@@ -19,7 +19,7 @@ The site will be published to the public web alongside (or before) the SVCv4 gui
 
 ## What SVCv4 is
 
-The **Sequence Variant Classification, version 4** guidelines are the next-generation, expert-authored standard for evaluating whether a germline **Variant Being Classified (VBC)** is causal for a specified **Mendelian Disease Entity (MDE)**. SVCv4 organises the available evidence into a hierarchy of **Evidence Lines → Workflows → Evidence Items**, scores each evidence item, rolls those scores into a final **Bayesian score**, and maps that score to a position on the **Benign ↔ Pathogenic** classification spectrum. The guidelines are being designed and piloted by the international clinical-genomics community and target publication later in 2026.
+The **Sequence Variant Classification, version 4** guidelines are the next-generation, expert-authored standard for evaluating whether a germline **Variant Being Considered (VBC)** is causal for a specified **Mendelian Disease Entity (MDE)**. SVCv4 organises the available evidence into a hierarchy of **Evidence Lines → Workflows → Evidence Items**, scores each evidence item, rolls those scores into a final **Bayesian score**, and maps that score to a position on the **Benign ↔ Pathogenic** classification spectrum. The guidelines are being designed and piloted by the international clinical-genomics community and target publication later in 2026.
 
 This repository does not author the SVCv4 guidelines themselves — it provides the **computational representation** of them, so the standard can be implemented, exchanged, and automated by the community.
 
@@ -79,7 +79,7 @@ See the [initial scaffold design](docs/plans/2026-05-19-initial-scaffold.md) for
 | Term | Meaning |
 |---|---|
 | **SVCv4** | Sequence Variant Classification, version 4 (forthcoming community guidelines). |
-| **VBC** | Variant Being Classified — the specific germline variant under evaluation. |
+| **VBC** | Variant Being Considered — the specific germline variant under evaluation. |
 | **MDE** | Mendelian Disease Entity — the disease the VBC is being assessed against. |
 | **Evidence Line** | A top-level category of evidence (e.g. population, functional, computational). |
 | **Workflow** | A leaf-level procedure that gathers evidence items using a defined method. |
