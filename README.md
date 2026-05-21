@@ -13,11 +13,13 @@ SVCv4 is realised in software through **two complementary models**:
 | Model | What it represents | Where it is published |
 |---|---|---|
 | **Classification Model** | The shape of a Variant Pathogenicity Classification — Statements, Propositions, Evidence Lines, and the Evidence Items that support them. *What* a classification is. | **This repository** (as a VA-Spec community profile). |
-| **Method Model** | The methods and rules that **evaluate** the evidence supplied by a curator and **produce workflow-specific scores** for the version of SVCv4 being applied to a given (VBC, MDE) curation. Encompasses both the baseline SVCv4 methods/rules and the forthcoming domain-specific specialised versions. | **ClinGen Criteria Specification (CSpec)** — outside this repo and outside GA4GH GKS VA-Spec. |
+| **Method Model** | The methods and rules that **evaluate** the evidence items and data points carried by the Classification Model and **produce workflow-specific scores** for the version of SVCv4 being applied (baseline or specialised) to a given (VBC, MDE) curation. Encompasses both the baseline SVCv4 methods/rules and the forthcoming domain-specific specialised versions. | **ClinGen Criteria Specification (CSpec)** — outside this repo and outside GA4GH GKS VA-Spec. |
 
 This repository covers **only the Classification Model**. The Method Model — the methods and rules that evaluate the evidence captured during a curation and produce workflow-specific scores for the version of SVCv4 being applied (baseline or VCEP-specialised), along with the gene-disease-MOI scoping that determines which specialised version applies — is the concern of **ClinGen CSpec**, where SVCv4 specification documents and APIs will be published. Both the baseline SVCv4 methods/rules and the forthcoming VCEP specialisations live in CSpec, not in this repository.
 
 The two models meet through **method codes and evidence codes** that this repo's Evidence Lines carry as references. The Classification Model *names* methods and evidence codes; the Method Model in CSpec *defines* what they do.
+
+The data flow between them runs both directions: the Classification Model carries the **Evidence Items and data points** that a curator captures for a (VBC, MDE), and those are **provided to** CSpec's methods/rules for the chosen specification version. CSpec evaluates and produces a workflow-specific score; the result lands back in the Classification Model as an **Evidence Line** that records the **method/rule code** invoked, the **evidence used**, and the **score/strength produced**.
 
 ## Foundation: GA4GH GKS VA-Spec
 
@@ -56,10 +58,10 @@ The Classification Model is expressed using VA-Spec's canonical entity names:
 - A **Statement** carries a **Proposition** and a final score, plus attributes for strength-direction, score-classification, method (reference), contribution, and a collection of Evidence Lines.
 - A **Proposition** is structured as **SPOQ**: **S**ubject (the **VBC** — Variant Being Considered, expressed as a VRS Variation), **P**redicate (the asserted relationship), **O**bject (the **MDE** — Mendelian Disease Entity), and **Q**ualifier(s).
 - A **Variant Pathogenicity Classification** is the categorical classification (a position on the Benign ↔ Pathogenic spectrum) produced by the Statement's score.
-- An **Evidence Line** carries its score, the evidence items that support it, optional evidence/method code references, an optional strength-direction, the method (reference), and contribution. Each Evidence Line groups one or more Evidence Items.
-- An **Evidence Item / Evidence Data** is a single structured datum captured to support a score.
+- An **Evidence Line** captures the result of invoking a CSpec method/rule on a curator's evidence: it records the **method/rule code** that was invoked, the **Evidence Items used** as inputs, the **score (and optional strength)** produced, and supporting metadata (contribution, optional strength-direction). It is the artifact through which a specific CSpec evaluation enters the Classification Model.
+- An **Evidence Item / Evidence Data** is a single structured datum captured by the curator. Evidence Items are inputs *provided to* CSpec methods/rules for the chosen specification version; the resulting Evidence Line records which Items were used and the score produced.
 
-> *Any process, rule, or method that produces a score maps to a VA-Spec Evidence Line.* When a CSpec workflow evaluates evidence and produces a score for the SVCv4 version being applied, that result surfaces in the Classification Model as an Evidence Line. The workflow itself — its rules, scoring logic, and version selection — lives in CSpec; only the resulting Evidence Line (with its score and supporting evidence) lives here.
+> *Any process, rule, or method that produces a score maps to a VA-Spec Evidence Line.* A CSpec workflow takes the Evidence Items captured in the Classification Model, applies its rules under the chosen specification version, and produces a score. The result lands in the Classification Model as an Evidence Line that records the method/rule code, the evidence used, and the score (and optional strength) produced. The workflow itself — its rules, scoring logic, and version selection — lives in CSpec.
 
 ### The user-facing summary table
 
@@ -67,7 +69,7 @@ Curators and scientists engage with SVCv4 through a **Summary Table** that organ
 
 - **Evidence Categories** (e.g., Human Observational Data, Variant Impact Data)
 - **Evidence Concepts**
-- **Evidence Codes** — each Evidence Code is the **jumping-off point** for a workflow (in CSpec) that walks a curator through gathering evidence and computing the score for a specific (VBC, MDE) classification.
+- **Evidence Codes** — each Evidence Code is the **jumping-off point** for a workflow (in CSpec). For a given (VBC, MDE) curation, the curator captures Evidence Items under an Evidence Code; those items are provided to the workflow, which evaluates them under the chosen specification version and produces an Evidence Line carrying the resulting score.
 
 These terms are canonical SVCv4 vocabulary and appear throughout the guidelines. This repository's data model represents the classifications and evidence lines produced via that summary table; the CSpec system will represent the workflows themselves.
 

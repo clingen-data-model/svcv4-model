@@ -112,11 +112,11 @@ svcv4-model/
 
 Goal: **shape** correct, **content** stubbed. Real Evidence Categories / Concepts / Codes, propositional predicates, and disease-domain content get filled in as SVCv4 and the VA-Spec community profile stabilise.
 
-- `Statement` — VA-Spec `Statement` profiled for SVCv4. Carries a `Proposition`, a final score, `strength_direction`, `score_classification`, `method` (reference), `contribution`, and `evidence_lines: list[EvidenceLine]`.
+- `Statement` — VA-Spec `Statement` profiled for SVCv4. Carries a `Proposition`, a final score, `strength_direction`, `score_classification`, `method` (reference — identifies the **applied SVCv4 specification version**: baseline or a specific VCEP specialisation), `contribution`, and `evidence_lines: list[EvidenceLine]`.
 - `Proposition` — VA-Spec `Proposition` with SPOQ slots: `subject: VBC`, `predicate`, `object: MDE`, `qualifiers`.
 - `VariantPathogenicityClassification` — categorical classification (placeholder enum spanning Benign ↔ Pathogenic). The score-to-class mapping is a placeholder; SVCv4 thresholds will be confirmed.
-- `EvidenceLine` — VA-Spec `EvidenceLine` profiled for SVCv4. Carries `score`, optional `score_classification`, evidence (`list[EvidenceItem]`), optional `code` (evidence-code reference), optional `strength_direction`, `method` (reference), `contribution`. Any process that yields a score lands here.
-- `EvidenceItem` (alias: `EvidenceData`) — structured datum supporting an Evidence Line's score.
+- `EvidenceLine` — VA-Spec `EvidenceLine` profiled for SVCv4. Captures the result of invoking a CSpec method/rule on a set of evidence items: `score`, optional `score_classification`, the evidence items used (`evidence: list[EvidenceItem]`), the invoked method (`method` reference) plus its `code` (evidence-code / method-code reference), optional `strength_direction`, and `contribution`. Any CSpec method or rule that produces a score lands here.
+- `EvidenceItem` (alias: `EvidenceData`) — structured datum captured by the curator. Evidence Items are the **inputs provided to** CSpec methods/rules under the chosen specification version; the resulting Evidence Line records which Items were used and the score produced.
 - `VBC` (Variant Being Considered) — typed field referencing a `ga4gh.vrs.models.Variation` (germline context).
 - `MDE` (Mendelian Disease Entity) — `label` + `curie` reference (MONDO / OMIM / Orphanet); precise typing deferred.
 
