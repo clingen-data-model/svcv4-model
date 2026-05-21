@@ -46,6 +46,8 @@ The SVCv4 Standard authored by the SVCv4 working group is intentionally a **base
 
 These specialisations do not exist yet — the baseline itself is still being finalised — but the design accounts for them. **Both the baseline SVCv4 methods/rules and the forthcoming VCEP specialisations live in ClinGen CSpec** (the Method Model side), not in this repository.
 
+In practice, the community will use the **baseline version** to define their VBC-MDE classification processes from the SVCv4 publication onward, and apply **specialised versions only as they become available** for specific gene/disease scopes. The baseline is therefore the operative SVCv4 version until — and wherever — no specialised version applies; specialisations are progressive enhancements layered over it.
+
 So there are two distinct layerings at play; do not confuse them:
 
 1. **Interoperability layering** — VA-Spec baseline classes → **SVCv4 community profile** (authored here).
