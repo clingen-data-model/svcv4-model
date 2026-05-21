@@ -1,0 +1,29 @@
+{
+  "additionalProperties": false,
+  "description": "Mendelian Disease Entity \u2014 the disease the VBC is being assessed against.\n\n`curie` is intentionally a flexible string for the scaffold.\nAcceptable namespaces include MONDO, OMIM, and Orphanet; precise\nnamespace constraints will be set by the SVCv4 VA-Spec community\nprofile.",
+  "properties": {
+    "curie": {
+      "description": "CURIE identifier (e.g. `MONDO:0007254`, `OMIM:114480`, `Orphanet:289545`).",
+      "title": "Curie",
+      "type": "string"
+    },
+    "label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Human-readable label for the disease.",
+      "title": "Label"
+    }
+  },
+  "required": [
+    "curie"
+  ],
+  "title": "MDE",
+  "type": "object"
+}

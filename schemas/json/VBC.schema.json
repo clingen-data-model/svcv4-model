@@ -1,0 +1,30 @@
+{
+  "additionalProperties": false,
+  "description": "Variant Being Considered \u2014 the germline variant under evaluation.\n\nEventually typed via a GA4GH VRS `Variation`. Today this is a\nplaceholder accepting any VRS-shaped payload as a dict; wiring\nthrough to `ga4gh.vrs.models.Variation` is a follow-up once the\nSVCv4 VA-Spec community profile is locked.",
+  "properties": {
+    "label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Human-readable label for the variant.",
+      "title": "Label"
+    },
+    "variation": {
+      "additionalProperties": true,
+      "description": "VRS Variation payload \u2014 placeholder. Will be typed as `ga4gh.vrs.models.Variation` in a follow-up PR.",
+      "title": "Variation",
+      "type": "object"
+    }
+  },
+  "required": [
+    "variation"
+  ],
+  "title": "VBC",
+  "type": "object"
+}
