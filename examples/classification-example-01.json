@@ -1,0 +1,81 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": {
+        "id": "ga4gh:VA.placeholder_example_01",
+        "type": "Allele",
+        "_note": "Placeholder VRS Variation payload — will be typed as ga4gh.vrs.models.Variation in a follow-up PR."
+      },
+      "label": "BRCA1 c.5096G>A (p.Arg1699Gln) — placeholder VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": {
+      "curie": "MONDO:0007254",
+      "label": "Hereditary breast and ovarian cancer syndrome"
+    },
+    "qualifiers": []
+  },
+  "method": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release",
+    "description": "Placeholder reference to the baseline SVCv4 specification version in CSpec."
+  },
+  "final_score": 4.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": {
+        "code": "svcv4:CLN_AFF",
+        "label": "Clinical observation in affected individual(s) — placeholder",
+        "version": "draft-2026-pre-release"
+      },
+      "code": "CLN_AFF_+2",
+      "evidence": [
+        {
+          "id": "evidence-item-001",
+          "type": "clinical_observation",
+          "data": {
+            "individuals_observed": 4,
+            "phenotype_match": "consistent"
+          },
+          "references": ["PMID:12345678"],
+          "description": "Placeholder: four affected individuals reported with consistent phenotype."
+        }
+      ],
+      "score": 2.0,
+      "strength_direction": "pathogenic_moderate",
+      "score_classification": null,
+      "contribution": 2.0,
+      "description": "Placeholder Evidence Line illustrating an affected-individual observation."
+    },
+    {
+      "method": {
+        "code": "svcv4:FNC_ASY",
+        "label": "Functional assay — placeholder",
+        "version": "draft-2026-pre-release"
+      },
+      "code": "FNC_ASY_+2",
+      "evidence": [
+        {
+          "id": "evidence-item-002",
+          "type": "functional_assay",
+          "data": {
+            "assay": "homology_directed_repair",
+            "result": "loss_of_function"
+          },
+          "references": ["PMID:23456789"],
+          "description": "Placeholder: HDR assay shows loss of function."
+        }
+      ],
+      "score": 2.0,
+      "strength_direction": "pathogenic_moderate",
+      "score_classification": null,
+      "contribution": 2.0,
+      "description": "Placeholder Evidence Line illustrating a functional-assay result."
+    }
+  ],
+  "description": "Placeholder SVCv4 classification — values are illustrative only and will be replaced as the SVCv4 Standards and VA-Spec community profile firm up."
+}

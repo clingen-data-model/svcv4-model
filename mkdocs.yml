@@ -1,0 +1,81 @@
+site_name: SVCv4 Classification Model
+site_description: GA4GH GKS VA-Spec community profile for the ACMG/AMP/CAP/ClinGen SVCv4 Standards
+site_url: https://clingen-data-model.github.io/svcv4-model/
+repo_url: https://github.com/clingen-data-model/svcv4-model
+repo_name: clingen-data-model/svcv4-model
+edit_uri: edit/main/docs/
+strict: true
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - toc.follow
+    - content.code.copy
+    - content.action.edit
+    - content.action.view
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: false
+            show_signature_annotations: true
+            separate_signature: true
+            members_order: source
+            heading_level: 2
+            merge_init_into_class: true
+            show_bases: true
+            docstring_section_style: table
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Concepts:
+      - Classification Model vs Method Model: concepts/classification-vs-method-model.md
+      - VA-Spec community profile: concepts/va-spec-community-profile.md
+      - Statement & Proposition: concepts/statement-and-proposition.md
+      - Evidence Lines & Items: concepts/evidence-lines-and-items.md
+      - Summary Table: concepts/summary-table.md
+  - Model reference: model/index.md
+  - JSON Schemas: schemas/index.md
+  - Examples: examples/index.md
+  - Interop:
+      - GA4GH GKS: gks-interop.md
+      - ClinGen CSpec: cspec-interop.md
+  - Contributing: contributing.md
+  - Glossary: glossary.md
+  - Plans:
+      - Initial scaffold (2026-05-19): plans/2026-05-19-initial-scaffold.md

@@ -1,2 +1,15 @@
 .superpowers/
 .claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# uv / venv
+.venv/
+
+# MkDocs build output
+site/

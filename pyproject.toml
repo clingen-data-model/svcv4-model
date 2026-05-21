@@ -1,0 +1,69 @@
+[project]
+name = "svcv4-model"
+version = "0.0.1"
+description = "Reference data model for the ACMG/AMP/CAP/ClinGen SVCv4 Classification Model (a GA4GH GKS VA-Spec community profile)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "SVCv4 Standards Data Modeling Team" },
+]
+keywords = [
+    "acmg", "amp", "cap", "clingen", "svcv4",
+    "variant-classification", "ga4gh", "gks", "va-spec", "vrs",
+    "clinical-genomics", "pathogenicity", "mendelian-disease",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "pydantic>=2.6,<3.0",
+]
+
+[project.optional-dependencies]
+# GKS packages are added as optional extras while the SVCv4 VA-Spec
+# community profile firms up. They are not yet imported by the
+# placeholder model classes, but consumers and follow-up PRs will pull
+# them in to type the VBC (VRS Variation) and to subclass VA-Spec base
+# entities.
+gks = [
+    "ga4gh.vrs~=2.3",
+    "ga4gh.va-spec~=0.4",
+]
+
+[dependency-groups]
+dev = [
+    "pytest~=8.3",
+    "ruff~=0.6",
+    "jsonschema~=4.23",
+]
+docs = [
+    "mkdocs~=1.6",
+    "mkdocs-material~=9.5",
+    "mkdocstrings[python]~=0.26",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/svcv4_model"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"

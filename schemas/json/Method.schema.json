@@ -1,0 +1,55 @@
+{
+  "additionalProperties": false,
+  "description": "A reference to a CSpec-defined method, rule, or specification.\n\nThis class **names**, but does not **define**, a method. Method\ndefinitions \u2014 together with their evaluation logic, scoring rules,\nand version selection \u2014 live in ClinGen CSpec, which is outside\nthis repository and outside GA4GH GKS VA-Spec.\n\nUsed in two roles:\n\n1. At the `Statement` level, `method` identifies the **applied\n   SVCv4 specification version** \u2014 either the baseline SVCv4\n   Standard or a specific VCEP-specialised version that was\n   selected for the (VBC, MDE) curation.\n2. At the `EvidenceLine` level, `method` identifies the specific\n   CSpec method or rule whose invocation produced that Evidence\n   Line's score.",
+  "properties": {
+    "code": {
+      "description": "Opaque method/rule code as published by CSpec. CURIE-style scheme TBD; treated as an opaque string for now.",
+      "title": "Code",
+      "type": "string"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Optional prose description; usually a pointer into CSpec.",
+      "title": "Description"
+    },
+    "label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Human-readable label for the method/rule.",
+      "title": "Label"
+    },
+    "version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "When `code` identifies an SVCv4 specification (baseline or specialised), the version of that specification.",
+      "title": "Version"
+    }
+  },
+  "required": [
+    "code"
+  ],
+  "title": "Method",
+  "type": "object"
+}
