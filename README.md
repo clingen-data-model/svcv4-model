@@ -1,6 +1,6 @@
 # svcv4-model
 
-> Computational reference for the **Classification Model** of the forthcoming **ACMG/AMP/CAP/ClinGen Sequence Variant Classification v4 (SVCv4) Standards**, expressed as a **GA4GH GKS VA-Spec community profile**.
+> A reference for the **Classification Model** of the forthcoming **ACMG/AMP/CAP/ClinGen Sequence Variant Classification v4 (SVCv4) Standards**, expressed as a **GA4GH GKS VA-Spec community profile**.
 
 **Status: early development.** The SVCv4 Standards (jointly sponsored by ACMG, AMP, CAP, and ClinGen) are being drafted and piloted by the genomic-medicine community, with publication targeted for **October 2026 in *Genetics in Medicine* (GIM)**. This repository will publish the engineering-facing data-model documentation that accompanies the guidelines' release.
 
