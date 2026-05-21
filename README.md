@@ -1,44 +1,92 @@
 # svcv4-model
 
-> Computational reference data model for the **Sequence Variant Classification v4 (SVCv4)** community guidelines.
+> Computational reference for the **Classification Model** of the forthcoming **ACMG/AMP/CAP/ClinGen Sequence Variant Classification v4 (SVCv4) Standards**, expressed as a **GA4GH GKS VA-Spec community profile**.
 
-**Status: early development.** The SVCv4 guidelines are being drafted and piloted by the genomic-medicine community; this repository will publish the engineering-facing data-model documentation that accompanies the guidelines' eventual release.
+**Status: early development.** The SVCv4 Standards (jointly sponsored by ACMG, AMP, CAP, and ClinGen) are being drafted and piloted by the genomic-medicine community, with publication targeted for **October 2026 in *Genetics in Medicine* (GIM)**. This repository will publish the engineering-facing data-model documentation that accompanies the guidelines' release.
 
 ---
 
-## What this repository will be
+## Scope: the Classification Model only
 
-A single integrated reference site that documents how to represent, exchange, and reason about **SVCv4 classifications** in software. It will combine:
+SVCv4 is realised in software through **two complementary models**:
 
-- **Pydantic data models** — the Python source of truth for SVCv4 classifications, evidence lines, workflows, evidence items, and Bayesian scoring.
-- **JSON Schemas** — emitted automatically from the Pydantic models so any language or toolchain can validate and exchange SVCv4 data.
-- **Worked examples** — concrete classifications of representative `(VBC, MDE)` pairs that downstream implementers can test against.
-- **Narrative documentation** — concept guides explaining the evidence hierarchy, score composition, and where SVCv4 builds on the GA4GH GKS foundation.
+| Model | What it represents | Where it is published |
+|---|---|---|
+| **Classification Model** | The shape of a Variant Pathogenicity Classification — Statements, Propositions, Evidence Lines, and the Evidence Items that support them. *What* a classification is. | **This repository** (as a VA-Spec community profile). |
+| **Method Model** | The definitions of methods, workflows, criteria, and scoring rules used to *produce* a classification. *How* evidence is assessed and scored. | **ClinGen Criteria Specification (CSpec)** — outside this repo and outside GA4GH GKS VA-Spec. |
 
-The site will be published to the public web alongside (or before) the SVCv4 guideline release later in 2026.
+This repository covers **only the Classification Model**. The Method Model — including the prescriptive workflows that walk curators through evidence gathering, the rules that compute points, gene-disease-MOI scoping, and any specialised configurations — is the concern of **ClinGen CSpec**, where SVCv4 specification documents and APIs will be published.
 
-## What SVCv4 is
+The two models meet through **method codes and evidence codes** that this repo's Evidence Lines carry as references. The Classification Model *names* methods and evidence codes; the Method Model in CSpec *defines* what they do.
 
-The **Sequence Variant Classification, version 4** guidelines are the next-generation, expert-authored standard for evaluating whether a germline **Variant Being Considered (VBC)** is causal for a specified **Mendelian Disease Entity (MDE)**. SVCv4 organises the available evidence into a hierarchy of **Evidence Lines → Workflows → Evidence Items**, scores each evidence item, rolls those scores into a final **Bayesian score**, and maps that score to a position on the **Benign ↔ Pathogenic** classification spectrum. The guidelines are being designed and piloted by the international clinical-genomics community and target publication later in 2026.
+## Foundation: GA4GH GKS VA-Spec
 
-This repository does not author the SVCv4 guidelines themselves — it provides the **computational representation** of them, so the standard can be implemented, exchanged, and automated by the community.
+All structural choices in this repository are grounded in the **Global Alliance for Genomics and Health (GA4GH) Genomic Knowledge Standards (GKS)** workstream. ClinGen is a GA4GH driver project.
 
-## Foundation: GA4GH GKS
+The primary GKS dependency for this repo is the **Variant Annotation Specification (VA-Spec)** (released v1.0). VA-Spec provides a baseline set of classes — `Statement`, `Proposition`, `EvidenceLine`, `InformationEntity`, `EvidenceData` — for representing evidence-based scientific assertions about genomic variants. **Community profiles** layer additional constraints on top of those baseline classes to enforce alignment with the terminology conventions of a specific community guideline.
 
-All structural choices in this repository are grounded in the **Global Alliance for Genomics and Health (GA4GH) Genomic Knowledge Standards (GKS)** workstream. SVCv4 data references — rather than redefines — existing GKS schemas:
+This repository authors the **VA-Spec SVCv4 Community Profile**: the SVCv4-specific shape on top of the VA-Spec baseline. That profile is what enables consistent representation, comparison, and processing of SVCv4 classifications with standardised tooling across organisations.
 
-- [**VRS** (Variation Representation Specification)](https://vrs.ga4gh.org/) — used to describe the VBC.
-- [**Cat-VRS** (Categorical Variation Representation)](https://cat-vrs.ga4gh.org/) — used where the variant is described categorically.
-- [**VA-Spec** (Variant Annotation Specification)](https://va-spec.ga4gh.org/) — used for related annotations.
+Supporting GKS schemas:
+
+- [**VRS** (Variation Representation Specification)](https://vrs.ga4gh.org/) — v2.0. Used to describe the VBC (the variant under consideration).
+- [**Cat-VRS** (Categorical Variation Representation)](https://cat-vrs.ga4gh.org/) — v1.0. Used where the variant is described categorically.
 - **gks-core** — common identifier, CURIE, and provenance constructs shared across GKS.
 
-By layering on top of GKS rather than around it, SVCv4 data produced from these models is interoperable with the broader genomic-knowledge ecosystem out of the box.
+ClinGen's Evidence Repository (ERepo) and its JSON-LD SEPIO implementation informed VA-Spec; this project further informs the SVCv4 community profile being layered on top of VA-Spec.
+
+## The SVCv4 Standard is a baseline by design
+
+The SVCv4 Standard authored by the SVCv4 working group is intentionally a **baseline**. It is designed so that disease-domain experts — including **ClinGen Variant Curation Expert Panels (VCEPs)** — can author **specialised versions** on top of it:
+
+- Customised **methods and scoring rules** within workflows.
+- **Gene/disease scope** (gene-disease-MOI) for which a specialisation is applicable.
+
+These specialisations do not exist yet — the baseline itself is still being finalised — but the design accounts for them. All specialisations will live in **ClinGen CSpec** (the Method Model side), not in this repository.
+
+So there are two distinct layerings at play; do not confuse them:
+
+1. **Interoperability layering** — VA-Spec baseline classes → **SVCv4 community profile** (authored here).
+2. **Domain layering** — SVCv4 Standard baseline → **VCEP specialisations** (authored in CSpec).
+
+## Conceptual model (VA-Spec terminology)
+
+The Classification Model is expressed using VA-Spec's canonical entity names:
+
+- A **Statement** carries a **Proposition** and a final score, plus attributes for strength-direction, score-classification, method (reference), contribution, and a collection of Evidence Lines.
+- A **Proposition** is structured as **SPOQ**: **S**ubject (the **VBC** — Variant Being Considered, expressed as a VRS Variation), **P**redicate (the asserted relationship), **O**bject (the **MDE** — Mendelian Disease Entity), and **Q**ualifier(s).
+- A **Variant Pathogenicity Classification** is the categorical classification (a position on the Benign ↔ Pathogenic spectrum) produced by the Statement's score.
+- An **Evidence Line** carries its score, the evidence items that support it, optional evidence/method code references, an optional strength-direction, the method (reference), and contribution. Each Evidence Line groups one or more Evidence Items.
+- An **Evidence Item / Evidence Data** is a single structured datum captured to support a score.
+
+> *Any process, rule, or method that produces a score maps to a VA-Spec Evidence Line.* That includes the workflows defined in CSpec — when a workflow produces a score, it surfaces in the Classification Model as an Evidence Line. The workflow *definition* lives in CSpec; only the *result* (an Evidence Line with its score and supporting evidence) lives here.
+
+### The user-facing summary table
+
+Curators and scientists engage with SVCv4 through a **Summary Table** that organises evidence lines top-down as:
+
+- **Evidence Categories** (e.g., Human Observational Data, Variant Impact Data)
+- **Evidence Concepts**
+- **Evidence Codes** — each Evidence Code is the **jumping-off point** for a workflow (in CSpec) that walks a curator through gathering evidence and computing the score for a specific (VBC, MDE) classification.
+
+These terms are canonical SVCv4 vocabulary and appear throughout the guidelines. This repository's data model represents the classifications and evidence lines produced via that summary table; the CSpec system will represent the workflows themselves.
+
+## What this repository will be
+
+A single integrated reference site that combines:
+
+- **Pydantic data models** — the Python source of truth for the SVCv4 Classification Model as a VA-Spec community profile.
+- **JSON Schemas** — emitted automatically from the Pydantic models so any language or toolchain can validate and exchange SVCv4 classifications.
+- **Worked examples** — concrete classifications of representative (VBC, MDE) pairs that downstream implementers can test against.
+- **Narrative documentation** — concept guides explaining the model, the VA-Spec layering, the Classification ↔ Method-Model boundary, and the SVCv4 baseline + specialisation design.
+
+The site will be published to the public web alongside (or before) the SVCv4 guideline release in October 2026, and tracks the draft **GA4GH VA Community Profile** for SVCv4 (JSON Schema and documentation, expected after GA4GH review in 2026).
 
 ## FAIR posture
 
 This project prioritises the **Interoperability** and **Reusability** dimensions of the [FAIR data principles](https://www.go-fair.org/fair-principles/):
 
-- **Interoperability** — shared GKS-grounded schemas, machine-readable JSON Schemas, stable identifiers.
+- **Interoperability** — VA-Spec-grounded schemas, machine-readable JSON Schemas, stable identifiers.
 - **Reusability** — open licence, versioned models, worked examples, clear documentation aimed at implementers.
 
 ## Audience
@@ -50,43 +98,71 @@ Software engineers, bioinformaticians, and platform teams in:
 - Knowledge-base curators exchanging variant classifications.
 - Tool builders producing user interfaces, decision support, or automated curation systems.
 
-This is engineering reference documentation. For *clinical* guidance on applying SVCv4, refer to the forthcoming SVCv4 guideline publication itself.
+This is engineering reference documentation. For *clinical* guidance on applying SVCv4, refer to the forthcoming SVCv4 guideline publication itself. For the **method definitions and workflows** that compute SVCv4 scores, refer to **ClinGen CSpec**.
 
 ## Status & roadmap
 
-**Now (this initial PR, May 2026):**
+**Now (May 2026):**
 
 - This README.
-- The first design document at [`docs/plans/2026-05-19-initial-scaffold.md`](docs/plans/2026-05-19-initial-scaffold.md) — the intended repository structure, tooling choices, GKS interop strategy, and verification approach.
+- The scaffold design document at [`docs/plans/2026-05-19-initial-scaffold.md`](docs/plans/2026-05-19-initial-scaffold.md) — repository structure, tooling choices, VA-Spec interop strategy, and verification approach.
 
 **Next:**
 
-- Python package skeleton (`src/svcv4_model/`) with placeholder Pydantic classes for `Classification`, `EvidenceLine`, `Workflow`, `EvidenceItem`, `BayesianScore`, `VBC`, and `MDE`.
+- Python package skeleton (`src/svcv4_model/`) with VA-Spec-aligned Pydantic classes (`Statement`, `Proposition`, `EvidenceLine`, `EvidenceItem`, `VariantPathogenicityClassification`, `VBC`, `MDE`).
 - JSON Schema export pipeline.
 - MkDocs Material site with auto-generated model reference.
 - First worked example validated in CI.
 
-**Later:**
+**Later (tracking the SVCv4 publication trajectory):**
 
-- Fill in real SVCv4 evidence-line, workflow, and evidence-item definitions as the guidelines stabilise.
-- Score-composition / Bayesian-rollup logic.
-- Cat-VRS and VA-Spec integration where the model requires them.
+- Fill in real SVCv4 Evidence Category / Concept / Code references as the Summary Table stabilises.
+- Publish drafts of the VA-Spec SVCv4 community profile in step with GA4GH review.
+- Synchronise with the SVCv4 publication (~October 2026, *Genetics in Medicine*).
 
-See the [initial scaffold design](docs/plans/2026-05-19-initial-scaffold.md) for the planned directory layout and tooling rationale.
+## Contributors
+
+This work is produced by the **SVCv4 Standards data modeling team**, a task force offshoot of the ClinGen Data Platform Working Group, meeting weekly since July 2024.
+
+**Key contributors:**
+
+- Alicia Byrne, PhD — Broad Institute
+- Larry Babb — Broad Institute
+- Christine Preston, PhD
+- Neethu Shah — ClinGen
+
+**Contributors:**
+
+- Matt Wright, PhD
+- Gloria Cheung
+- Bryan Wulf
+- Mark Mandell
+- Hannah Dziadzio
+- Liam Mulhall
+
+The VA-Spec SVCv4 community profile work is conducted in collaboration with the GA4GH GKS VA-Spec authors (Matt Brush, Alex Wagner, Larry Babb).
 
 ## Glossary
 
 | Term | Meaning |
 |---|---|
-| **SVCv4** | Sequence Variant Classification, version 4 (forthcoming community guidelines). |
-| **VBC** | Variant Being Considered — the specific germline variant under evaluation. |
+| **SVCv4** | Sequence Variant Classification v4 — the ACMG/AMP/CAP/ClinGen joint Technical Standard, succeeding the 2015 Richards et al. guidelines (SVCv3). Points-based; replaces v3's strength-categories + combining-rules approach. |
+| **VBC** | Variant Being Considered — the specific germline variant under evaluation; expressed as a VRS Variation. |
 | **MDE** | Mendelian Disease Entity — the disease the VBC is being assessed against. |
-| **Evidence Line** | A top-level category of evidence (e.g. population, functional, computational). |
-| **Workflow** | A leaf-level procedure that gathers evidence items using a defined method. |
-| **Evidence Item** | A single structured datum contributing a score under a workflow. |
-| **Bayesian score** | The composed numeric score produced by rolling up evidence-item scores. |
+| **Classification Model** | The shape of a classification (Statements, Propositions, Evidence Lines, Evidence Items). Authored by this repo as a VA-Spec community profile. |
+| **Method Model** | The definitions of methods, workflows, criteria, scoring rules. Authored in ClinGen CSpec; not in this repo, not in VA-Spec. |
+| **Statement / Proposition / Evidence Line / Evidence Item** | VA-Spec core entities; see the conceptual-model section above. |
+| **SPOQ** | Subject / Predicate / Object / Qualifier — the structure of a VA-Spec Proposition. |
+| **Evidence Category / Concept / Code** | Canonical SVCv4 vocabulary for the user-facing Summary Table; the Evidence Code is the jumping-off point for a workflow. |
+| **Workflow** | A prescriptive procedure (defined in CSpec) that walks a curator through gathering evidence and computing a score. Surfaces in the Classification Model as an Evidence Line. |
+| **CSpec** | ClinGen Criteria Specification system — registry and APIs where SVCv4 methods, workflows, and VCEP specialisations are published. |
+| **VCEP** | Variant Curation Expert Panel (ClinGen). Authors specialised SVCv4 method definitions in CSpec. |
+| **Community Profile (VA-Spec)** | A layer of additional constraints on top of VA-Spec's baseline classes to enforce a community's terminology and conventions. |
+| **VA-Spec / VRS / Cat-VRS / gks-core** | GA4GH GKS sub-schemas. VA-Spec is this repo's primary dependency. |
+| **CSpec / ERepo / SEPIO** | ClinGen Criteria Specification; ClinGen Evidence Repository; Scientific Evidence and Provenance Information Ontology. SEPIO informed VA-Spec. |
 | **GA4GH** | Global Alliance for Genomics and Health. |
-| **GKS** | Genomic Knowledge Standards (a GA4GH workstream). |
+| **GKS** | Genomic Knowledge Standards — a GA4GH workstream. |
+| **GIM** | *Genetics in Medicine*, the journal where SVCv4 will publish. |
 | **FAIR** | Findable, Accessible, Interoperable, Reusable. |
 
 ## Contributing
