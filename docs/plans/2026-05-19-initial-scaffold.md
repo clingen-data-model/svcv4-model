@@ -15,7 +15,7 @@ The audience is software engineers in clinical labs, research groups, and consor
 
 ### Scope: Classification Model only
 
-This repository covers only the **Classification Model** — the shape of a SVCv4 Variant Pathogenicity Classification. It does **not** cover the **Method Model** (the prescriptive workflows, scoring rules, criteria definitions, gene-disease-MOI scoping, and specialised configurations); those live in **ClinGen CSpec**. The Classification Model's Evidence Lines reference methods and evidence codes; CSpec defines what those references mean.
+This repository covers only the **Classification Model** — the shape of a SVCv4 Variant Pathogenicity Classification. It does **not** cover the **Method Model**, which encompasses the methods and rules that evaluate the evidence supplied during a curation and produce workflow-specific scores for the version of SVCv4 being applied (baseline or VCEP-specialised), together with the gene-disease-MOI scoping that selects the applicable specialised version. **Both the baseline SVCv4 methods/rules and the forthcoming VCEP specialisations live in ClinGen CSpec**, not here. The Classification Model's Evidence Lines reference methods and evidence codes; CSpec defines and evaluates them.
 
 ### Foundation: GA4GH GKS VA-Spec
 
@@ -145,7 +145,7 @@ Score values are carried; score *computation* is **not** modelled here — it be
 
 ## Out of Scope (intentional YAGNI)
 
-- The **Method Model** in any form — workflow definitions, scoring rules, criteria-specification mechanics, gene-disease-MOI scoping, VCEP specialisations. All of that lives in **CSpec**.
+- The **Method Model** in any form — methods and rules that evaluate evidence to produce workflow-specific scores, criteria-specification mechanics, gene-disease-MOI scoping, baseline configuration, VCEP specialisations. All of that lives in **CSpec** (baseline included, not just specialisations).
 - Authoring real SVCv4 Evidence Category / Concept / Code content (handled as the Summary Table stabilises).
 - Cat-VRS integration (added when the SVCv4 profile needs it).
 - LinkML round-trip (deferred unless GKS interop requires it).

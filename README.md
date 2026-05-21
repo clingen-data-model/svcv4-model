@@ -13,9 +13,9 @@ SVCv4 is realised in software through **two complementary models**:
 | Model | What it represents | Where it is published |
 |---|---|---|
 | **Classification Model** | The shape of a Variant Pathogenicity Classification — Statements, Propositions, Evidence Lines, and the Evidence Items that support them. *What* a classification is. | **This repository** (as a VA-Spec community profile). |
-| **Method Model** | The definitions of methods, workflows, criteria, and scoring rules used to *produce* a classification. *How* evidence is assessed and scored. | **ClinGen Criteria Specification (CSpec)** — outside this repo and outside GA4GH GKS VA-Spec. |
+| **Method Model** | The methods and rules that **evaluate** the evidence supplied by a curator and **produce workflow-specific scores** for the version of SVCv4 being applied to a given (VBC, MDE) curation. Encompasses both the baseline SVCv4 methods/rules and the forthcoming domain-specific specialised versions. | **ClinGen Criteria Specification (CSpec)** — outside this repo and outside GA4GH GKS VA-Spec. |
 
-This repository covers **only the Classification Model**. The Method Model — including the prescriptive workflows that walk curators through evidence gathering, the rules that compute points, gene-disease-MOI scoping, and any specialised configurations — is the concern of **ClinGen CSpec**, where SVCv4 specification documents and APIs will be published.
+This repository covers **only the Classification Model**. The Method Model — the methods and rules that evaluate the evidence captured during a curation and produce workflow-specific scores for the version of SVCv4 being applied (baseline or VCEP-specialised), along with the gene-disease-MOI scoping that determines which specialised version applies — is the concern of **ClinGen CSpec**, where SVCv4 specification documents and APIs will be published. Both the baseline SVCv4 methods/rules and the forthcoming VCEP specialisations live in CSpec, not in this repository.
 
 The two models meet through **method codes and evidence codes** that this repo's Evidence Lines carry as references. The Classification Model *names* methods and evidence codes; the Method Model in CSpec *defines* what they do.
 
@@ -42,7 +42,7 @@ The SVCv4 Standard authored by the SVCv4 working group is intentionally a **base
 - Customised **methods and scoring rules** within workflows.
 - **Gene/disease scope** (gene-disease-MOI) for which a specialisation is applicable.
 
-These specialisations do not exist yet — the baseline itself is still being finalised — but the design accounts for them. All specialisations will live in **ClinGen CSpec** (the Method Model side), not in this repository.
+These specialisations do not exist yet — the baseline itself is still being finalised — but the design accounts for them. **Both the baseline SVCv4 methods/rules and the forthcoming VCEP specialisations live in ClinGen CSpec** (the Method Model side), not in this repository.
 
 So there are two distinct layerings at play; do not confuse them:
 
@@ -59,7 +59,7 @@ The Classification Model is expressed using VA-Spec's canonical entity names:
 - An **Evidence Line** carries its score, the evidence items that support it, optional evidence/method code references, an optional strength-direction, the method (reference), and contribution. Each Evidence Line groups one or more Evidence Items.
 - An **Evidence Item / Evidence Data** is a single structured datum captured to support a score.
 
-> *Any process, rule, or method that produces a score maps to a VA-Spec Evidence Line.* That includes the workflows defined in CSpec — when a workflow produces a score, it surfaces in the Classification Model as an Evidence Line. The workflow *definition* lives in CSpec; only the *result* (an Evidence Line with its score and supporting evidence) lives here.
+> *Any process, rule, or method that produces a score maps to a VA-Spec Evidence Line.* When a CSpec workflow evaluates evidence and produces a score for the SVCv4 version being applied, that result surfaces in the Classification Model as an Evidence Line. The workflow itself — its rules, scoring logic, and version selection — lives in CSpec; only the resulting Evidence Line (with its score and supporting evidence) lives here.
 
 ### The user-facing summary table
 
@@ -154,7 +154,7 @@ The VA-Spec SVCv4 community profile work is conducted in collaboration with the 
 | **Statement / Proposition / Evidence Line / Evidence Item** | VA-Spec core entities; see the conceptual-model section above. |
 | **SPOQ** | Subject / Predicate / Object / Qualifier — the structure of a VA-Spec Proposition. |
 | **Evidence Category / Concept / Code** | Canonical SVCv4 vocabulary for the user-facing Summary Table; the Evidence Code is the jumping-off point for a workflow. |
-| **Workflow** | A prescriptive procedure (defined in CSpec) that walks a curator through gathering evidence and computing a score. Surfaces in the Classification Model as an Evidence Line. |
+| **Workflow** | A prescriptive procedure (defined and applied in CSpec) for evaluating the evidence captured under an Evidence Code and producing a score for the version of SVCv4 being applied. Each workflow's result surfaces in the Classification Model as an Evidence Line. |
 | **CSpec** | ClinGen Criteria Specification system — registry and APIs where SVCv4 methods, workflows, and VCEP specialisations are published. |
 | **VCEP** | Variant Curation Expert Panel (ClinGen). Authors specialised SVCv4 method definitions in CSpec. |
 | **Community Profile (VA-Spec)** | A layer of additional constraints on top of VA-Spec's baseline classes to enforce a community's terminology and conventions. |
