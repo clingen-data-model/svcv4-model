@@ -233,9 +233,9 @@ git commit -m "docs: relocate concept/reference pages into new IA (git mv, no co
 - [ ] **Step 1: Find residual references to old paths**
 
 ```bash
-grep -rnE 'concepts/|model/index|schemas/index|\]\(\.\./glossary|\]\(glossary\.md|contributing\.md|gks-interop\.md|cspec-interop\.md' docs --include='*.md' | grep -v superpowers/
+grep -rnE 'concepts/|model/index|schemas/index|va-spec-community-profile|\((\.\./)?(glossary|contributing|gks-interop|cspec-interop)\.md' docs --include='*.md' | grep -vE 'superpowers/|plans/'
 ```
-This lists every link to fix (notably `docs/index.md` "Start here"/"Reference" lists, and cross-links inside the moved pages).
+This lists every link to fix (notably `docs/index.md` "Start here"/"Reference" lists, and cross-links inside the moved pages). The `plans/` and `superpowers/` dirs are kept out of nav and contain old-path-like strings in prose/tree illustrations, so they're excluded from the audit.
 
 - [ ] **Step 2: Update each link to the new path**
 
@@ -350,9 +350,9 @@ Expected: builds clean; the only "not in nav" INFO lines are `superpowers/**` an
 - [ ] **Step 2: Link audit** — no references to old paths remain
 
 ```bash
-grep -rnE 'concepts/|model/index|schemas/index|\(glossary\.md|\(contributing\.md|\(gks-interop\.md|\(cspec-interop\.md' docs --include='*.md' | grep -v superpowers/ || echo "CLEAN"
+grep -rnE 'concepts/|model/index|schemas/index|va-spec-community-profile|\((\.\./)?(glossary|contributing|gks-interop|cspec-interop)\.md' docs --include='*.md' | grep -vE 'superpowers/|plans/' || echo "CLEAN"
 ```
-Expected: `CLEAN`.
+Expected: `CLEAN` (same pattern as the Task 2.2 audit).
 
 - [ ] **Step 3: Schema/docs drift gate (with the new case-model path)**
 

@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-11
 **Status:** Proposed (rev. 2 — incorporates user-supplied decks, graphics, and the workflow↔evidence-item sheet)
-**Branch:** `docs/site-restructure` (off `feat/case-model`; PR base = `feat/case-model`, rebase to `main` once PR #17 merges)
+**Branch:** `docs/site-restructure` — PR #18, base `main` (PR #17 / the Case model has since merged to `main`)
 
 ## 1. Purpose & goal
 
