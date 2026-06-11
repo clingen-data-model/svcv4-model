@@ -75,6 +75,23 @@ Data Platform WG offshoot meeting weekly since July 2024).
 > confirm/correct, and links to the SVCv4 Working Group's authoritative roster
 > where available, rather than treating the deck snapshot as final.
 
+### 1.3 Maturity annotations (first-class content principle)
+
+Pages must clearly distinguish two different reasons something isn't fully
+covered, and never conflate them:
+
+- **Not yet specified by the SVCv4 Working Group** (out of scope for the first
+  release of the Standards) — e.g. **`CLN_CCS` (Case-Control)**. Such items may
+  be *shown* for completeness of the framework picture, but must carry an explicit
+  annotation that the **committee has not yet specified them** (it is not this
+  project's omission).
+- **Specified by the Standards but not yet modeled here** — e.g. POP, LOC, and
+  the Variant-Impact concepts this round. Annotated as a modeling-project
+  backlog item (Phase B), not a gap in the Standards.
+
+A consistent admonition style is used for each so readers can tell, at a glance,
+which kind of "not yet" they're looking at.
+
 ## 2. Source material (user-supplied)
 
 Authoring draws on materials the user added under `tmp/` (decks + PNGs) and two
@@ -155,7 +172,8 @@ Getting Started
 Workflows
   • Workflows overview — the Summary Table (Category → Concept → Code → Workflow)   [img: summary-table]
   • Human Observational Data                                          [img: hod-workflows]
-      – Clinical Observations (CLN) — overview (incl. CLN_CCS note)
+      – Clinical Observations (CLN) — overview (CLN_CCS shown but flagged "not yet
+        specified by the SVCv4 WG for the first release")
       – Affected (CLN_AFF) · De Novo (CLN_DNV) · Alternative Variant (CLN_ALTV)
         · Alternative Gene (CLN_ALTG) · Unaffected (CLN_UAF)        (deep-dives)
       – Population (POP) & Locus Specificity (LOC)                   (stub)
@@ -191,7 +209,7 @@ history), not rewritten from scratch. Internal cross-links are updated; `--stric
 | `getting-started/first-case.md` | new — minimal CLN_AFF capture using the Case model | authored now |
 | `workflows/index.md` | new — Summary Table overview | authored from decks (+ img) |
 | `workflows/human-observational-data.md` | new — HOD category overview | authored from decks (+ img) |
-| `workflows/clinical-observations.md` | new — CLN concept overview (notes CLN_CCS not yet modeled) | authored now |
+| `workflows/clinical-observations.md` | new — CLN concept overview; **CLN_CCS (Case-Control) is shown but annotated "not yet specified by the SVCv4 Working Group for the first release"** | authored now |
 | `workflows/cln-aff.md` … `cln-uaf.md` (5) | new deep-dives; each: description + "evidence needed" (from the Case applicability matrix + the sheet) + link to the generated applicability table + example stub | authored now |
 | `workflows/pop-loc.md` | new — POP & LOC stub | stub |
 | `workflows/variant-impact.md` | new — Variant-Impact overview (MIS/CDS/NUL/SPL) | stub (+ img) |
