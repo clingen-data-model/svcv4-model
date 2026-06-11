@@ -116,12 +116,9 @@ Proposition fields: **subject → `subjectVariant`** (the VBC) and **object →
 `objectCondition` / `objectConditionSet`** (the MDE). The Glossary records all of
 these equivalences.
 
-> **Discrepancy to resolve:** the model currently expands `MDE` as **"Mendelian
-> Disease Entity"** (`src/svcv4_model/inputs.py`), but the user referred to it as
-> **"Monogenic Disease Entity."** The implementer must confirm the canonical
-> expansion with the user and use it consistently in the Glossary and all pages
-> (and, if it changes, note that the model docstring should be updated to match in
-> a follow-up — out of scope for this docs PR).
+> **Resolved:** `MDE` = **"Mendelian Disease Entity"** (confirmed by the user).
+> This matches the model (`src/svcv4_model/inputs.py`), so no code change is
+> needed; the Glossary and all pages use "Mendelian Disease Entity" consistently.
 
 ## 2. Source material (user-supplied)
 
