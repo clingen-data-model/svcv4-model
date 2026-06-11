@@ -13,24 +13,24 @@ observation (CLN) supporting (or opposing) variant pathogenicity. A `Case` is
 the structured payload behind a `clinical_observation` Evidence Item.
 
 The attributes span five CLN evidence-assessment workflows. Each attribute
-carries one applicability code per workflow, drawn from a fixed five-token set:
+carries one applicability code per workflow, drawn from a fixed four-token set:
 
 | Token | Meaning |
 |-------|---------|
 | `r` | required |
 | `o` | optional |
 | `c` | conditional — applies only when a stated rule holds (§4.1) |
-| `c*` | conditional **with a workflow-specific caveat** — same as `c`, but an asterisked footnote in the source sheet narrows how it applies in that workflow (carried in the entry's `rule`/`notes`) |
 | `x` | not applicable |
 
-Every attribute is `r`, `o`, `c`, `c*`, or `x` in at least one workflow.
+Every attribute is `r`, `o`, `c`, or `x` in at least one workflow.
 
-> The `*` in `c*` reflects an asterisked footnote in the **source sheet** and is
-> independent of the rule machinery in §4.1: a `c*` cell may carry a structured
-> `rule` (e.g. `enum_exclude`, `fixed`) *or* only free-text `notes`, and a plain
-> `c` cell may likewise carry a structured `rule` (e.g. `additional_variants`'
-> `requires`). Treat `c` and `c*` identically for applicability; the `*` is a
-> provenance/caveat marker only.
+> The source sheet marks some conditional cells with an asterisk (`c*`) to flag
+> a workflow-specific caveat. We **collapse `c*` into `c`** for now —
+> applicability-wise they are identical. As the conditional rules mature, a
+> single property may need *several* distinct conditions that differ by
+> workflow; at that point we will attach explicit rule identifiers to a `c` cell
+> (e.g. `c` + a `rule_ref`, rendered as a super/subscript in docs) rather than
+> overloading the token itself. The token set stays `{r, o, c, x}`.
 
 | Code | Workflow | Generalization |
 |------|----------|----------------|
@@ -89,19 +89,19 @@ Case
 ├─ case_proband_info
 │   ├─ sex                      enum: M | F | U | T
 │   ├─ age                      Age (structured, see §3.1)
-│   ├─ phenotypes[]             Phenotype { name, hpo_id }
+│   ├─ phenotypes[]             Phenotype { name, code }   (see §3.3)
 │   ├─ pheno_specificity_for_gene   enum: SPECIFIC | CONSISTENT | INCONSISTENT
 │   ├─ pheno_severity           enum: MONO_GT_OR_BIALLELIC_EQ_EXPECTED
 │   │                                 | MONO_EQ_EXPECTED
 │   │                                 | BIALLELIC_LT_EXPECTED
 │   ├─ age_matched_penetrance   enum: LT_80 | PCT_80_100 | NEAR_100
-│   ├─ confirmed_parental_relationship   bool
-│   └─ all_relevant_genes_tested         bool
+│   ├─ confirmed_parental_relationship   TriState   (see §3.4)
+│   └─ all_relevant_genes_tested         TriState
 ├─ vbc                          CaseVariant { id, zygosity }
 ├─ compound_het_variant         CompoundHetVariant {
 │                                  id, zygosity=HET (fixed), phase_in_ref_to_vbc=TRANS (fixed),
 │                                  phase_confidence, classification }
-├─ additional_variant_exists    bool
+├─ additional_variant_exists    TriState
 └─ additional_variants[]        AdditionalVariant {
                                    id, gene { symbol, mde_associated_gene },
                                    zygosity: HOM | HET | HEMI,
@@ -144,9 +144,39 @@ preserved as the field/enum descriptions.
 | `Phase` | `TRANS`, `CIS`, `UNKNOWN` |
 | `AgeUnit` | `DAY`, `WEEK`, `MONTH`, `YEAR` |
 | `AgeQualifier` | `EXACT`, `GT`, `LT`, `APPROX`, `RANGE` |
+| `TriState` | `TRUE`, `FALSE`, `UNKNOWN` |
 
 `classification` and `phase_confidence` carry placeholder string types in this
 phase, to be tightened against the SVCv4 VA-Spec community profile later.
+
+### 3.3 The `Phenotype` type
+
+A phenotype is a `{name, code}` pair, both optional:
+
+```
+Phenotype
+├─ code  string | null   HPO id/code, preferred (e.g. "HP:0001250")
+└─ name  string | null   label of the coded entry when a code is given;
+                         otherwise a free-text term the curator could not
+                         confidently match to HPO
+```
+
+Either may stand alone: a curator who finds an HPO match supplies `code` (and
+ideally its `name`); one who cannot supplies `name` only. (A later phase may
+constrain `code` to the HPO namespace and reconcile `name` against it.)
+
+### 3.4 The `TriState` type (booleans)
+
+Yes/no attributes are modeled as `TriState` (`TRUE` | `FALSE` | `UNKNOWN`), not
+plain booleans, so a curator can record that a value's truth is **not known**:
+
+- `TRUE` / `FALSE` — the curator established the value.
+- `UNKNOWN` — the curator looked and could not determine true vs. false.
+- `null` (field absent) — the value was **not captured at all**; no assumption
+  may be drawn. `UNKNOWN` and `null` are therefore semantically distinct.
+
+Applies to `confirmed_parental_relationship`, `all_relevant_genes_tested`, and
+`additional_variant_exists`.
 
 ## 4. The applicability matrix (single source of truth)
 
@@ -167,25 +197,25 @@ pop_frq_points:
   notes: "must be >= -1.0"
 
 case_proband_info.pheno_severity:
-  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: "c*", CLN_UAF: x }
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: c, CLN_UAF: x }
   rule: { workflow: CLN_ALTG, effect: enum_exclude, value: BIALLELIC_LT_EXPECTED }
   notes: "BIALLELIC<expected not applicable to ALT Gene; ALTV rule is more nuanced than ALTG"
 
 case_proband_info.age_matched_penetrance:
-  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: x, CLN_ALTG: "c*", CLN_UAF: r }
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: x, CLN_ALTG: c, CLN_UAF: r }
   notes: "only applicable at all for ALT Gene among the conditional workflows"
 
 compound_het_variant:
-  applicability: { CLN_AFF: "c*", CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
   rule: { requires: { context: "biallelic disease eval with a het VBC" } }
   notes: "AFF only; otherwise use additional_variant"
 
 compound_het_variant.zygosity:
-  applicability: { CLN_AFF: "c*", CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
   rule: { workflow: CLN_AFF, effect: fixed, value: HET }
 
 compound_het_variant.phase_in_ref_to_vbc:
-  applicability: { CLN_AFF: "c*", CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
   rule: { workflow: CLN_AFF, effect: fixed, value: TRANS }
 
 additional_variant_exists:
@@ -193,7 +223,7 @@ additional_variant_exists:
 
 additional_variants:
   applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
-  rule: { requires: { field: additional_variant_exists, equals: true } }
+  rule: { requires: { field: additional_variant_exists, equals: TRUE } }
   notes: "compound-het additional variants are NOT supported; classification must be P-LP for ALTV/ALTG"
 ```
 
@@ -280,7 +310,7 @@ Conventions / wiring:
 
 - **Model round-trip:** construct a maximal `Case`, serialize, re-parse, assert equality.
 - **Matrix shape:** every field path in the matrix exists on the model and vice
-  versa (no orphans, no gaps); every applicability value ∈ {`r`,`o`,`c`,`c*`,`x`}.
+  versa (no orphans, no gaps); every applicability value ∈ {`r`,`o`,`c`,`x`}.
 - **Derived schemas in sync:** running the exporter produces no diff against the
   committed `schemas/json/case/*.json` (mirrors the scaffold's schema-sync check).
 - **Per-workflow required/excluded:** for each workflow, the derived schema's
