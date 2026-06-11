@@ -19,6 +19,38 @@ shareable classification records.
 **Primary audience:** curators, VCEP members, researchers/clinicians learning
 the framework→model alignment. Engineers/integrators are routed to **Reference**.
 
+### 1.1 Positioning — who authors what (first-class content principle)
+
+The site must make the project's role unambiguous throughout: **this project is a
+data-modeling effort, not the author of the SVCv4 Standards.** Specifically:
+
+- The **ACMG/AMP/CAP/ClinGen SVCv4 Working Group** defines and owns the SVCv4
+  Standards/framework itself (the rubric, evidence concepts/codes, workflows, and
+  scoring). The framework is theirs and is evolving.
+- The **SVCv4 Standards data-modeling team** (this project — a task-force offshoot
+  of the ClinGen Data Platform WG) works *in coordination with* the SVCv4 Working
+  Group to provide a **computational representation** of the data: its structure,
+  codes, and uses — so software/system developers who produce or consume SVCv4
+  classifications can do so with a **common semantic understanding**.
+- **ClinGen CSpec** owns the methods/rules (scoring operations, specialized
+  versions). The model links to method specifications; it does not implement them.
+
+This three-way role distinction (Standards WG → framework; this team → data model;
+CSpec → methods) is rendered as:
+
+1. A clear statement in the **Home** intro.
+2. A brief, attributed **`overview/svcv4-in-brief.md`** primer that grounds the
+   modeling docs in the SVCv4 Standards at a high level and points to the SVCv4
+   Working Group's own (forthcoming) publication/specs as the authoritative source.
+3. An expanded **`overview/scope.md`** ("What this project is — and isn't") that
+   frames all three roles, not only Classification-vs-Method.
+4. A short reusable note carried on the **Overview** pages and folded into the
+   **Reference** "in-flux" banner, reinforcing that codes/structure track the
+   evolving SVCv4 Standards and are not themselves the Standard.
+
+Authored pages must not present the framework as this project's own, and must
+attribute framework definitions to the SVCv4 Working Group.
+
 ## 2. Source material (user-supplied)
 
 Authoring draws on materials the user added under `tmp/` (decks + PNGs) and two
@@ -85,9 +117,10 @@ one; committing the source decks; any data-model/schema change.
 
 ```
 Overview
-  • Home (index.md) — what SVCv4 is, why we built it, how to apply it; points-based rubric
+  • Home (index.md) — what this project is, why we built it, how to apply it; points-based rubric
+  • SVCv4 Standards in brief — high-level primer on the framework/rules/workflows (attributed to the SVCv4 WG)
   • How SVCv4 maps to the model — Summary Table & data model        [img: summary-table]   (core)
-  • What's in scope — Classification Model vs Method Model
+  • What this project is — and isn't (roles: Standards WG / this model / CSpec)
 
 Getting Started
   • Show your work: structured evidence (the cornerstone)
@@ -126,7 +159,8 @@ history), not rewritten from scratch. Internal cross-links are updated; `--stric
 |----------|--------|--------|
 | `index.md` (Home) | rewrite for broad audience; points-based rubric as a table | authored now |
 | `overview/alignment.md` | new — Summary Table & data-model alignment | **authored from decks** (+ img) |
-| `overview/scope.md` | move `concepts/classification-vs-method-model.md` | authored now |
+| `overview/svcv4-in-brief.md` | new — super high-level primer on the SVCv4 Standards/framework/rules/workflows, **attributed to the SVCv4 Working Group**, to ground the modeling docs | authored from decks |
+| `overview/scope.md` | expand `concepts/classification-vs-method-model.md` to frame all three roles (Standards WG / this model / CSpec) per §1.1 | authored now |
 | `getting-started/show-your-work.md` | new — cornerstone rationale | authored now |
 | `getting-started/assertion-framework.md` | reframe `concepts/statement-and-proposition.md`; add Mermaid | authored from decks |
 | `getting-started/evidence-lines-and-items.md` | reframe `concepts/evidence-lines-and-items.md` (simple first, deeper links) | authored now |
