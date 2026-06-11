@@ -97,16 +97,24 @@ which kind of "not yet" they're looking at.
 Across the documentation, two equivalences hold by default and are captured in the
 **Glossary** (`reference/glossary.md`) so they are explicit and discoverable:
 
-- **"the variant" = the VBC (Variant Being Considered)** — the single germline
-  variant under evaluation. The docs do **not** introduce a separate generic
-  "Variant" entity. The only variants named distinctly are the **additional
-  variant** (`additional_variants`) and the **compound-het variant**
+- **"the variant" = the VBC (Variant Being Considered) = "variation"** — the
+  single germline variant under evaluation, and the Proposition's **subject**
+  (`subjectVariant`). The docs do **not** introduce a separate generic "Variant"
+  entity. The only variants named distinctly are the **additional variant**
+  (`additional_variants`) and the **compound-het variant**
   (`compound_het_variant`). Authored pages use **VBC** (or "the variant being
   considered") for the variant under evaluation, reserving the other two terms
   for those specific roles.
 - **"the disease" / "the condition" = the MDE** — the disease entity the VBC is
-  evaluated against. Use **MDE** (or "the disease/condition") interchangeably
-  unless a page explicitly means something else.
+  evaluated against, and the Proposition's **object**
+  (`objectCondition`, or `objectConditionSet` when more than one). Use **MDE**
+  (or "the disease/condition") interchangeably unless a page explicitly means
+  something else.
+
+In the assertion-framework page's SPOQ explanation, these map directly onto the
+Proposition fields: **subject → `subjectVariant`** (the VBC) and **object →
+`objectCondition` / `objectConditionSet`** (the MDE). The Glossary records all of
+these equivalences.
 
 > **Discrepancy to resolve:** the model currently expands `MDE` as **"Mendelian
 > Disease Entity"** (`src/svcv4_model/inputs.py`), but the user referred to it as
