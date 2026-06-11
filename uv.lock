@@ -971,6 +971,7 @@ version = "0.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "pydantic" },
+    { name = "pyyaml" },
 ]
 
 [package.optional-dependencies]
@@ -996,6 +997,7 @@ requires-dist = [
     { name = "ga4gh-va-spec", marker = "extra == 'gks'", specifier = "~=0.4" },
     { name = "ga4gh-vrs", marker = "extra == 'gks'", specifier = "~=2.3" },
     { name = "pydantic", specifier = ">=2.6,<3.0" },
+    { name = "pyyaml", specifier = ">=6,<7" },
 ]
 provides-extras = ["gks"]
 

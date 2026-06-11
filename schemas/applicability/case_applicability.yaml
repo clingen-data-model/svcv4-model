@@ -1,0 +1,125 @@
+# Source of truth for Case attribute applicability across the five CLN workflows.
+# Codes: r=required, o=optional, c=conditional (see `rule`), x=not applicable.
+# Derived from the SVCv4 case-attributes sheet (tab 138412089).
+
+moi:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
+  value: "AD, AR, XLD, XLR, SD"
+  notes: "ALTV does not yet support AR/XLR"
+
+pop_frq_points:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  notes: "must be >= -1.0"
+
+case_proband_info:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
+
+case_proband_info.sex:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+  value: "M/F/U/T"
+
+case_proband_info.age:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+  notes: "age + unit, or an age range; general or disease-specific"
+
+case_proband_info.phenotypes:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+  value: "0..many"
+
+case_proband_info.phenotypes.name:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+
+case_proband_info.phenotypes.code:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+  notes: "HPO identifier when possible"
+
+case_proband_info.pheno_specificity_for_gene:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  value: "SPECIFIC, CONSISTENT, INCONSISTENT"
+  notes: "curator makes the PHENO SPECIFICITY call; rule coordination is out of scope"
+
+case_proband_info.pheno_severity:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: c, CLN_UAF: x }
+  rule: { workflow: CLN_ALTG, effect: enum_exclude, value: BIALLELIC_LT_EXPECTED }
+  notes: "BIALLELIC<expected not applicable to ALT Gene; ALTV rule is more nuanced than ALTG"
+
+case_proband_info.age_matched_penetrance:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: x, CLN_ALTG: c, CLN_UAF: r }
+  value: "<80%, 80-100%, near 100%"
+  notes: "only applicable at all for ALT Gene among the conditional workflows"
+
+case_proband_info.confirmed_parental_relationship:
+  applicability: { CLN_AFF: x, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+
+case_proband_info.all_relevant_genes_tested:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+
+vbc:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
+
+vbc.id:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
+
+vbc.zygosity:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
+  notes: "the only variant_type element needed for case-level VBC assessment"
+
+compound_het_variant:
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  rule: { requires: { context: "biallelic disease eval with a het VBC" } }
+  notes: "AFF only; otherwise use additional_variant"
+
+compound_het_variant.id:
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+
+compound_het_variant.zygosity:
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  rule: { workflow: CLN_AFF, effect: fixed, value: HET }
+
+compound_het_variant.phase_in_ref_to_vbc:
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  rule: { workflow: CLN_AFF, effect: fixed, value: TRANS }
+
+compound_het_variant.phase_confidence:
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+
+compound_het_variant.classification:
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+
+additional_variant_exists:
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+
+additional_variants:
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  rule: { requires: { field: additional_variant_exists, equals: TRUE } }
+  notes: "compound-het additional variants are NOT supported"
+
+additional_variants.id:
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+
+additional_variants.gene:
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+
+additional_variants.gene.symbol:
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  notes: "gene symbol; follows the gene's applicability"
+
+additional_variants.gene.mde_associated_gene:
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  notes: "required if gene is different from VBC gene"
+
+additional_variants.zygosity:
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  value: "HOM / HET / HEMI"
+
+additional_variants.phase_in_ref_to_vbc:
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: x, CLN_UAF: x }
+  notes: "only if same gene as VBC"
+
+additional_variants.phase_confidence:
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: x, CLN_UAF: x }
+  notes: "only if phase is captured"
+
+additional_variants.classification:
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  notes: "must be P-LP if ALTV or ALTG use case"
