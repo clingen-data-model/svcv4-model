@@ -92,6 +92,29 @@ covered, and never conflate them:
 A consistent admonition style is used for each so readers can tell, at a glance,
 which kind of "not yet" they're looking at.
 
+### 1.4 Terminology conventions — core synonyms
+
+Across the documentation, two equivalences hold by default and are captured in the
+**Glossary** (`reference/glossary.md`) so they are explicit and discoverable:
+
+- **"the variant" = the VBC (Variant Being Considered)** — the single germline
+  variant under evaluation. The docs do **not** introduce a separate generic
+  "Variant" entity. The only variants named distinctly are the **additional
+  variant** (`additional_variants`) and the **compound-het variant**
+  (`compound_het_variant`). Authored pages use **VBC** (or "the variant being
+  considered") for the variant under evaluation, reserving the other two terms
+  for those specific roles.
+- **"the disease" / "the condition" = the MDE** — the disease entity the VBC is
+  evaluated against. Use **MDE** (or "the disease/condition") interchangeably
+  unless a page explicitly means something else.
+
+> **Discrepancy to resolve:** the model currently expands `MDE` as **"Mendelian
+> Disease Entity"** (`src/svcv4_model/inputs.py`), but the user referred to it as
+> **"Monogenic Disease Entity."** The implementer must confirm the canonical
+> expansion with the user and use it consistently in the Glossary and all pages
+> (and, if it changes, note that the model docstring should be updated to match in
+> a follow-up — out of scope for this docs PR).
+
 ## 2. Source material (user-supplied)
 
 Authoring draws on materials the user added under `tmp/` (decks + PNGs) and two
@@ -139,17 +162,20 @@ this larger framework. Those are the deep-dive exemplars in this PR.
 **In scope (this PR):** new top-tab IA; rewritten Home; Overview "alignment"
 page authored from the decks; Getting Started track; the Workflows section built
 on the Summary Table hierarchy (overview + HOD/Variant-Impact category pages +
-the five CLN workflow deep-dives + the moved Case model page; POP/LOC/CLN_CCS and
-Variant-Impact concepts as brief stubs); Examples reorg with content tabs;
+the five CLN workflow deep-dives + the moved Case model page; POP/LOC and
+Variant-Impact concepts as brief stubs, with CLN_CCS shown-but-flagged on the CLN
+overview as not-yet-specified by the WG — see §1.3); Examples reorg with content tabs;
 Reference demotion with an in-flux banner; the three graphics placed under
 `docs/assets/images/` with a manifest; mkdocs config for tabs, section index
 pages, content tabs, and Mermaid; **the Case-exporter/CI path fix** required by
 moving `case-model.md` (§8).
 
 **Out of scope / deferred (Phase B):** deep per-data-point workflow nuance and
-scoring narrative; full build-out of POP, LOC, CLN_CCS, and the Variant-Impact
-concepts; per-workflow worked examples and downloadable JSON beyond the existing
-one; committing the source decks; any data-model/schema change.
+scoring narrative; full build-out of POP, LOC, and the Variant-Impact concepts
+(and a full CLN_CCS page only if/when the SVCv4 WG specifies it — a different
+reason than the others, per §1.3); per-workflow worked examples and downloadable
+JSON beyond the existing one; committing the source decks; any data-model/schema
+change.
 
 ## 4. Information architecture (top tabs)
 
@@ -297,7 +323,8 @@ Examples reorg; Reference moves with in-flux banner; the three graphics + manife
 Mermaid data-model + rubric; strict build green.
 
 **Later (Phase B, separate PR):** deep per-data-point workflow nuance; full
-POP/LOC/CLN_CCS and Variant-Impact concept pages; per-workflow examples +
+POP/LOC and Variant-Impact concept pages (and CLN_CCS once the WG specifies
+it — §1.3); per-workflow examples +
 downloadable JSON; optional polished deck figures.
 
 ## 11. Delivery
