@@ -46,9 +46,10 @@ jobs:
       - name: Export schemas and check no drift
         run: |
           uv run python scripts/export_schemas.py
-          if ! git diff --quiet -- schemas/json; then
-            echo "::error::schemas/json is out of date. Run scripts/export_schemas.py and commit the result."
-            git diff -- schemas/json
+          uv run python scripts/export_case_views.py
+          if ! git diff --quiet -- schemas/json docs/concepts/case-model.md; then
+            echo "::error::Generated schemas/docs are out of date. Run scripts/export_schemas.py and scripts/export_case_views.py and commit the result."
+            git diff -- schemas/json docs/concepts/case-model.md
             exit 1
           fi
 
