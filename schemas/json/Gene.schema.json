@@ -1,0 +1,34 @@
+{
+  "additionalProperties": false,
+  "description": "A gene reference; ``mde_associated_gene`` set when it differs from the VBC gene.",
+  "properties": {
+    "mde_associated_gene": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "MDE-associated gene, required when the gene differs from the VBC gene.",
+      "title": "Mde Associated Gene"
+    },
+    "symbol": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Gene symbol.",
+      "title": "Symbol"
+    }
+  },
+  "title": "Gene",
+  "type": "object"
+}

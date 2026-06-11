@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "Phase": {
+      "description": "Phase of a variant in reference to the VBC.",
+      "enum": [
+        "TRANS",
+        "CIS",
+        "UNKNOWN"
+      ],
+      "title": "Phase",
+      "type": "string"
+    },
+    "Zygosity": {
+      "description": "Zygosity of a variant in the case.",
+      "enum": [
+        "HOM",
+        "HET",
+        "HEMI"
+      ],
+      "title": "Zygosity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The second variant in a biallelic AFF evaluation against a het VBC.\n\nUsed only in the Affected workflow. Per the applicability matrix the\n``zygosity`` is fixed to ``HET`` and ``phase_in_ref_to_vbc`` to ``TRANS``.",
+  "properties": {
+    "classification": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Variant classification (placeholder string this phase).",
+      "title": "Classification"
+    },
+    "id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Id"
+    },
+    "phase_confidence": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Confidence in the phase call.",
+      "title": "Phase Confidence"
+    },
+    "phase_in_ref_to_vbc": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Phase"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fixed to TRANS in the AFF workflow."
+    },
+    "zygosity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Zygosity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fixed to HET in the AFF workflow."
+    }
+  },
+  "title": "CompoundHetVariant",
+  "type": "object"
+}

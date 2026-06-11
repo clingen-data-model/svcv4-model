@@ -1,0 +1,625 @@
+{
+  "$defs": {
+    "AdditionalVariant": {
+      "additionalProperties": false,
+      "description": "An additional variant in the case (ALTV/ALTG, or AFF when present).",
+      "properties": {
+        "classification": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Variant classification; must be P/LP for the ALTV and ALTG workflows.",
+          "title": "Classification"
+        },
+        "gene": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Gene"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "phase_confidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Captured only if phase is captured.",
+          "title": "Phase Confidence"
+        },
+        "phase_in_ref_to_vbc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Phase"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Captured only if the additional variant shares the VBC gene."
+        },
+        "zygosity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Zygosity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "AdditionalVariant",
+      "type": "object"
+    },
+    "Age": {
+      "additionalProperties": false,
+      "description": "A structured age covering point values, bounds, and ranges.",
+      "properties": {
+        "max": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Upper bound (with RANGE).",
+          "title": "Max"
+        },
+        "min": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Lower bound (with RANGE).",
+          "title": "Min"
+        },
+        "qualifier": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgeQualifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "How to interpret the value(s)."
+        },
+        "raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Original curator text, preserved verbatim.",
+          "title": "Raw"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgeUnit"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Unit for value/min/max."
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Point value (with EXACT/GT/LT/APPROX).",
+          "title": "Value"
+        }
+      },
+      "title": "Age",
+      "type": "object"
+    },
+    "AgeMatchedPenetrance": {
+      "description": "Age-matched penetrance bands.",
+      "enum": [
+        "LT_80",
+        "PCT_80_100",
+        "NEAR_100"
+      ],
+      "title": "AgeMatchedPenetrance",
+      "type": "string"
+    },
+    "AgeQualifier": {
+      "description": "How to read an :class:`Age`: a point value, a bound, or a range.",
+      "enum": [
+        "EXACT",
+        "GT",
+        "LT",
+        "APPROX",
+        "RANGE"
+      ],
+      "title": "AgeQualifier",
+      "type": "string"
+    },
+    "AgeUnit": {
+      "description": "Unit for an :class:`Age` value or bounds.",
+      "enum": [
+        "DAY",
+        "WEEK",
+        "MONTH",
+        "YEAR"
+      ],
+      "title": "AgeUnit",
+      "type": "string"
+    },
+    "CaseProbandInfo": {
+      "additionalProperties": false,
+      "description": "Proband-level observations captured for the case.",
+      "properties": {
+        "age": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Age"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "age_matched_penetrance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgeMatchedPenetrance"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "all_relevant_genes_tested": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether all relevant genes for the disorder were tested."
+        },
+        "confirmed_parental_relationship": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the parental relationship was confirmed."
+        },
+        "pheno_severity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PhenoSeverity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pheno_specificity_for_gene": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PhenoSpecificity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "phenotypes": {
+          "description": "0..many phenotypes; capture at least what is relevant to the case.",
+          "items": {
+            "$ref": "#/$defs/Phenotype"
+          },
+          "title": "Phenotypes",
+          "type": "array"
+        },
+        "sex": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sex"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "CaseProbandInfo",
+      "type": "object"
+    },
+    "CaseVariant": {
+      "additionalProperties": false,
+      "description": "The VBC as referenced at the case level (id + case-level zygosity).",
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Identifier for the variant being considered.",
+          "title": "Id"
+        },
+        "zygosity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Zygosity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "CaseVariant",
+      "type": "object"
+    },
+    "CompoundHetVariant": {
+      "additionalProperties": false,
+      "description": "The second variant in a biallelic AFF evaluation against a het VBC.\n\nUsed only in the Affected workflow. Per the applicability matrix the\n``zygosity`` is fixed to ``HET`` and ``phase_in_ref_to_vbc`` to ``TRANS``.",
+      "properties": {
+        "classification": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Variant classification (placeholder string this phase).",
+          "title": "Classification"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "phase_confidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Confidence in the phase call.",
+          "title": "Phase Confidence"
+        },
+        "phase_in_ref_to_vbc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Phase"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fixed to TRANS in the AFF workflow."
+        },
+        "zygosity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Zygosity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fixed to HET in the AFF workflow."
+        }
+      },
+      "title": "CompoundHetVariant",
+      "type": "object"
+    },
+    "Gene": {
+      "additionalProperties": false,
+      "description": "A gene reference; ``mde_associated_gene`` set when it differs from the VBC gene.",
+      "properties": {
+        "mde_associated_gene": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "MDE-associated gene, required when the gene differs from the VBC gene.",
+          "title": "Mde Associated Gene"
+        },
+        "symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Gene symbol.",
+          "title": "Symbol"
+        }
+      },
+      "title": "Gene",
+      "type": "object"
+    },
+    "MOI": {
+      "description": "Mode of inheritance. ALTV does not yet support AR/XLR.",
+      "enum": [
+        "AD",
+        "AR",
+        "XLD",
+        "XLR",
+        "SD"
+      ],
+      "title": "MOI",
+      "type": "string"
+    },
+    "Phase": {
+      "description": "Phase of a variant in reference to the VBC.",
+      "enum": [
+        "TRANS",
+        "CIS",
+        "UNKNOWN"
+      ],
+      "title": "Phase",
+      "type": "string"
+    },
+    "PhenoSeverity": {
+      "description": "Phenotype severity relative to expectation.\n\n``BIALLELIC_LT_EXPECTED`` is not applicable to the ALT Gene workflow\n(see the applicability matrix's ``enum_exclude`` rule).",
+      "enum": [
+        "MONO_GT_OR_BIALLELIC_EQ_EXPECTED",
+        "MONO_EQ_EXPECTED",
+        "BIALLELIC_LT_EXPECTED"
+      ],
+      "title": "PhenoSeverity",
+      "type": "string"
+    },
+    "PhenoSpecificity": {
+      "description": "Phenotype specificity for the gene.",
+      "enum": [
+        "SPECIFIC",
+        "CONSISTENT",
+        "INCONSISTENT"
+      ],
+      "title": "PhenoSpecificity",
+      "type": "string"
+    },
+    "Phenotype": {
+      "additionalProperties": false,
+      "description": "A phenotype as a ``{name, code}`` pair; either may stand alone.",
+      "properties": {
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "HPO id/code, preferred (e.g. `HP:0001250`).",
+          "title": "Code"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Label of the coded entry when a code is given; otherwise a free-text term the curator could not confidently match to HPO.",
+          "title": "Name"
+        }
+      },
+      "title": "Phenotype",
+      "type": "object"
+    },
+    "Sex": {
+      "description": "Proband sex: Male / Female / Unknown / Trans.",
+      "enum": [
+        "M",
+        "F",
+        "U",
+        "T"
+      ],
+      "title": "Sex",
+      "type": "string"
+    },
+    "TriState": {
+      "description": "Tri-state truth value.\n\n``TRUE``/``FALSE`` \u2014 the curator established the value. ``UNKNOWN`` \u2014\nthe curator looked and could not determine it. A ``null`` field (absent)\nmeans the value was **not captured at all**; ``UNKNOWN`` and ``null`` are\nsemantically distinct.",
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN"
+      ],
+      "title": "TriState",
+      "type": "string"
+    },
+    "Zygosity": {
+      "description": "Zygosity of a variant in the case.",
+      "enum": [
+        "HOM",
+        "HET",
+        "HEMI"
+      ],
+      "title": "Zygosity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Superset of case-level CLN-observation attributes (permissive).",
+  "properties": {
+    "additional_variant_exists": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether an additional variant exists in the case."
+    },
+    "additional_variants": {
+      "description": "Additional variant(s); populated only if `additional_variant_exists` is TRUE.",
+      "items": {
+        "$ref": "#/$defs/AdditionalVariant"
+      },
+      "title": "Additional Variants",
+      "type": "array"
+    },
+    "case_proband_info": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CaseProbandInfo"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "compound_het_variant": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CompoundHetVariant"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "moi": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MOI"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Mode of inheritance."
+    },
+    "pop_frq_points": {
+      "anyOf": [
+        {
+          "minimum": -1.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Population-frequency points (must be >= -1.0).",
+      "title": "Pop Frq Points"
+    },
+    "vbc": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CaseVariant"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The variant being considered."
+    }
+  },
+  "title": "Case",
+  "type": "object"
+}

@@ -68,6 +68,7 @@ nav:
       - VA-Spec community profile: concepts/va-spec-community-profile.md
       - Statement & Proposition: concepts/statement-and-proposition.md
       - Evidence Lines & Items: concepts/evidence-lines-and-items.md
+      - Case model: concepts/case-model.md
       - Summary Table: concepts/summary-table.md
   - Model reference: model/index.md
   - JSON Schemas: schemas/index.md

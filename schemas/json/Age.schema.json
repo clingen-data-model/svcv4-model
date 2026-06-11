@@ -1,0 +1,109 @@
+{
+  "$defs": {
+    "AgeQualifier": {
+      "description": "How to read an :class:`Age`: a point value, a bound, or a range.",
+      "enum": [
+        "EXACT",
+        "GT",
+        "LT",
+        "APPROX",
+        "RANGE"
+      ],
+      "title": "AgeQualifier",
+      "type": "string"
+    },
+    "AgeUnit": {
+      "description": "Unit for an :class:`Age` value or bounds.",
+      "enum": [
+        "DAY",
+        "WEEK",
+        "MONTH",
+        "YEAR"
+      ],
+      "title": "AgeUnit",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A structured age covering point values, bounds, and ranges.",
+  "properties": {
+    "max": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Upper bound (with RANGE).",
+      "title": "Max"
+    },
+    "min": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Lower bound (with RANGE).",
+      "title": "Min"
+    },
+    "qualifier": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AgeQualifier"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "How to interpret the value(s)."
+    },
+    "raw": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Original curator text, preserved verbatim.",
+      "title": "Raw"
+    },
+    "unit": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AgeUnit"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Unit for value/min/max."
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Point value (with EXACT/GT/LT/APPROX).",
+      "title": "Value"
+    }
+  },
+  "title": "Age",
+  "type": "object"
+}
