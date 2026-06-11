@@ -7,7 +7,7 @@
 | **MDE** | Mendelian Disease Entity — the disease the VBC is being assessed against. |
 | **Classification Model** | The shape of a classification (Statements, Propositions, Evidence Lines, Evidence Items). Authored by this repo as a VA-Spec community profile. |
 | **Method Model** | The definitions of methods, workflows, criteria, and scoring rules — *and* their evaluation logic. Authored in ClinGen CSpec; not in this repo, not in VA-Spec. |
-| **Statement / Proposition / Evidence Line / Evidence Item** | VA-Spec core entities. See [Statement & Proposition](concepts/statement-and-proposition.md) and [Evidence Lines & Items](concepts/evidence-lines-and-items.md). |
+| **Statement / Proposition / Evidence Line / Evidence Item** | VA-Spec core entities. See [The assertion framework](../getting-started/assertion-framework.md) and [Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md). |
 | **SPOQ** | Subject / Predicate / Object / Qualifier — the structure of a VA-Spec Proposition. |
 | **Evidence Category / Concept / Code** | Canonical SVCv4 vocabulary for the user-facing Summary Table; the Evidence Code is the jumping-off point for a workflow in CSpec. |
 | **Workflow** | A prescriptive procedure (defined and applied in CSpec) for evaluating the evidence captured under an Evidence Code and producing a score for the version of SVCv4 being applied. Each workflow's result surfaces in the Classification Model as an Evidence Line. |

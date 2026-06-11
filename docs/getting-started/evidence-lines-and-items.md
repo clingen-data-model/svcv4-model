@@ -57,8 +57,8 @@ assert EvidenceData is EvidenceItem
 
 ## See also
 
-- [Statement & Proposition](statement-and-proposition.md)
-- [Summary Table](summary-table.md) — how Evidence Codes (which CSpec
+- [The assertion framework](assertion-framework.md)
+- [Summary Table](../reference/summary-table.md) — how Evidence Codes (which CSpec
   workflows reference) organise into Categories and Concepts.
 - Model reference: [`EvidenceLine`][svcv4_model.EvidenceLine],
   [`EvidenceItem`][svcv4_model.EvidenceItem].

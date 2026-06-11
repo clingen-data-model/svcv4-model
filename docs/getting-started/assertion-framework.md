@@ -56,7 +56,7 @@ authoritative definitions.
 
 ## See also
 
-- [Evidence Lines & Items](evidence-lines-and-items.md)
-- [Classification Model vs Method Model](classification-vs-method-model.md)
+- [Evidence Lines & Evidence Items](evidence-lines-and-items.md)
+- [What this project is — and isn't](../overview/scope.md)
 - Model reference: [`Statement`][svcv4_model.Statement],
   [`Proposition`][svcv4_model.Proposition].
