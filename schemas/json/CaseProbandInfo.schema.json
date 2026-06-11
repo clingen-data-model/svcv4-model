@@ -1,0 +1,289 @@
+{
+  "$defs": {
+    "Age": {
+      "additionalProperties": false,
+      "description": "A structured age covering point values, bounds, and ranges.",
+      "properties": {
+        "max": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Upper bound (with RANGE).",
+          "title": "Max"
+        },
+        "min": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Lower bound (with RANGE).",
+          "title": "Min"
+        },
+        "qualifier": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgeQualifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "How to interpret the value(s)."
+        },
+        "raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Original curator text, preserved verbatim.",
+          "title": "Raw"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgeUnit"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Unit for value/min/max."
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Point value (with EXACT/GT/LT/APPROX).",
+          "title": "Value"
+        }
+      },
+      "title": "Age",
+      "type": "object"
+    },
+    "AgeMatchedPenetrance": {
+      "description": "Age-matched penetrance bands.",
+      "enum": [
+        "LT_80",
+        "PCT_80_100",
+        "NEAR_100"
+      ],
+      "title": "AgeMatchedPenetrance",
+      "type": "string"
+    },
+    "AgeQualifier": {
+      "description": "How to read an :class:`Age`: a point value, a bound, or a range.",
+      "enum": [
+        "EXACT",
+        "GT",
+        "LT",
+        "APPROX",
+        "RANGE"
+      ],
+      "title": "AgeQualifier",
+      "type": "string"
+    },
+    "AgeUnit": {
+      "description": "Unit for an :class:`Age` value or bounds.",
+      "enum": [
+        "DAY",
+        "WEEK",
+        "MONTH",
+        "YEAR"
+      ],
+      "title": "AgeUnit",
+      "type": "string"
+    },
+    "PhenoSeverity": {
+      "description": "Phenotype severity relative to expectation.\n\n``BIALLELIC_LT_EXPECTED`` is not applicable to the ALT Gene workflow\n(see the applicability matrix's ``enum_exclude`` rule).",
+      "enum": [
+        "MONO_GT_OR_BIALLELIC_EQ_EXPECTED",
+        "MONO_EQ_EXPECTED",
+        "BIALLELIC_LT_EXPECTED"
+      ],
+      "title": "PhenoSeverity",
+      "type": "string"
+    },
+    "PhenoSpecificity": {
+      "description": "Phenotype specificity for the gene.",
+      "enum": [
+        "SPECIFIC",
+        "CONSISTENT",
+        "INCONSISTENT"
+      ],
+      "title": "PhenoSpecificity",
+      "type": "string"
+    },
+    "Phenotype": {
+      "additionalProperties": false,
+      "description": "A phenotype as a ``{name, code}`` pair; either may stand alone.",
+      "properties": {
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "HPO id/code, preferred (e.g. `HP:0001250`).",
+          "title": "Code"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Label of the coded entry when a code is given; otherwise a free-text term the curator could not confidently match to HPO.",
+          "title": "Name"
+        }
+      },
+      "title": "Phenotype",
+      "type": "object"
+    },
+    "Sex": {
+      "description": "Proband sex: Male / Female / Unknown / Trans.",
+      "enum": [
+        "M",
+        "F",
+        "U",
+        "T"
+      ],
+      "title": "Sex",
+      "type": "string"
+    },
+    "TriState": {
+      "description": "Tri-state truth value.\n\n``TRUE``/``FALSE`` \u2014 the curator established the value. ``UNKNOWN`` \u2014\nthe curator looked and could not determine it. A ``null`` field (absent)\nmeans the value was **not captured at all**; ``UNKNOWN`` and ``null`` are\nsemantically distinct.",
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN"
+      ],
+      "title": "TriState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Proband-level observations captured for the case.",
+  "properties": {
+    "age": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Age"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "age_matched_penetrance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AgeMatchedPenetrance"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "all_relevant_genes_tested": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether all relevant genes for the disorder were tested."
+    },
+    "confirmed_parental_relationship": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the parental relationship was confirmed."
+    },
+    "pheno_severity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PhenoSeverity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "pheno_specificity_for_gene": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PhenoSpecificity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "phenotypes": {
+      "description": "0..many phenotypes; capture at least what is relevant to the case.",
+      "items": {
+        "$ref": "#/$defs/Phenotype"
+      },
+      "title": "Phenotypes",
+      "type": "array"
+    },
+    "sex": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Sex"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "title": "CaseProbandInfo",
+  "type": "object"
+}

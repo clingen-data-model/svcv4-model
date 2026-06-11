@@ -11,6 +11,27 @@ Community Profile as the SVCv4 Standards and the VA-Spec profile
 firm up. See `docs/concepts/` for the conceptual narrative.
 """
 
+from svcv4_model.case import (
+    MOI,
+    AdditionalVariant,
+    Age,
+    AgeMatchedPenetrance,
+    AgeQualifier,
+    AgeUnit,
+    Case,
+    CaseProbandInfo,
+    CaseVariant,
+    CompoundHetVariant,
+    Gene,
+    Phase,
+    PhenoSeverity,
+    PhenoSpecificity,
+    Phenotype,
+    Sex,
+    TriState,
+    Workflow,
+    Zygosity,
+)
 from svcv4_model.classification import VariantPathogenicityClassification
 from svcv4_model.evidence_item import EvidenceData, EvidenceItem
 from svcv4_model.evidence_line import EvidenceLine
@@ -21,13 +42,32 @@ from svcv4_model.statement import Statement
 
 __all__ = [
     "MDE",
+    "MOI",
     "VBC",
+    "AdditionalVariant",
+    "Age",
+    "AgeMatchedPenetrance",
+    "AgeQualifier",
+    "AgeUnit",
+    "Case",
+    "CaseProbandInfo",
+    "CaseVariant",
+    "CompoundHetVariant",
     "EvidenceData",
     "EvidenceItem",
     "EvidenceLine",
+    "Gene",
     "Method",
+    "Phase",
+    "Phenotype",
+    "PhenoSeverity",
+    "PhenoSpecificity",
     "Predicate",
     "Proposition",
+    "Sex",
     "Statement",
+    "TriState",
     "VariantPathogenicityClassification",
+    "Workflow",
+    "Zygosity",
 ]
