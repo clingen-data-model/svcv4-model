@@ -13,3 +13,6 @@ __pycache__/
 
 # MkDocs build output
 site/
+
+# Local source material (decks, raw graphics) — not published
+tmp/

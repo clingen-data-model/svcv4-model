@@ -28,7 +28,7 @@ from svcv4_model.case_applicability import load_matrix
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CASE_SCHEMA_DIR = REPO_ROOT / "schemas" / "json" / "case"
-DOCS_PAGE = REPO_ROOT / "docs" / "concepts" / "case-model.md"
+DOCS_PAGE = REPO_ROOT / "docs" / "workflows" / "case-model.md"
 GEN_BEGIN = "<!-- BEGIN GENERATED: applicability tables -->"
 GEN_END = "<!-- END GENERATED: applicability tables -->"
 
