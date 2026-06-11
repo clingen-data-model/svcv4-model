@@ -12,9 +12,25 @@ curator captures from the literature to represent a single human clinical
 observation (CLN) supporting (or opposing) variant pathogenicity. A `Case` is
 the structured payload behind a `clinical_observation` Evidence Item.
 
-The attributes span five CLN evidence-assessment workflows. Each attribute is
-**required (`r`)**, **optional (`o`)**, **conditional (`c`)**, or **not
-applicable (`x`)** in at least one workflow:
+The attributes span five CLN evidence-assessment workflows. Each attribute
+carries one applicability code per workflow, drawn from a fixed five-token set:
+
+| Token | Meaning |
+|-------|---------|
+| `r` | required |
+| `o` | optional |
+| `c` | conditional — applies only when a stated rule holds (§4.1) |
+| `c*` | conditional **with a workflow-specific caveat** — same as `c`, but an asterisked footnote in the source sheet narrows how it applies in that workflow (carried in the entry's `rule`/`notes`) |
+| `x` | not applicable |
+
+Every attribute is `r`, `o`, `c`, `c*`, or `x` in at least one workflow.
+
+> The `*` in `c*` reflects an asterisked footnote in the **source sheet** and is
+> independent of the rule machinery in §4.1: a `c*` cell may carry a structured
+> `rule` (e.g. `enum_exclude`, `fixed`) *or* only free-text `notes`, and a plain
+> `c` cell may likewise carry a structured `rule` (e.g. `additional_variants`'
+> `requires`). Treat `c` and `c*` identically for applicability; the `*` is a
+> provenance/caveat marker only.
 
 | Code | Workflow | Generalization |
 |------|----------|----------------|
@@ -162,7 +178,15 @@ case_proband_info.age_matched_penetrance:
 compound_het_variant:
   applicability: { CLN_AFF: "c*", CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
   rule: { requires: { context: "biallelic disease eval with a het VBC" } }
-  notes: "AFF only; otherwise use additional_variant. zygosity fixed HET, phase fixed TRANS"
+  notes: "AFF only; otherwise use additional_variant"
+
+compound_het_variant.zygosity:
+  applicability: { CLN_AFF: "c*", CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  rule: { workflow: CLN_AFF, effect: fixed, value: HET }
+
+compound_het_variant.phase_in_ref_to_vbc:
+  applicability: { CLN_AFF: "c*", CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  rule: { workflow: CLN_AFF, effect: fixed, value: TRANS }
 
 additional_variant_exists:
   applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
@@ -213,8 +237,19 @@ enforced):
 - `requires` → rendered as an `if/then` **annotation** in the schema description
   and the docs (informational this phase).
 
-This mirrors the existing `scripts/export_schemas.py` pattern; CI runs it to
-verify the committed schemas are in sync.
+This mirrors the existing `scripts/export_schemas.py` pattern. Note the two
+exporters have complementary coverage and **CI must run both**:
+
+- `export_schemas.py` already auto-discovers every public model in `__all__`, so
+  it will emit `schemas/json/Case.schema.json` automatically once `Case` is
+  exported — no change needed for the superset schema.
+- `export_case_views.py` is a *new, separate* generator that writes the
+  per-workflow `schemas/json/case/CLN_*.schema.json`. The current CI job
+  (`.github/workflows/ci.yml`) runs only `export_schemas.py` before its
+  `git diff --quiet -- schemas/json` drift check, so per-workflow drift would
+  pass silently today. This phase therefore **updates the CI job to also run
+  `export_case_views.py`** before the diff check, making the in-sync guarantee
+  above (and the §7 test) actually enforced.
 
 ## 6. File layout
 
@@ -228,10 +263,18 @@ verify the committed schemas are in sync.
 | `scripts/export_case_views.py` | Generates derived schemas + docs tables from model + matrix |
 | `docs/concepts/case-model.md` | Narrative + generated superset/per-workflow tables |
 | `tests/test_case.py` | Round-trip + matrix-shape + generated-schema-in-sync tests |
+| `.github/workflows/ci.yml` | Updated to run `export_case_views.py` before the schema-drift check (§5) |
 
-`src/svcv4_model/__init__.py` exports `Case` (and its public sub-models/enums);
-`mkdocs.yml` adds the new docs page; `docs/model/index.md` adds a `::: svcv4_model.Case`
-stanza.
+Conventions / wiring:
+
+- All `Case` models use `model_config = ConfigDict(extra="forbid")`, matching the
+  existing models (house style).
+- `src/svcv4_model/__init__.py` exports `Case` and its public sub-models/enums.
+  The matrix **loader** (`case_applicability.py`) is *not* a Pydantic model and
+  is deliberately kept out of `__all__`, so `export_schemas.py`'s auto-discovery
+  won't emit a stray schema for it.
+- `mkdocs.yml` adds `docs/concepts/case-model.md` under the existing **Concepts**
+  nav group; `docs/model/index.md` adds a `::: svcv4_model.Case` stanza.
 
 ## 7. Testing
 
