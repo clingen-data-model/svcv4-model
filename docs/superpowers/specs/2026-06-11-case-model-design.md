@@ -237,7 +237,7 @@ Three machine-readable rule kinds capture every conditional in the sheet; the
 rest stays as free-text `notes`:
 
 - **`requires`** — the field applies only when another field/context holds
-  (`additional_variants` ⇐ `additional_variant_exists == true`; the AFF-only
+  (`additional_variants` ⇐ `additional_variant_exists == TRUE`; the AFF-only
   compound-het block).
 - **`enum_exclude`** — a workflow drops one enum value (`CLN_ALTG` drops
   `BIALLELIC_LT_EXPECTED` from `pheno_severity`).
