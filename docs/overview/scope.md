@@ -1,8 +1,24 @@
-# Classification Model vs Method Model
+# What this project is — and isn't
 
-SVCv4 is realised in software through **two complementary models**.
-This repository publishes one of them; the other lives in **ClinGen
-CSpec**.
+Three distinct groups make SVCv4 real. Keeping their roles clear is essential to
+understanding what this documentation does and does not own.
+
+| Role | Who | What they own |
+|---|---|---|
+| **The Standards / framework** | **ACMG/AMP/CAP/ClinGen SVCv4 Working Group** | The SVCv4 rubric, evidence concepts/codes, workflows, and scoring approach. The framework itself — evolving and authoritative. |
+| **The computational data model** | **SVCv4 Standards data-modeling team** (this project; a ClinGen Data Platform WG offshoot) | A computational representation of the SVCv4 data — its structure, codes, and uses — so producers/consumers share a common semantics. **Not the author of the Standards.** |
+| **The methods / rules** | **ClinGen CSpec** | The workflows/methods that evaluate captured evidence and produce scores (baseline + specialized versions). |
+
+This project works **in coordination with** the SVCv4 Working Group's
+developments; it does not define the framework, and it does not implement the
+scoring rules. See [Credits](../reference/credits.md) for the people in each
+group.
+
+## Classification Model vs Method Model
+
+Within the software, SVCv4 is realised through **two complementary models**. This
+repository publishes one of them (the Classification Model); the other (the
+Method Model) lives in **ClinGen CSpec**.
 
 | Model | What it represents | Where it is published |
 |---|---|---|
