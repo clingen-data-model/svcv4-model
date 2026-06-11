@@ -51,6 +51,30 @@ CSpec → methods) is rendered as:
 Authored pages must not present the framework as this project's own, and must
 attribute framework definitions to the SVCv4 Working Group.
 
+### 1.2 Accreditation (first-class content principle)
+
+The documentation must give **proper, separate credit** to the two distinct
+groups, as appropriate:
+
+- the **ACMG/AMP/CAP/ClinGen SVCv4 Working Group** — for authoring the SVCv4
+  Standards/framework; and
+- the **SVCv4 Standards data-modeling team** — for this computational model and
+  documentation.
+
+This is rendered as a dedicated **`reference/credits.md`** ("Credits &
+acknowledgements") page that lists each group with members, affiliations, and
+role, plus lightweight inline attribution where appropriate (the
+`svcv4-in-brief` primer credits the Working Group; Home/About credits the
+modeling team). Rosters are sourced from the user's decks (the SVCv4 WG slide
+lists co-chairs Biesecker and Harrison, AMP rep Gastier-Foster, CAP rep Moyer,
+and others, plus past members; the data-modeling team slide lists the ClinGen
+Data Platform WG offshoot meeting weekly since July 2024).
+
+> **Verify before publishing:** member lists come from the decks and may be
+> out of date — the implementer surfaces the drafted rosters for the user to
+> confirm/correct, and links to the SVCv4 Working Group's authoritative roster
+> where available, rather than treating the deck snapshot as final.
+
 ## 2. Source material (user-supplied)
 
 Authoring draws on materials the user added under `tmp/` (decks + PNGs) and two
@@ -143,7 +167,7 @@ Examples
 
 Reference   (banner: "in flux / advisory while the model stabilizes")
   • Model reference · JSON Schemas · Summary Table (vocabulary) · VA-Spec community profile
-  • Glossary · Interop: GA4GH GKS · Interop: ClinGen CSpec · Contributing
+  • Glossary · Interop: GA4GH GKS · Interop: ClinGen CSpec · Contributing · Credits & acknowledgements
 ```
 
 **Out of nav (files kept):** `docs/superpowers/**`, `docs/plans/2026-05-19-initial-scaffold.md`.
@@ -180,6 +204,7 @@ history), not rewritten from scratch. Internal cross-links are updated; `--stric
 | `reference/glossary.md` | move `glossary.md` | authored now |
 | `reference/gks-interop.md`, `reference/cspec-interop.md` | move interop pages | authored now |
 | `reference/contributing.md` | move `contributing.md` | authored now |
+| `reference/credits.md` | new — separate accreditation for the SVCv4 Working Group and the data-modeling team (§1.2) | authored from decks (user to verify rosters) |
 
 The five CLN workflow pages **link to** the generated per-workflow applicability
 table on `workflows/case-model.md` (the exporter writes all five tables into that
