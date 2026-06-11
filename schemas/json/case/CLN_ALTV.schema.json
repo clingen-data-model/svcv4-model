@@ -99,7 +99,7 @@
       "title": "Additional Variants",
       "type": "array",
       "x-svcv4-conditional": {
-        "equals": true,
+        "equals": "TRUE",
         "field": "additional_variant_exists"
       }
     },

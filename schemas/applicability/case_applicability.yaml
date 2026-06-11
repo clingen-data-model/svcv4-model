@@ -91,7 +91,7 @@ additional_variant_exists:
 
 additional_variants:
   applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
-  rule: { requires: { field: additional_variant_exists, equals: TRUE } }
+  rule: { requires: { field: additional_variant_exists, equals: "TRUE" } }
   notes: "compound-het additional variants are NOT supported"
 
 additional_variants.id:
