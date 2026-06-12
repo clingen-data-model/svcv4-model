@@ -1,42 +1,73 @@
 # SVCv4 Classification Model
 
-> A reference for the **Classification Model** of the forthcoming
-> **ACMG/AMP/CAP/ClinGen Sequence Variant Classification v4 (SVCv4)**
-> Standards, expressed as a **GA4GH GKS VA-Spec community profile**.
+> A **data model** for the **ACMG/AMP/CAP/ClinGen Sequence Variant
+> Classification v4 (SVCv4)** Standards — expressed as a **GA4GH GKS VA-Spec
+> community profile** — providing **standard semantic interoperability** for
+> producing, exchanging, and consuming evidence-based SVCv4-compliant
+> classifications.
 
-These docs are generated from the [Pydantic data model][src] in this
-repository together with hand-written concept pages, exported JSON
-Schemas, and worked examples. They are aimed at software engineers,
-bioinformaticians, and platform teams who will integrate, automate, or
-exchange SVCv4 data.
+## About this project
 
-**Status — early development.** The SVCv4 Standards target publication
-in *Genetics in Medicine* in October 2026; these docs evolve alongside
-the draft VA-Spec SVCv4 community profile in step with GA4GH review.
+The **SVCv4 Standards** — the Summary Table, evidence concepts and codes, workflows,
+and scoring — are defined by the **ACMG/AMP/CAP/ClinGen SVCv4 Working Group**.
+The framework is theirs; it has not yet been finalized and is still changing to
+varying degrees.
+
+**This project** is a separate, coordinating effort: the **SVCv4 Standards
+data-modeling team** (a task-force offshoot of the ClinGen Data Platform Working
+Group). We build the **classification data model** — the structure, codes, and
+uses of the SVCv4 data — to provide **standard semantic interoperability** for
+producing, exchanging, and consuming evidence-based SVCv4-compliant
+classifications. We do **not** author the Standards, and the scoring
+**methods/rules** live in
+[ClinGen CSpec](reference/cspec-interop.md), not here. See
+[What this project is — and isn't](overview/scope.md) and
+[Credits](reference/credits.md).
+
+!!! warning "Early development"
+
+    The SVCv4 Standards have not yet been finalized and are still changing to
+    varying degrees, and this model changes alongside them; the
+    [Reference](reference/model.md) material is advisory for now. The narrative
+    pages here are the best place to start.
+
+## Why structured evidence
+
+SVCv4 is a **points-based** framework: each line of evidence carries a code and a
+point value, and the points combine into a final classification. To get there,
+the evidence behind a classification has to be **captured in a common,
+structured form** — "show your work." That captured, computable evidence is what
+this model standardizes, and it is the backbone of classification records that
+can be created, approved, and shared across the research and clinical community.
+
+The points-based classification bands (per the SVCv4 Working Group):
+
+![SVCv4 points-based classification bands](assets/images/points-bands.png){ loading=lazy }
+
+*SVCv4 points-based classification bands — Benign (≤ −4), Likely Benign (−3 to
+−1), Uncertain significance (0 to 5; "Low" 0–1, "Mid" 2–3, "High" 4–5), Likely
+Pathogenic (6 to 9), Pathogenic (≥ 10). (Figure provided by the SVCv4 Standards
+group.)*
 
 ## Start here
 
-- [**Classification Model vs Method Model**](concepts/classification-vs-method-model.md) — what this model covers, and what lives in ClinGen CSpec instead.
-- [**VA-Spec community profile**](concepts/va-spec-community-profile.md) — how the SVCv4 profile layers on top of GA4GH GKS VA-Spec.
-- [**Statement & Proposition**](concepts/statement-and-proposition.md) — the top-level entity and its SPOQ-structured Proposition.
-- [**Evidence Lines & Items**](concepts/evidence-lines-and-items.md) — how curator-captured evidence becomes scored Evidence Lines.
-- [**Summary Table**](concepts/summary-table.md) — Evidence Category / Concept / Code vocabulary.
+1. [**SVCv4 Standards in brief**](overview/svcv4-in-brief.md) — a high-level primer on the framework.
+2. [**How SVCv4 maps to the model**](overview/alignment.md) — the Summary Table ↔ data-model alignment.
+3. [**Show your work: structured evidence**](getting-started/show-your-work.md) — why and how to capture evidence.
+4. [**The assertion framework**](getting-started/assertion-framework.md) — Propositions → Variant Pathogenicity Statements.
+5. [**Capture your first case**](getting-started/first-case.md) — a minimal worked example.
 
-## Reference
+## Already familiar?
 
-- [**Model reference**](model/index.md) — every class, every field.
-- [**JSON Schemas**](schemas/index.md) — machine-readable schemas exported from the Pydantic model.
-- [**Examples**](examples/index.md) — worked classifications with narrative walkthrough.
-
-## Interop
-
-- [**GA4GH GKS**](gks-interop.md) — VA-Spec, VRS, Cat-VRS, gks-core.
-- [**ClinGen CSpec**](cspec-interop.md) — where method codes resolve.
+Jump to the [**Workflows**](workflows/index.md) (the SVCv4 Summary Table and the
+clinical-observation workflows) or the [**Reference**](reference/model.md)
+(model classes, JSON Schemas, vocabulary) — both advisory while the model is in
+flux.
 
 ## Project context
 
-See the [project README][readme] for the contributor list, FAIR posture,
-broader context, and licensing.
+See the [project README][readme] for the FAIR posture, broader context, and
+licensing, and [Credits & acknowledgements](reference/credits.md) for the people
+behind the Standards and this model.
 
-[src]: https://github.com/clingen-data-model/svcv4-model/tree/main/src/svcv4_model
 [readme]: https://github.com/clingen-data-model/svcv4-model/blob/main/README.md

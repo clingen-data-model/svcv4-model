@@ -45,6 +45,6 @@ authored on top of VA-Spec.
 
 ## See also
 
-- [Statement & Proposition](statement-and-proposition.md)
-- [Evidence Lines & Items](evidence-lines-and-items.md)
-- [GA4GH GKS interop](../gks-interop.md)
+- [The assertion framework](../getting-started/assertion-framework.md)
+- [Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md)
+- [GA4GH GKS interop](gks-interop.md)

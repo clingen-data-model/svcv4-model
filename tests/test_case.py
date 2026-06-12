@@ -72,7 +72,7 @@ def _maximal_case() -> Case:
             id="clinvar:VCV000000002",
             zygosity=Zygosity.HET,
             phase_in_ref_to_vbc=Phase.TRANS,
-            phase_confidence="high",
+            phase_confidence="HIGH",
             classification="P",
         ),
         additional_variant_exists=TriState.TRUE,
@@ -82,7 +82,7 @@ def _maximal_case() -> Case:
                 gene=Gene(symbol="ABCA4", mde_associated_gene="ABCA4"),
                 zygosity=Zygosity.HOM,
                 phase_in_ref_to_vbc=Phase.CIS,
-                phase_confidence="low",
+                phase_confidence="LOW",
                 classification="LP",
             )
         ],

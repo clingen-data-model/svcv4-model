@@ -28,7 +28,7 @@ from svcv4_model.case_applicability import load_matrix
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CASE_SCHEMA_DIR = REPO_ROOT / "schemas" / "json" / "case"
-DOCS_PAGE = REPO_ROOT / "docs" / "concepts" / "case-model.md"
+DOCS_PAGE = REPO_ROOT / "docs" / "workflows" / "case-model.md"
 GEN_BEGIN = "<!-- BEGIN GENERATED: applicability tables -->"
 GEN_END = "<!-- END GENERATED: applicability tables -->"
 
@@ -150,29 +150,194 @@ def build_workflow_schema(workflow: Workflow) -> dict[str, Any]:
     return base
 
 
-def _table(workflow: Workflow) -> str:
+#: Display labels for each workflow.
+WORKFLOW_LABELS = {
+    "CLN_AFF": "Affected",
+    "CLN_DNV": "De novo",
+    "CLN_ALTV": "Alternative Cause-Variant",
+    "CLN_ALTG": "Alternative Cause-Gene",
+    "CLN_UAF": "Unaffected",
+}
+
+#: Applicability code -> CSS class (bold / underline / italic / dim).
+APPL_CLASS = {"r": "appl-r", "c": "appl-c", "o": "appl-o", "x": "appl-x"}
+
+#: Array-valued (0..many) fields, by dotted path. Asserted against the matrix.
+ARRAYS = {"case_proband_info.phenotypes", "additional_variants"}
+
+#: Mock values for leaf fields, used in the per-workflow JSON examples.
+MOCK: dict[str, object] = {
+    "moi": "AD",
+    "pop_frq_points": 0,
+    "case_proband_info.sex": "F",
+    "case_proband_info.age": {"value": 7, "unit": "MONTH", "qualifier": "EXACT", "raw": "7 mo"},
+    "case_proband_info.phenotypes.code": "HP:0001250",
+    "case_proband_info.phenotypes.name": "Seizure",
+    "case_proband_info.pheno_specificity_for_gene": "SPECIFIC",
+    "case_proband_info.pheno_severity": "MONO_EQ_EXPECTED",
+    "case_proband_info.age_matched_penetrance": "NEAR_100",
+    "case_proband_info.confirmed_parental_relationship": "TRUE",
+    "case_proband_info.all_relevant_genes_tested": "TRUE",
+    "vbc.id": "clinvar:VCV000000001",
+    "vbc.zygosity": "HET",
+    "compound_het_variant.id": "clinvar:VCV000000002",
+    "compound_het_variant.zygosity": "HET",
+    "compound_het_variant.phase_in_ref_to_vbc": "TRANS",
+    "compound_het_variant.phase_confidence": "HIGH",
+    "compound_het_variant.classification": "P",
+    "additional_variants.id": "clinvar:VCV000000003",
+    "additional_variants.gene.symbol": "ABCA4",
+    "additional_variants.gene.mde_associated_gene": "ABCA4",
+    "additional_variants.zygosity": "HOM",
+    "additional_variants.phase_in_ref_to_vbc": "CIS",
+    "additional_variants.phase_confidence": "LOW",
+    "additional_variants.classification": "LP",
+}
+
+
+def _build_tree() -> dict:
+    """Build an ordered nested tree of field nodes from the matrix dotted paths.
+
+    Each node is ``{"name", "path", "children": {name: node, ...}}``; a node with
+    children is a container, and a container whose path is in ``ARRAYS`` is a list.
+    """
+    root: dict = {}
+    for path in load_matrix():
+        cur, acc = root, ""
+        for i, part in enumerate(path.split(".")):
+            acc = part if i == 0 else f"{acc}.{part}"
+            cur = cur.setdefault(part, {"name": part, "path": acc, "children": {}})["children"]
+    return root
+
+
+def _appl_span(code: str) -> str:
+    return f'<span class="{APPL_CLASS[code]}">{code.upper()}</span>'
+
+
+def _notes_for(entry: dict) -> str:
+    bits: list[str] = []
+    if entry.get("value"):
+        bits.append(str(entry["value"]))
+    if entry.get("notes"):
+        bits.append(str(entry["notes"]))
+    rule = entry.get("rule")
+    if rule:
+        if rule.get("effect") == "fixed":
+            bits.append(f"fixed = `{rule['value']}` ({rule['workflow']})")
+        elif rule.get("effect") == "enum_exclude":
+            bits.append(f"{rule['workflow']} excludes `{rule['value']}`")
+        elif "requires" in rule:
+            req = rule["requires"]
+            if "field" in req:
+                bits.append(f"requires `{req['field']} == {req.get('equals')}`")
+            elif "context" in req:
+                bits.append(str(req["context"]))
+    return " — ".join(bits).replace("|", "\\|")
+
+
+def _matrix_table() -> str:
+    """The superset matrix: every field (hierarchy preserved) × the five workflows."""
     matrix = load_matrix()
-    lines = [
-        f"#### {workflow.value}",
-        "",
-        "| Attribute | Code | Value | Notes |",
-        "|-----------|------|-------|-------|",
-    ]
+    cols = list(Workflow)
+    short = [w.value.replace("CLN_", "") for w in cols]
+    header = "| " + " | ".join(short) + " | Property | Notes |"
+    sep = "|" + "---|" * (len(cols) + 2)
+    lines = [header, sep]
     for path, entry in matrix.items():
-        code = entry["applicability"][workflow.value]
-        value = str(entry.get("value", "")).replace("|", "\\|")
-        notes = str(entry.get("notes", "")).replace("|", "\\|")
-        lines.append(f"| `{path}` | {code} | {value} | {notes} |")
-    return "\n".join(lines)
+        depth = path.count(".")
+        name = path.split(".")[-1]
+        indent = "&nbsp;&nbsp;&nbsp;&nbsp;" * depth
+        prop = f"{indent}{'↳ ' if depth else ''}`{name}`"
+        cells = " | ".join(_appl_span(entry["applicability"][w.value]) for w in cols)
+        lines.append(f"| {cells} | {prop} | {_notes_for(entry)} |")
+    table = "\n".join(lines)
+    return f'<div class="appl-matrix" markdown="1">\n\n{table}\n\n</div>'
+
+
+def _value_html(path: str) -> str:
+    val = MOCK.get(path, "...")
+    if isinstance(val, bool):
+        return f'<span class="j-num">{str(val).lower()}</span>'
+    if isinstance(val, (int, float)):
+        return f'<span class="j-num">{val}</span>'
+    if isinstance(val, dict):
+        parts = []
+        for k, v in val.items():
+            vv = (
+                f'<span class="j-str">"{v}"</span>'
+                if isinstance(v, str)
+                else f'<span class="j-num">{v}</span>'
+            )
+            parts.append(f'<span class="j-key">"{k}"</span>: {vv}')
+        return "{ " + ", ".join(parts) + " }"
+    return f'<span class="j-str">"{val}"</span>'
+
+
+def _emit_obj(children: dict, codes: dict[str, str], indent: int) -> list[str]:
+    pad = "  " * indent
+    items = [(n, node) for n, node in children.items() if codes.get(node["path"]) != "x"]
+    out: list[str] = []
+    for idx, (name, node) in enumerate(items):
+        comma = "," if idx < len(items) - 1 else ""
+        cls = APPL_CLASS[codes[node["path"]]]
+        key = f'<span class="j-key {cls}">"{name}"</span>'
+        if node["children"]:
+            if node["path"] in ARRAYS:
+                out.append(f"{pad}{key}: [")
+                out.append(f"{pad}  {{")
+                out += _emit_obj(node["children"], codes, indent + 2)
+                out.append(f"{pad}  }}")
+                out.append(f"{pad}]{comma}")
+            else:
+                out.append(f"{pad}{key}: {{")
+                out += _emit_obj(node["children"], codes, indent + 1)
+                out.append(f"{pad}}}{comma}")
+        else:
+            out.append(f"{pad}{key}: {_value_html(node['path'])}{comma}")
+    return out
+
+
+def _workflow_block(workflow: Workflow, tree: dict) -> str:
+    codes = {p: e["applicability"][workflow.value] for p, e in load_matrix().items()}
+    body = "\n".join(["{", *_emit_obj(tree, codes, 1), "}"])
+    label = WORKFLOW_LABELS[workflow.value]
+    return (
+        f'<details class="appl-detail">\n'
+        f"<summary>{label} <code>{workflow.value}</code></summary>\n"
+        f'<pre class="appl-json">\n{body}\n</pre>\n'
+        f"</details>"
+    )
 
 
 def write_docs_tables() -> None:
-    body = "\n\n".join(_table(w) for w in Workflow)
+    assert set(load_matrix()) >= ARRAYS, "ARRAYS contains a path missing from the matrix"
+    tree = _build_tree()
+    legend = (
+        "**Legend:** "
+        '<span class="appl-r">required (R)</span> &nbsp;·&nbsp; '
+        '<span class="appl-c">conditional (C)</span> &nbsp;·&nbsp; '
+        '<span class="appl-o">optional (O)</span> &nbsp;·&nbsp; '
+        '<span class="appl-x">not applicable (X)</span>'
+    )
+    blocks = "\n\n".join(_workflow_block(w, tree) for w in Workflow)
+    body = "\n\n".join(
+        [
+            legend,
+            "### Superset matrix",
+            "Every Case attribute across the five CLN workflows, with the nested "
+            "structure preserved. Conditional rules are summarized in **Notes**.",
+            _matrix_table(),
+            "### Per-workflow structures",
+            "Expand a workflow to see only its applicable fields as a JSON example "
+            'with mock data — **bold** = required, <span class="appl-c">underlined</span> '
+            "= conditional, *italic* = optional; not-applicable fields are omitted.",
+            blocks,
+        ]
+    )
     text = DOCS_PAGE.read_text()
     pre, _, rest = text.partition(GEN_BEGIN)
     _, _, post = rest.partition(GEN_END)
-    new = f"{pre}{GEN_BEGIN}\n\n{body}\n\n{GEN_END}{post}"
-    DOCS_PAGE.write_text(new)
+    DOCS_PAGE.write_text(f"{pre}{GEN_BEGIN}\n\n{body}\n\n{GEN_END}{post}")
 
 
 def main() -> None:

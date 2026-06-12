@@ -96,6 +96,14 @@ class Phase(StrEnum):
     UNKNOWN = "UNKNOWN"
 
 
+class PhaseConfidence(StrEnum):
+    """Confidence in a phase determination."""
+
+    HIGH = "HIGH"
+    MED = "MED"
+    LOW = "LOW"
+
+
 class AgeUnit(StrEnum):
     """Unit for an :class:`Age` value or bounds."""
 
@@ -207,7 +215,9 @@ class CompoundHetVariant(BaseModel):
     phase_in_ref_to_vbc: Phase | None = Field(
         default=None, description="Fixed to TRANS in the AFF workflow."
     )
-    phase_confidence: str | None = Field(default=None, description="Confidence in the phase call.")
+    phase_confidence: PhaseConfidence | None = Field(
+        default=None, description="Confidence in the phase call."
+    )
     classification: str | None = Field(
         default=None, description="Variant classification (placeholder string this phase)."
     )
@@ -236,8 +246,8 @@ class AdditionalVariant(BaseModel):
     phase_in_ref_to_vbc: Phase | None = Field(
         default=None, description="Captured only if the additional variant shares the VBC gene."
     )
-    phase_confidence: str | None = Field(
-        default=None, description="Captured only if phase is captured."
+    phase_confidence: PhaseConfidence | None = Field(
+        default=None, description="Captured only if phase is captured (HIGH / MED / LOW)."
     )
     classification: str | None = Field(
         default=None,

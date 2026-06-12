@@ -1,5 +1,12 @@
 # JSON Schemas
 
+!!! warning "Advisory — not yet final"
+
+    The SVCv4 Standards have not yet been finalized and are still changing to
+    varying degrees. These schemas, generated from the data model, **track** the
+    Standards authored by the SVCv4 Working Group and change along with them —
+    they are not themselves the Standard. Treat as advisory for now.
+
 The Pydantic data model emits JSON Schemas via
 `pydantic.BaseModel.model_json_schema()`. The committed schemas in
 [`schemas/json/`][schemas-src] are the source of truth for downstream

@@ -10,7 +10,9 @@ theme:
   name: material
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
+    - navigation.indexes
     - navigation.top
     - toc.follow
     - content.code.copy
@@ -31,6 +33,9 @@ theme:
       toggle:
         icon: material/weather-night
         name: Switch to light mode
+
+extra_css:
+  - assets/stylesheets/applicability.css
 
 plugins:
   - search
@@ -56,27 +61,52 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - tables
   - toc:
       permalink: true
 
 nav:
-  - Home: index.md
-  - Concepts:
-      - Classification Model vs Method Model: concepts/classification-vs-method-model.md
-      - VA-Spec community profile: concepts/va-spec-community-profile.md
-      - Statement & Proposition: concepts/statement-and-proposition.md
-      - Evidence Lines & Items: concepts/evidence-lines-and-items.md
-      - Case model: concepts/case-model.md
-      - Summary Table: concepts/summary-table.md
-  - Model reference: model/index.md
-  - JSON Schemas: schemas/index.md
-  - Examples: examples/index.md
-  - Interop:
-      - GA4GH GKS: gks-interop.md
-      - ClinGen CSpec: cspec-interop.md
-  - Contributing: contributing.md
-  - Glossary: glossary.md
-  - Plans:
-      - Initial scaffold (2026-05-19): plans/2026-05-19-initial-scaffold.md
+  - Overview:
+      - Home: index.md
+      - SVCv4 Standards in brief: overview/svcv4-in-brief.md
+      - How SVCv4 maps to the model: overview/alignment.md
+      - What this project is — and isn't: overview/scope.md
+  - Getting Started:
+      - "Show your work: structured evidence": getting-started/show-your-work.md
+      - The assertion framework: getting-started/assertion-framework.md
+      - Evidence Lines & Evidence Items: getting-started/evidence-lines-and-items.md
+      - Capture your first case: getting-started/first-case.md
+  - Workflows:
+      - Workflows overview: workflows/index.md
+      - Human Observational Data (HOD):
+          - workflows/hod/index.md
+          - Clinical Observations (CLN):
+              - workflows/hod/cln/index.md
+              - Affected (CLN_AFF): workflows/hod/cln/cln-aff.md
+              - De novo (CLN_DNV): workflows/hod/cln/cln-dnv.md
+              - Alternative Cause (CLN_ALT): workflows/hod/cln/cln-alt.md
+              - Unaffected (CLN_UAF): workflows/hod/cln/cln-uaf.md
+          - Population (POP): workflows/hod/pop.md
+          - Locus Specificity (LOC): workflows/hod/loc.md
+      - Predictive & Functional Data (PFD):
+          - workflows/pfd/index.md
+      - Case model & applicability: workflows/case-model.md
+  - Examples:
+      - Examples overview: examples/index.md
+  - Reference:
+      - Model reference: reference/model.md
+      - JSON Schemas: reference/schemas.md
+      - Summary Table: reference/summary-table.md
+      - VA-Spec community profile: reference/va-spec-profile.md
+      - Glossary: reference/glossary.md
+      - "Interop: GA4GH GKS": reference/gks-interop.md
+      - "Interop: ClinGen CSpec": reference/cspec-interop.md
+      - Contributing: reference/contributing.md
+      - Credits & acknowledgements: reference/credits.md

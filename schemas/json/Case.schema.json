@@ -43,15 +43,14 @@
         "phase_confidence": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/$defs/PhaseConfidence"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Captured only if phase is captured.",
-          "title": "Phase Confidence"
+          "description": "Captured only if phase is captured (HIGH / MED / LOW)."
         },
         "phase_in_ref_to_vbc": {
           "anyOf": [
@@ -356,15 +355,14 @@
         "phase_confidence": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/$defs/PhaseConfidence"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Confidence in the phase call.",
-          "title": "Phase Confidence"
+          "description": "Confidence in the phase call."
         },
         "phase_in_ref_to_vbc": {
           "anyOf": [
@@ -448,6 +446,16 @@
         "UNKNOWN"
       ],
       "title": "Phase",
+      "type": "string"
+    },
+    "PhaseConfidence": {
+      "description": "Confidence in a phase determination.",
+      "enum": [
+        "HIGH",
+        "MED",
+        "LOW"
+      ],
+      "title": "PhaseConfidence",
       "type": "string"
     },
     "PhenoSeverity": {

@@ -41,5 +41,5 @@ gene/disease in scope; otherwise the baseline is used.
 
 ## See also
 
-- [Classification Model vs Method Model](concepts/classification-vs-method-model.md)
+- [What this project is — and isn't](../overview/scope.md)
 - [GA4GH GKS interop](gks-interop.md)

@@ -58,8 +58,13 @@
           },
           "phase_confidence": {
             "default": null,
-            "description": "Captured only if phase is captured.",
-            "title": "Phase Confidence",
+            "description": "Confidence in a phase determination.",
+            "enum": [
+              "HIGH",
+              "MED",
+              "LOW"
+            ],
+            "title": "PhaseConfidence",
             "type": "string"
           },
           "phase_in_ref_to_vbc": {

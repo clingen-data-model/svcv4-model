@@ -1,0 +1,339 @@
+# Docs Site Restructure — Design Spec
+
+**Date:** 2026-06-11
+**Status:** Proposed (rev. 2 — incorporates user-supplied decks, graphics, and the workflow↔evidence-item sheet)
+**Branch:** `docs/site-restructure` — PR #18, base `main` (PR #17 / the Case model has since merged to `main`)
+
+## 1. Purpose & goal
+
+Re-center the MkDocs site on **teaching the SVCv4 framework and how it aligns to
+this data model**, learner-first, with the computational reference demoted while
+the model is in flux.
+
+Cornerstone message: **"show your work with structured evidence."** A reader
+lands, learns what SVCv4 is and why it exists, then follows simple steps to
+capture the evidence each workflow needs — building up to the evidence-based
+assertions (causal Variant Pathogenicity Statements) that are the final,
+shareable classification records.
+
+**Primary audience:** curators, VCEP members, researchers/clinicians learning
+the framework→model alignment. Engineers/integrators are routed to **Reference**.
+
+### 1.1 Positioning — who authors what (first-class content principle)
+
+The site must make the project's role unambiguous throughout: **this project is a
+data-modeling effort, not the author of the SVCv4 Standards.** Specifically:
+
+- The **ACMG/AMP/CAP/ClinGen SVCv4 Working Group** defines and owns the SVCv4
+  Standards/framework itself (the rubric, evidence concepts/codes, workflows, and
+  scoring). The framework is theirs and is evolving.
+- The **SVCv4 Standards data-modeling team** (this project — a task-force offshoot
+  of the ClinGen Data Platform WG) works *in coordination with* the SVCv4 Working
+  Group to provide a **computational representation** of the data: its structure,
+  codes, and uses — so software/system developers who produce or consume SVCv4
+  classifications can do so with a **common semantic understanding**.
+- **ClinGen CSpec** owns the methods/rules (scoring operations, specialized
+  versions). The model links to method specifications; it does not implement them.
+
+This three-way role distinction (Standards WG → framework; this team → data model;
+CSpec → methods) is rendered as:
+
+1. A clear statement in the **Home** intro.
+2. A brief, attributed **`overview/svcv4-in-brief.md`** primer that grounds the
+   modeling docs in the SVCv4 Standards at a high level and points to the SVCv4
+   Working Group's own (forthcoming) publication/specs as the authoritative source.
+3. An expanded **`overview/scope.md`** ("What this project is — and isn't") that
+   frames all three roles, not only Classification-vs-Method.
+4. A short reusable note carried on the **Overview** pages and folded into the
+   **Reference** "in-flux" banner, reinforcing that codes/structure track the
+   evolving SVCv4 Standards and are not themselves the Standard.
+
+Authored pages must not present the framework as this project's own, and must
+attribute framework definitions to the SVCv4 Working Group.
+
+### 1.2 Accreditation (first-class content principle)
+
+The documentation must give **proper, separate credit** to the two distinct
+groups, as appropriate:
+
+- the **ACMG/AMP/CAP/ClinGen SVCv4 Working Group** — for authoring the SVCv4
+  Standards/framework; and
+- the **SVCv4 Standards data-modeling team** — for this computational model and
+  documentation.
+
+This is rendered as a dedicated **`reference/credits.md`** ("Credits &
+acknowledgements") page that lists each group with members, affiliations, and
+role, plus lightweight inline attribution where appropriate (the
+`svcv4-in-brief` primer credits the Working Group; Home/About credits the
+modeling team). Rosters are sourced from the user's decks (the SVCv4 WG slide
+lists co-chairs Biesecker and Harrison, AMP rep Gastier-Foster, CAP rep Moyer,
+and others, plus past members; the data-modeling team slide lists the ClinGen
+Data Platform WG offshoot meeting weekly since July 2024).
+
+> **Verify before publishing:** member lists come from the decks and may be
+> out of date — the implementer surfaces the drafted rosters for the user to
+> confirm/correct, and links to the SVCv4 Working Group's authoritative roster
+> where available, rather than treating the deck snapshot as final.
+
+### 1.3 Maturity annotations (first-class content principle)
+
+Pages must clearly distinguish two different reasons something isn't fully
+covered, and never conflate them:
+
+- **Not yet specified by the SVCv4 Working Group** (out of scope for the first
+  release of the Standards) — e.g. **`CLN_CCS` (Case-Control)**. Such items may
+  be *shown* for completeness of the framework picture, but must carry an explicit
+  annotation that the **committee has not yet specified them** (it is not this
+  project's omission).
+- **Specified by the Standards but not yet modeled here** — e.g. POP, LOC, and
+  the Variant-Impact concepts this round. Annotated as a modeling-project
+  backlog item (Phase B), not a gap in the Standards.
+
+A consistent admonition style is used for each so readers can tell, at a glance,
+which kind of "not yet" they're looking at.
+
+### 1.4 Terminology conventions — core synonyms
+
+Across the documentation, two equivalences hold by default and are captured in the
+**Glossary** (`reference/glossary.md`) so they are explicit and discoverable:
+
+- **"the variant" = the VBC (Variant Being Considered) = "variation"** — the
+  single germline variant under evaluation, and the Proposition's **subject**
+  (`subjectVariant`). The docs do **not** introduce a separate generic "Variant"
+  entity. The only variants named distinctly are the **additional variant**
+  (`additional_variants`) and the **compound-het variant**
+  (`compound_het_variant`). Authored pages use **VBC** (or "the variant being
+  considered") for the variant under evaluation, reserving the other two terms
+  for those specific roles.
+- **"the disease" / "the condition" = the MDE** — the disease entity the VBC is
+  evaluated against, and the Proposition's **object**
+  (`objectCondition`, or `objectConditionSet` when more than one). Use **MDE**
+  (or "the disease/condition") interchangeably unless a page explicitly means
+  something else.
+
+In the assertion-framework page's SPOQ explanation, these map directly onto the
+Proposition fields: **subject → `subjectVariant`** (the VBC) and **object →
+`objectCondition` / `objectConditionSet`** (the MDE). The Glossary records all of
+these equivalences.
+
+> **Resolved:** `MDE` = **"Mendelian Disease Entity"** (confirmed by the user).
+> This matches the model (`src/svcv4_model/inputs.py`), so no code change is
+> needed; the Glossary and all pages use "Mendelian Disease Entity" consistently.
+
+## 2. Source material (user-supplied)
+
+Authoring draws on materials the user added under `tmp/` (decks + PNGs) and two
+Google Sheets:
+
+- **Decks** (text extracted; not committed to the site): *Overview of SVCv4
+  Standards* (points-based rubric, v3→v4, evidence-code naming like `CLN_AFF_+1`),
+  *The SVCv4 Standard Data Model* (GKS/VA-Spec alignment, the
+  Statement→Proposition→Evidence Line→Evidence Item structure, Standard vs
+  Specialized/CSpec), *Summary Table alignment to evidence lines*.
+- **Graphics (PNGs)** → become the three primary site images (§7).
+- **Workflow↔evidence-item sheet** (`gid=495026972`): the evidence-line/evidence-item
+  hierarchy, the inputs each workflow needs (GDM, MOI, MDE, VBC, ZYG, …), and
+  scoring methods. **Scoring rules/methods stay pointed at CSpec** per the repo's
+  scope boundary; the docs use this to describe *what evidence items a workflow
+  needs*, not to implement the rules.
+- **Case applicability sheet** (`gid=138412089`): already realized in PR #17.
+
+**The SVCv4 Summary Table hierarchy** (confirmed from the graphics) is the
+backbone of the Workflows section:
+
+```
+Evidence Category → Evidence Concept → Evidence Code → Code Workflow(s) → Workflow Score   (points roll up)
+  Human Observational Data (HOD)
+    Population (POP):            POP_FRQ, POP_HMZ
+    Clinical (CLN):             CLN_UAF, CLN_ALT (→ Alt Variant / Alt Gene), CLN_AFF, CLN_DNV, CLN_CCS
+    Locus Specificity (LOC):    LOC_PHE, LOC_SEG
+  Variant Impact
+    Single-aa change (MIS):     MIS_PRD, MIS_FXN, MIS_INF
+    RNA alteration (CDS):       CDS_PRD, CDS_FXN, CDS_INF
+    Absent protein (NUL):       NUL_PRD, NUL_FXN, NUL_INF
+    Splicing (SPL):             SPL_PRD, SPL_SPA, SPL_FXN, SPL_INF
+```
+
+The **Case model (PR #17) covers the CLN clinical-observation workflows**
+`CLN_AFF / CLN_DNV / CLN_ALTV / CLN_ALTG / CLN_UAF` — one Concept's codes within
+this larger framework. Those are the deep-dive exemplars in this PR.
+
+> **Authoring caveat:** content authored from the decks/sheets will flag any
+> non-obvious inference for user review, and will not assert scoring rules
+> (CSpec's domain).
+
+## 3. Scope
+
+**In scope (this PR):** new top-tab IA; rewritten Home; Overview "alignment"
+page authored from the decks; Getting Started track; the Workflows section built
+on the Summary Table hierarchy (overview + HOD/Variant-Impact category pages +
+the five CLN workflow deep-dives + the moved Case model page; POP/LOC and
+Variant-Impact concepts as brief stubs, with CLN_CCS shown-but-flagged on the CLN
+overview as not-yet-specified by the WG — see §1.3); Examples reorg with content tabs;
+Reference demotion with an in-flux banner; the three graphics placed under
+`docs/assets/images/` with a manifest; mkdocs config for tabs, section index
+pages, content tabs, and Mermaid; **the Case-exporter/CI path fix** required by
+moving `case-model.md` (§8).
+
+**Out of scope / deferred (Phase B):** deep per-data-point workflow nuance and
+scoring narrative; full build-out of POP, LOC, and the Variant-Impact concepts
+(and a full CLN_CCS page only if/when the SVCv4 WG specifies it — a different
+reason than the others, per §1.3); per-workflow worked examples and downloadable
+JSON beyond the existing one; committing the source decks; any data-model/schema
+change.
+
+## 4. Information architecture (top tabs)
+
+`navigation.tabs` is already enabled; top-level nav keys become tabs.
+`navigation.indexes` makes section landing pages.
+
+```
+Overview
+  • Home (index.md) — what this project is, why we built it, how to apply it; points-based rubric
+  • SVCv4 Standards in brief — high-level primer on the framework/rules/workflows (attributed to the SVCv4 WG)
+  • How SVCv4 maps to the model — Summary Table & data model        [img: summary-table]   (core)
+  • What this project is — and isn't (roles: Standards WG / this model / CSpec)
+
+Getting Started
+  • Show your work: structured evidence (the cornerstone)
+  • The assertion framework: Propositions → Variant Pathogenicity Statements   [Mermaid diagram]
+  • Evidence Lines & Evidence Items, simply
+  • Capture your first case — a minimal worked example (uses the Case model)
+
+Workflows
+  • Workflows overview — the Summary Table (Category → Concept → Code → Workflow)   [img: summary-table]
+  • Human Observational Data                                          [img: hod-workflows]
+      – Clinical Observations (CLN) — overview (CLN_CCS shown but flagged "not yet
+        specified by the SVCv4 WG for the first release")
+      – Affected (CLN_AFF) · De Novo (CLN_DNV) · Alternative Variant (CLN_ALTV)
+        · Alternative Gene (CLN_ALTG) · Unaffected (CLN_UAF)        (deep-dives)
+      – Population (POP) & Locus Specificity (LOC)                   (stub)
+  • Variant Impact — Predictive & Functional (MIS/CDS/NUL/SPL)       [img: variant-impact-workflows]  (stub)
+  • Case model & applicability — the structured backbone            (moved from concepts/)
+
+Examples
+  • Examples overview — prose · narrative · semi-structured · downloadable JSON
+
+Reference   (banner: "in flux / advisory while the model stabilizes")
+  • Model reference · JSON Schemas · Summary Table (vocabulary) · VA-Spec community profile
+  • Glossary · Interop: GA4GH GKS · Interop: ClinGen CSpec · Contributing · Credits & acknowledgements
+```
+
+**Out of nav (files kept):** `docs/superpowers/**`, `docs/plans/2026-05-19-initial-scaffold.md`.
+These produce mkdocs INFO (not warnings), so `--strict` still passes.
+
+## 5. Page inventory & disposition
+
+Existing concept pages are **reframed and relocated** (via `git mv` to preserve
+history), not rewritten from scratch. Internal cross-links are updated; `--strict`
++ a link audit (§9) catch breakage.
+
+| New page | Source | Status |
+|----------|--------|--------|
+| `index.md` (Home) | rewrite for broad audience; points-based rubric as a table | authored now |
+| `overview/alignment.md` | new — Summary Table & data-model alignment | **authored from decks** (+ img) |
+| `overview/svcv4-in-brief.md` | new — super high-level primer on the SVCv4 Standards/framework/rules/workflows, **attributed to the SVCv4 Working Group**, to ground the modeling docs | authored from decks |
+| `overview/scope.md` | expand `concepts/classification-vs-method-model.md` to frame all three roles (Standards WG / this model / CSpec) per §1.1 | authored now |
+| `getting-started/show-your-work.md` | new — cornerstone rationale | authored now |
+| `getting-started/assertion-framework.md` | reframe `concepts/statement-and-proposition.md`; add Mermaid | authored from decks |
+| `getting-started/evidence-lines-and-items.md` | reframe `concepts/evidence-lines-and-items.md` (simple first, deeper links) | authored now |
+| `getting-started/first-case.md` | new — minimal CLN_AFF capture using the Case model | authored now |
+| `workflows/index.md` | new — Summary Table overview | authored from decks (+ img) |
+| `workflows/human-observational-data.md` | new — HOD category overview | authored from decks (+ img) |
+| `workflows/clinical-observations.md` | new — CLN concept overview; **CLN_CCS (Case-Control) is shown but annotated "not yet specified by the SVCv4 Working Group for the first release"** | authored now |
+| `workflows/cln-aff.md` … `cln-uaf.md` (5) | new deep-dives; each: description + "evidence needed" (from the Case applicability matrix + the sheet) + link to the generated applicability table + example stub | authored now |
+| `workflows/pop-loc.md` | new — POP & LOC stub | stub |
+| `workflows/variant-impact.md` | new — Variant-Impact overview (MIS/CDS/NUL/SPL) | stub (+ img) |
+| `workflows/case-model.md` | move `concepts/case-model.md` | authored (already generated) |
+| `examples/index.md` | reorganize with content tabs | authored now |
+| `reference/model.md` | move `model/index.md` (+ in-flux banner) | authored now |
+| `reference/schemas.md` | move `schemas/index.md` (+ in-flux banner) | authored now |
+| `reference/summary-table.md` | move `concepts/summary-table.md` | authored now |
+| `reference/va-spec-profile.md` | move `concepts/va-spec-community-profile.md` | authored now |
+| `reference/glossary.md` | move `glossary.md` | authored now |
+| `reference/gks-interop.md`, `reference/cspec-interop.md` | move interop pages | authored now |
+| `reference/contributing.md` | move `contributing.md` | authored now |
+| `reference/credits.md` | new — separate accreditation for the SVCv4 Working Group and the data-modeling team (§1.2) | authored from decks (user to verify rosters) |
+
+The five CLN workflow pages **link to** the generated per-workflow applicability
+table on `workflows/case-model.md` (the exporter writes all five tables into that
+one page); they do not each carry a generated table, so no exporter change beyond
+the path fix in §8.
+
+## 6. Example presentation
+
+Examples use mkdocs-material **content tabs** (`pymdownx.tabbed`, `alternate_style:
+true`): one example shows switchable **Prose / Narrative / Semi-structured / JSON**
+views. The JSON view references the downloadable file in the repo-root `examples/`
+directory via its GitHub URL (its current location; validated by
+`scripts/validate_examples.py`) — it is not relocated into `docs/`.
+
+## 7. Graphics: assets & manifest
+
+`docs/assets/images/` holds the three user PNGs (copied from `tmp/`); `tmp/` is
+added to `.gitignore` so the source decks/PNGs aren't committed wholesale. Each
+embed carries descriptive alt text and a caption. `docs/assets/images/README.md`
+documents the manifest.
+
+| File (`docs/assets/images/`) | Source (`tmp/`) | Depicts | Used on |
+|---|---|---|---|
+| `summary-table.png` | `SVCv4 Summary Table.png` | full SVCv4 Summary Table | `workflows/index.md`, `overview/alignment.md` |
+| `hod-workflows.png` | `Human Observational Data w: Workflows.png` | HOD Summary Table w/ workflows | `workflows/human-observational-data.md` |
+| `variant-impact-workflows.png` | `Predictive and Functional Data w: Workflows.png` | Variant-Impact Summary Table w/ workflows | `workflows/variant-impact.md` |
+
+Two conceptual diagrams are authored **in-repo as Mermaid** (no image needed,
+editable, version-controlled): the **data-model diagram**
+(Statement → Proposition / Final Score → Evidence Line(s) → Evidence Item(s)) on
+the assertion-framework page, and the **points-based classification rubric**
+(score ranges B ≤ −4 / LB −3..−1 / VUS 0..5 [Low/Mid/High] / LP 6..9 / P ≥ 10)
+rendered as a table on Home. If the user later wants the decks' polished figures
+for these, they drop PNGs into new manifest slots.
+
+## 8. mkdocs config + the Case-exporter/CI path fix
+
+**mkdocs.yml:** add `navigation.indexes` and `navigation.tabs.sticky` to
+`theme.features`; add `pymdownx.tabbed` (`alternate_style: true`) and a
+`pymdownx.superfences` Mermaid custom fence to `markdown_extensions`; replace
+`nav` with §4. No new Python dependency (pymdownx/mermaid ship with the `docs`
+group already).
+
+**Case-exporter/CI path fix (required):** moving `concepts/case-model.md` →
+`workflows/case-model.md` breaks PR #17's generator and drift gate, which
+hardcode the old path. Update:
+- `scripts/export_case_views.py`: `DOCS_PAGE` → `docs/workflows/case-model.md`.
+- `.github/workflows/ci.yml`: the two `docs/concepts/case-model.md` references in
+  the drift step → `docs/workflows/case-model.md`.
+
+After the fix, `uv run python scripts/export_case_views.py` regenerates the moved
+page in place and the drift gate stays green.
+
+## 9. Quality gates
+
+- `uv run mkdocs build --strict` passes (only the known out-of-nav internal docs
+  emit INFO, not warnings).
+- **Link audit:** no references to old paths (`concepts/…`, `model/…`,
+  `schemas/…`, root `glossary.md`/`contributing.md`/`*-interop.md`) remain —
+  `grep` for them returns nothing.
+- `scripts/validate_examples.py` passes.
+- The Case schema/docs drift gate passes with the new path: regenerate both
+  exporters, `git diff --quiet -- schemas/json docs/workflows/case-model.md` is clean.
+- The three image embeds resolve (files present under `docs/assets/images/`).
+
+## 10. Implementation phasing
+
+**This PR (Phase A):** full IA + config + path fix; all "authored now / authored
+from decks" pages; the Workflows section (overview + HOD/Variant-Impact category
+pages + five CLN deep-dives + moved Case page; POP/LOC + Variant-Impact stubs);
+Examples reorg; Reference moves with in-flux banner; the three graphics + manifest;
+Mermaid data-model + rubric; strict build green.
+
+**Later (Phase B, separate PR):** deep per-data-point workflow nuance; full
+POP/LOC and Variant-Impact concept pages (and CLN_CCS once the WG specifies
+it — §1.3); per-workflow examples +
+downloadable JSON; optional polished deck figures.
+
+## 11. Delivery
+
+Work on `docs/site-restructure` (off `feat/case-model`). Open a PR with **base
+`feat/case-model`** so it stacks on the Case work; retarget to `main` once PR #17
+merges. Keep in sync via the PR.
