@@ -1,0 +1,27 @@
+/* Applicability styling for the Case model page.
+   Convention: bold = required (r), underline = conditional (c),
+   italic = optional (o), dimmed = not applicable (x).
+   Used by the generated superset matrix and the per-workflow JSON examples. */
+
+.appl-r { font-weight: 700; }
+.appl-c { text-decoration: underline; }
+.appl-o { font-style: italic; }
+.appl-x { color: var(--md-default-fg-color--lighter); }
+
+/* Per-workflow JSON examples: keep light JSON token coloring; applicability is
+   shown by the text styling above (applied to the field keys). */
+pre.appl-json {
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+  padding: 0.8em 1em;
+  border-radius: 0.2rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  font-size: 0.78rem;
+}
+pre.appl-json .j-key { color: var(--md-code-hl-keyword-color); }
+pre.appl-json .j-str { color: var(--md-code-hl-string-color); }
+pre.appl-json .j-num { color: var(--md-code-hl-number-color); }
+
+details.appl-detail { margin: 0.4rem 0; }
+details.appl-detail > summary { cursor: pointer; font-weight: 600; }

@@ -34,6 +34,9 @@ theme:
         icon: material/weather-night
         name: Switch to light mode
 
+extra_css:
+  - assets/stylesheets/applicability.css
+
 plugins:
   - search
   - mkdocstrings:
