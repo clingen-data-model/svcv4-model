@@ -34,10 +34,9 @@ This documentation and data model are produced by the **SVCv4
 Standards data-modeling team**, a task-force offshoot of the **ClinGen Data
 Platform Working Group**, meeting weekly since July 2024.
 
-Larry Babb · Christine Preston · Matt Wright · Gloria Cheung · Bryan Wulf · Mark
-Mandell · Neethu Shah · Hannah Dziadzio · Liam Mulhall · Alicia Byrne.
-
-<!-- VERIFY: data-modeling team roster transcribed from "The SVCv4 Standard Data Model" deck; confirm. -->
+Larry Babb · Christine Preston · Neethu Shah · Alicia Byrne · Matt Wright ·
+Gloria Cheung · Bryan Wulf · Mark Mandell · Keyang Yu · Hannah Dziadzio · Liam
+Mulhall.
 
 ## Standards bodies
 

@@ -14,7 +14,5 @@ variant.
 | `POP_FRQ` | Population (allele) frequency of the variant. |
 | `POP_HMZ` | Population observations of homozygotes / hemizygotes. |
 
-<!-- VERIFY: POP codes transcribed from the Human Observational Data Summary Table graphic; confirm with the SVCv4 WG. -->
-
 Scoring for these codes is defined in
 [ClinGen CSpec](../../reference/cspec-interop.md).

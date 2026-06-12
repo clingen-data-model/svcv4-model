@@ -30,8 +30,6 @@ Group, with publication targeted in *Genetics in Medicine*.
   decision trees that mimic the steps a curator follows, rather than simple
   Met / Not-Met criteria.
 
-<!-- VERIFY: v3→v4 summary and code-naming examples drawn from the "Overview of SVCv4 Standards" deck (slides 4–9); confirm wording with the SVCv4 WG. -->
-
 ## The Summary Table
 
 SVCv4 organizes evidence in a **Summary Table** with a top-down hierarchy:

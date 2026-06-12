@@ -31,7 +31,5 @@ Each concept uses a common code pattern: **`_PRD`** (prediction), **`_FXN`**
 | **Absent protein (NUL)** | `NUL_PRD`, `NUL_FXN`, `NUL_INF` |
 | **Alteration to splicing (SPL)** | `SPL_PRD`, `SPL_SPA`, `SPL_FXN`, `SPL_INF` |
 
-<!-- VERIFY: PFD concept/code roster and the PRD/FXN/INF/SPA pattern transcribed from the "Predictive and Functional Data w/ Workflows" Summary Table graphic; confirm with the SVCv4 WG. -->
-
 Scoring for these codes is defined in
 [ClinGen CSpec](../../reference/cspec-interop.md).

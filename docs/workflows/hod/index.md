@@ -17,8 +17,6 @@ workflows. (Figure provided by the SVCv4 Standards group.)*
 | **Clinical Observations (CLN)** | `CLN_UAF`, `CLN_ALT`, `CLN_AFF`, `CLN_DNV`, `CLN_CCS` | Observations in (un)affected individuals, alternate-cause cases, de novo occurrences, and case-control studies. |
 | **Locus Specificity (LOC)** | `LOC_PHE`, `LOC_SEG` | Observation of a specific phenotype; segregation of the variant with disease. |
 
-<!-- VERIFY: concept/code roster transcribed from the "Human Observational Data w/ Workflows" Summary Table graphic; confirm with the SVCv4 WG. -->
-
 ## Where this model goes deep
 
 The **[Clinical Observations (CLN)](cln/index.md)** workflows are detailed here

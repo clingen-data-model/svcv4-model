@@ -14,7 +14,5 @@ tracks with the phenotype and disease.
 | `LOC_PHE` | Observation of a specific phenotype. |
 | `LOC_SEG` | Segregation of the variant with disease (co-segregation). |
 
-<!-- VERIFY: LOC codes transcribed from the Human Observational Data Summary Table graphic; confirm with the SVCv4 WG. -->
-
 Scoring for these codes is defined in
 [ClinGen CSpec](../../reference/cspec-interop.md).
