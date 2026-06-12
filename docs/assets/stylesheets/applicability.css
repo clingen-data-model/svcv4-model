@@ -26,17 +26,24 @@ pre.appl-json .j-num { color: var(--md-code-hl-number-color); }
 details.appl-detail { margin: 0.4rem 0; }
 details.appl-detail > summary { cursor: pointer; font-weight: 600; }
 
-/* Superset matrix: workflow columns shrink to fit their heading (minimal
-   padding); Property + Notes take the remaining width. */
-.appl-matrix table { width: 100%; }
-.appl-matrix th:nth-child(-n+5),
-.appl-matrix td:nth-child(-n+5) {
-  width: 1%;            /* shrink-to-content with white-space:nowrap */
-  white-space: nowrap;
-  text-align: center;
-  padding-left: 0.4rem;
-  padding-right: 0.4rem;
+/* Superset matrix: the five workflow columns are quick annotations and should
+   take <=40% of the table; Property + Notes (the important content) take the
+   rest. Selectors are prefixed with .md-typeset to out-specify the theme's
+   default table rules, and table-layout:fixed enforces the column widths. */
+.md-typeset .appl-matrix table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
-.appl-matrix th:nth-child(6),
-.appl-matrix td:nth-child(6) { width: 32%; }  /* Property */
+.md-typeset .appl-matrix th:nth-child(-n+5),
+.md-typeset .appl-matrix td:nth-child(-n+5) {
+  width: 6%;            /* 5 x 6% = 30% total for the workflow columns */
+  font-size: 0.68rem;
+  text-align: center;
+  white-space: nowrap;
+  padding: 0.3em 0.2rem;
+}
+.md-typeset .appl-matrix th:nth-child(6),
+.md-typeset .appl-matrix td:nth-child(6) { width: 35%; }  /* Property */
+/* Notes (7th column) takes the remaining ~35%. */
 
