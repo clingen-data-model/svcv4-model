@@ -2,7 +2,7 @@
 
 Two more Evidence Concepts sit under
 [Human Observational Data](human-observational-data.md) alongside Clinical
-Observations. They are part of the SVCv4 Standards; this computational model has
+Observations. They are part of the SVCv4 Standards; this data model has
 not modeled them in detail yet.
 
 !!! note "Not yet modeled here"

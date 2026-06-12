@@ -1,8 +1,8 @@
 # How SVCv4 maps to the model
 
 This is the heart of the project: showing how the **SVCv4 Standards**
-(authored by the SVCv4 Working Group) line up with the **computational data
-model** documented here, so the two stay in lock-step as the framework evolves.
+(authored by the SVCv4 Working Group) line up with the **data model** documented
+here, so the two stay in lock-step as the framework changes toward finalization.
 
 ## The Summary Table is the anchor
 

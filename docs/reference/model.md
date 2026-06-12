@@ -1,13 +1,13 @@
 # Model reference
 
-!!! warning "Advisory — in flux"
+!!! warning "Advisory — not yet final"
 
-    This reference is generated from the computational data model, which is
-    still evolving alongside the SVCv4 Standards. Its codes and structure
-    **track** the (evolving) SVCv4 Standards authored by the SVCv4 Working
-    Group — they are not themselves the Standard. Treat this as advisory while
-    the model stabilizes. New to SVCv4? Start with
-    [Overview](../index.md) and [Getting Started](../getting-started/show-your-work.md).
+    The SVCv4 Standards have not yet been finalized and are still changing to
+    varying degrees. This reference, generated from the data model, **tracks**
+    the Standards authored by the SVCv4 Working Group and changes along with them
+    — it is not itself the Standard. Treat it as advisory for now. New to SVCv4?
+    Start with [Overview](../index.md) and
+    [Getting Started](../getting-started/show-your-work.md).
 
 Auto-generated from the [Pydantic data model][src]. Each class shows
 its fields with their types, defaults, and descriptions.

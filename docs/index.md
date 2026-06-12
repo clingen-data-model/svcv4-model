@@ -1,31 +1,35 @@
 # SVCv4 Classification Model
 
-> A computational **data model** for the **ACMG/AMP/CAP/ClinGen Sequence
-> Variant Classification v4 (SVCv4)** Standards — expressed as a **GA4GH GKS
-> VA-Spec community profile** — so software and systems can produce, exchange,
-> and consume SVCv4 classifications with a shared, semantic understanding.
+> A **data model** for the **ACMG/AMP/CAP/ClinGen Sequence Variant
+> Classification v4 (SVCv4)** Standards — expressed as a **GA4GH GKS VA-Spec
+> community profile** — providing **standard semantic interoperability** for
+> producing, exchanging, and consuming evidence-based SVCv4-compliant
+> classifications.
 
-## What this is (and who builds it)
+## About this project
 
-The **SVCv4 Standards** — the rubric, evidence concepts and codes, workflows,
+The **SVCv4 Standards** — the Summary Table, evidence concepts and codes, workflows,
 and scoring — are defined by the **ACMG/AMP/CAP/ClinGen SVCv4 Working Group**.
-The framework is theirs and is still evolving.
+The framework is theirs; it has not yet been finalized and is still changing to
+varying degrees.
 
 **This project** is a separate, coordinating effort: the **SVCv4 Standards
 data-modeling team** (a task-force offshoot of the ClinGen Data Platform Working
-Group). We provide a *computational representation* of the SVCv4 data — its
-structure, codes, and uses — so developers who produce or consume SVCv4
-classifications can do so with a common semantic understanding. We do **not**
-author the Standards, and the scoring **methods/rules** live in
+Group). We build the **classification data model** — the structure, codes, and
+uses of the SVCv4 data — to provide **standard semantic interoperability** for
+producing, exchanging, and consuming evidence-based SVCv4-compliant
+classifications. We do **not** author the Standards, and the scoring
+**methods/rules** live in
 [ClinGen CSpec](reference/cspec-interop.md), not here. See
 [What this project is — and isn't](overview/scope.md) and
 [Credits](reference/credits.md).
 
 !!! warning "Early development"
 
-    The SVCv4 Standards and this model are evolving together; the
-    [Reference](reference/model.md) material is advisory while the model
-    stabilizes. The narrative pages here are the best place to start.
+    The SVCv4 Standards have not yet been finalized and are still changing to
+    varying degrees, and this model changes alongside them; the
+    [Reference](reference/model.md) material is advisory for now. The narrative
+    pages here are the best place to start.
 
 ## Why structured evidence
 
@@ -38,15 +42,12 @@ can be created, approved, and shared across the research and clinical community.
 
 The points-based classification bands (per the SVCv4 Working Group):
 
-| Classification | Points |
-|---|---|
-| Benign (B) | ≤ −4 |
-| Likely Benign (LB) | −3 to −1 |
-| Uncertain (VUS) | 0 to 5 — *Low* 0–1 · *Mid* 2–3 · *High* 4–5 |
-| Likely Pathogenic (LP) | 6 to 9 |
-| Pathogenic (P) | ≥ 10 |
+![SVCv4 points-based classification bands](assets/images/points-bands.png){ loading=lazy }
 
-<!-- VERIFY: point bands and VUS Low/Mid/High split transcribed from the "Overview of SVCv4 Standards" deck (slides 6–7); confirm against the SVCv4 WG's authoritative source. -->
+*SVCv4 points-based classification bands — Benign (≤ −4), Likely Benign (−3 to
+−1), Uncertain significance (0 to 5; "Low" 0–1, "Mid" 2–3, "High" 4–5), Likely
+Pathogenic (6 to 9), Pathogenic (≥ 10). (Figure provided by the SVCv4 Standards
+group.)*
 
 ## Start here
 

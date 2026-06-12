@@ -11,7 +11,7 @@ SVCv4 is the work of two distinct groups, credited separately here.
 ## SVCv4 Working Group — the Standards
 
 The **ACMG/AMP/CAP/ClinGen SVCv4 Working Group** defines and owns the SVCv4
-Standards/framework (rubric, evidence concepts/codes, workflows, scoring).
+Standards/framework (Summary Table, evidence concepts/codes, workflows, scoring).
 
 **Co-chairs:** Les Biesecker (NHGRI/NIH) · Steven Harrison (Ambry).
 
@@ -30,7 +30,7 @@ representative) · Nicky Whiffin (University of Oxford).
 
 ## SVCv4 Standards data-modeling team — this model
 
-This documentation and computational data model are produced by the **SVCv4
+This documentation and data model are produced by the **SVCv4
 Standards data-modeling team**, a task-force offshoot of the **ClinGen Data
 Platform Working Group**, meeting weekly since July 2024.
 

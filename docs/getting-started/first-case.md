@@ -54,4 +54,5 @@ its applicability varies by workflow.
 !!! note "This is a teaching example"
 
     Field names follow the current [Case model](../workflows/case-model.md);
-    they will track the SVCv4 Standards as they evolve.
+    they track the SVCv4 Standards, which have not yet been finalized and are
+    still changing to varying degrees.

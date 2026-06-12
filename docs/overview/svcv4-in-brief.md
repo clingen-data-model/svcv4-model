@@ -46,9 +46,9 @@ Observational Data** (population, clinical, and locus-specificity evidence) and
 
 ## How the model relates
 
-This documentation and data model provide a **computational representation** of
-the above so that systems can capture and exchange the evidence and the
-resulting classifications. The Standards define *what* the evidence and codes
+This documentation and data model provide a **standard, interoperable
+representation** of the above so that systems can capture and exchange the
+evidence and the resulting classifications. The Standards define *what* the evidence and codes
 are; this project defines *how the data is structured*; and
 [ClinGen CSpec](../reference/cspec-interop.md) owns the *methods/rules* that turn
 captured evidence into scores. See

@@ -1,11 +1,11 @@
 # JSON Schemas
 
-!!! warning "Advisory — in flux"
+!!! warning "Advisory — not yet final"
 
-    These schemas are generated from the computational data model, which is
-    still evolving alongside the SVCv4 Standards. They **track** the (evolving)
-    SVCv4 Standards authored by the SVCv4 Working Group — they are not themselves
-    the Standard. Treat as advisory while the model stabilizes.
+    The SVCv4 Standards have not yet been finalized and are still changing to
+    varying degrees. These schemas, generated from the data model, **track** the
+    Standards authored by the SVCv4 Working Group and change along with them —
+    they are not themselves the Standard. Treat as advisory for now.
 
 The Pydantic data model emits JSON Schemas via
 `pydantic.BaseModel.model_json_schema()`. The committed schemas in

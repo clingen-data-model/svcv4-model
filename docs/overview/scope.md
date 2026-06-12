@@ -5,8 +5,8 @@ understanding what this documentation does and does not own.
 
 | Role | Who | What they own |
 |---|---|---|
-| **The Standards / framework** | **ACMG/AMP/CAP/ClinGen SVCv4 Working Group** | The SVCv4 rubric, evidence concepts/codes, workflows, and scoring approach. The framework itself — evolving and authoritative. |
-| **The computational data model** | **SVCv4 Standards data-modeling team** (this project; a ClinGen Data Platform WG offshoot) | A computational representation of the SVCv4 data — its structure, codes, and uses — so producers/consumers share a common semantics. **Not the author of the Standards.** |
+| **The Standards / framework** | **ACMG/AMP/CAP/ClinGen SVCv4 Working Group** | The SVCv4 Summary Table, evidence concepts/codes, workflows, and scoring approach. The framework itself — authoritative, though not yet finalized and still changing to varying degrees. |
+| **The data model** | **SVCv4 Standards data-modeling team** (this project; a ClinGen Data Platform WG offshoot) | A standard data model for the SVCv4 data — its structure, codes, and uses — providing semantic interoperability for producing, exchanging, and consuming evidence-based SVCv4-compliant classifications. **Not the author of the Standards.** |
 | **The methods / rules** | **ClinGen CSpec** | The workflows/methods that evaluate captured evidence and produce scores (baseline + specialized versions). |
 
 This project works **in coordination with** the SVCv4 Working Group's
