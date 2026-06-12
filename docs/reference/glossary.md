@@ -3,8 +3,8 @@
 | Term | Meaning |
 |---|---|
 | **SVCv4** | Sequence Variant Classification v4 — the ACMG/AMP/CAP/ClinGen joint Technical Standard, succeeding the 2015 Richards et al. guidelines (SVCv3). Points-based; replaces v3's strength-categories + combining-rules approach. |
-| **VBC** | Variant Being Considered — the specific germline variant under evaluation; expressed as a VRS Variation. |
-| **MDE** | Mendelian Disease Entity — the disease the VBC is being assessed against. |
+| **VBC** | Variant Being Considered — the specific germline variant under evaluation; expressed as a VRS Variation. **"The variant," "variation," and "VBC" are synonyms**, and the VBC is the Proposition's subject (`subjectVariant`). The terms *additional variant* and *compound-het variant* refer to other, distinctly-named variants — not the VBC. |
+| **MDE** | **Mendelian** Disease Entity — the disease the VBC is assessed against. **"The disease," "the condition," and "MDE" are synonyms**, and the MDE is the Proposition's object (`objectCondition`, or `objectConditionSet` when more than one). |
 | **Classification Model** | The shape of a classification (Statements, Propositions, Evidence Lines, Evidence Items). Authored by this repo as a VA-Spec community profile. |
 | **Method Model** | The definitions of methods, workflows, criteria, and scoring rules — *and* their evaluation logic. Authored in ClinGen CSpec; not in this repo, not in VA-Spec. |
 | **Statement / Proposition / Evidence Line / Evidence Item** | VA-Spec core entities. See [The assertion framework](../getting-started/assertion-framework.md) and [Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md). |
