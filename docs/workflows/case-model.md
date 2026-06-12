@@ -18,6 +18,13 @@ phase documents the conditional rules but does not enforce them.
 
 See the [`Case` model reference][svcv4_model.Case] for field types.
 
+This is the **structured backbone** of the
+[Clinical Observations](clinical-observations.md) workflows: each CLN workflow
+page describes *what evidence to capture*, and the per-workflow tables below say
+exactly which fields apply. Terminology follows the
+[Glossary](../reference/glossary.md) — "the variant" is the **VBC**, "the
+disease/condition" is the **MDE**.
+
 ## Applicability by workflow
 
 <!-- BEGIN GENERATED: applicability tables -->
