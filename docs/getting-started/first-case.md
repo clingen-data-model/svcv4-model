@@ -47,7 +47,7 @@ This captured case becomes one or more **Evidence Items** under the `CLN_AFF`
 **Evidence Line**. The workflow (defined in
 [CSpec](../reference/cspec-interop.md)) turns the captured evidence into a
 **score**; scores roll up into the **Statement**. See
-[Affected (CLN_AFF)](../workflows/cln-aff.md) for the full workflow and
+[Affected (CLN_AFF)](../workflows/hod/cln/cln-aff.md) for the full workflow and
 [Case model & applicability](../workflows/case-model.md) for every field and how
 its applicability varies by workflow.
 

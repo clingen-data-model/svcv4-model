@@ -7,7 +7,7 @@ autosomal-dominant / X-linked-male inheritance.
 ## What evidence to capture
 
 Required for a De Novo case (see the full
-[applicability table](case-model.md)):
+[applicability table](../../case-model.md)):
 
 - `moi` — mode of inheritance.
 - `pop_frq_points` — the population-frequency contribution.
@@ -24,5 +24,5 @@ The compound-het and additional-variant fields are **not applicable** to
 Points for `CLN_DNV` come from its CSpec workflow; the strength of a de novo
 observation typically depends on whether the parental relationship was confirmed
 and on phenotype specificity — but those **rules** live in
-[ClinGen CSpec](../reference/cspec-interop.md). This model captures the evidence;
-see [Case model & applicability](case-model.md) for the exact `CLN_DNV` fields.
+[ClinGen CSpec](../../../reference/cspec-interop.md). This model captures the evidence;
+see [Case model & applicability](../../case-model.md) for the exact `CLN_DNV` fields.

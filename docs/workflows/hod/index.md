@@ -4,7 +4,7 @@
 Categories in the SVCv4 Summary Table. It covers evidence observed in
 populations and patients.
 
-![Human Observational Data with workflows](../assets/images/hod-workflows.png){ loading=lazy }
+![Human Observational Data with workflows](../../assets/images/hod-workflows.png){ loading=lazy }
 
 *The Human Observational Data section of the SVCv4 Summary Table, with its code
 workflows. (Figure provided by the SVCv4 Standards group.)*
@@ -21,10 +21,9 @@ workflows. (Figure provided by the SVCv4 Standards group.)*
 
 ## Where this model goes deep
 
-The **[Clinical Observations (CLN)](clinical-observations.md)** workflows are
-detailed here and backed by the [Case model](case-model.md). **Population (POP)**
-and **Locus Specificity (LOC)** are summarized on the
-[Population & Locus Specificity](pop-loc.md) page and will be modeled in a later
-phase.
+The **[Clinical Observations (CLN)](cln/index.md)** workflows are detailed here
+and backed by the [Case model](../case-model.md). **[Population (POP)](pop.md)**
+and **[Locus Specificity (LOC)](loc.md)** are summarized for now and will be
+modeled in a later phase.
 
-Scoring rules for every code live in [ClinGen CSpec](../reference/cspec-interop.md).
+Scoring rules for every code live in [ClinGen CSpec](../../reference/cspec-interop.md).

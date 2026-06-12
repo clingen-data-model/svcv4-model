@@ -85,14 +85,18 @@ nav:
       - Capture your first case: getting-started/first-case.md
   - Workflows:
       - Workflows overview: workflows/index.md
-      - Human Observational Data: workflows/human-observational-data.md
-      - Clinical Observations (CLN): workflows/clinical-observations.md
-      - Affected (CLN_AFF): workflows/cln-aff.md
-      - De Novo (CLN_DNV): workflows/cln-dnv.md
-      - Alternative Cause (CLN_ALT): workflows/cln-alt.md
-      - Unaffected (CLN_UAF): workflows/cln-uaf.md
-      - Population & Locus Specificity: workflows/pop-loc.md
-      - Variant Impact: workflows/variant-impact.md
+      - Human Observational Data (HOD):
+          - workflows/hod/index.md
+          - Clinical Observations (CLN):
+              - workflows/hod/cln/index.md
+              - Affected (CLN_AFF): workflows/hod/cln/cln-aff.md
+              - De novo (CLN_DNV): workflows/hod/cln/cln-dnv.md
+              - Alternative Cause (CLN_ALT): workflows/hod/cln/cln-alt.md
+              - Unaffected (CLN_UAF): workflows/hod/cln/cln-uaf.md
+          - Population (POP): workflows/hod/pop.md
+          - Locus Specificity (LOC): workflows/hod/loc.md
+      - Predictive & Functional Data (PFD):
+          - workflows/pfd/index.md
       - Case model & applicability: workflows/case-model.md
   - Examples:
       - Examples overview: examples/index.md

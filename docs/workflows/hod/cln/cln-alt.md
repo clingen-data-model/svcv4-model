@@ -10,8 +10,8 @@ VBC's causality. It has two subtypes, kept together here:
   variant in a *different gene* offers the alternate explanation.
 
 Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
-([Glossary](../reference/glossary.md)). Both subtypes are distinct workflows in
-the [Case model](case-model.md) (separate columns in its applicability matrix),
+([Glossary](../../../reference/glossary.md)). Both subtypes are distinct workflows in
+the [Case model](../../case-model.md) (separate columns in its applicability matrix),
 so use that page for the exact field applicability.
 
 ## Alternative Cause-Variant (CLN_ALTV)
@@ -22,7 +22,7 @@ disease.
 
 ### What evidence to capture
 
-Required (see the full [applicability table](case-model.md)):
+Required (see the full [applicability table](../../case-model.md)):
 
 - `moi` — mode of inheritance.
 - `case_proband_info` — including **`pheno_severity`** (severity relative to
@@ -38,7 +38,7 @@ Required (see the full [applicability table](case-model.md)):
 
 The `CLN_ALTV` points (and how phase and the alternate variant's classification
 weigh in) are determined by its workflow in
-[ClinGen CSpec](../reference/cspec-interop.md). This model captures the evidence.
+[ClinGen CSpec](../../../reference/cspec-interop.md). This model captures the evidence.
 
 ## Alternative Cause-Gene (CLN_ALTG)
 
@@ -47,7 +47,7 @@ The **Alternative Cause-Gene** subtype covers cases where a variant in a
 
 ### What evidence to capture
 
-Required (see the full [applicability table](case-model.md)):
+Required (see the full [applicability table](../../case-model.md)):
 
 - `moi` — mode of inheritance.
 - `case_proband_info` — including:
@@ -65,4 +65,4 @@ Required (see the full [applicability table](case-model.md)):
 
 `CLN_ALTG` points come from its CSpec workflow; phenotype severity and
 age-matched penetrance feed that scoring, but the **rules** live in
-[ClinGen CSpec](../reference/cspec-interop.md). This model captures the evidence.
+[ClinGen CSpec](../../../reference/cspec-interop.md). This model captures the evidence.

@@ -8,7 +8,7 @@ X-linked inheritance.
 ## What evidence to capture
 
 Required for an Affected case (see the full
-[applicability table](case-model.md)):
+[applicability table](../../case-model.md)):
 
 - `moi` — mode of inheritance.
 - `pop_frq_points` — the population-frequency contribution.
@@ -27,7 +27,7 @@ Conditional:
 ## Scoring
 
 The points for `CLN_AFF` are produced by its workflow in
-[ClinGen CSpec](../reference/cspec-interop.md); this model captures the evidence
-the workflow consumes. See [Case model & applicability](case-model.md) for the
-exact `CLN_AFF` field applicability and [Capture your first case](../getting-started/first-case.md)
+[ClinGen CSpec](../../../reference/cspec-interop.md); this model captures the evidence
+the workflow consumes. See [Case model & applicability](../../case-model.md) for the
+exact `CLN_AFF` field applicability and [Capture your first case](../../../getting-started/first-case.md)
 for a worked example.

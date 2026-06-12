@@ -15,12 +15,12 @@ surfaces as an [Evidence Line](../getting-started/evidence-lines-and-items.md).
 
 ## The two categories
 
-- **[Human Observational Data](human-observational-data.md)** — evidence from
+- **[Human Observational Data (HOD)](hod/index.md)** — evidence from
   populations and patients: Population (POP), Clinical Observations (CLN), and
   Locus Specificity (LOC).
-- **[Variant Impact](variant-impact.md)** — predictive and functional evidence
-  about the variant's molecular effect: Single-amino-acid change (MIS), RNA
-  alteration (CDS), Absent protein (NUL), and Splicing (SPL).
+- **[Predictive & Functional Data (PFD)](pfd/index.md)** — predictive and
+  functional evidence about the variant's molecular effect: Single-amino-acid
+  change (MIS), RNA alteration (CDS), Absent protein (NUL), and Splicing (SPL).
 
 ## What this section covers now
 

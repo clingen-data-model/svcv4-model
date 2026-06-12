@@ -8,7 +8,7 @@ autosomal-recessive / X-linked inheritance.
 ## What evidence to capture
 
 Required for an Unaffected case (see the full
-[applicability table](case-model.md)):
+[applicability table](../../case-model.md)):
 
 - `moi` — mode of inheritance.
 - `case_proband_info` — including **`age_matched_penetrance`** (how penetrant the
@@ -23,5 +23,5 @@ fields are **not applicable** to `CLN_UAF`.
 
 The weight of an unaffected observation depends heavily on age-matched
 penetrance, but the scoring **rules** are defined in
-[ClinGen CSpec](../reference/cspec-interop.md). This model captures the evidence;
-see [Case model & applicability](case-model.md) for the exact `CLN_UAF` fields.
+[ClinGen CSpec](../../../reference/cspec-interop.md). This model captures the evidence;
+see [Case model & applicability](../../case-model.md) for the exact `CLN_UAF` fields.
