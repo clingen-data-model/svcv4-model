@@ -14,7 +14,7 @@ Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
 |---|---|---|
 | [`CLN_AFF`](cln-aff.md) | Affected individuals (AD; AR / X-linked) | ✅ |
 | [`CLN_DNV`](cln-dnv.md) | De novo occurrence (AD / X-linked male) | ✅ |
-| [`CLN_ALT`](cln-altv.md) | Affected with an alternate cause — [Variant](cln-altv.md) / [Gene](cln-altg.md) | ✅ |
+| [`CLN_ALT`](cln-alt.md) | Affected with an alternate cause — [Variant](cln-alt.md#alternative-variant-cln_altv) / [Gene](cln-alt.md#alternative-gene-cln_altg) | ✅ |
 | [`CLN_UAF`](cln-uaf.md) | Unaffected individuals (AD; AR / X-linked) | ✅ |
 | `CLN_CCS` | Case-control studies | — |
 

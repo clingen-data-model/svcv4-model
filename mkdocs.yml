@@ -89,8 +89,7 @@ nav:
       - Clinical Observations (CLN): workflows/clinical-observations.md
       - Affected (CLN_AFF): workflows/cln-aff.md
       - De Novo (CLN_DNV): workflows/cln-dnv.md
-      - Alternative Variant (CLN_ALTV): workflows/cln-altv.md
-      - Alternative Gene (CLN_ALTG): workflows/cln-altg.md
+      - Alternative Cause (CLN_ALT): workflows/cln-alt.md
       - Unaffected (CLN_UAF): workflows/cln-uaf.md
       - Population & Locus Specificity: workflows/pop-loc.md
       - Variant Impact: workflows/variant-impact.md
