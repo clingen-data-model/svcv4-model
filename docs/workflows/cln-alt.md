@@ -4,20 +4,21 @@
 explanation** for the proband's disease exists, which counts **against** the
 VBC's causality. It has two subtypes, kept together here:
 
-- **[Alternative Variant (`CLN_ALTV`)](#alternative-variant-cln_altv)** — a
-  *different variant in the same gene* offers the alternate explanation.
-- **[Alternative Gene (`CLN_ALTG`)](#alternative-gene-cln_altg)** — a variant in
-  a *different gene* offers the alternate explanation.
+- **[Alternative Cause-Variant (`CLN_ALTV`)](#alternative-cause-variant-cln_altv)**
+  — a *different variant in the same gene* offers the alternate explanation.
+- **[Alternative Cause-Gene (`CLN_ALTG`)](#alternative-cause-gene-cln_altg)** — a
+  variant in a *different gene* offers the alternate explanation.
 
 Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
 ([Glossary](../reference/glossary.md)). Both subtypes are distinct workflows in
 the [Case model](case-model.md) (separate columns in its applicability matrix),
 so use that page for the exact field applicability.
 
-## Alternative Variant (CLN_ALTV)
+## Alternative Cause-Variant (CLN_ALTV)
 
-The **Alternative Variant** subtype covers cases where a **different variant in
-the same gene** offers an alternate explanation for the proband's disease.
+The **Alternative Cause-Variant** subtype covers cases where a **different
+variant in the same gene** offers an alternate explanation for the proband's
+disease.
 
 ### What evidence to capture
 
@@ -39,10 +40,10 @@ The `CLN_ALTV` points (and how phase and the alternate variant's classification
 weigh in) are determined by its workflow in
 [ClinGen CSpec](../reference/cspec-interop.md). This model captures the evidence.
 
-## Alternative Gene (CLN_ALTG)
+## Alternative Cause-Gene (CLN_ALTG)
 
-The **Alternative Gene** subtype covers cases where a variant in a **different
-gene** offers an alternate explanation for the proband's disease.
+The **Alternative Cause-Gene** subtype covers cases where a variant in a
+**different gene** offers an alternate explanation for the proband's disease.
 
 ### What evidence to capture
 
@@ -51,7 +52,7 @@ Required (see the full [applicability table](case-model.md)):
 - `moi` — mode of inheritance.
 - `case_proband_info` — including:
     - **`pheno_severity`** — *conditional*: the `BIALLELIC_LT_EXPECTED` value is
-      **not applicable** to Alternative Gene (the workflow drops it).
+      **not applicable** to Alternative Cause-Gene (the workflow drops it).
     - **`age_matched_penetrance`** — *conditional*: applicable for Alternative
       Gene among the conditional workflows.
 - `vbc` — the variant being considered.

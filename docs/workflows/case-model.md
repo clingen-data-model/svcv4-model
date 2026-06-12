@@ -6,10 +6,11 @@ variant pathogenicity. It is the structured `data` behind a
 `clinical_observation` Evidence Item.
 
 The model is a permissive **superset**: every attribute is optional on the type.
-Which attributes are required (`r`), optional (`o`), conditional (`c`), or not
-applicable (`x`) depends on the CLN workflow — `CLN_AFF` (Affected), `CLN_DNV`
-(De Novo), `CLN_ALTV` (Alternative Variant), `CLN_ALTG` (Alternative Gene), and
-`CLN_UAF` (Unaffected). `CLN_ALTV` + `CLN_ALTG` generalize to `CLN_ALT`.
+Which attributes are required (`R`), optional (`O`), conditional (`C`), or not
+applicable (`X`) depends on the CLN workflow — `CLN_AFF` (Affected), `CLN_DNV`
+(De novo), `CLN_ALTV` (Alternative Cause-Variant), `CLN_ALTG` (Alternative
+Cause-Gene), and `CLN_UAF` (Unaffected). `CLN_ALTV` + `CLN_ALTG` are subtypes of
+`CLN_ALT` (Alternative Cause).
 
 Applicability and the conditional rules live in a single source of truth,
 `schemas/applicability/case_applicability.yaml`. The per-workflow JSON Schemas
@@ -29,46 +30,50 @@ disease/condition" is the **MDE**.
 
 <!-- BEGIN GENERATED: applicability tables -->
 
-**Legend:** <span class="appl-r">required (r)</span> &nbsp;·&nbsp; <span class="appl-c">conditional (c)</span> &nbsp;·&nbsp; <span class="appl-o">optional (o)</span> &nbsp;·&nbsp; <span class="appl-x">not applicable (x)</span>
+**Legend:** <span class="appl-r">required (R)</span> &nbsp;·&nbsp; <span class="appl-c">conditional (C)</span> &nbsp;·&nbsp; <span class="appl-o">optional (O)</span> &nbsp;·&nbsp; <span class="appl-x">not applicable (X)</span>
 
 ### Superset matrix
 
 Every Case attribute across the five CLN workflows, with the nested structure preserved. Conditional rules are summarized in **Notes**.
 
-| Attribute | Affected<br>`CLN_AFF` | De novo<br>`CLN_DNV` | Alternate Variant<br>`CLN_ALTV` | Alternate Gene<br>`CLN_ALTG` | Unaffected<br>`CLN_UAF` | Notes |
+<div class="appl-matrix" markdown="1">
+
+| AFF | DNV | ALTV | ALTG | UAF | Property | Notes |
 |---|---|---|---|---|---|---|
-| `moi` | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | AD, AR, XLD, XLR, SD — ALTV does not yet support AR/XLR |
-| `pop_frq_points` | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | must be >= -1.0 |
-| `case_proband_info` | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> |  |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `sex` | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | M/F/U/T |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `age` | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | age + unit, or an age range; general or disease-specific |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `phenotypes` | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | 0..many |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ `name` | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> |  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ `code` | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-o">o</span> | HPO identifier when possible |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `pheno_specificity_for_gene` | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | SPECIFIC, CONSISTENT, INCONSISTENT — curator makes the PHENO SPECIFICITY call; rule coordination is out of scope |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `pheno_severity` | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-c">c</span> | <span class="appl-x">x</span> | BIALLELIC<expected not applicable to ALT Gene; ALTV rule is more nuanced than ALTG — CLN_ALTG excludes `BIALLELIC_LT_EXPECTED` |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `age_matched_penetrance` | <span class="appl-o">o</span> | <span class="appl-o">o</span> | <span class="appl-x">x</span> | <span class="appl-c">c</span> | <span class="appl-r">r</span> | <80%, 80-100%, near 100% — only applicable at all for ALT Gene among the conditional workflows |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `confirmed_parental_relationship` | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> |  |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `all_relevant_genes_tested` | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> |  |
-| `vbc` | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> |  |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `id` | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> |  |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `zygosity` | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | the only variant_type element needed for case-level VBC assessment |
-| `compound_het_variant` | <span class="appl-c">c</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | AFF only; otherwise use additional_variant — biallelic disease eval with a het VBC |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `id` | <span class="appl-c">c</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> |  |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `zygosity` | <span class="appl-c">c</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | fixed = `HET` (CLN_AFF) |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `phase_in_ref_to_vbc` | <span class="appl-c">c</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | fixed = `TRANS` (CLN_AFF) |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `phase_confidence` | <span class="appl-c">c</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> |  |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `classification` | <span class="appl-c">c</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> |  |
-| `additional_variant_exists` | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> |  |
-| `additional_variants` | <span class="appl-c">c</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | compound-het additional variants are NOT supported — requires `additional_variant_exists == TRUE` |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `id` | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> |  |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `gene` | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> |  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ `symbol` | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | gene symbol; follows the gene's applicability |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ `mde_associated_gene` | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | required if gene is different from VBC gene |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `zygosity` | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | HOM / HET / HEMI |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `phase_in_ref_to_vbc` | <span class="appl-c">c</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | only if same gene as VBC |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `phase_confidence` | <span class="appl-c">c</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-x">x</span> | only if phase is captured |
-| &nbsp;&nbsp;&nbsp;&nbsp;↳ `classification` | <span class="appl-r">r</span> | <span class="appl-x">x</span> | <span class="appl-r">r</span> | <span class="appl-r">r</span> | <span class="appl-x">x</span> | must be P-LP if ALTV or ALTG use case |
+| <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | `moi` | AD, AR, XLD, XLR, SD — ALTV does not yet support AR/XLR |
+| <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | `pop_frq_points` | must be >= -1.0 |
+| <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | `case_proband_info` |  |
+| <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `sex` | M/F/U/T |
+| <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `age` | age + unit, or an age range; general or disease-specific |
+| <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `phenotypes` | 0..many |
+| <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ `name` |  |
+| <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-o">O</span> | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ `code` | HPO identifier when possible |
+| <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `pheno_specificity_for_gene` | SPECIFIC, CONSISTENT, INCONSISTENT — curator makes the PHENO SPECIFICITY call; rule coordination is out of scope |
+| <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-c">C</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `pheno_severity` | BIALLELIC<expected not applicable to ALT Gene; ALTV rule is more nuanced than ALTG — CLN_ALTG excludes `BIALLELIC_LT_EXPECTED` |
+| <span class="appl-o">O</span> | <span class="appl-o">O</span> | <span class="appl-x">X</span> | <span class="appl-c">C</span> | <span class="appl-r">R</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `age_matched_penetrance` | <80%, 80-100%, near 100% — only applicable at all for ALT Gene among the conditional workflows |
+| <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `confirmed_parental_relationship` |  |
+| <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `all_relevant_genes_tested` |  |
+| <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | `vbc` |  |
+| <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `id` |  |
+| <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `zygosity` | the only variant_type element needed for case-level VBC assessment |
+| <span class="appl-c">C</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | `compound_het_variant` | AFF only; otherwise use additional_variant — biallelic disease eval with a het VBC |
+| <span class="appl-c">C</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `id` |  |
+| <span class="appl-c">C</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `zygosity` | fixed = `HET` (CLN_AFF) |
+| <span class="appl-c">C</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `phase_in_ref_to_vbc` | fixed = `TRANS` (CLN_AFF) |
+| <span class="appl-c">C</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `phase_confidence` |  |
+| <span class="appl-c">C</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `classification` |  |
+| <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | `additional_variant_exists` |  |
+| <span class="appl-c">C</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | `additional_variants` | compound-het additional variants are NOT supported — requires `additional_variant_exists == TRUE` |
+| <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `id` |  |
+| <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `gene` |  |
+| <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ `symbol` | gene symbol; follows the gene's applicability |
+| <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ `mde_associated_gene` | required if gene is different from VBC gene |
+| <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `zygosity` | HOM / HET / HEMI |
+| <span class="appl-c">C</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `phase_in_ref_to_vbc` | only if same gene as VBC |
+| <span class="appl-c">C</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `phase_confidence` | only if phase is captured |
+| <span class="appl-r">R</span> | <span class="appl-x">X</span> | <span class="appl-r">R</span> | <span class="appl-r">R</span> | <span class="appl-x">X</span> | &nbsp;&nbsp;&nbsp;&nbsp;↳ `classification` | must be P-LP if ALTV or ALTG use case |
+
+</div>
 
 ### Per-workflow structures
 
@@ -101,7 +106,7 @@ Expand a workflow to see only its applicable fields as a JSON example with mock 
     <span class="j-key appl-c">"id"</span>: <span class="j-str">"clinvar:VCV000000002"</span>,
     <span class="j-key appl-c">"zygosity"</span>: <span class="j-str">"HET"</span>,
     <span class="j-key appl-c">"phase_in_ref_to_vbc"</span>: <span class="j-str">"TRANS"</span>,
-    <span class="j-key appl-c">"phase_confidence"</span>: <span class="j-str">"high"</span>,
+    <span class="j-key appl-c">"phase_confidence"</span>: <span class="j-str">"HIGH"</span>,
     <span class="j-key appl-c">"classification"</span>: <span class="j-str">"P"</span>
   },
   <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
@@ -114,7 +119,7 @@ Expand a workflow to see only its applicable fields as a JSON example with mock 
       },
       <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
       <span class="j-key appl-c">"phase_in_ref_to_vbc"</span>: <span class="j-str">"CIS"</span>,
-      <span class="j-key appl-c">"phase_confidence"</span>: <span class="j-str">"low"</span>,
+      <span class="j-key appl-c">"phase_confidence"</span>: <span class="j-str">"LOW"</span>,
       <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
     }
   ]
@@ -151,7 +156,7 @@ Expand a workflow to see only its applicable fields as a JSON example with mock 
 </details>
 
 <details class="appl-detail">
-<summary>Alternate Variant <code>CLN_ALTV</code></summary>
+<summary>Alternative Cause-Variant <code>CLN_ALTV</code></summary>
 <pre class="appl-json">
 {
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
@@ -180,7 +185,7 @@ Expand a workflow to see only its applicable fields as a JSON example with mock 
       },
       <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
       <span class="j-key appl-r">"phase_in_ref_to_vbc"</span>: <span class="j-str">"CIS"</span>,
-      <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"low"</span>,
+      <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"LOW"</span>,
       <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
     }
   ]
@@ -189,7 +194,7 @@ Expand a workflow to see only its applicable fields as a JSON example with mock 
 </details>
 
 <details class="appl-detail">
-<summary>Alternate Gene <code>CLN_ALTG</code></summary>
+<summary>Alternative Cause-Gene <code>CLN_ALTG</code></summary>
 <pre class="appl-json">
 {
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,

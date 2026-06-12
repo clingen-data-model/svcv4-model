@@ -154,8 +154,8 @@ def build_workflow_schema(workflow: Workflow) -> dict[str, Any]:
 WORKFLOW_LABELS = {
     "CLN_AFF": "Affected",
     "CLN_DNV": "De novo",
-    "CLN_ALTV": "Alternate Variant",
-    "CLN_ALTG": "Alternate Gene",
+    "CLN_ALTV": "Alternative Cause-Variant",
+    "CLN_ALTG": "Alternative Cause-Gene",
     "CLN_UAF": "Unaffected",
 }
 
@@ -183,14 +183,14 @@ MOCK: dict[str, object] = {
     "compound_het_variant.id": "clinvar:VCV000000002",
     "compound_het_variant.zygosity": "HET",
     "compound_het_variant.phase_in_ref_to_vbc": "TRANS",
-    "compound_het_variant.phase_confidence": "high",
+    "compound_het_variant.phase_confidence": "HIGH",
     "compound_het_variant.classification": "P",
     "additional_variants.id": "clinvar:VCV000000003",
     "additional_variants.gene.symbol": "ABCA4",
     "additional_variants.gene.mde_associated_gene": "ABCA4",
     "additional_variants.zygosity": "HOM",
     "additional_variants.phase_in_ref_to_vbc": "CIS",
-    "additional_variants.phase_confidence": "low",
+    "additional_variants.phase_confidence": "LOW",
     "additional_variants.classification": "LP",
 }
 
@@ -210,8 +210,8 @@ def _build_tree() -> dict:
     return root
 
 
-def _appl_span(code: str, text: str) -> str:
-    return f'<span class="{APPL_CLASS[code]}">{text}</span>'
+def _appl_span(code: str) -> str:
+    return f'<span class="{APPL_CLASS[code]}">{code.upper()}</span>'
 
 
 def _notes_for(entry: dict) -> str:
@@ -239,24 +239,19 @@ def _matrix_table() -> str:
     """The superset matrix: every field (hierarchy preserved) × the five workflows."""
     matrix = load_matrix()
     cols = list(Workflow)
-    header = (
-        "| Attribute | "
-        + " | ".join(f"{WORKFLOW_LABELS[w.value]}<br>`{w.value}`" for w in cols)
-        + " | Notes |"
-    )
+    short = [w.value.replace("CLN_", "") for w in cols]
+    header = "| " + " | ".join(short) + " | Property | Notes |"
     sep = "|" + "---|" * (len(cols) + 2)
     lines = [header, sep]
     for path, entry in matrix.items():
         depth = path.count(".")
         name = path.split(".")[-1]
         indent = "&nbsp;&nbsp;&nbsp;&nbsp;" * depth
-        attr = f"{indent}{'↳ ' if depth else ''}`{name}`"
-        cells = " | ".join(
-            _appl_span(entry["applicability"][w.value], entry["applicability"][w.value])
-            for w in cols
-        )
-        lines.append(f"| {attr} | {cells} | {_notes_for(entry)} |")
-    return "\n".join(lines)
+        prop = f"{indent}{'↳ ' if depth else ''}`{name}`"
+        cells = " | ".join(_appl_span(entry["applicability"][w.value]) for w in cols)
+        lines.append(f"| {cells} | {prop} | {_notes_for(entry)} |")
+    table = "\n".join(lines)
+    return f'<div class="appl-matrix" markdown="1">\n\n{table}\n\n</div>'
 
 
 def _value_html(path: str) -> str:
@@ -319,10 +314,10 @@ def write_docs_tables() -> None:
     tree = _build_tree()
     legend = (
         "**Legend:** "
-        '<span class="appl-r">required (r)</span> &nbsp;·&nbsp; '
-        '<span class="appl-c">conditional (c)</span> &nbsp;·&nbsp; '
-        '<span class="appl-o">optional (o)</span> &nbsp;·&nbsp; '
-        '<span class="appl-x">not applicable (x)</span>'
+        '<span class="appl-r">required (R)</span> &nbsp;·&nbsp; '
+        '<span class="appl-c">conditional (C)</span> &nbsp;·&nbsp; '
+        '<span class="appl-o">optional (O)</span> &nbsp;·&nbsp; '
+        '<span class="appl-x">not applicable (X)</span>'
     )
     blocks = "\n\n".join(_workflow_block(w, tree) for w in Workflow)
     body = "\n\n".join(

@@ -25,3 +25,15 @@ pre.appl-json .j-num { color: var(--md-code-hl-number-color); }
 
 details.appl-detail { margin: 0.4rem 0; }
 details.appl-detail > summary { cursor: pointer; font-weight: 600; }
+
+/* Superset matrix: narrow workflow columns up front, wide Property + Notes. */
+.appl-matrix table { width: 100%; }
+.appl-matrix th:nth-child(-n+5),
+.appl-matrix td:nth-child(-n+5) {
+  width: 2.6em;
+  text-align: center;
+  white-space: nowrap;
+}
+.appl-matrix th:nth-child(6),
+.appl-matrix td:nth-child(6) { width: 34%; }  /* Property */
+

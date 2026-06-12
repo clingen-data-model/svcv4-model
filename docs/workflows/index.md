@@ -25,9 +25,9 @@ surfaces as an [Evidence Line](../getting-started/evidence-lines-and-items.md).
 ## What this section covers now
 
 This model currently details the **Clinical Observations (CLN)** workflows that
-the [Case model](case-model.md) supports — Affected, De Novo, Alternative
-Variant, Alternative Gene, and Unaffected. The other concepts are summarized at
-the category level and will be detailed as the model grows.
+the [Case model](case-model.md) supports — Affected, De novo, Alternative Cause
+(Variant and Gene), and Unaffected. The other concepts are summarized at the
+category level and will be detailed as the model grows.
 
 !!! note "Scoring lives in CSpec"
 
