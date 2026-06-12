@@ -34,8 +34,6 @@ into the **Statement's** final score. The entity detail is in
 [The assertion framework](../getting-started/assertion-framework.md) and
 [Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md).
 
-<!-- VERIFY: the level↔entity mapping is drawn from "The SVCv4 Standard Data Model" deck (slides 6, 11, 13); confirm the mapping wording with the SVCv4 WG / modeling team. -->
-
 ## Standard vs. specialized versions
 
 The SVCv4 **Standard** is the baseline hierarchy, workflows, and default

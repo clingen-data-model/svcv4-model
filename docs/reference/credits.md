@@ -26,8 +26,6 @@ representative) · Nicky Whiffin (University of Oxford).
 **Past members:** Sian Ellard (University of Exeter) · Heather McLaughlin
 (Pharming) · Sue Richards (OHSU).
 
-<!-- VERIFY: SVCv4 Working Group roster transcribed from the "Overview of SVCv4 Standards" deck; confirm and link the authoritative WG roster. -->
-
 ## SVCv4 Standards data-modeling team — this model
 
 This documentation and data model are produced by the **SVCv4
