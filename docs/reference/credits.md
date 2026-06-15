@@ -13,15 +13,20 @@ SVCv4 is the work of two distinct groups, credited separately here.
 The **ACMG/AMP/CAP/ClinGen SVCv4 Working Group** defines and owns the SVCv4
 Standards/framework (Summary Table, evidence concepts/codes, workflows, scoring).
 
-**Co-chairs:** Les Biesecker (NHGRI/NIH) · Steven Harrison (Ambry).
+**Co-chairs:** Leslie G. Biesecker (Center for Precision Health Research,
+National Human Genome Research Institute, National Institutes of Health) ·
+Steven M. Harrison (Ambry Genetics).
 
-**Members:** Alicia Byrne (Broad Institute) · Anne O'Donnell-Luria (Boston
-Children's Hospital) · Elizabeth Chao (UC Irvine) · Sharon Plon (Baylor College
-of Medicine) · Ahmad Abou Tayoun (Al Jalila Children's) · Julie Gastier-Foster
-(Texas Children's; AMP representative) · Heidi Rehm (Massachusetts General
-Hospital) · Jonathan Berg (UNC) · Izabela Karbassi (Quest Diagnostics) · Lisa
-Vincent (Natera) · David Bick (Genomics England) · Ann Moyer (Mayo Clinic; CAP
-representative) · Nicky Whiffin (University of Oxford).
+**Members:** Alicia Byrne (James Cook University) · Ahmad Abou Tayoun (Genomic
+Medicine Center, Dubai Health) · Jonathan S Berg (Department of Genetics, The
+University of North Carolina at Chapel Hill) · David Bick (Genomics England) ·
+Elizabeth Chao (University of California Irvine) · Julie M. Gastier-Foster
+(Department of Pediatrics, Baylor College of Medicine) · Izabela Karbassi (Quest
+Diagnostics) · Ann M. Moyer (Mayo Clinic) · Anne O'Donnell-Luria (Division of
+Genetics and Genomics, Boston Children's Hospital) · Sharon E. Plon (Department
+of Pediatrics, Baylor College of Medicine) · Lisa M. Vincent (Natera) · Nicola
+Whiffin (Big Data Institute, University of Oxford) · Heidi L. Rehm (Center for
+Genomic Medicine, Massachusetts General Hospital).
 
 **Past members:** Sian Ellard (University of Exeter) · Heather McLaughlin
 (Pharming) · Sue Richards (OHSU).
