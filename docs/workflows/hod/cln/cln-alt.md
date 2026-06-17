@@ -27,7 +27,7 @@ Required (see the full [applicability table](../../case-model.md)):
 - `moi` — mode of inheritance.
 - `case_proband_info` — including **`pheno_severity`** (severity relative to
   expectation).
-- `vbc` — the variant being considered.
+- `vbc` — the variant being classified.
 - `additional_variant_exists` — must indicate the alternate variant is present.
 - **`additional_variants`** — the alternate variant(s): `id`, `gene`,
   `zygosity`, and (since it's the same gene as the VBC) **`phase_in_ref_to_vbc`**
@@ -55,7 +55,7 @@ Required (see the full [applicability table](../../case-model.md)):
       **not applicable** to Alternative Cause-Gene (the workflow drops it).
     - **`age_matched_penetrance`** — *conditional*: applicable for Alternative
       Gene among the conditional workflows.
-- `vbc` — the variant being considered.
+- `vbc` — the variant being classified.
 - `additional_variant_exists` — must indicate the alternate-gene variant is present.
 - **`additional_variants`** — the alternate variant(s): `id`, `gene` (including
   **`mde_associated_gene`**, since the gene differs from the VBC's), `zygosity`,
