@@ -97,13 +97,13 @@ which kind of "not yet" they're looking at.
 Across the documentation, two equivalences hold by default and are captured in the
 **Glossary** (`reference/glossary.md`) so they are explicit and discoverable:
 
-- **"the variant" = the VBC (Variant Being Considered) = "variation"** — the
+- **"the variant" = the VBC (Variant Being Classified) = "variation"** — the
   single germline variant under evaluation, and the Proposition's **subject**
   (`subjectVariant`). The docs do **not** introduce a separate generic "Variant"
   entity. The only variants named distinctly are the **additional variant**
   (`additional_variants`) and the **compound-het variant**
   (`compound_het_variant`). Authored pages use **VBC** (or "the variant being
-  considered") for the variant under evaluation, reserving the other two terms
+  classified") for the variant under evaluation, reserving the other two terms
   for those specific roles.
 - **"the disease" / "the condition" = the MDE** — the disease entity the VBC is
   evaluated against, and the Proposition's **object**
