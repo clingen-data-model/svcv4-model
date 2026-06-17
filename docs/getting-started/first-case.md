@@ -5,7 +5,7 @@ represent a single human clinical observation supporting (or opposing) variant
 pathogenicity — the structured payload behind a `clinical_observation` Evidence
 Item. This page walks through a minimal **Affected (`CLN_AFF`)** case.
 
-Throughout, **"the variant" means the VBC** (Variant Being Considered) and
+Throughout, **"the variant" means the VBC** (Variant Being Classified) and
 **"the disease/condition" means the MDE** (Mendelian Disease Entity). See the
 [Glossary](../reference/glossary.md).
 
@@ -31,7 +31,7 @@ A minimal capture looks like:
 
 In prose: *a female proband with a seizure phenotype that is specific to the
 gene; all relevant genes for the disorder were tested; the variant being
-considered (the VBC) is heterozygous, under autosomal-dominant inheritance.*
+classified (the VBC) is heterozygous, under autosomal-dominant inheritance.*
 
 ## What each piece is
 
@@ -39,7 +39,7 @@ considered (the VBC) is heterozygous, under autosomal-dominant inheritance.*
 - `pop_frq_points` — the population-frequency contribution (computed upstream).
 - `case_proband_info` — what's known about the proband (sex, age, phenotypes,
   phenotype specificity, …).
-- `vbc` — the variant being considered, by id and case-level zygosity.
+- `vbc` — the variant being classified, by id and case-level zygosity.
 
 ## What happens next
 
