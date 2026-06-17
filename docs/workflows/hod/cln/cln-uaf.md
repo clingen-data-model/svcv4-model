@@ -14,7 +14,7 @@ Required for an Unaffected case (see the full
 - `case_proband_info` — including **`age_matched_penetrance`** (how penetrant the
   condition is by the individual's age — central to interpreting an unaffected
   carrier).
-- `vbc` — the variant being considered.
+- `vbc` — the variant being classified.
 
 Population-frequency, phenotype-specificity, compound-het, and additional-variant
 fields are **not applicable** to `CLN_UAF`.
