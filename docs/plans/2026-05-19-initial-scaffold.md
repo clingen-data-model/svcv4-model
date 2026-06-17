@@ -8,7 +8,7 @@
 
 - the SVCv4 Classification Model expressed in Pydantic as the Python source of truth;
 - machine-readable JSON Schemas emitted from those Pydantic models;
-- worked examples that demonstrate a complete classification of a germline **Variant Being Considered (VBC)** against a **Mendelian Disease Entity (MDE)**; and
+- worked examples that demonstrate a complete classification of a germline **Variant Being Classified (VBC)** against a **Mendelian Disease Entity (MDE)**; and
 - narrative documentation that frames the model, its VA-Spec layering, and its boundary with the Method Model in ClinGen CSpec.
 
 The audience is software engineers in clinical labs, research groups, and consortia who will integrate, automate, and exchange SVCv4 data. The site is engineering-facing and emphasises **Interoperability** and **Reusability** (the I and R of FAIR).
@@ -117,7 +117,7 @@ Goal: **shape** correct, **content** stubbed. Real Evidence Categories / Concept
 - `VariantPathogenicityClassification` — categorical classification (placeholder enum spanning Benign ↔ Pathogenic). The score-to-class mapping is a placeholder; SVCv4 thresholds will be confirmed.
 - `EvidenceLine` — VA-Spec `EvidenceLine` profiled for SVCv4. Captures the result of invoking a CSpec method/rule on a set of evidence items: `score`, optional `score_classification`, the evidence items used (`evidence: list[EvidenceItem]`), the invoked method (`method` reference) plus its `code` (evidence-code / method-code reference), optional `strength_direction`, and `contribution`. Any CSpec method or rule that produces a score lands here.
 - `EvidenceItem` (alias: `EvidenceData`) — structured datum captured by the curator. Evidence Items are the **inputs provided to** CSpec methods/rules under the chosen specification version; the resulting Evidence Line records which Items were used and the score produced.
-- `VBC` (Variant Being Considered) — typed field referencing a `ga4gh.vrs.models.Variation` (germline context).
+- `VBC` (Variant Being Classified) — typed field referencing a `ga4gh.vrs.models.Variation` (germline context).
 - `MDE` (Mendelian Disease Entity) — `label` + `curie` reference (MONDO / OMIM / Orphanet); precise typing deferred.
 
 Score values are carried; score *computation* is **not** modelled here — it belongs to the workflows defined in CSpec. Where `method` or `code` slots appear, they are **references** pointing into the (out-of-scope) Method Model.
