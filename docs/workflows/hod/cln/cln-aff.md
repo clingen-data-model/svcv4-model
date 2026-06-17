@@ -15,7 +15,7 @@ Required for an Affected case (see the full
 - `case_proband_info` — including **`pheno_specificity_for_gene`** and
   **`all_relevant_genes_tested`** (sex, age, phenotypes are optional but
   encouraged).
-- `vbc` — the variant being considered (`id`, case-level `zygosity`).
+- `vbc` — the variant being classified (`id`, case-level `zygosity`).
 - `additional_variant_exists` — whether another relevant variant is present.
 
 Conditional:
