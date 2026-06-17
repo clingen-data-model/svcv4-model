@@ -27,7 +27,7 @@ uv run python scripts/validate_examples.py
 
 === "Narrative"
 
-    The variant being considered (VBC) is *BRCA1* c.5096G>A (p.Arg1699Gln); the
+    The variant being classified (VBC) is *BRCA1* c.5096G>A (p.Arg1699Gln); the
     disease/condition (MDE) is Hereditary breast and ovarian cancer syndrome.
     The curator captured two Evidence Items: four affected individuals with a
     consistent phenotype (Evidence Code `CLN_AFF_+2`), and an HDR
