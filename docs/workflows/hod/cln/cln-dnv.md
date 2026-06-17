@@ -14,7 +14,7 @@ Required for a De Novo case (see the full
 - `case_proband_info` — including **`pheno_specificity_for_gene`**,
   **`confirmed_parental_relationship`** (was the parentage confirmed?), and
   **`all_relevant_genes_tested`**.
-- `vbc` — the variant being considered (`id`, case-level `zygosity`).
+- `vbc` — the variant being classified (`id`, case-level `zygosity`).
 
 The compound-het and additional-variant fields are **not applicable** to
 `CLN_DNV`.
