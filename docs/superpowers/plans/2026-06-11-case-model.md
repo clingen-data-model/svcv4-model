@@ -390,7 +390,7 @@ class CaseVariant(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    id: str | None = Field(default=None, description="Identifier for the variant being considered.")
+    id: str | None = Field(default=None, description="Identifier for the variant being classified.")
     zygosity: Zygosity | None = Field(default=None)
 
 
@@ -456,7 +456,7 @@ class Case(BaseModel):
         default=None, ge=-1.0, description="Population-frequency points (must be >= -1.0)."
     )
     case_proband_info: CaseProbandInfo | None = Field(default=None)
-    vbc: CaseVariant | None = Field(default=None, description="The variant being considered.")
+    vbc: CaseVariant | None = Field(default=None, description="The variant being classified.")
     compound_het_variant: CompoundHetVariant | None = Field(default=None)
     additional_variant_exists: TriState | None = Field(
         default=None, description="Whether an additional variant exists in the case."
