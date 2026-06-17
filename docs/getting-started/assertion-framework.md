@@ -3,7 +3,7 @@
 SVCv4 work starts with a **question** and ends with an **assertion**. This page
 introduces that backbone simply, then links to the deeper detail.
 
-Throughout: **the variant = the VBC** (Variant Being Considered) and **the
+Throughout: **the variant = the VBC** (Variant Being Classified) and **the
 disease/condition = the MDE** (Mendelian Disease Entity). See the
 [Glossary](../reference/glossary.md).
 
