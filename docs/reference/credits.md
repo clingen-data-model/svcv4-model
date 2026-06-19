@@ -17,9 +17,9 @@ Standards/framework (Summary Table, evidence concepts/codes, workflows, scoring)
 National Human Genome Research Institute, National Institutes of Health) ·
 Steven M. Harrison (Ambry Genetics).
 
-**Members:** Alicia Byrne (James Cook University) · Ahmad Abou Tayoun (Genomic
-Medicine Center, Dubai Health) · Jonathan S Berg (Department of Genetics, The
-University of North Carolina at Chapel Hill) · David Bick (Genomics England) ·
+**Members:** Alicia Byrne (Broad Institute of MIT and Harvard) · Ahmad Abou Tayoun 
+(Genomic Medicine Center, Dubai Health) · Jonathan S Berg (Department of Genetics, 
+The University of North Carolina at Chapel Hill) · David Bick (Genomics England) ·
 Elizabeth Chao (University of California Irvine) · Julie M. Gastier-Foster
 (Department of Pediatrics, Baylor College of Medicine) · Izabela Karbassi (Quest
 Diagnostics) · Ann M. Moyer (Mayo Clinic) · Anne O'Donnell-Luria (Division of
@@ -37,9 +37,8 @@ This documentation and data model are produced by the **SVCv4
 Standards data-modeling team**, a task-force offshoot of the **ClinGen Data
 Platform Working Group**, meeting weekly since July 2024.
 
-Larry Babb · Christine Preston · Neethu Shah · Alicia Byrne · Matt Wright ·
-Gloria Cheung · Bryan Wulf · Mark Mandell · Keyang Yu · Hannah Dziadzio · Liam
-Mulhall.
+Larry Babb · Alicia Byrne · Gloria Cheung · Hannah Dziadzio · Mark Mandell · Liam 
+Mulhall · Christine Preston · Neethu Shah · Matt Wright · Bryan Wulf · Keyang Yu.
 
 ## Standards bodies
 
