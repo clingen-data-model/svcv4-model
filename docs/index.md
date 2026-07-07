@@ -20,7 +20,7 @@ uses of the SVCv4 data — to provide **standard semantic interoperability** for
 producing, exchanging, and consuming evidence-based SVCv4-compliant
 classifications. We do **not** author the Standards, and the scoring
 **methods/rules** live in
-[ClinGen CSpec](reference/cspec-interop.md), not here. See
+[ClinGen's Criteria Specification (CSpec)](reference/cspec-interop.md), not here. See
 [What this project is — and isn't](overview/scope.md) and
 [Credits](reference/credits.md).
 
