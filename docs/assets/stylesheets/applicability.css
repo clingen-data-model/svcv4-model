@@ -1,5 +1,52 @@
-/* Applicability styling for the Case model page.
-   Convention: bold = required (r), underline = conditional (c),
+/* ─── Fixed announce bar + header stacking ───────────────────────────────── */
+/* Both use position:fixed so neither moves during scroll.                    */
+/* Announce bar: use a CSS variable for its height so the header can          */
+/* reference it exactly — no gap, no overlap.                                 */
+:root { --announce-h: 1.6rem; }
+[data-md-component="announce"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: var(--announce-h);
+  z-index: 5;
+  font-size: 0.85rem;
+  line-height: 1;
+  background-color: #fdd835 !important;  /* yellow */
+  color: #1a1a1a !important;             /* black text */
+}
+[data-md-component="announce"] .md-banner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fdd835 !important;
+  color: #1a1a1a !important;
+}
+[data-md-component="announce"] .md-banner__inner {
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  background-color: #fdd835 !important;
+  color: #1a1a1a !important;
+}
+.md-header {
+  position: fixed !important;
+  top: var(--announce-h) !important;
+  left: 0;
+  width: 100%;
+  z-index: 4;
+}
+/* Push page content below the fixed header + announce bar */
+.md-container {
+  padding-top: calc(var(--announce-h) + 3rem);
+}
+
+
+/* ─── Applicability styling for the Case model page. ──────────────────────── */
+/* Convention: bold = required (r), underline = conditional (c),
    italic = optional (o), dimmed = not applicable (x).
    Used by the generated superset matrix and the per-workflow JSON examples. */
 
