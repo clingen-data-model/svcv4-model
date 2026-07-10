@@ -1,5 +1,12 @@
 # SVCv4 Classification Model
 
+!!! warning "Early development"
+
+    The SVCv4 Standards have not yet been finalized and are still changing to
+    varying degrees, and this model changes alongside them; the
+    [Reference](reference/model.md) material is provisional for now. The narrative
+    pages here are the best place to start.
+
 > A **data model** for the **ACMG/AMP/CAP/ClinGen Sequence Variant
 > Classification v4 (SVCv4)** Standards — expressed as a **GA4GH GKS VA-Spec
 > community profile** — providing **standard semantic interoperability** for
@@ -23,13 +30,6 @@ classifications. We do **not** author the Standards, and the scoring
 [ClinGen's Criteria Specification (CSpec)](reference/cspec-interop.md), not here. See
 [What this project is — and isn't](overview/scope.md) and
 [Credits](reference/credits.md).
-
-!!! warning "Early development"
-
-    The SVCv4 Standards have not yet been finalized and are still changing to
-    varying degrees, and this model changes alongside them; the
-    [Reference](reference/model.md) material is advisory for now. The narrative
-    pages here are the best place to start.
 
 ## Why structured evidence
 
@@ -61,7 +61,7 @@ group.)*
 
 Jump to the [**Workflows**](workflows/index.md) (the SVCv4 Summary Table and the
 clinical-observation workflows) or the [**Reference**](reference/model.md)
-(model classes, JSON Schemas, vocabulary) — both advisory while the model is in
+(model classes, JSON Schemas, vocabulary) — both provisional while the model is in
 flux.
 
 ## Project context
