@@ -1,0 +1,199 @@
+{
+  "$defs": {
+    "Gene": {
+      "additionalProperties": false,
+      "description": "A gene reference (symbol/id/transcript); ``mde_associated_gene`` flags\nwhether it is the MDE-associated gene (set when it differs from the VBC gene).",
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Gene identifier (e.g. HGNC / NCBI id).",
+          "title": "Id"
+        },
+        "mde_associated_gene": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "MDE-associated gene, required when the gene differs from the VBC gene.",
+          "title": "Mde Associated Gene"
+        },
+        "symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Gene symbol.",
+          "title": "Symbol"
+        },
+        "transcript": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Transcript reference (e.g. RefSeq accession).",
+          "title": "Transcript"
+        }
+      },
+      "title": "Gene",
+      "type": "object"
+    },
+    "MOI": {
+      "description": "Mode of inheritance. ALTV does not yet support AR/XLR.",
+      "enum": [
+        "AD",
+        "AR",
+        "XLD",
+        "XLR",
+        "SD"
+      ],
+      "title": "MOI",
+      "type": "string"
+    },
+    "Mde": {
+      "additionalProperties": false,
+      "description": "Mendelian Disease Entity \u2014 the curation-level disease reference the VBC is\nassessed against, shared across workflows as a parameter.\n\nCuration-level counterpart to the formal VA-Spec ``inputs.MDE``.",
+      "properties": {
+        "curie": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Disease CURIE (e.g. `MONDO:0007254`, `OMIM:114480`).",
+          "title": "Curie"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Human-readable disease label.",
+          "title": "Label"
+        }
+      },
+      "title": "Mde",
+      "type": "object"
+    },
+    "Vbc": {
+      "additionalProperties": false,
+      "description": "Variant Being Considered \u2014 the curation-level reference to the variant\nunder evaluation, shared across workflows as a parameter (id + gene).\n\nCuration-level counterpart to the formal VA-Spec ``inputs.VBC``; the two\nreconcile in a later phase.",
+      "properties": {
+        "gene": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Gene"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The gene the VBC is in."
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Identifier for the variant being considered.",
+          "title": "Id"
+        }
+      },
+      "title": "Vbc",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Parameters required by the workflows but not part of the Case data\nstructure. These feed the (forthcoming) workflow matrix that determines\napplicability and scoring; they are captured alongside a Case, not within it.",
+  "properties": {
+    "mde": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Mde"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The disease the VBC is assessed against."
+    },
+    "moi": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MOI"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Mode of inheritance."
+    },
+    "pop_frq_points": {
+      "anyOf": [
+        {
+          "minimum": -1.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Population-frequency points (must be >= -1.0).",
+      "title": "Pop Frq Points"
+    },
+    "vbc": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Vbc"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The variant being considered."
+    }
+  },
+  "title": "WorkflowParameters",
+  "type": "object"
+}

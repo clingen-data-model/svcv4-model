@@ -2,8 +2,21 @@
   "$defs": {
     "Gene": {
       "additionalProperties": false,
-      "description": "A gene reference; ``mde_associated_gene`` set when it differs from the VBC gene.",
+      "description": "A gene reference (symbol/id/transcript); ``mde_associated_gene`` flags\nwhether it is the MDE-associated gene (set when it differs from the VBC gene).",
       "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Gene identifier (e.g. HGNC / NCBI id).",
+          "title": "Id"
+        },
         "mde_associated_gene": {
           "anyOf": [
             {
@@ -29,6 +42,19 @@
           "default": null,
           "description": "Gene symbol.",
           "title": "Symbol"
+        },
+        "transcript": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Transcript reference (e.g. RefSeq accession).",
+          "title": "Transcript"
         }
       },
       "title": "Gene",
