@@ -6,7 +6,7 @@ import typing
 
 from pydantic import BaseModel
 
-from svcv4_model.case import Case, Workflow
+from svcv4_model.case import Case, Workflow, WorkflowParameters
 from svcv4_model.case_applicability import (
     VALID_CODES,
     field_paths,
@@ -16,6 +16,14 @@ from svcv4_model.case_applicability import (
 
 #: Value types whose internal fields are a single sheet attribute, not matrix paths.
 LEAF_VALUE_MODELS = {"Age"}
+
+
+def _case_paths() -> set[str]:
+    return {p for p, e in load_matrix().items() if e.get("model") != "workflow_parameters"}
+
+
+def _param_paths() -> set[str]:
+    return {p for p, e in load_matrix().items() if e.get("model") == "workflow_parameters"}
 
 
 def test_matrix_loads_and_codes_are_valid() -> None:
@@ -37,8 +45,9 @@ def test_every_field_applies_somewhere() -> None:
 def test_workflow_codes_view() -> None:
     aff = workflow_codes(Workflow.CLN_AFF)
     assert aff["pop_frq_points"] == "r"
-    assert aff["case_proband_info.pheno_severity"] == "x"
+    assert aff["pheno_severity"] == "x"
     assert aff["additional_variants"] == "c"
+    assert aff["vbc"] == "r"
 
 
 def test_field_paths_are_unique() -> None:
@@ -76,8 +85,19 @@ def _model_field_paths(model: type[BaseModel], prefix: str = "") -> set[str]:
     return paths
 
 
-def test_matrix_and_model_paths_match_exactly() -> None:
+def test_case_matrix_and_model_paths_match_exactly() -> None:
     model_paths = _model_field_paths(Case)
-    matrix_paths = set(field_paths())
-    assert matrix_paths - model_paths == set(), "matrix has paths the model lacks (orphans)"
-    assert model_paths - matrix_paths == set(), "model has fields the matrix lacks (gaps)"
+    matrix_paths = _case_paths()
+    assert matrix_paths - model_paths == set(), "case matrix has paths the model lacks (orphans)"
+    assert model_paths - matrix_paths == set(), "Case model has fields the matrix lacks (gaps)"
+
+
+def test_param_matrix_and_model_paths_match_exactly() -> None:
+    model_paths = _model_field_paths(WorkflowParameters)
+    matrix_paths = _param_paths()
+    assert matrix_paths - model_paths == set(), "param matrix has paths the model lacks (orphans)"
+    assert model_paths - matrix_paths == set(), "WorkflowParameters has fields the matrix lacks"
+
+
+def test_all_field_paths_unique_across_models() -> None:
+    assert set(field_paths()) == _case_paths() | _param_paths()

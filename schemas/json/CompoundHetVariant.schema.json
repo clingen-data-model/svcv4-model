@@ -1,15 +1,5 @@
 {
   "$defs": {
-    "Phase": {
-      "description": "Phase of a variant in reference to the VBC.",
-      "enum": [
-        "TRANS",
-        "CIS",
-        "UNKNOWN"
-      ],
-      "title": "Phase",
-      "type": "string"
-    },
     "PhaseConfidence": {
       "description": "Confidence in a phase determination.",
       "enum": [
@@ -19,20 +9,10 @@
       ],
       "title": "PhaseConfidence",
       "type": "string"
-    },
-    "Zygosity": {
-      "description": "Zygosity of a variant in the case.",
-      "enum": [
-        "HOM",
-        "HET",
-        "HEMI"
-      ],
-      "title": "Zygosity",
-      "type": "string"
     }
   },
   "additionalProperties": false,
-  "description": "The second variant in a biallelic AFF evaluation against a het VBC.\n\nUsed only in the Affected workflow. Per the applicability matrix the\n``zygosity`` is fixed to ``HET`` and ``phase_in_ref_to_vbc`` to ``TRANS``.",
+  "description": "The second variant in a biallelic evaluation against a het VBC.\n\nIncluded only when ``vbc_zygosity`` is ``HET`` and there is another variant\nin the same gene that is also HET and in *trans*. Because those conditions\nare the inclusion criteria, zygosity (HET) and phase (TRANS) are implied and\nare not captured here.",
   "properties": {
     "classification": {
       "anyOf": [
@@ -69,31 +49,7 @@
         }
       ],
       "default": null,
-      "description": "Confidence in the phase call."
-    },
-    "phase_in_ref_to_vbc": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Phase"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Fixed to TRANS in the AFF workflow."
-    },
-    "zygosity": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Zygosity"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Fixed to HET in the AFF workflow."
+      "description": "Confidence that the variant is in trans with the VBC."
     }
   },
   "title": "CompoundHetVariant",

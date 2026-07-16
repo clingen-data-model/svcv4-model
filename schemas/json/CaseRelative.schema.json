@@ -84,16 +84,6 @@
       "title": "Age",
       "type": "object"
     },
-    "AgeMatchedPenetrance": {
-      "description": "Age-matched penetrance bands.",
-      "enum": [
-        "LT_80",
-        "PCT_80_100",
-        "NEAR_100"
-      ],
-      "title": "AgeMatchedPenetrance",
-      "type": "string"
-    },
     "AgeQualifier": {
       "description": "How to read an :class:`Age`: a point value, a bound, or a range.",
       "enum": [
@@ -115,26 +105,6 @@
         "YEAR"
       ],
       "title": "AgeUnit",
-      "type": "string"
-    },
-    "PhenoSeverity": {
-      "description": "Phenotype severity relative to expectation.\n\n``BIALLELIC_LT_EXPECTED`` is not applicable to the ALT Gene workflow\n(see the applicability matrix's ``enum_exclude`` rule).",
-      "enum": [
-        "MONO_GT_OR_BIALLELIC_EQ_EXPECTED",
-        "MONO_EQ_EXPECTED",
-        "BIALLELIC_LT_EXPECTED"
-      ],
-      "title": "PhenoSeverity",
-      "type": "string"
-    },
-    "PhenoSpecificity": {
-      "description": "Phenotype specificity for the gene.",
-      "enum": [
-        "SPECIFIC",
-        "CONSISTENT",
-        "INCONSISTENT"
-      ],
-      "title": "PhenoSpecificity",
       "type": "string"
     },
     "Phenotype": {
@@ -191,11 +161,33 @@
       ],
       "title": "TriState",
       "type": "string"
+    },
+    "Zygosity": {
+      "description": "Zygosity of a variant in the case.",
+      "enum": [
+        "HOM",
+        "HET",
+        "HEMI"
+      ],
+      "title": "Zygosity",
+      "type": "string"
     }
   },
   "additionalProperties": false,
-  "description": "Proband-level observations captured for the case.",
+  "description": "A relative of the proband, captured for segregation (LOC_SEG).",
   "properties": {
+    "affected_w_mde": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the relative is affected with the MDE."
+    },
     "age": {
       "anyOf": [
         {
@@ -207,18 +199,7 @@
       ],
       "default": null
     },
-    "age_matched_penetrance": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/AgeMatchedPenetrance"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
-    },
-    "all_relevant_genes_tested": {
+    "cmp_het_variant_exists": {
       "anyOf": [
         {
           "$ref": "#/$defs/TriState"
@@ -228,9 +209,9 @@
         }
       ],
       "default": null,
-      "description": "Whether all relevant genes for the disorder were tested."
+      "description": "Whether a compound-het variant exists in the relative."
     },
-    "confirmed_parental_relationship": {
+    "parent_of_proband": {
       "anyOf": [
         {
           "$ref": "#/$defs/TriState"
@@ -240,37 +221,27 @@
         }
       ],
       "default": null,
-      "description": "Whether the parental relationship was confirmed."
-    },
-    "pheno_severity": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/PhenoSeverity"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
-    },
-    "pheno_specificity_for_gene": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/PhenoSpecificity"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
+      "description": "Whether this relative is a parent of the proband."
     },
     "phenotypes": {
-      "description": "0..many phenotypes; capture at least what is relevant to the case.",
+      "description": "0..many phenotypes for the relative.",
       "items": {
         "$ref": "#/$defs/Phenotype"
       },
       "title": "Phenotypes",
       "type": "array"
+    },
+    "severe_phenotype": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the relative has a severe phenotype. Required for semi-dominant and X-linked when affected. Distinct from `pheno_severity`."
     },
     "sex": {
       "anyOf": [
@@ -281,9 +252,34 @@
           "type": "null"
         }
       ],
-      "default": null
+      "default": null,
+      "description": "Relative sex; required if X-linked."
+    },
+    "vbc_exists": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the VBC is present in the relative."
+    },
+    "vbc_zygosity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Zygosity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Zygosity of the VBC in the relative."
     }
   },
-  "title": "CaseProbandInfo",
+  "title": "CaseRelative",
   "type": "object"
 }

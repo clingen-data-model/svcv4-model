@@ -1,125 +1,258 @@
-# Source of truth for Case attribute applicability across the five CLN workflows.
+# Source of truth for attribute applicability across the workflows.
 # Codes: r=required, o=optional, c=conditional (see `rule`), x=not applicable.
+# Workflows: five clinical (CLN_*) + two locus-based (LOC_PHE, LOC_SEG).
 # Derived from the SVCv4 case-attributes sheet (tab 138412089).
+#
+# Two groups of entries, distinguished by `model`:
+#   * model: workflow_parameters  -> the WorkflowParameters model (moi,
+#     pop_frq_points). Required by the workflows, NOT part of the Case.
+#   * model: case (default)        -> the Case data structure. Paths are dotted
+#     field paths on the Case model.
+
+vbc:
+  model: workflow_parameters
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: r, LOC_SEG: r }
+  notes: "the Variant Being Considered; a shared parameter for every workflow"
+
+vbc.id:
+  model: workflow_parameters
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: r, LOC_SEG: r }
+
+vbc.gene:
+  model: workflow_parameters
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: r, LOC_SEG: r }
+
+vbc.gene.symbol:
+  model: workflow_parameters
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: r, LOC_SEG: r }
+
+vbc.gene.id:
+  model: workflow_parameters
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
+  notes: "gene identifier (e.g. HGNC / NCBI id)"
+
+vbc.gene.mde_associated_gene:
+  model: workflow_parameters
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
+  notes: "whether the VBC gene is the MDE-associated gene"
+
+vbc.gene.transcript:
+  model: workflow_parameters
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
+  notes: "transcript reference (e.g. RefSeq accession)"
+
+mde:
+  model: workflow_parameters
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: r, LOC_SEG: r }
+  notes: "the Mendelian Disease Entity the VBC is assessed against"
+
+mde.curie:
+  model: workflow_parameters
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: r, LOC_SEG: r }
+  value: "e.g. MONDO:0007254, OMIM:114480"
+
+mde.label:
+  model: workflow_parameters
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
 
 moi:
-  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
+  model: workflow_parameters
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: x, LOC_SEG: r }
   value: "AD, AR, XLD, XLR, SD"
   notes: "ALTV does not yet support AR/XLR"
 
 pop_frq_points:
-  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  model: workflow_parameters
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: r, LOC_SEG: r }
   notes: "must be >= -1.0"
 
-case_proband_info:
-  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
+id:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: r, LOC_SEG: r }
+  notes: "match individuals across workflows (DNV/AFF, PHE/AFF, ALT/AFF, UAF standalone)"
 
-case_proband_info.sex:
-  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+family_id:
+  applicability: { CLN_AFF: r, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: r, LOC_PHE: o, LOC_SEG: r }
+  notes: "match individuals in families across UAF/AFF and SEG/AFF"
+
+sex:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
   value: "M/F/U/T"
 
-case_proband_info.age:
-  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+age:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
   notes: "age + unit, or an age range; general or disease-specific"
 
-case_proband_info.phenotypes:
-  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+phenotypes:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
   value: "0..many"
 
-case_proband_info.phenotypes.name:
-  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+phenotypes.name:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
 
-case_proband_info.phenotypes.code:
-  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o }
+phenotypes.code:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
   notes: "HPO identifier when possible"
 
-case_proband_info.pheno_specificity_for_gene:
-  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+pheno_specificity_for_mde:
+  applicability: { CLN_AFF: c, CLN_DNV: c, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
   value: "SPECIFIC, CONSISTENT, INCONSISTENT"
-  notes: "curator makes the PHENO SPECIFICITY call; rule coordination is out of scope"
+  notes: "how closely phenotype matches the MDE; 'SPECIFIC' n/a to biallelic AFF, none apply to biallelic DNV; curator makes the call, rule coordination is out of scope"
 
-case_proband_info.pheno_severity:
-  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: c, CLN_UAF: x }
+gene_specificity_for_phenotypes:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: r, LOC_SEG: x }
+  value: "e.g. 100%, 50%"
+  notes: "how specific the phenotype(s) are to the gene (roughly the inverse of the number of genes causing them)"
+
+testing:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: r, LOC_SEG: x }
+
+testing.method:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: o, LOC_SEG: x }
+  value: "e.g. Sanger, Exome, Genome, Cyto"
+  notes: "CSV allowed for multiple methods; a single diagnostic yield / covers-all value applies"
+
+testing.diagnostic_yield_for_phenotypes:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: r, LOC_SEG: x }
+  value: "e.g. 100%, 50%"
+  notes: "supporting evidence captured as notes only this phase, not structured values"
+
+testing.covers_all_genes_relevant_to_mde:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: o, LOC_SEG: x }
+  value: "true, false"
+  notes: "all relevant genes for the disease were covered by the test"
+
+pheno_severity:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: c, CLN_UAF: x, LOC_PHE: x, LOC_SEG: x }
   rule: { workflow: CLN_ALTG, effect: enum_exclude, value: BIALLELIC_LT_EXPECTED }
   notes: "BIALLELIC<expected not applicable to ALT Gene; ALTV rule is more nuanced than ALTG"
 
-case_proband_info.age_matched_penetrance:
-  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: x, CLN_ALTG: c, CLN_UAF: r }
+age_matched_penetrance:
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: r, LOC_PHE: o, LOC_SEG: o }
   value: "<80%, 80-100%, near 100%"
-  notes: "only applicable at all for ALT Gene among the conditional workflows"
 
-case_proband_info.confirmed_parental_relationship:
-  applicability: { CLN_AFF: x, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+confirmed_parental_relationship:
+  applicability: { CLN_AFF: x, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+  value: "true, false"
 
-case_proband_info.all_relevant_genes_tested:
-  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+vbc_exists:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: r, LOC_SEG: r }
+  value: "TRUE / FALSE / UNKNOWN"
+  notes: "whether the proband carries the VBC"
 
-vbc:
-  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
-
-vbc.id:
-  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
-
-vbc.zygosity:
-  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r }
-  notes: "the only variant_type element needed for case-level VBC assessment"
+vbc_zygosity:
+  applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: o, LOC_SEG: o }
+  value: "HET / HOM / HEMI"
+  notes: "zygosity of the VBC in the proband; compound_het_variant applies only when this is HET"
 
 compound_het_variant:
-  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
-  rule: { requires: { context: "biallelic disease eval with a het VBC" } }
-  notes: "AFF only; otherwise use additional_variant"
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+  rule: { requires: { field: vbc_zygosity, equals: "HET" } }
+  notes: "only when vbc_zygosity is HET and there is another same-gene variant that is also HET and in trans; zygosity (HET) and phase (TRANS) are implied, so not captured"
 
 compound_het_variant.id:
-  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
-
-compound_het_variant.zygosity:
-  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
-  rule: { workflow: CLN_AFF, effect: fixed, value: HET }
-
-compound_het_variant.phase_in_ref_to_vbc:
-  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
-  rule: { workflow: CLN_AFF, effect: fixed, value: TRANS }
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
 
 compound_het_variant.phase_confidence:
-  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+  notes: "confidence that the variant is in trans with the VBC"
 
 compound_het_variant.classification:
-  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x }
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
 
 additional_variant_exists:
-  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x, LOC_PHE: r, LOC_SEG: r }
+  value: "TRUE / FALSE / UNKNOWN"
+  notes: "TriState (Yes/No/Unknown). TRUE asserts an additional variant exists but does NOT itself carry the details — see additional_variants."
 
 additional_variants:
-  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x, LOC_PHE: c, LOC_SEG: c }
   rule: { requires: { field: additional_variant_exists, equals: "TRUE" } }
-  notes: "compound-het additional variants are NOT supported"
+  notes: "applies only when additional_variant_exists is TRUE; the data layer permits TRUE with an empty array (details omitted) — feasible, but flagged at validate_case time for workflows that require the details. Compound-het additional variants are NOT supported."
 
 additional_variants.id:
-  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x, LOC_PHE: r, LOC_SEG: r }
 
 additional_variants.gene:
-  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: r, CLN_UAF: x, LOC_PHE: x, LOC_SEG: c }
+  notes: "required if gene is different from the VBC gene"
 
 additional_variants.gene.symbol:
-  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: r, CLN_UAF: x, LOC_PHE: x, LOC_SEG: c }
   notes: "gene symbol; follows the gene's applicability"
 
+additional_variants.gene.id:
+  applicability: { CLN_AFF: o, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: o, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+  notes: "gene identifier"
+
 additional_variants.gene.mde_associated_gene:
-  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: r, CLN_UAF: x, LOC_PHE: x, LOC_SEG: c }
   notes: "required if gene is different from VBC gene"
 
+additional_variants.gene.transcript:
+  applicability: { CLN_AFF: o, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: o, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+  notes: "transcript reference"
+
 additional_variants.zygosity:
-  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x, LOC_PHE: r, LOC_SEG: o }
   value: "HOM / HET / HEMI"
 
 additional_variants.phase_in_ref_to_vbc:
-  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: x, CLN_UAF: x }
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: r, LOC_SEG: o }
   notes: "only if same gene as VBC"
 
 additional_variants.phase_confidence:
-  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: x, CLN_UAF: x }
+  applicability: { CLN_AFF: c, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
   notes: "only if phase is captured"
 
 additional_variants.classification:
-  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x }
-  notes: "must be P-LP if ALTV or ALTG use case"
+  applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x, LOC_PHE: r, LOC_SEG: o }
+  notes: "must be P-LP if ALTV or ALTG; must be VUS/P-LP if AFF or PHE"
+
+relatives:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: r }
+  notes: "capture multiple relatives, singularly or in bulk"
+
+relatives.parent_of_proband:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: r }
+  value: "true, false"
+
+relatives.sex:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: c }
+  rule: { requires: { context: "X-linked MOI" } }
+  notes: "required if X-linked"
+
+relatives.age:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+
+relatives.phenotypes:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+  value: "0..many"
+
+relatives.phenotypes.name:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+
+relatives.phenotypes.code:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+  notes: "HPO identifier when possible"
+
+relatives.affected_w_mde:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: r }
+  value: "true, false"
+
+relatives.severe_phenotype:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: c }
+  rule: { requires: { context: "semi-dominant or X-linked MOI and affected" } }
+  value: "true, false"
+  notes: "distinct concept from pheno_severity"
+
+relatives.vbc_exists:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: r }
+  value: "true, false"
+
+relatives.vbc_zygosity:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: r }
+  value: "het / hom / hemi"
+
+relatives.cmp_het_variant_exists:
+  applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: r }
+  value: "true, false"

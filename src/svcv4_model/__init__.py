@@ -19,8 +19,8 @@ from svcv4_model.case import (
     AgeQualifier,
     AgeUnit,
     Case,
-    CaseProbandInfo,
-    CaseVariant,
+    CaseRelative,
+    CaseTesting,
     CompoundHetVariant,
     Gene,
     Phase,
@@ -31,6 +31,7 @@ from svcv4_model.case import (
     Sex,
     TriState,
     Workflow,
+    WorkflowParameters,
     Zygosity,
 )
 from svcv4_model.classification import VariantPathogenicityClassification
@@ -51,8 +52,8 @@ __all__ = [
     "AgeQualifier",
     "AgeUnit",
     "Case",
-    "CaseProbandInfo",
-    "CaseVariant",
+    "CaseRelative",
+    "CaseTesting",
     "CompoundHetVariant",
     "EvidenceData",
     "EvidenceItem",
@@ -71,5 +72,6 @@ __all__ = [
     "TriState",
     "VariantPathogenicityClassification",
     "Workflow",
+    "WorkflowParameters",
     "Zygosity",
 ]

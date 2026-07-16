@@ -1,0 +1,58 @@
+{
+  "$defs": {
+    "TriState": {
+      "description": "Tri-state truth value.\n\n``TRUE``/``FALSE`` \u2014 the curator established the value. ``UNKNOWN`` \u2014\nthe curator looked and could not determine it. A ``null`` field (absent)\nmeans the value was **not captured at all**; ``UNKNOWN`` and ``null`` are\nsemantically distinct.",
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN"
+      ],
+      "title": "TriState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Genetic testing performed for the proband/case.",
+  "properties": {
+    "covers_all_genes_relevant_to_mde": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the test covered all genes relevant to the MDE."
+    },
+    "diagnostic_yield_for_phenotypes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Diagnostic yield for the phenotype(s), e.g. `100%`, `50%`. Supporting evidence is captured as notes only this phase, not as structured values.",
+      "title": "Diagnostic Yield For Phenotypes"
+    },
+    "method": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Test method(s), e.g. Sanger, Exome, Genome, Cyto; CSV allowed for multiple.",
+      "title": "Method"
+    }
+  },
+  "title": "CaseTesting",
+  "type": "object"
+}

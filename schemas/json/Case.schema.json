@@ -196,10 +196,22 @@
       "title": "AgeUnit",
       "type": "string"
     },
-    "CaseProbandInfo": {
+    "CaseRelative": {
       "additionalProperties": false,
-      "description": "Proband-level observations captured for the case.",
+      "description": "A relative of the proband, captured for segregation (LOC_SEG).",
       "properties": {
+        "affected_w_mde": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the relative is affected with the MDE."
+        },
         "age": {
           "anyOf": [
             {
@@ -211,18 +223,7 @@
           ],
           "default": null
         },
-        "age_matched_penetrance": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/AgeMatchedPenetrance"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "all_relevant_genes_tested": {
+        "cmp_het_variant_exists": {
           "anyOf": [
             {
               "$ref": "#/$defs/TriState"
@@ -232,9 +233,9 @@
             }
           ],
           "default": null,
-          "description": "Whether all relevant genes for the disorder were tested."
+          "description": "Whether a compound-het variant exists in the relative."
         },
-        "confirmed_parental_relationship": {
+        "parent_of_proband": {
           "anyOf": [
             {
               "$ref": "#/$defs/TriState"
@@ -244,37 +245,27 @@
             }
           ],
           "default": null,
-          "description": "Whether the parental relationship was confirmed."
-        },
-        "pheno_severity": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PhenoSeverity"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "pheno_specificity_for_gene": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PhenoSpecificity"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "description": "Whether this relative is a parent of the proband."
         },
         "phenotypes": {
-          "description": "0..many phenotypes; capture at least what is relevant to the case.",
+          "description": "0..many phenotypes for the relative.",
           "items": {
             "$ref": "#/$defs/Phenotype"
           },
           "title": "Phenotypes",
           "type": "array"
+        },
+        "severe_phenotype": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the relative has a severe phenotype. Required for semi-dominant and X-linked when affected. Distinct from `pheno_severity`."
         },
         "sex": {
           "anyOf": [
@@ -285,17 +276,54 @@
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "description": "Relative sex; required if X-linked."
+        },
+        "vbc_exists": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the VBC is present in the relative."
+        },
+        "vbc_zygosity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Zygosity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Zygosity of the VBC in the relative."
         }
       },
-      "title": "CaseProbandInfo",
+      "title": "CaseRelative",
       "type": "object"
     },
-    "CaseVariant": {
+    "CaseTesting": {
       "additionalProperties": false,
-      "description": "The VBC as referenced at the case level (id + case-level zygosity).",
+      "description": "Genetic testing performed for the proband/case.",
       "properties": {
-        "id": {
+        "covers_all_genes_relevant_to_mde": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the test covered all genes relevant to the MDE."
+        },
+        "diagnostic_yield_for_phenotypes": {
           "anyOf": [
             {
               "type": "string"
@@ -305,27 +333,29 @@
             }
           ],
           "default": null,
-          "description": "Identifier for the variant being considered.",
-          "title": "Id"
+          "description": "Diagnostic yield for the phenotype(s), e.g. `100%`, `50%`. Supporting evidence is captured as notes only this phase, not as structured values.",
+          "title": "Diagnostic Yield For Phenotypes"
         },
-        "zygosity": {
+        "method": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Zygosity"
+              "type": "string"
             },
             {
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "description": "Test method(s), e.g. Sanger, Exome, Genome, Cyto; CSV allowed for multiple.",
+          "title": "Method"
         }
       },
-      "title": "CaseVariant",
+      "title": "CaseTesting",
       "type": "object"
     },
     "CompoundHetVariant": {
       "additionalProperties": false,
-      "description": "The second variant in a biallelic AFF evaluation against a het VBC.\n\nUsed only in the Affected workflow. Per the applicability matrix the\n``zygosity`` is fixed to ``HET`` and ``phase_in_ref_to_vbc`` to ``TRANS``.",
+      "description": "The second variant in a biallelic evaluation against a het VBC.\n\nIncluded only when ``vbc_zygosity`` is ``HET`` and there is another variant\nin the same gene that is also HET and in *trans*. Because those conditions\nare the inclusion criteria, zygosity (HET) and phase (TRANS) are implied and\nare not captured here.",
       "properties": {
         "classification": {
           "anyOf": [
@@ -362,31 +392,7 @@
             }
           ],
           "default": null,
-          "description": "Confidence in the phase call."
-        },
-        "phase_in_ref_to_vbc": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Phase"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Fixed to TRANS in the AFF workflow."
-        },
-        "zygosity": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Zygosity"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Fixed to HET in the AFF workflow."
+          "description": "Confidence that the variant is in trans with the VBC."
         }
       },
       "title": "CompoundHetVariant",
@@ -394,8 +400,21 @@
     },
     "Gene": {
       "additionalProperties": false,
-      "description": "A gene reference; ``mde_associated_gene`` set when it differs from the VBC gene.",
+      "description": "A gene reference (symbol/id/transcript); ``mde_associated_gene`` flags\nwhether it is the MDE-associated gene (set when it differs from the VBC gene).",
       "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Gene identifier (e.g. HGNC / NCBI id).",
+          "title": "Id"
+        },
         "mde_associated_gene": {
           "anyOf": [
             {
@@ -421,22 +440,23 @@
           "default": null,
           "description": "Gene symbol.",
           "title": "Symbol"
+        },
+        "transcript": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Transcript reference (e.g. RefSeq accession).",
+          "title": "Transcript"
         }
       },
       "title": "Gene",
       "type": "object"
-    },
-    "MOI": {
-      "description": "Mode of inheritance. ALTV does not yet support AR/XLR.",
-      "enum": [
-        "AD",
-        "AR",
-        "XLD",
-        "XLR",
-        "SD"
-      ],
-      "title": "MOI",
-      "type": "string"
     },
     "Phase": {
       "description": "Phase of a variant in reference to the VBC.",
@@ -545,7 +565,7 @@
     }
   },
   "additionalProperties": false,
-  "description": "Superset of case-level CLN-observation attributes (permissive).",
+  "description": "The case data structure: a reusable, permissive superset of the case-level\ninformation a curator captures for a single human observation.\n\nA ``Case`` is shared across the workflows that consume case information to\ndetermine applicability and score human-observation evidence. Every field is\noptional here; which fields are required/optional/conditional/not-applicable\nper workflow is expressed by the applicability matrix, not by this type.\n\n``moi`` and ``pop_frq_points`` are **not** part of the Case \u2014 they are\nworkflow parameters (see :class:`WorkflowParameters`).",
   "properties": {
     "additional_variant_exists": {
       "anyOf": [
@@ -567,10 +587,21 @@
       "title": "Additional Variants",
       "type": "array"
     },
-    "case_proband_info": {
+    "age": {
       "anyOf": [
         {
-          "$ref": "#/$defs/CaseProbandInfo"
+          "$ref": "#/$defs/Age"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "age_matched_penetrance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AgeMatchedPenetrance"
         },
         {
           "type": "null"
@@ -589,43 +620,141 @@
       ],
       "default": null
     },
-    "moi": {
+    "confirmed_parental_relationship": {
       "anyOf": [
         {
-          "$ref": "#/$defs/MOI"
+          "$ref": "#/$defs/TriState"
         },
         {
           "type": "null"
         }
       ],
       "default": null,
-      "description": "Mode of inheritance."
+      "description": "Whether the parental relationship was confirmed."
     },
-    "pop_frq_points": {
+    "family_id": {
       "anyOf": [
         {
-          "minimum": -1.0,
-          "type": "number"
+          "type": "string"
         },
         {
           "type": "null"
         }
       ],
       "default": null,
-      "description": "Population-frequency points (must be >= -1.0).",
-      "title": "Pop Frq Points"
+      "description": "Family identifier, used to match relatives across workflows.",
+      "title": "Family Id"
     },
-    "vbc": {
+    "gene_specificity_for_phenotypes": {
       "anyOf": [
         {
-          "$ref": "#/$defs/CaseVariant"
+          "type": "string"
         },
         {
           "type": "null"
         }
       ],
       "default": null,
-      "description": "The variant being considered."
+      "description": "How specific the phenotype(s) are to the gene, e.g. `100%`, `50%` (roughly the inverse of the number of genes causing the phenotype(s)).",
+      "title": "Gene Specificity For Phenotypes"
+    },
+    "id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Proband identifier, used to match individuals across workflows.",
+      "title": "Id"
+    },
+    "pheno_severity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PhenoSeverity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "pheno_specificity_for_mde": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PhenoSpecificity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "How closely the phenotype(s) match what is expected for the MDE."
+    },
+    "phenotypes": {
+      "description": "0..many phenotypes; capture at least what is relevant to the case.",
+      "items": {
+        "$ref": "#/$defs/Phenotype"
+      },
+      "title": "Phenotypes",
+      "type": "array"
+    },
+    "relatives": {
+      "description": "0..many relatives; captured singularly or in bulk for segregation.",
+      "items": {
+        "$ref": "#/$defs/CaseRelative"
+      },
+      "title": "Relatives",
+      "type": "array"
+    },
+    "sex": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Sex"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "testing": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CaseTesting"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "vbc_exists": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the VBC is present in the proband."
+    },
+    "vbc_zygosity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Zygosity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Zygosity of the VBC in the proband."
     }
   },
   "title": "Case",
