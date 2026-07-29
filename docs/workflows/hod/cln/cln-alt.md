@@ -25,8 +25,7 @@ disease.
 Required (see the full [applicability table](../../case-model.md)):
 
 - `moi` — mode of inheritance.
-- `case_proband_info` — including **`pheno_severity`** (severity relative to
-  expectation).
+- **`pheno_severity`** — severity relative to expectation.
 - `vbc` — the variant being classified.
 - `additional_variant_exists` — must indicate the alternate variant is present.
 - **`additional_variants`** — the alternate variant(s): `id`, `gene`,
@@ -50,11 +49,10 @@ The **Alternative Cause-Gene** subtype covers cases where a variant in a
 Required (see the full [applicability table](../../case-model.md)):
 
 - `moi` — mode of inheritance.
-- `case_proband_info` — including:
-    - **`pheno_severity`** — *conditional*: the `BIALLELIC_LT_EXPECTED` value is
-      **not applicable** to Alternative Cause-Gene (the workflow drops it).
-    - **`age_matched_penetrance`** — *conditional*: applicable for Alternative
-      Gene among the conditional workflows.
+- **`pheno_severity`** — *conditional*: the `BIALLELIC_LT_EXPECTED` value is
+  **not applicable** to Alternative Cause-Gene (the workflow drops it).
+- **`age_matched_penetrance`** — *conditional*: applicable for Alternative
+  Gene among the conditional workflows.
 - `vbc` — the variant being classified.
 - `additional_variant_exists` — must indicate the alternate-gene variant is present.
 - **`additional_variants`** — the alternate variant(s): `id`, `gene` (including

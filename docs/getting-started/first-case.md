@@ -19,27 +19,34 @@ A minimal capture looks like:
 {
   "moi": "AD",
   "pop_frq_points": 0,
-  "case_proband_info": {
-    "sex": "F",
-    "phenotypes": [{ "code": "HP:0001250", "name": "Seizure" }],
-    "pheno_specificity_for_gene": "SPECIFIC",
-    "all_relevant_genes_tested": "TRUE"
-  },
-  "vbc": { "id": "clinvar:VCV000000001", "zygosity": "HET" }
+  "vbc": { "id": "clinvar:VCV000000001" },
+  "sex": "F",
+  "phenotypes": [{ "code": "HP:0001250", "name": "Seizure" }],
+  "pheno_specificity_for_mde": "SPECIFIC",
+  "testing": { "covers_all_genes_relevant_to_mde": "TRUE" },
+  "vbc_zygosity": "HET"
 }
 ```
 
 In prose: *a female proband with a seizure phenotype that is specific to the
-gene; all relevant genes for the disorder were tested; the variant being
+MDE; testing covered all genes relevant to the MDE; the variant being
 classified (the VBC) is heterozygous, under autosomal-dominant inheritance.*
 
 ## What each piece is
 
 - `moi` — the mode of inheritance for the VBC ⇔ MDE pairing.
 - `pop_frq_points` — the population-frequency contribution (computed upstream).
-- `case_proband_info` — what's known about the proband (sex, age, phenotypes,
-  phenotype specificity, …).
-- `vbc` — the variant being classified, by id and case-level zygosity.
+- `vbc` — the variant being classified, by id.
+- `sex` / `phenotypes` — what's known about the proband (sex, phenotypes).
+- `pheno_specificity_for_mde` — how closely the phenotype(s) match what is
+  expected for the MDE.
+- `testing.covers_all_genes_relevant_to_mde` — whether the test covered all
+  genes relevant to the MDE.
+- `vbc_zygosity` — the VBC's zygosity in the proband.
+
+`moi`, `pop_frq_points`, and `vbc` are `WorkflowParameters` — submitted
+alongside a `Case`, not fields of it (see `src/svcv4_model/case.py`'s own
+docstring/design) — while the rest are `Case` fields directly.
 
 ## What happens next
 
@@ -50,6 +57,18 @@ This captured case becomes one or more **Evidence Items** under the `CLN_AFF`
 [Affected (CLN_AFF)](../workflows/hod/cln/cln-aff.md) for the full workflow and
 [Case model & applicability](../workflows/case-model.md) for every field and how
 its applicability varies by workflow.
+
+## Following the hierarchy
+
+This one `CLN_AFF` capture threads the whole hierarchy: it's an **[Evidence
+Item](evidence-lines-and-items.md)** (the `Case` payload above) that feeds the
+`CLN_AFF` **[Evidence Code](../workflows/index.md)**'s workflow, producing an
+**[Evidence Line](evidence-lines-and-items.md)** under the **[Clinical
+Observations (CLN)](../workflows/index.md)** Evidence Concept, under the
+**[Human Observations](../workflows/index.md)** Evidence Category — whose score
+ultimately rolls up into a **[Statement](assertion-framework.md)** about a
+**[Proposition](assertion-framework.md)** (`subjectVariant` = the VBC,
+`objectCondition` = the MDE).
 
 !!! note "This is a teaching example"
 
