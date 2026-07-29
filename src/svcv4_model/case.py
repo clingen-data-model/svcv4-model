@@ -1,4 +1,4 @@
-"""SVCv4 Case model — the case-level clinical-observation (CLN) evidence payload.
+"""SVCv4 Case model — the case-level clinical-observation and locus-specificity (CLN/LOC) evidence payload.
 
 A ``Case`` is the structured payload behind a ``clinical_observation``
 Evidence Item: the superset of all attributes a curator captures from the
