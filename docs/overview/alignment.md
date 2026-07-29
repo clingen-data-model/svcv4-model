@@ -6,9 +6,9 @@ here, so the two stay in lock-step as the framework changes toward finalization.
 
 ## The Summary Table is the anchor
 
-SVCv4 presents evidence in a **Summary Table** organized top-down:
-
-**Evidence Category → Evidence Concept → Evidence Code → Code Workflow(s) → Workflow Score**
+SVCv4 presents evidence in a **Summary Table** organized top-down as a
+four-level hierarchy — see the [Workflows overview](../workflows/index.md) for
+the full chain from Evidence Category to Workflow Score.
 
 ![The SVCv4 Summary Table](../assets/images/summary-table.png){ loading=lazy }
 
