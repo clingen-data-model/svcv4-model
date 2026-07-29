@@ -7,6 +7,16 @@ concepts the [Case model](../../case-model.md) realizes (together with
 [Clinical Observations](../cln/index.md)) — LOC is captured by the **same Case
 model** that realizes CLN, not a separate structure.
 
+!!! note "Locus evidence implicates the allele, not necessarily a single variant"
+
+    `LOC_PHE` and `LOC_SEG` evidence implicates a **locus/allele** — via a
+    phenotype-to-gene match or via genetic linkage — not a specific variant.
+    When an allele carries a single clinically relevant variant (the common
+    case, and the only one this model currently represents), that distinction
+    doesn't change anything in practice. When an allele carries more than one
+    clinically relevant variant, the evidence must be apportioned across them
+    rather than applied to just one — a case this model doesn't yet handle.
+
 Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
 ([Glossary](../../../reference/glossary.md)).
 
