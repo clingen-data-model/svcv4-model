@@ -1,9 +1,17 @@
 # Capture your first case
 
+This page walks through one concrete workflow — **Affected (`CLN_AFF`)** — as a
+worked example. (Locus Specificity and, eventually, Population and
+Predictive & Functional Data workflows follow the same shape but capture
+different evidence; see [Workflows](../workflows/index.md).) If you haven't
+already, [The classification inputs](classification-inputs.md) covers the
+VBC/MDE/MOI/Gene inputs used below before you dive into workflow-specific
+evidence.
+
 A **case** is the case-level evidence a curator captures from the literature to
 represent a single human clinical observation supporting (or opposing) variant
 pathogenicity — the structured payload behind a `clinical_observation` Evidence
-Item. This page walks through a minimal **Affected (`CLN_AFF`)** case.
+Item.
 
 Throughout, **"the variant" means the VBC** (Variant Being Classified) and
 **"the disease/condition" means the MDE** (Mendelian Disease Entity). See the

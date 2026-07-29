@@ -5,7 +5,9 @@ introduces that backbone simply, then links to the deeper detail.
 
 Throughout: **the variant = the VBC** (Variant Being Classified) and **the
 disease/condition = the MDE** (Mendelian Disease Entity). See the
-[Glossary](../reference/glossary.md).
+[Glossary](../reference/glossary.md) and, for how VBC/MDE/MOI/Gene anchor a
+classification before any workflow runs,
+[The classification inputs](classification-inputs.md).
 
 ## Start with the Proposition
 

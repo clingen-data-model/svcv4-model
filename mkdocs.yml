@@ -84,6 +84,7 @@ nav:
       - What this project is — and isn't: overview/scope.md
   - Getting Started:
       - "Show your work: structured evidence": getting-started/show-your-work.md
+      - The classification inputs: getting-started/classification-inputs.md
       - The assertion framework: getting-started/assertion-framework.md
       - Evidence Lines & Evidence Items: getting-started/evidence-lines-and-items.md
       - Capture your first case: getting-started/first-case.md
