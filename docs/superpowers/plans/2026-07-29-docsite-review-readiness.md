@@ -168,7 +168,7 @@ git commit -m "docs: nest LOC nav section (index + LOC_PHE + LOC_SEG deep-dives)
 
 - [ ] **Step 1:** `docs/workflows/hod/index.md` — stop lumping LOC in with the POP/PFD stubs in its "Where this model goes deep" framing; LOC belongs alongside CLN as "detailed here."
 - [ ] **Step 2:** `docs/workflows/index.md` — in the "What this section covers now" paragraph, change "the CLN workflows that the Case model supports" to "the CLN **and LOC** workflows that the Case model supports."
-- [ ] **Step 3:** `docs/workflows/hod/cln/index.md` — line 6 currently reads "This is the concept the [Case model] realizes." Change to name both concepts, e.g. "This is one of the two concepts the Case model realizes (together with [Locus Specificity](../loc/index.md))."
+- [ ] **Step 3:** `docs/workflows/hod/cln/index.md` — line 6 currently reads "This is the concept the [Case model] realizes." Change to name both concepts, e.g. "This is one of the two concepts the Case model realizes (together with Locus Specificity, `../loc/index.md`)."
 - [ ] **Step 4:** Build-check and commit.
 
 ```bash
@@ -262,7 +262,7 @@ New:
     in the same "specified but not yet modeled" bucket — see
     [Spec coverage](../../../reference/spec-alignment.md) for the full picture.
     (Locus Specificity is no longer in that bucket — see
-    [Locus Specificity (LOC)](../loc/index.md).)
+    `Locus Specificity (LOC)` (`../loc/index.md`).)
 ```
 
 - [ ] **Step 2:** Build-check and commit.
@@ -413,7 +413,7 @@ git commit -m "docs: add glossary terms surfaced by the SVCv4 manuscript/glossar
 grep -rn 'Evidence Category.*Evidence Concept.*Evidence Code' docs --include='*.md'
 ```
 
-- [ ] **Step 2:** Keep the full statement only on `docs/workflows/index.md` (already there, unchanged). On each other page that restates it in full, replace with one sentence + a link, e.g.: "SVCv4 organizes evidence in a four-level hierarchy — see [Workflows overview](../workflows/index.md) for the full picture." Read each page first to confirm the replacement doesn't strand any content that depended on the full chain being spelled out locally (e.g. `overview/alignment.md`'s mapping table stands on its own and shouldn't need the chain restated above it).
+- [ ] **Step 2:** Keep the full statement only on `docs/workflows/index.md` (already there, unchanged). On each other page that restates it in full, replace with one sentence + a link, e.g.: "SVCv4 organizes evidence in a four-level hierarchy — see `Workflows overview` (`../workflows/index.md`) for the full picture." Read each page first to confirm the replacement doesn't strand any content that depended on the full chain being spelled out locally (e.g. `overview/alignment.md`'s mapping table stands on its own and shouldn't need the chain restated above it).
 
 - [ ] **Step 3:** Re-run the Step 1 grep — expected: only `docs/workflows/index.md` remains.
 

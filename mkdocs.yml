@@ -79,6 +79,7 @@ markdown_extensions:
 nav:
   - Overview:
       - Home: index.md
+      - Reviewing this site: overview/review-guide.md
       - SVCv4 Standards in brief: overview/svcv4-in-brief.md
       - How SVCv4 maps to the model: overview/alignment.md
       - What this project is — and isn't: overview/scope.md
@@ -110,9 +111,11 @@ nav:
       - Examples overview: examples/index.md
   - Reference:
       - Model reference: reference/model.md
+      - Spec coverage: reference/spec-alignment.md
       - JSON Schemas: reference/schemas.md
       - Summary Table: reference/summary-table.md
       - VA-Spec community profile: reference/va-spec-profile.md
+      - Core concepts: reference/concepts.md
       - Glossary: reference/glossary.md
       - "Interop: GA4GH GKS": reference/gks-interop.md
       - "Interop: ClinGen CSpec": reference/cspec-interop.md
