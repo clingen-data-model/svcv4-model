@@ -1,7 +1,9 @@
 # Capture your first case
 
 This page walks through one concrete workflow — **Affected (`CLN_AFF`)** — as a
-worked example. (Locus Specificity and, eventually, Population and
+worked example of a **complex, multi-branch workflow** — contrast with the
+simpler [`POP_FRQ` example](capturing-basic-evidence.md) earlier in this
+section. (Locus Specificity and, eventually, Population and
 Predictive & Functional Data workflows follow the same shape but capture
 different evidence; see [Workflows](../workflows/index.md).) If you haven't
 already, [The classification inputs](classification-inputs.md) covers the
@@ -68,15 +70,11 @@ its applicability varies by workflow.
 
 ## Following the hierarchy
 
-This one `CLN_AFF` capture threads the whole hierarchy: it's an **[Evidence
-Item](evidence-lines-and-items.md)** (the `Case` payload above) that feeds the
-`CLN_AFF` **[Evidence Code](../workflows/index.md)**'s workflow, producing an
-**[Evidence Line](evidence-lines-and-items.md)** under the **[Clinical
-Observations (CLN)](../workflows/index.md)** Evidence Concept, under the
-**[Human Observations](../workflows/index.md)** Evidence Category — whose score
-ultimately rolls up into a **[Statement](assertion-framework.md)** about a
-**[Proposition](assertion-framework.md)** (`subjectVariant` = the VBC,
-`objectCondition` = the MDE).
+Like every workflow, this `CLN_AFF` capture is an **Evidence Item** that
+feeds an **Evidence Line**, which rolls up through the Concept/Category
+hierarchy into the **Statement**'s final score — see
+[Rolling up Evidence Line scores](rolling-up-scores.md) for exactly how
+that works, using a smaller worked example.
 
 !!! note "This is a teaching example"
 

@@ -20,6 +20,27 @@ flowchart LR
     EL -->|rolls up| UP["parent Evidence Line(s) → Statement"]
 ```
 
+## A concrete example
+
+Take `POP_FRQ`, the population-frequency evidence code introduced in
+[Capturing basic evidence](capturing-basic-evidence.md). The **Evidence
+Item** — per SVCv4's own definition of the code — is the captured allele
+frequency (a Filtering Allele Frequency, FAF) compared against the
+calculated Disease Allele Frequency Threshold (DAFT) for the MDE.
+
+The **Evidence Line** is what this model actually carries: a single score
+for that code, `pop_frq_points`. It's a required `WorkflowParameters`
+field, and every downstream workflow (`CLN_AFF`, `CLN_DNV`, `CLN_ALT`,
+`CLN_UAF`, `LOC_PHE`, `LOC_SEG`) takes it as an input:
+
+```json
+{ "pop_frq_points": -1.0 }
+```
+
+This score doesn't stand alone — it rolls up alongside the Evidence Lines
+from whichever other workflow(s) ran (e.g. `CLN_AFF`) into the Statement's
+final score; see [Rolling up Evidence Line scores](rolling-up-scores.md).
+
 ## Learn more
 
 ??? info "Field shapes"

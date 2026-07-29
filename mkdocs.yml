@@ -87,7 +87,9 @@ nav:
       - "Show your work: structured evidence": getting-started/show-your-work.md
       - The classification inputs: getting-started/classification-inputs.md
       - The assertion framework: getting-started/assertion-framework.md
+      - Capturing basic evidence: getting-started/capturing-basic-evidence.md
       - Evidence Lines & Evidence Items: getting-started/evidence-lines-and-items.md
+      - Rolling up Evidence Line scores: getting-started/rolling-up-scores.md
       - Capture your first case: getting-started/first-case.md
   - Workflows:
       - Workflows overview: workflows/index.md
