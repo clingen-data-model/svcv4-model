@@ -19,9 +19,9 @@ workflows. (Figure provided by the SVCv4 Standards group.)*
 
 ## Where this model goes deep
 
-The **[Clinical Observations (CLN)](cln/index.md)** workflows are detailed here
-and backed by the [Case model](../case-model.md). **[Population (POP)](pop.md)**
-and **[Locus Specificity (LOC)](loc.md)** are summarized for now and will be
-modeled in a later phase.
+The **[Clinical Observations (CLN)](cln/index.md)** and
+**[Locus Specificity (LOC)](loc/index.md)** workflows are detailed here and
+backed by the [Case model](../case-model.md). **[Population (POP)](pop.md)** is
+summarized for now and will be modeled in a later phase.
 
 Scoring rules for every code live in [ClinGen CSpec](../../reference/cspec-interop.md).

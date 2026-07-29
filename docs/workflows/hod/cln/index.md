@@ -3,7 +3,8 @@
 **Clinical Observations (CLN)** is the Evidence Concept (under
 [Human Observational Data](../index.md)) for evidence drawn from observing
 individuals — affected and unaffected — and how the variant tracks with disease.
-This is the concept the [Case model](../../case-model.md) realizes.
+This is one of the two concepts the [Case model](../../case-model.md) realizes
+(together with [Locus Specificity](../loc/index.md)).
 
 Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
 ([Glossary](../../../reference/glossary.md)).
@@ -23,10 +24,11 @@ Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
     **`CLN_CCS` (Case-Control studies)** is shown here for completeness of the
     framework, but it is **out of scope for the first release** of the SVCv4
     Standards — the SVCv4 Working Group has not yet specified it. It is therefore
-    not modeled here. (This is different from POP/LOC/PFD, which the Standards
+    not modeled here. (This is different from POP/PFD, which the Standards
     specify but this model has not yet covered — see
-    [Population (POP)](../pop.md), [Locus Specificity (LOC)](../loc.md), and
-    [Predictive & Functional Data](../../pfd/index.md).)
+    [Population (POP)](../pop.md) and
+    [Predictive & Functional Data](../../pfd/index.md). Locus Specificity is
+    already covered — see [Locus Specificity (LOC)](../loc/index.md).)
 
 ## How to read each workflow page
 

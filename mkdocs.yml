@@ -98,7 +98,10 @@ nav:
               - Alternative Cause (CLN_ALT): workflows/hod/cln/cln-alt.md
               - Unaffected (CLN_UAF): workflows/hod/cln/cln-uaf.md
           - Population (POP): workflows/hod/pop.md
-          - Locus Specificity (LOC): workflows/hod/loc.md
+          - Locus Specificity (LOC):
+              - workflows/hod/loc/index.md
+              - Phenotype (LOC_PHE): workflows/hod/loc/loc-phe.md
+              - Segregation (LOC_SEG): workflows/hod/loc/loc-seg.md
       - Predictive & Functional Data (PFD):
           - workflows/pfd/index.md
       - Case model & applicability: workflows/case-model.md
