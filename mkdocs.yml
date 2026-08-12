@@ -114,6 +114,7 @@ nav:
   - Reference:
       - Model reference: reference/model.md
       - Spec coverage: reference/spec-alignment.md
+      - Known gaps: reference/known-gaps.md
       - JSON Schemas: reference/schemas.md
       - Summary Table: reference/summary-table.md
       - VA-Spec community profile: reference/va-spec-profile.md

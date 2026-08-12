@@ -284,3 +284,5 @@ represents Gene-Disease Validity today.
 - [Spec coverage](../reference/spec-alignment.md) — full SVCv4 Standards
   coverage tracking, including the Multiple Disorders Guidance and Population
   Database Frequency rows referenced above.
+- [Known gaps](known-gaps.md) — the organized backlog for the three
+  not-yet-modeled concepts above, plus other concrete model/documentation gaps.

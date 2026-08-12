@@ -51,6 +51,10 @@ piece by piece rather than dropping you into the middle of it:
 - Do the cross-cutting concepts on the [Core concepts](../reference/concepts.md)
   page (VBC, MDE, Gene, MOI, Zygosity & Phase, Case) match how you think
   about these day to day as a curator?
+- The items above, plus a few more (Gene-Disease Validity, DAFT, rule
+  enforcement, case aggregation), are tracked in one place on
+  [Known gaps](../reference/known-gaps.md) — does the way they're grouped
+  there make sense, or would you organize this differently?
 
 ## What's not here
 
