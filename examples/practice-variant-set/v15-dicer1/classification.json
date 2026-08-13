@@ -1,0 +1,33 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA10583232", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA10583232." },
+      "label": "DICER1 c.2T>C (p.Met1Thr, start-loss) — PVS-v15-DICER1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0100216", "label": "DICER1-related tumor predisposition" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 0.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v15-DICER1-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 800", "allelic_heterogeneity": 0.07, "genetic_heterogeneity": 1.00, "penetrance": 0.10, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr14-95133457-A-G?dataset=gnomad_r4"], "description": "POP inputs from the tab; note low penetrance (0.10)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:NUL", "label": "Absent protein / loss of function (NUL)", "version": "draft-2026-pre-release" },
+      "code": "NUL_+0",
+      "evidence": [ { "id": "PVS-v15-DICER1-nul-001", "type": "predicted_lof", "data": { "consequence": "start-loss (p.Met1Thr)", "alternate_starts": "p.Met11/Met17/Met24 present; p.M1 not highly conserved", "impact": "loss of first ~24 aa removes only ~1.2% of the protein; no critical domain there", "interpretation": "LoF weight is uncertain — alternative Met usage may rescue translation" }, "references": [], "description": "Start-loss with plausible downstream alternate start codons, so the LoF effect is uncertain." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Start-loss with uncertain LoF (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v15-DICER1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v15: DICER1'. A 'why nothing counts' example: proband 1 is unaffected and DICER1 penetrance is low (no CLN_UAF), and proband 2's breast cancer is non-specific with a Pathogenic BRCA1 variant and high genetic heterogeneity (no CLN_AFF, no CLN_ALT). VUS."
+}

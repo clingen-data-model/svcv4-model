@@ -1,0 +1,24 @@
+{
+  "vbc": {
+    "id": "CAID:CA274615",
+    "gene": { "symbol": "MECP2", "id": "HGNC:6990", "mde_associated_gene": "MECP2", "transcript": "NM_001110792.2" }
+  },
+  "mde": { "curie": "MONDO:0010726", "label": "Rett syndrome" },
+  "moi": "XLD",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v24-MECP2-case-1",
+    "family_id": "PVS-v24-MECP2-FAM-1",
+    "sex": "F",
+    "phenotypes": [
+      { "name": "Seizure", "code": "HP:0001250" },
+      { "name": "Intellectual disability", "code": "HP:0001249" }
+    ],
+    "pheno_specificity_for_mde": "CONSISTENT",
+    "testing": { "method": "Exome", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "PCT_80_100",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "FALSE"
+  }
+}

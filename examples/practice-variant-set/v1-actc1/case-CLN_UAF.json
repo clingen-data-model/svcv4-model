@@ -1,0 +1,15 @@
+{
+  "vbc": {
+    "id": "CAID:CA2627662931",
+    "gene": { "symbol": "ACTC1", "id": "HGNC:143", "mde_associated_gene": "ACTC1", "transcript": "NM_005159.5" }
+  },
+  "mde": { "curie": "MONDO:0005045", "label": "hypertrophic cardiomyopathy" },
+  "moi": "AD",
+  "case": {
+    "id": "PVS-v1-ACTC1-proband-2",
+    "family_id": "PVS-v1-ACTC1-FAM-2",
+    "age_matched_penetrance": "LT_80",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET"
+  }
+}

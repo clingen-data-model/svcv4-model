@@ -1,0 +1,15 @@
+{
+  "vbc": {
+    "id": "CAID:CA365563886",
+    "gene": { "symbol": "TRDN", "id": "HGNC:12261", "mde_associated_gene": "TRDN", "transcript": "NM_006073.4" }
+  },
+  "mde": { "curie": "MONDO:0017990", "label": "catecholaminergic polymorphic ventricular tachycardia" },
+  "moi": "AR",
+  "case": {
+    "id": "PVS-v8-TRDN-relative-1",
+    "family_id": "PVS-v8-TRDN-FAM-1",
+    "age_matched_penetrance": "LT_80",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET"
+  }
+}

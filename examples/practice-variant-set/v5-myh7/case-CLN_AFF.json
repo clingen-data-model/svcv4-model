@@ -1,0 +1,33 @@
+{
+  "vbc": {
+    "id": "CAID:CA015454",
+    "gene": {
+      "symbol": "MYH7",
+      "id": "HGNC:7577",
+      "mde_associated_gene": "MYH7",
+      "transcript": "NM_000257.4"
+    }
+  },
+  "mde": {
+    "curie": "MONDO:0005045",
+    "label": "hypertrophic cardiomyopathy"
+  },
+  "moi": "AD",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v5-MYH7-proband-2",
+    "family_id": "PVS-v5-MYH7-FAM-2",
+    "phenotypes": [
+      { "name": "Hypertrophic cardiomyopathy", "code": "HP:0001639" }
+    ],
+    "pheno_specificity_for_mde": "SPECIFIC",
+    "testing": {
+      "method": "Panel",
+      "covers_all_genes_relevant_to_mde": "TRUE"
+    },
+    "age_matched_penetrance": "LT_80",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "FALSE"
+  }
+}

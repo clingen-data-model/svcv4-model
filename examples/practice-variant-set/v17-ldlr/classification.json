@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA023436", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA023436." },
+      "label": "LDLR c.1216C>A (p.Arg406=, splice-altering) — PVS-v17-LDLR VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0005439", "label": "familial hypercholesterolemia" },
+    "qualifiers": [ { "moi": "SD", "note": "Semidominant. Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 7.0,
+  "score_classification": "pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v17-LDLR-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 200", "allelic_heterogeneity": 0.05, "genetic_heterogeneity": 0.80, "penetrance": 0.80, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr19-11113307-C-A?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+2",
+      "evidence": [ { "id": "PVS-v17-LDLR-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 2, "pheno_specificity_for_mde": "SPECIFIC", "phenotype": "clinical diagnostic criteria for FH; FH panel negative for other genes", "biallelic_proband": "a third proband is homozygous/AR FH (LDLc 704 mg/dl) with p.Gln254Ter (P) in trans → LOC_PHE ~60% yield", "pop_frq_points": 0 }, "references": [], "description": "Two AD probands meeting FH criteria (all FH genes tested); a third biallelic proband adds LOC_PHE." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Affected probands (illustrative). A biallelic proband also supports LOC_PHE."
+    },
+    {
+      "method": { "code": "svcv4:SPL", "label": "Splicing (SPL)", "version": "draft-2026-pre-release" },
+      "code": "SPL_+5",
+      "evidence": [ { "id": "PVS-v17-LDLR-spl-001", "type": "functional_assay", "data": { "prediction": "natural exon-9 acceptor lost (1.0→0.57); new acceptor gained (0.00→1.00) → r.1189_1219del, p.Ser397ThrfsTer6", "assays": "minigene and RT-PCR confirm the acceptor gain", "concordance": "splicing data and PRD concordant; near-complete alternative transcript" }, "references": ["PMID:19371225", "PMID:17335829"], "description": "Synonymous-appearing change that creates a new splice acceptor → frameshift; confirmed by minigene and RT-PCR." } ],
+      "score": 5.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 5.0,
+      "description": "Splicing + functional evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v17-LDLR rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v17: LDLR'. A splice-altering synonymous change (minigene + RT-PCR confirmed) under semidominant inheritance, with AD and biallelic probands."
+}

@@ -1,0 +1,21 @@
+{
+  "vbc": {
+    "id": "CAID:CA2499226544",
+    "gene": { "symbol": "RS1", "id": "HGNC:10457", "mde_associated_gene": "RS1", "transcript": "NM_000330.4" }
+  },
+  "mde": { "curie": "MONDO:0010725", "label": "X-linked retinoschisis" },
+  "moi": "XLR",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v29-RS1-proband-1",
+    "family_id": "PVS-v29-RS1-FAM-1",
+    "sex": "M",
+    "phenotypes": [ { "name": "Retinoschisis", "code": "HP:0030502" } ],
+    "pheno_specificity_for_mde": "SPECIFIC",
+    "testing": { "method": "Exome", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "PCT_80_100",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HEMI",
+    "additional_variant_exists": "FALSE"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "vbc": {
+    "id": "CAID:CA3246685756",
+    "gene": { "symbol": "USH2A", "id": "HGNC:12601", "mde_associated_gene": "USH2A", "transcript": "NM_206933.3" }
+  },
+  "mde": { "curie": "MONDO:0019501", "label": "Usher syndrome" },
+  "moi": "AR",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v20-USH2A-proband-1",
+    "family_id": "PVS-v20-USH2A-FAM-1",
+    "phenotypes": [
+      { "name": "Sensorineural hearing impairment", "code": "HP:0000407" },
+      { "name": "Retinitis pigmentosa", "code": "HP:0000510" }
+    ],
+    "pheno_specificity_for_mde": "SPECIFIC",
+    "testing": { "method": "Panel", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "PCT_80_100",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HOM",
+    "additional_variant_exists": "FALSE"
+  }
+}

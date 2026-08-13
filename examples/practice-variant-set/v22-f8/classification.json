@@ -1,0 +1,36 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA414914392", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA414914392." },
+      "label": "F8 c.1420G>C (p.Gly474Arg) — PVS-v22-F8 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0010602", "label": "hemophilia A" },
+    "qualifiers": [ { "moi": "XLR", "note": "X-linked. Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 5.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v22-F8-pop-001", "type": "population_frequency", "data": { "approach": "binning (X-linked dominant combined table)", "prevalence_estimate": "1 in 10000", "penetrance": 0.20, "gnomad": "absent", "pop_frq_points": 0 }, "references": [], "description": "POP inputs via the binning approach; variant absent from gnomAD." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+5",
+      "evidence": [
+        { "id": "PVS-v22-F8-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.972, "grantham": 125, "splice_impact": "none" }, "references": [], "description": "Strong in-silico missense support (REVEL 0.972)." },
+        { "id": "PVS-v22-F8-mis-002", "type": "same_residue_variant", "data": { "residue": "p.Gly474", "same_aa_change": "c.1420G>A (p.Gly474Arg) is LP (PS1-type: same amino-acid change)", "same_codon": ["c.1421G>A (p.Gly474Glu) — Pathogenic (Grantham 98)", "c.1420G>T (p.Gly474Trp) — LP (Grantham 184)"] }, "references": [], "description": "A different nucleotide giving the SAME amino-acid change is LP (PS1-type), and two other same-codon changes are P/LP (PM5-type)." }
+      ],
+      "score": 5.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 5.0,
+      "description": "Predictive missense + same-AA (PS1) + same-codon (PM5) evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v22-F8 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v22: F8'. Evidence-driven (no clinical observation): strong in-silico support plus a same-amino-acid LP variant (PS1) and same-codon P/LP variants (PM5). An X-linked example."
+}

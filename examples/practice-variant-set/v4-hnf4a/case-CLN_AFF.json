@@ -1,0 +1,20 @@
+{
+  "vbc": {
+    "id": "CAID:CA2573106197",
+    "gene": { "symbol": "HNF4A", "id": "HGNC:5024", "mde_associated_gene": "HNF4A", "transcript": "NM_175914.5" }
+  },
+  "mde": { "curie": "MONDO:0015967", "label": "monogenic diabetes" },
+  "moi": "AD",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v4-HNF4A-proband-1",
+    "family_id": "PVS-v4-HNF4A-FAM-1",
+    "phenotypes": [ { "name": "Maturity-onset diabetes of the young", "code": "HP:0004904" } ],
+    "pheno_specificity_for_mde": "CONSISTENT",
+    "testing": { "method": "Panel", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "LT_80",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "FALSE"
+  }
+}

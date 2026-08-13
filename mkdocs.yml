@@ -110,7 +110,39 @@ nav:
           - workflows/pfd/index.md
       - Case model & applicability: workflows/case-model.md
   - Examples:
-      - Examples overview: examples/index.md
+      - examples/practice-variant-set/index.md
+      - ACTC1 · Hypertrophic Cardiomyopathy: examples/practice-variant-set/v1-actc1.md
+      - ATM · ataxia telangiectasia: examples/practice-variant-set/v2-atm.md
+      - FOXG1 · FOXG1-related disorder: examples/practice-variant-set/v3-foxg1.md
+      - HNF4A · monogenic diabetes: examples/practice-variant-set/v4-hnf4a.md
+      - MYH7 · hypertropic cardiomyopathy: examples/practice-variant-set/v5-myh7.md
+      - NF1 · neurofibromatosis type 1: examples/practice-variant-set/v6-nf1.md
+      - PAH · phenylketonuria: examples/practice-variant-set/v7-pah.md
+      - PKP2 · arrhythmogenic right ventricular cardiomyopathy: examples/practice-variant-set/pkp2.md
+      - TRDN · catecholaminergic polymorphic ventricular tachycardia: examples/practice-variant-set/v8-trdn.md
+      - RUNX1 · Hereditary thrombocytopenia and hematologic cancer predisposition syndrome: examples/practice-variant-set/v9-runx1.md
+      - SCN2A · complex neurodevelopmental disorder: examples/practice-variant-set/v10-scn2a.md
+      - ACVRL1 · hereditary hemorrhagic telangiectasia: examples/practice-variant-set/v11-acvrl1.md
+      - ADA · severe combined immunodeficiency: examples/practice-variant-set/v12-ada.md
+      - AIPL1 · AIPL1-related retinopathy: examples/practice-variant-set/v13-aipl1.md
+      - ATXN7L3 · ATXN7L3-related developmental delay: examples/practice-variant-set/v14-atxn7l3.md
+      - DICER1 · DICER1-related tumor predisposition: examples/practice-variant-set/v15-dicer1.md
+      - DYSF · autosomal recessive limb-girdle muscular dystrophy: examples/practice-variant-set/v16-dysf.md
+      - LDLR · familial hypercholesterolemia: examples/practice-variant-set/v17-ldlr.md
+      - TNNI3 · hypertrophic cardiomyopathy: examples/practice-variant-set/v18-tnni3.md
+      - TP53 · Li-Fraumeni syndrome: examples/practice-variant-set/v19-tp53.md
+      - USH2A · Usher syndrome: examples/practice-variant-set/v20-ush2a.md
+      - ANO5 · autosomal recessive limb-girdle muscular dystrophy: examples/practice-variant-set/v21-ano5.md
+      - F8 · hemophilia A: examples/practice-variant-set/v22-f8.md
+      - GP1BA · Bernard-Soulier syndrome: examples/practice-variant-set/v23-gp1ba.md
+      - MECP2 · Rett syndrome: examples/practice-variant-set/v24-mecp2.md
+      - MSH2 · Lynch syndrome: examples/practice-variant-set/v25-msh2.md
+      - MSH6 · Lynch syndrome: examples/practice-variant-set/v26-msh6.md
+      - MYOC · open-angle glaucoma: examples/practice-variant-set/v27-myoc.md
+      - PTEN · PTEN hamartoma tumor syndrome: examples/practice-variant-set/v28-pten.md
+      - RS1 · X-linked retinoschisis: examples/practice-variant-set/v29-rs1.md
+      - RYR1 · malignant hyperthermia: examples/practice-variant-set/v30-ryr1.md
+      - FBN1 · Marfan syndrome: examples/practice-variant-set/example-fbn1.md
   - Reference:
       - Model reference: reference/model.md
       - Spec coverage: reference/spec-alignment.md

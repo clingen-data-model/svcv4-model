@@ -1,0 +1,20 @@
+{
+  "vbc": {
+    "id": "CAID:CA405668522",
+    "gene": { "symbol": "RYR1", "id": "HGNC:10483", "mde_associated_gene": "RYR1", "transcript": "NM_000540.3" }
+  },
+  "mde": { "curie": "MONDO:0007783", "label": "malignant hyperthermia, susceptibility to, 1" },
+  "moi": "AD",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v30-RYR1-proband-1",
+    "family_id": "PVS-v30-RYR1-FAM-1",
+    "phenotypes": [ { "name": "Malignant hyperthermia", "code": "HP:0002047" } ],
+    "pheno_specificity_for_mde": "CONSISTENT",
+    "testing": { "method": "Panel", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "LT_80",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "FALSE"
+  }
+}

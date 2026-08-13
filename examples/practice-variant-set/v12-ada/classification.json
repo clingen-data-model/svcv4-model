@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA252010", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA252010." },
+      "label": "ADA c.219-2A>G — PVS-v12-ADA VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0007064", "label": "severe combined immunodeficiency due to adenosine deaminase deficiency" },
+    "qualifiers": [ { "moi": "AR", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 8.0,
+  "score_classification": "pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v12-ADA-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 5000", "allelic_heterogeneity": 0.20, "genetic_heterogeneity": 0.13, "penetrance": 0.50, "inheritance": "biallelic", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr20-44626601-T-C?dataset=gnomad_r4"], "description": "POP inputs from the tab (biallelic threshold)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+2",
+      "evidence": [ { "id": "PVS-v12-ADA-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "zygosity": "homozygous", "pheno_specificity_for_mde": "SPECIFIC", "phenotype": "SCID with T-B-NK- lymphocyte subset profile; large SCID panel tested", "pop_frq_points": 0 }, "references": [], "description": "One homozygous proband with a SCID-specific T-B-NK- profile; all relevant genes tested." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Affected homozygous proband (illustrative). No LOC_PHE points (only the subset profile was provided)."
+    },
+    {
+      "method": { "code": "svcv4:SPL", "label": "Splicing (SPL)", "version": "draft-2026-pre-release" },
+      "code": "SPL_+6",
+      "evidence": [ { "id": "PVS-v12-ADA-spl-001", "type": "functional_assay", "data": { "variant": "canonical splice acceptor (-2) of intron 3", "predicted_effect": "skipping of biologically relevant exon 4 → in-frame deletion of aa 74-121 (>10% of protein; critical region)", "rt_pcr": "confirmed exon 4 skipping in the proband", "concordance": "splicing data and PRD concordant; near-complete alternative transcript" }, "references": ["PMID:3182793"], "description": "Canonical splice-site variant with RT-PCR-confirmed exon-4 skipping removing a critical region." } ],
+      "score": 6.0, "strength_direction": "pathogenic_very_strong", "score_classification": null, "contribution": 6.0,
+      "description": "Splicing + functional evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v12-ADA rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v12: ADA'. A homozygous canonical-splice case with RT-PCR confirmation."
+}

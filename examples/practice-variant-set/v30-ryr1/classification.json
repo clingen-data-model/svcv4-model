@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA405668522", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA405668522." },
+      "label": "RYR1 c.12383C>T (p.Ala4128Val) — PVS-v30-RYR1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0007783", "label": "malignant hyperthermia, susceptibility to, 1" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is NOT an established mechanism for RYR1-related malignant hyperthermia susceptibility." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 2.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v30-RYR1-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 10000", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 0.76, "penetrance": 0.01, "gnomad": "absent", "pop_frq_points": 0 }, "references": [], "description": "POP inputs from the tab; penetrance is very low (0.01)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+2",
+      "evidence": [ { "id": "PVS-v30-RYR1-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "malignant-hyperthermia episode with a positive in-vitro contracture test (IVCT); CACNA1S ruled out", "note": "a substantial fraction of MHS cases have no identified genetic cause", "pop_frq_points": 0 }, "references": [], "description": "One proband with an MH episode and positive IVCT; other known genes cleared." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Affected proband (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+0",
+      "evidence": [ { "id": "PVS-v30-RYR1-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.248, "splice_impact": "none" }, "references": [], "description": "REVEL 0.248 is low; no same-codon informative variants." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v30-RYR1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v30: RYR1'. A VUS: a single consistent clinical case (MH + IVCT) is offset by a low REVEL and the fact that LoF is not the disease mechanism."
+}

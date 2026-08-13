@@ -1,0 +1,33 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA10605474", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA10605474." },
+      "label": "ANO5 c.139-1del (splice acceptor) — PVS-v21-ANO5 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0015152", "label": "autosomal recessive limb-girdle muscular dystrophy" },
+    "qualifiers": [ { "moi": "AR", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 2.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v21-ANO5-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 50000", "allelic_heterogeneity": 0.20, "genetic_heterogeneity": 0.25, "penetrance": 0.85, "inheritance": "biallelic", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr11-22218244-AG-A?dataset=gnomad_r4"], "description": "POP inputs from the tab (biallelic threshold)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:SPL", "label": "Splicing (SPL)", "version": "draft-2026-pre-release" },
+      "code": "SPL_+2",
+      "evidence": [ { "id": "PVS-v21-ANO5-spl-001", "type": "computational_prediction", "data": { "variant": "loss of exon-4 acceptor (SpliceAI just above 0.20)", "predicted_effect": "skipping of in-frame exon 4 (p.Pro47_Met60del; ~1.5% of protein; cytoplasmic region)", "informative_variants": "a same-exon P/LP missense with supporting clinical data (ClinVar:197402) suggests the exon contributes to function" }, "references": ["https://www.ncbi.nlm.nih.gov/clinvar/variation/197402/"], "description": "Predicted exon-4 skip; a same-exon P/LP missense supports that this region matters." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Splicing / domain evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v21-ANO5 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v21: ANO5'. A VUS: both probands carry only a single heterozygous ANO5 variant (no second allele) for a recessive disease, so neither is a countable biallelic case; the evidence is predictive only."
+}

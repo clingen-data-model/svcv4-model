@@ -1,0 +1,33 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA343726916", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA343726916." },
+      "label": "MYOC c.719A>G (p.Glu240Gly) — PVS-v27-MYOC VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0005338", "label": "open-angle glaucoma" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is NOT an established mechanism for MYOC-related open-angle glaucoma." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 0.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v27-MYOC-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 24", "allelic_heterogeneity": 0.04, "genetic_heterogeneity": 0.60, "penetrance": 0.56, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr1-171638608-T-C?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+0",
+      "evidence": [ { "id": "PVS-v27-MYOC-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.205, "splice_impact": "none" }, "references": [], "description": "REVEL 0.205 is low; no same-codon informative variants." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v27-MYOC rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v27: MYOC'. A VUS by insufficient evidence: not yet seen in a glaucoma proband, LoF is not the mechanism, and REVEL is low."
+}

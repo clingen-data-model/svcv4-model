@@ -1,0 +1,33 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA8314744", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA8314744." },
+      "label": "GP1BA c.334G>A (p.Gly112Arg) — PVS-v23-GP1BA VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0009276", "label": "Bernard-Soulier syndrome" },
+    "qualifiers": [ { "moi": "AR", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 0.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v23-GP1BA-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 1000000", "allelic_heterogeneity": 0.40, "genetic_heterogeneity": 0.40, "penetrance": 1.00, "inheritance": "biallelic", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr17-4932938-G-A?dataset=gnomad_r4"], "description": "POP inputs from the tab (biallelic threshold)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+0",
+      "evidence": [ { "id": "PVS-v23-GP1BA-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.322, "splice_impact": "none" }, "references": [], "description": "REVEL 0.322 is low — mildly benign-leaning, but not decisive." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v23-GP1BA rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v23: GP1BA'. A VUS by insufficient evidence: the variant has not been seen in an affected case, and the only other datum is a low REVEL score."
+}

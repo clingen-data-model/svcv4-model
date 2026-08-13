@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA2499226544", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA2499226544. Deletion of exon 2 (intron 1 to intron 2)." },
+      "label": "RS1 del exon 2 (c.53-713_78+266del) — PVS-v29-RS1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0010725", "label": "X-linked retinoschisis" },
+    "qualifiers": [ { "moi": "XLR", "note": "X-linked. Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 7.0,
+  "score_classification": "pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v29-RS1-pop-001", "type": "population_frequency", "data": { "approach": "binning (X-linked, male sex-specific table)", "prevalence_estimate": "1 in 5000", "penetrance": 0.80, "gnomad": "absent", "pop_frq_points": 0 }, "references": [], "description": "POP inputs via the binning approach; variant absent from gnomAD." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+2",
+      "evidence": [ { "id": "PVS-v29-RS1-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "sex": "male (hemizygous)", "pheno_specificity_for_mde": "SPECIFIC", "phenotype": "retinoschisis by age 13 with visual acuity impairment, schisis, retinal detachment; exome, no other candidate variants", "pop_frq_points": 0 }, "references": [], "description": "One hemizygous male proband with an RS1-specific phenotype." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Affected hemizygous proband (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:NUL", "label": "Absent protein / loss of function (NUL)", "version": "draft-2026-pre-release" },
+      "code": "NUL_+4",
+      "evidence": [ { "id": "PVS-v29-RS1-nul-001", "type": "structural", "data": { "consequence": "deletion of out-of-frame exon 2 → p.(Ala18GlyfsTer2); removes the exon-2 acceptor and donor (also exon skipping)", "informative_variants": "2 Pathogenic + 1 Likely pathogenic LoF variants in this exon (VCEP)" }, "references": [], "description": "Out-of-frame single-exon deletion → LoF; multiple P/LP LoF variants in the same exon." } ],
+      "score": 4.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 4.0,
+      "description": "Loss-of-function evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v29-RS1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v29: RS1'. An X-linked example: a hemizygous male proband plus an out-of-frame exon-2 deletion in a LoF gene."
+}

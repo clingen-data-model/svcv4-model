@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA349020765", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA349020765." },
+      "label": "SCN2A c.1108T>C (p.Phe370Leu) — PVS-v10-SCN2A VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0100038", "label": "complex neurodevelopmental disorder" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 6.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v10-SCN2A-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 200", "allelic_heterogeneity": 0.20, "genetic_heterogeneity": 0.02, "penetrance": 0.50, "gnomad": "absent", "pop_frq_points": 0 }, "references": [], "description": "POP inputs from the tab; variant absent from gnomAD." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_DNV", "label": "De novo occurrence (CLN_DNV)", "version": "draft-2026-pre-release" },
+      "code": "CLN_DNV_+2",
+      "evidence": [ { "id": "PVS-v10-SCN2A-dnv-001", "type": "clinical_observation", "data": { "de_novo": "one individual (parental relationships unconfirmed)", "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "early infantile developmental and epileptic encephalopathy; exome, no other variants", "pop_frq_points": 0 }, "references": [], "description": "De novo occurrence (unconfirmed parentage) in a phenotype-consistent proband." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "De novo occurrence (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+4",
+      "evidence": [ { "id": "PVS-v10-SCN2A-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.977, "bayesdel": 0.52, "splice_impact": "none" }, "references": [], "description": "REVEL 0.977 and BayesDel 0.52 — strong in-silico missense support." } ],
+      "score": 4.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 4.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v10-SCN2A rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v10: SCN2A'. A de novo occurrence (CLN_DNV) plus strong in-silico missense support."
+}

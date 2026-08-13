@@ -51,14 +51,23 @@ uv run mkdocs serve
    CI will fail.
 5. Validate the examples still pass: `uv run python scripts/validate_examples.py`.
 
-## How to add a worked example
+## How to add or encode a worked example
 
-1. Create a new `*.json` file under `examples/` whose top-level shape
-   conforms to `Statement`.
-2. Add a row to `examples/README.md`.
-3. Add a paragraph to `docs/examples/index.md` describing what the
-   example illustrates.
-4. Run `uv run python scripts/validate_examples.py`.
+Worked examples are the [Practice Variant Set](../examples/practice-variant-set/index.md) —
+one entry per spreadsheet tab under `examples/practice-variant-set/<slug>/`. To
+encode a captured entry:
+
+1. Add `mapping.md` (which model fields each source value maps to, plus the
+   workflow assignment), a validated `case-<WORKFLOW>.json` for the primary
+   workflow, and a rolled-up `classification.json` conforming to `Statement`.
+2. Validate: `uv run python scripts/validate_examples.py`.
+3. Generate its page: `uv run python scripts/export_example_pages.py` (writes
+   `docs/examples/practice-variant-set/<slug>.md` from the fixtures).
+4. Add the page to the `Examples` nav in `mkdocs.yml` and refresh the catalog
+   status/link in `docs/examples/practice-variant-set/index.md`.
+
+The synthetic `examples/classification-example-01.json` scaffold remains only as
+a minimal `Statement` test fixture; new examples come from the pilots.
 
 ## Style
 

@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA016924", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA016924." },
+      "label": "FBN1 c.7003C>T (p.Arg2335Trp) — PVS-EXAMPLE-FBN1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0007947", "label": "Marfan syndrome" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 5.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-EXAMPLE-FBN1-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 5000", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 1.00, "penetrance": 0.85, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr15-48427768-G-A?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+3",
+      "evidence": [ { "id": "PVS-EXAMPLE-FBN1-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 2, "probands": [ { "phenotype": "thoracic aortic aneurysm/dissection; TAAD panel clear of other variants", "pheno_specificity_for_mde": "CONSISTENT" }, { "phenotype": "ectopia lentis; confirmed de novo (parentage confirmed); exome clear", "pheno_specificity_for_mde": "SPECIFIC" } ], "pop_frq_points": 0 }, "references": [], "description": "Two probands; proband 2 (ectopia lentis — FBN1 accounts for ~60-68%) is a confirmed de novo, also scoreable under CLN_DNV." } ],
+      "score": 3.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 3.0,
+      "description": "Affected probands (illustrative). Proband 2's confirmed de novo is captured separately under CLN_DNV."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+2",
+      "evidence": [ { "id": "PVS-EXAMPLE-FBN1-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.841, "splice_impact": "none" }, "references": [], "description": "REVEL 0.841 — supportive in-silico missense evidence." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-EXAMPLE-FBN1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'Example: FBN1' (the spreadsheet's template tab). Two affected probands (one a confirmed de novo, CLN_DNV) with supportive missense prediction."
+}

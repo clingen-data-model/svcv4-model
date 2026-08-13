@@ -1,0 +1,33 @@
+{
+  "vbc": {
+    "id": "CAID:CA658799413",
+    "gene": { "symbol": "RUNX1", "id": "HGNC:10471", "mde_associated_gene": "RUNX1", "transcript": "NM_001754.5" }
+  },
+  "mde": { "curie": "MONDO:0011071", "label": "hereditary thrombocytopenia and hematologic cancer predisposition syndrome" },
+  "moi": "AD",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v9-RUNX1-proband-1",
+    "family_id": "PVS-v9-RUNX1-FAM-1",
+    "pheno_specificity_for_mde": "CONSISTENT",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "FALSE",
+    "relatives": [
+      {
+        "parent_of_proband": "FALSE",
+        "affected_w_mde": "TRUE",
+        "vbc_exists": "TRUE",
+        "vbc_zygosity": "HET",
+        "cmp_het_variant_exists": "FALSE"
+      },
+      {
+        "parent_of_proband": "TRUE",
+        "affected_w_mde": "TRUE",
+        "vbc_exists": "TRUE",
+        "vbc_zygosity": "HET",
+        "cmp_het_variant_exists": "FALSE"
+      }
+    ]
+  }
+}

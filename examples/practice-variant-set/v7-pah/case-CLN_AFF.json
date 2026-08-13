@@ -1,0 +1,25 @@
+{
+  "vbc": {
+    "id": "CAID:CA386294434",
+    "gene": { "symbol": "PAH", "id": "HGNC:8582", "mde_associated_gene": "PAH", "transcript": "NM_000277.3" }
+  },
+  "mde": { "curie": "MONDO:0009861", "label": "phenylketonuria" },
+  "moi": "AR",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v7-PAH-proband-1",
+    "family_id": "PVS-v7-PAH-FAM-1",
+    "phenotypes": [ { "name": "Hyperphenylalaninemia", "code": "HP:0004923" } ],
+    "pheno_specificity_for_mde": "CONSISTENT",
+    "testing": { "method": "Panel", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "PCT_80_100",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "compound_het_variant": {
+      "id": "CAID:PAH-Gly272Ter-in-trans",
+      "phase_confidence": "HIGH",
+      "classification": "P"
+    },
+    "additional_variant_exists": "FALSE"
+  }
+}

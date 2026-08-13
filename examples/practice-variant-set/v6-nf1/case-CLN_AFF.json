@@ -1,0 +1,24 @@
+{
+  "vbc": {
+    "id": "CAID:CA398989536",
+    "gene": { "symbol": "NF1", "id": "HGNC:7765", "mde_associated_gene": "NF1", "transcript": "NM_001042492.3" }
+  },
+  "mde": { "curie": "MONDO:0018975", "label": "neurofibromatosis type 1" },
+  "moi": "AD",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v6-NF1-proband-1",
+    "family_id": "PVS-v6-NF1-FAM-1",
+    "phenotypes": [
+      { "name": "Neurofibroma", "code": "HP:0001067" },
+      { "name": "Cafe-au-lait spot", "code": "HP:0000957" },
+      { "name": "Axillary freckling", "code": "HP:0000997" }
+    ],
+    "pheno_specificity_for_mde": "SPECIFIC",
+    "testing": { "method": "Panel", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "PCT_80_100",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "FALSE"
+  }
+}

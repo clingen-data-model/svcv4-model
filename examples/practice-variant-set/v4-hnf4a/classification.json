@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA2573106197", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA2573106197." },
+      "label": "HNF4A c.421del (p.Arg141AspfsTer29) — PVS-v4-HNF4A VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0015967", "label": "monogenic diabetes" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 5.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v4-HNF4A-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 1000", "allelic_heterogeneity": 0.40, "genetic_heterogeneity": 0.10, "penetrance": 0.50, "gnomad": "absent", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/region/20-44413773-44413813?dataset=gnomad_r4"], "description": "POP inputs from the tab; variant absent from gnomAD." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+1",
+      "evidence": [ { "id": "PVS-v4-HNF4A-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "HNF4A-MODY (diazoxide-responsive neonatal hypoglycemia); all other MODY genes negative", "diagnostic_yield": "33-50%", "pop_frq_points": 0 }, "references": [], "description": "One proband with HNF4A-MODY phenotype and negative testing of other MODY genes." } ],
+      "score": 1.0, "strength_direction": "pathogenic_supporting", "score_classification": null, "contribution": 1.0,
+      "description": "Affected proband (illustrative). Note: LOC_SEG also applicable — variant segregated with MODY in 3 affected relatives — but is captured separately."
+    },
+    {
+      "method": { "code": "svcv4:NUL", "label": "Absent protein / loss of function (NUL)", "version": "draft-2026-pre-release" },
+      "code": "NUL_+4",
+      "evidence": [ { "id": "PVS-v4-HNF4A-nul-001", "type": "predicted_lof", "data": { "consequence": "frameshift at codon 141, PTC in exon 5 of 10", "nmd": "predicted", "informative_variants": "≥3 other NMD-predicted LoF variants in this exon classified Pathogenic by the Monogenic Diabetes VCEP" }, "references": [], "description": "Frameshift predicted to undergo NMD in a gene where LoF is the mechanism." } ],
+      "score": 4.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 4.0,
+      "description": "Predicted null / LoF evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v4-HNF4A rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v4: HNF4A'. LOC_SEG (3 affected relatives) and LOC_PHE also applicable."
+}

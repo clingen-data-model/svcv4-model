@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA274615", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA274615." },
+      "label": "MECP2 c.907_1080del (p.Ser303_Glu360del) — PVS-v24-MECP2 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0010726", "label": "Rett syndrome" },
+    "qualifiers": [ { "moi": "XLD", "note": "X-linked; affected XX and XY count under the monoallelic section. Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 6.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v24-MECP2-pop-001", "type": "population_frequency", "data": { "approach": "binning (X-linked dominant combined table)", "prevalence_estimate": "1 in 10000", "penetrance": 0.80, "gnomad": "absent", "pop_frq_points": 0 }, "references": [], "description": "POP inputs via the binning approach; variant absent from gnomAD." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+2",
+      "evidence": [ { "id": "PVS-v24-MECP2-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 2, "sex": "female (XX)", "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "case 1: seizures, left-hemisphere atrophy, intellectual disability, dysmorphism; case 2: atypical Rett", "note": "X-linked dominant → affected XX and XY count under the monoallelic section", "pop_frq_points": 0 }, "references": [], "description": "Two affected females with Rett/atypical-Rett features (exome; other genes cleared)." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Affected XX probands (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CDS", "label": "RNA / coding alteration (CDS)", "version": "draft-2026-pre-release" },
+      "code": "CDS_+4",
+      "evidence": [ { "id": "PVS-v24-MECP2-cds-001", "type": "structural", "data": { "consequence": "in-frame deletion of 58 aa (~11% of protein) in the last exon", "domain": "overlaps the Transcriptional Repression Domain (285-313), including the VCEP critical minimal region (NM_001110792 residues 314-318)", "contained_pathogenic": ["c.954_962del (p.Lys319_Arg321del) — Pathogenic", "c.933_968del (p.Leu313_Val324del) — Pathogenic"] }, "references": [], "description": "In-frame deletion removing a critical functional domain; two smaller Pathogenic deletions are fully contained within it." } ],
+      "score": 4.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 4.0,
+      "description": "Coding-alteration / critical-domain evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v24-MECP2 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v24: MECP2'. An X-linked-dominant example: affected females plus an in-frame deletion removing a critical domain that contains two Pathogenic deletions."
+}

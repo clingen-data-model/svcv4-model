@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA039549", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA039549." },
+      "label": "MSH2 c.630G>A (p.Met210Ile) — PVS-v25-MSH2 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0005835", "label": "Lynch syndrome / hereditary non-polyposis colorectal cancer" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": -4.0,
+  "score_classification": "likely_benign",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v25-MSH2-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 14", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 0.01, "penetrance": 0.40, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr2-47410357-G-A?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:FNC", "label": "Functional assay (FNC)", "version": "draft-2026-pre-release" },
+      "code": "FNC_-4",
+      "evidence": [ { "id": "PVS-v25-MSH2-fnc-001", "type": "functional_assay", "data": { "assay": "MAVE: massively parallel functional testing of MSH2 missense variants (Jia et al.)", "functional_score": -3.662, "calibration": "functional score <0 → OddsPath 0.04 → -4 points (benign)" }, "references": ["https://www.mavedb.org/variants/CA039549"], "description": "Calibrated MAVE assay places this variant in the functionally-normal (benign) range." } ],
+      "score": -4.0, "strength_direction": "benign_strong", "score_classification": null, "contribution": -4.0,
+      "description": "Functional assay, benign (PFD, illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+0",
+      "evidence": [ { "id": "PVS-v25-MSH2-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.40, "splice_impact": "none" }, "references": [], "description": "REVEL 0.40 is low; no same-codon informative variants." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v25-MSH2 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v25: MSH2'. A benign example driven by a calibrated MAVE functional assay (OddsPath 0.04)."
+}

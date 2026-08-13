@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA382538604", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA382538604." },
+      "label": "ATM c.5005+1G>A — PVS-v2-ATM VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0008840", "label": "ataxia telangiectasia" },
+    "qualifiers": [ { "moi": "AR", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 5.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v2-ATM-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 40000", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 1.00, "penetrance": 0.90, "inheritance": "biallelic", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr11-108297383-G-A?dataset=gnomad_r4"], "description": "POP inputs from the tab (biallelic threshold)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+2",
+      "evidence": [ { "id": "PVS-v2-ATM-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "zygosity": "biallelic", "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "classic ataxia-telangiectasia; elevated serum AFP", "compound_het_partner": "ATM LoF confirmed in trans (P)", "diagnostic_yield": ">90%", "pop_frq_points": 0 }, "references": [], "description": "One biallelic proband meeting classic A-T criteria; second LoF confirmed in trans." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Affected biallelic proband (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:SPL", "label": "Splicing (SPL)", "version": "draft-2026-pre-release" },
+      "code": "SPL_+3",
+      "evidence": [ { "id": "PVS-v2-ATM-spl-001", "type": "computational_prediction", "data": { "predicted_effect": "in-frame skipping of exon 33 (c.4910_5005)", "domain": "removes a portion of the HEAT repeat critical domain", "comparator_variant": "ClinVar:371636", "comparator_variant_classification": "LP", "comparator_note": "c.5005+1G>T, same position, equal SpliceAI, same predicted outcome" }, "references": ["https://www.ncbi.nlm.nih.gov/clinvar/variation/371636/"], "description": "Splice +1 variant → in-frame exon skip removing part of a critical domain; same-position LP comparator." } ],
+      "score": 3.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 3.0,
+      "description": "Splicing/critical-domain evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v2-ATM rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v2: ATM'. LOC_PHE also applicable (diagnostic yield >90%) but not scored here."
+}

@@ -1,0 +1,20 @@
+{
+  "vbc": {
+    "id": "CAID:CA349020765",
+    "gene": { "symbol": "SCN2A", "id": "HGNC:10588", "mde_associated_gene": "SCN2A", "transcript": "NM_001040142.2" }
+  },
+  "mde": { "curie": "MONDO:0100038", "label": "complex neurodevelopmental disorder" },
+  "moi": "AD",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v10-SCN2A-proband-1",
+    "family_id": "PVS-v10-SCN2A-FAM-1",
+    "phenotypes": [ { "name": "Epileptic encephalopathy", "code": "HP:0200134" } ],
+    "pheno_specificity_for_mde": "CONSISTENT",
+    "testing": { "method": "Exome", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "LT_80",
+    "confirmed_parental_relationship": "FALSE",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET"
+  }
+}
