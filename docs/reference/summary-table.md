@@ -1,16 +1,10 @@
 # The Summary Table
 
 Curators and scientists engage with SVCv4 through a **Summary Table**
-that organises evidence lines top-down as a three-level hierarchy:
-
-- **Evidence Categories** — broad partitions, e.g. *Human Observational
-  Data*, *Variant Impact Data*.
-- **Evidence Concepts** — groupings within a Category.
-- **Evidence Codes** — the concrete codes a curator works against.
-
-Beneath the Summary Table, **workflows** (defined in CSpec) hang off
-each Evidence Code and produce the scores that roll up into the
-table.
+that organises evidence lines top-down, from Evidence Category through
+Evidence Concept and Evidence Code to the workflows and scores that roll
+up into the table — see the [Workflows overview](../workflows/index.md)
+for the full hierarchy.
 
 ## Evidence Codes are jumping-off points
 

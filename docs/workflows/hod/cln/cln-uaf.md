@@ -11,9 +11,8 @@ Required for an Unaffected case (see the full
 [applicability table](../../case-model.md)):
 
 - `moi` — mode of inheritance.
-- `case_proband_info` — including **`age_matched_penetrance`** (how penetrant the
-  condition is by the individual's age — central to interpreting an unaffected
-  carrier).
+- **`age_matched_penetrance`** — how penetrant the condition is by the
+  individual's age — central to interpreting an unaffected carrier.
 - `vbc` — the variant being classified.
 
 Population-frequency, phenotype-specificity, compound-het, and additional-variant

@@ -12,9 +12,11 @@ Required for an Affected case (see the full
 
 - `moi` — mode of inheritance.
 - `pop_frq_points` — the population-frequency contribution.
-- `case_proband_info` — including **`pheno_specificity_for_gene`** and
-  **`all_relevant_genes_tested`** (sex, age, phenotypes are optional but
-  encouraged).
+- `sex` / `phenotypes` — proband sex and phenotypes (optional but encouraged).
+- **`pheno_specificity_for_mde`** — how closely the phenotype(s) match what is
+  expected for the MDE.
+- **`testing.covers_all_genes_relevant_to_mde`** — whether the test covered all
+  genes relevant to the MDE.
 - `vbc` — the variant being classified (`id`, case-level `zygosity`).
 - `additional_variant_exists` — whether another relevant variant is present.
 

@@ -11,9 +11,8 @@ Required for a De Novo case (see the full
 
 - `moi` — mode of inheritance.
 - `pop_frq_points` — the population-frequency contribution.
-- `case_proband_info` — including **`pheno_specificity_for_gene`**,
-  **`confirmed_parental_relationship`** (was the parentage confirmed?), and
-  **`all_relevant_genes_tested`**.
+- **`pheno_specificity_for_mde`**, **`confirmed_parental_relationship`** (was
+  the parentage confirmed?), and **`testing.covers_all_genes_relevant_to_mde`**.
 - `vbc` — the variant being classified (`id`, case-level `zygosity`).
 
 The compound-het and additional-variant fields are **not applicable** to

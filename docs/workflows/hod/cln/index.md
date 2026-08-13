@@ -3,7 +3,8 @@
 **Clinical Observations (CLN)** is the Evidence Concept (under
 [Human Observational Data](../index.md)) for evidence drawn from observing
 individuals — affected and unaffected — and how the variant tracks with disease.
-This is the concept the [Case model](../../case-model.md) realizes.
+This is one of the two concepts the [Case model](../../case-model.md) realizes
+(together with [Locus Specificity](../loc/index.md)).
 
 Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
 ([Glossary](../../../reference/glossary.md)).
@@ -18,15 +19,21 @@ Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
 | [`CLN_UAF`](cln-uaf.md) | Unaffected individuals (AD; AR / X-linked) | ✅ |
 | `CLN_CCS` | Case-control studies | — |
 
-!!! warning "Not yet specified by the SVCv4 Working Group"
+!!! warning "Out of scope for this Classification Model (for now)"
 
-    **`CLN_CCS` (Case-Control studies)** is shown here for completeness of the
-    framework, but it is **out of scope for the first release** of the SVCv4
-    Standards — the SVCv4 Working Group has not yet specified it. It is therefore
-    not modeled here. (This is different from POP/LOC/PFD, which the Standards
-    specify but this model has not yet covered — see
-    [Population (POP)](../pop.md), [Locus Specificity (LOC)](../loc.md), and
-    [Predictive & Functional Data](../../pfd/index.md).)
+    SVCv4 provides scoring guidance for **`CLN_CCS` (Case-Control studies)** — a
+    point scale keyed to an odds ratio and confidence interval — but does not yet
+    define decomposed **evidence concepts** for it the way it does for
+    `CLN_AFF`/`CLN_DNV`/`CLN_ALT`/`CLN_UAF`. This project models structured,
+    verifiable **evidence**, not just derived scores, so there isn't yet a robust
+    evidence shape here to capture beyond a single statistic. Subsequent SVCv4
+    versions aim to add more evidence-based workflow scoring for `CLN_CCS`; this
+    model will cover it once that exists. (This is different from
+    [Population (POP)](../pop.md) and
+    [Predictive & Functional Data](../../pfd/index.md), which the Standards
+    specify with decomposed evidence concepts this project simply hasn't modeled
+    yet. Locus Specificity is already covered — see
+    [Locus Specificity (LOC)](../loc/index.md).)
 
 ## How to read each workflow page
 

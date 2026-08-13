@@ -33,3 +33,14 @@ Each concept uses a common code pattern: **`_PRD`** (prediction), **`_FXN`**
 
 Scoring for these codes is defined in
 [ClinGen CSpec](../../reference/cspec-interop.md).
+
+## The shape of the remaining work
+
+Every PFD workflow (missense, nonsense, frameshift, canonical splice, exon
+deletion, start loss, stop loss, and others) follows the same pipeline:
+**predict → adjust for molecular mechanism / exon relevance → functional
+evidence → informative variants → capped code total.** Four sub-modules are
+shared across all of them: Determining Critical Amino Acids, Molecular
+Mechanism and Exon Relevance, Informative Variants, and Functional Assays.
+Modeling this pipeline once, as a reusable shape, is the likely starting point
+when PFD modeling begins.

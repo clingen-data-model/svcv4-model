@@ -32,15 +32,14 @@ Group, with publication targeted in *Genetics in Medicine*.
 
 ## The Summary Table
 
-SVCv4 organizes evidence in a **Summary Table** with a top-down hierarchy:
+SVCv4 organizes evidence in a **Summary Table** with a top-down, four-level
+hierarchy — see the [Workflows overview](../workflows/index.md) for the full
+chain from Evidence Category down to Workflow Score.
 
-**Evidence Category → Evidence Concept → Evidence Code → Code Workflow(s) → Workflow Score**
-
-Scores roll up the hierarchy. The two top-level categories are **Human
-Observational Data** (population, clinical, and locus-specificity evidence) and
-**Variant Impact** (predictive and functional evidence). See
-[How SVCv4 maps to the model](alignment.md) and the
-[Workflows](../workflows/index.md) section for the full picture.
+The two top-level categories are **Human Observational Data** (population,
+clinical, and locus-specificity evidence) and **Variant Impact** (predictive
+and functional evidence). See [How SVCv4 maps to the model](alignment.md) and
+the [Workflows](../workflows/index.md) section for the full picture.
 
 ## How the model relates
 
