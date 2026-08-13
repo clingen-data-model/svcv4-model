@@ -490,3 +490,38 @@ Then summarize for the user: what landed, and the follow-up backlog from spec §
 - Builds on Phase A (`docs/superpowers/specs/2026-06-11-docs-restructure-design.md`, PR #18) and the Case model (`docs/superpowers/specs/2026-06-11-case-model-design.md`, PR #17).
 - Recommended chunk order: **1 → 2 → 3 → 5 → 4 → 6 → 7 → 8 → 9 → 10 → 11** (see the note at the top of this document).
 - Follow-up backlog (not this PR): see spec §7.
+
+## Post-plan additions (beyond the original 11 chunks)
+
+Landed in the same PR (#20), driven by mid-execution user feedback rather than
+being in the original chunk list above. Recorded here for an accurate history
+— the spec doc's §3.3/§3.4/§5.9-5.11 were updated to match, but this plan's
+chunk list above was intentionally left as originally written rather than
+renumbered:
+
+- **`getting-started/classification-inputs.md`** — new page; Getting Started
+  shouldn't lead with a single-workflow example (`first-case.md`), it should
+  ground readers in the classification-level inputs (VBC/MDE/MOI/Gene/
+  Transcript) first.
+- **`getting-started/capturing-basic-evidence.md`** (new) and
+  **`getting-started/rolling-up-scores.md`** (new), plus a worked-example
+  extension to `evidence-lines-and-items.md` and a trim of `first-case.md`'s
+  hierarchy walkthrough — expands Getting Started into a full arc using
+  `POP_FRQ` (the simplest real evidence code) before the more complex,
+  branching `CLN_AFF` example. Chosen as the lower-risk, additive alternative
+  to fully retiring/merging "The assertion framework" and "Evidence Lines &
+  Evidence Items" as standalone pages — that fuller merge remains an option
+  if wanted later, but was explicitly deferred ("good enough for now").
+- **`docs/reference/known-gaps.md`** (new) — consolidates the follow-up
+  backlog (spec §7) into one organized, cross-linked triage page, at the
+  user's request to "create placeholders in the docs to figure out how best
+  to organize them."
+- **`docs/workflows/hod/pop.md`** — expanded with a "shape of the remaining
+  work" section (mirroring the PFD stub's pattern), using Supplementary
+  Material 3 content already ingested.
+- **`docs/workflows/hod/loc/index.md`** — one additional note (allele vs.
+  single-variant scope) added after reading the actual SVCv4 text
+  (Supplementary Material 5), confirming the Chunk 2 restructuring was
+  correct.
+- **`docs/overview/review-guide.md`**'s reading path — updated to include the
+  new Getting Started pages and Known gaps once they existed.

@@ -21,11 +21,14 @@ piece by piece rather than dropping you into the middle of it:
 4. [Show your work: structured evidence](../getting-started/show-your-work.md)
 5. [The classification inputs](../getting-started/classification-inputs.md)
 6. [The assertion framework](../getting-started/assertion-framework.md)
-7. [Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md)
-8. [Capture your first case](../getting-started/first-case.md)
-9. [Clinical Observations (CLN)](../workflows/hod/cln/index.md) and [Locus Specificity (LOC)](../workflows/hod/loc/index.md)
-10. [Spec coverage](../reference/spec-alignment.md)
-11. [Core concepts](../reference/concepts.md)
+7. [Capturing basic evidence](../getting-started/capturing-basic-evidence.md)
+8. [Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md)
+9. [Rolling up Evidence Line scores](../getting-started/rolling-up-scores.md)
+10. [Capture your first case](../getting-started/first-case.md)
+11. [Clinical Observations (CLN)](../workflows/hod/cln/index.md) and [Locus Specificity (LOC)](../workflows/hod/loc/index.md)
+12. [Spec coverage](../reference/spec-alignment.md)
+13. [Core concepts](../reference/concepts.md)
+14. [Known gaps](../reference/known-gaps.md)
 
 ## What we'd like feedback on
 
