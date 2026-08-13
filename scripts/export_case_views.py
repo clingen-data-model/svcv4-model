@@ -177,17 +177,12 @@ ARRAYS = {
 
 def _case_matrix() -> dict[str, dict]:
     """Matrix entries for the Case data structure (excludes workflow parameters)."""
-    return {
-        p: e for p, e in load_matrix().items() if e.get("model") != "workflow_parameters"
-    }
+    return {p: e for p, e in load_matrix().items() if e.get("model") != "workflow_parameters"}
 
 
 def _param_matrix() -> dict[str, dict]:
     """Matrix entries for the WorkflowParameters model."""
-    return {
-        p: e for p, e in load_matrix().items() if e.get("model") == "workflow_parameters"
-    }
-
+    return {p: e for p, e in load_matrix().items() if e.get("model") == "workflow_parameters"}
 
 
 #: Per-workflow source of example values: the PVS entry whose ``case-<WF>.json``
@@ -237,7 +232,7 @@ def _source_values(workflow: Workflow) -> dict[str, object]:
         return {}
     values: dict[str, object] = {}
     for key, val in _flatten_source(json.loads(path.read_text())).items():
-        values[key[len("case."):] if key.startswith("case.") else key] = val
+        values[key[len("case.") :] if key.startswith("case.") else key] = val
     return values
 
 
@@ -324,8 +319,7 @@ def _matrix_table() -> str:
             child_count[path.rsplit(".", 1)[0]] = child_count.get(path.rsplit(".", 1)[0], 0) + 1
     max_depth = max((p.count(".") for p in matrix), default=0)
     level_btns = "".join(
-        f'<button type="button" data-appl-level="{n}">{n}</button>'
-        for n in range(1, max_depth + 2)
+        f'<button type="button" data-appl-level="{n}">{n}</button>' for n in range(1, max_depth + 2)
     )
     controls = (
         '<div class="appl-matrix-controls">'
@@ -335,9 +329,7 @@ def _matrix_table() -> str:
         "</div>"
     )
     rows = "".join(_row_html(p, e, cols, child_count) for p, e in matrix.items())
-    table = (
-        f'<table class="appl-matrix-table">{_header_html(cols)}<tbody>{rows}</tbody></table>'
-    )
+    table = f'<table class="appl-matrix-table">{_header_html(cols)}<tbody>{rows}</tbody></table>'
     return f'<div class="appl-matrix">\n{controls}\n{table}\n</div>'
 
 
@@ -355,9 +347,7 @@ def _params_table() -> str:
         )
         prop = f'<td class="appl-prop">{indent}<code>{name}</code></td>'
         rows += f'<tr>{cells}{prop}<td class="appl-notes">{_notes_html(entry)}</td></tr>'
-    table = (
-        f'<table class="appl-matrix-table">{_header_html(cols)}<tbody>{rows}</tbody></table>'
-    )
+    table = f'<table class="appl-matrix-table">{_header_html(cols)}<tbody>{rows}</tbody></table>'
     return f'<div class="appl-params">\n{table}\n</div>'
 
 

@@ -115,9 +115,7 @@ def _narrative(clf: dict) -> str:
 def _semi(clf: dict) -> list[str]:
     prop = clf["proposition"]
     quals = prop.get("qualifiers") or [{}]
-    qual_bits = "; ".join(
-        f"{k}={v}" for k, v in quals[0].items() if k in ("moi", "note")
-    )
+    qual_bits = "; ".join(f"{k}={v}" for k, v in quals[0].items() if k in ("moi", "note"))
     out = [
         "    ```text",
         "    Statement",
