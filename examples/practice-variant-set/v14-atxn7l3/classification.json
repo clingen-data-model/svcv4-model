@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA3246641821", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA3246641821." },
+      "label": "ATXN7L3 c.332del (p.Asn111ThrfsTer16) — PVS-v14-ATXN7L3 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0100038", "label": "complex neurodevelopmental disorder (ATXN7L3-related; MONDO pending)" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is the SUSPECTED (not established) mechanism (GenCC LoF framework)." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 2.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v14-ATXN7L3-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 1000", "penetrance": 0.50, "approach": "binning (new gene-disease; heterogeneity estimates unavailable)", "threshold": 0.001, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/region/17-44197233-44197273?dataset=gnomad_r4"], "description": "POP inputs via the binning approach; variant absent from gnomAD." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+2",
+      "evidence": [ { "id": "PVS-v14-ATXN7L3-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "global developmental delay, expressive language disorder, hypotonia", "testing": "exome; no other candidate variant", "de_novo": "confirmed (neither parent carries; parental relationships confirmed)", "pop_frq_points": 0 }, "references": [], "description": "One exome proband, phenotype consistent; also a confirmed de novo (scoreable under CLN_DNV)." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Affected proband + confirmed de novo (illustrative). CLN_DNV also applicable."
+    },
+    {
+      "method": { "code": "svcv4:NUL", "label": "Absent protein / loss of function (NUL)", "version": "draft-2026-pre-release" },
+      "code": "NUL_+0",
+      "evidence": [ { "id": "PVS-v14-ATXN7L3-nul-001", "type": "predicted_lof", "data": { "consequence": "frameshift in exon 4 (coding exon 3), predicted NMD", "mechanism_confidence": "LoF only SUSPECTED (GenCC)", "informative_variants": "two other LoF variants in this exon are VUS" }, "references": [], "description": "Frameshift predicted to undergo NMD, but LoF is only a suspected mechanism, so weight is reduced." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Predicted null, mechanism-tempered (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v14-ATXN7L3 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v14: ATXN7L3'. A VUS: a confirmed de novo in a phenotype-consistent proband, tempered by a new gene-disease with only a suspected LoF mechanism. Also exercises CLN_DNV."
+}

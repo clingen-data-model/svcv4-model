@@ -1,0 +1,47 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA211326", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA211326." },
+      "label": "ACVRL1 c.88C>T (p.Pro30Ser) — PVS-v11-ACVRL1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0019180", "label": "hereditary hemorrhagic telangiectasia" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 0.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v11-ACVRL1-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 4000", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 0.60, "penetrance": 0.80, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr12-51913125-C-T?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_ALTV", "label": "Affected with an alternate cause — variant (CLN_ALTV)", "version": "draft-2026-pre-release" },
+      "code": "CLN_ALTV_-1",
+      "evidence": [ { "id": "PVS-v11-ACVRL1-altv-001", "type": "clinical_observation", "data": { "phenotype": "typical HHT", "alternate_cause": "a Pathogenic LoF ACVRL1 variant (c.191delA) confirmed in trans; typical (not severe biallelic) presentation", "pheno_severity": "MONO_EQ_EXPECTED" }, "references": [], "description": "Case 1's HHT is explained by an in-trans Pathogenic ACVRL1 variant → alternate cause (variant)." } ],
+      "score": -1.0, "strength_direction": "benign_supporting", "score_classification": null, "contribution": -1.0,
+      "description": "Alternate cause — variant (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_ALTG", "label": "Affected with an alternate cause — gene (CLN_ALTG)", "version": "draft-2026-pre-release" },
+      "code": "CLN_ALTG_-1",
+      "evidence": [ { "id": "PVS-v11-ACVRL1-altg-001", "type": "clinical_observation", "data": { "phenotype": "typical HHT", "alternate_cause": "a Pathogenic LoF variant in ENG (a different HHT gene); typical (not more severe) presentation", "pheno_severity": "MONO_EQ_EXPECTED" }, "references": [], "description": "Case 2's HHT is explained by a Pathogenic ENG variant → alternate cause (gene)." } ],
+      "score": -1.0, "strength_direction": "benign_supporting", "score_classification": null, "contribution": -1.0,
+      "description": "Alternate cause — gene (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+0",
+      "evidence": [ { "id": "PVS-v11-ACVRL1-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.499, "splice_impact": "none" }, "references": [], "description": "REVEL 0.499 is intermediate; no other reported variants in this codon." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v11-ACVRL1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v11: ACVRL1'. Both observed cases are alternate-cause (Case 1 an in-trans Pathogenic ACVRL1 variant → CLN_ALTV; Case 2 a Pathogenic ENG variant → CLN_ALTG), so neither credits the VBC; with only an intermediate REVEL, this is a VUS."
+}

@@ -1,0 +1,43 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA398989536", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA398989536." },
+      "label": "NF1 c.3496G>C (p.Gly1166Arg) — PVS-v6-NF1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0018975", "label": "neurofibromatosis type 1" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 6.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v6-NF1-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 2600", "allelic_heterogeneity": 0.06, "genetic_heterogeneity": 1.00, "penetrance": 0.80, "gnomad": "absent", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/region/17-31232861-31232901?dataset=gnomad_r4"], "description": "POP inputs from the tab; variant absent from gnomAD." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+2",
+      "evidence": [ { "id": "PVS-v6-NF1-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 3, "probands": [ { "phenotype": "clinical diagnosis of NF1 (CAL spots, axillary freckling, neurofibromas); confirmed de novo", "pheno_specificity_for_mde": "SPECIFIC" }, { "phenotype": "multiple neurofibromas", "pheno_specificity_for_mde": "CONSISTENT" }, { "phenotype": "multiple CALMs, inguinal freckling, Lisch nodules", "pheno_specificity_for_mde": "SPECIFIC" } ], "pop_frq_points": 0 }, "references": [], "description": "Three probands; proband 1 is a confirmed de novo (also scoreable under CLN_DNV) with a clinical NF1 diagnosis." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Affected probands (illustrative). Proband 1's confirmed de novo is captured separately under CLN_DNV; LOC_PHE also applicable (>82% yield)."
+    },
+    {
+      "method": { "code": "svcv4:SPL", "label": "Splicing (SPL)", "version": "draft-2026-pre-release" },
+      "code": "SPL_+4",
+      "evidence": [
+        { "id": "PVS-v6-NF1-spl-001", "type": "computational_prediction", "data": { "position": "last base of exon 26 of 57", "spliceai": "loss of donor (0.76)", "predicted_effect": "skipping of an out-of-frame exon → LoF", "informative_variants": "other variants with the same SpliceAI donor-loss prediction" }, "references": [], "description": "Donor-loss at the last base of the exon → out-of-frame exon skip in a LoF gene." },
+        { "id": "PVS-v6-NF1-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.51, "bayesdel": 0.05 }, "references": [], "description": "Missense predictors are intermediate/low — the splicing effect, not the amino-acid change, drives this line." }
+      ],
+      "score": 4.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 4.0,
+      "description": "Splicing evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v6-NF1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v6: NF1'. Also exercises CLN_DNV (proband 1) and LOC_PHE."
+}

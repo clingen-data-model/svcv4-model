@@ -1,0 +1,33 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA000593", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA000593." },
+      "label": "PTEN c.802-3T>A (intronic, splice region) — PVS-v28-PTEN VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0017623", "label": "PTEN hamartoma tumor syndrome" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": -3.0,
+  "score_classification": "likely_benign",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v28-PTEN-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 9000", "allelic_heterogeneity": 0.08, "genetic_heterogeneity": 1.00, "penetrance": 0.10, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr10-87960891-T-A?dataset=gnomad_r4"], "description": "POP inputs from the tab; note low penetrance (0.10)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:SPL", "label": "Splicing (SPL)", "version": "draft-2026-pre-release" },
+      "code": "SPL_-3",
+      "evidence": [ { "id": "PVS-v28-PTEN-spl-001", "type": "functional_assay", "data": { "prediction": "no predicted impact on splicing", "rna_assay": "follow-up RNA study from a case with c.802-3T>A found NO abnormal splicing" }, "references": [], "description": "A splice-region variant where both prediction and an RNA assay show no splicing effect — benign-leaning." } ],
+      "score": -3.0, "strength_direction": "benign_strong", "score_classification": null, "contribution": -3.0,
+      "description": "Splicing assay, benign (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v28-PTEN rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v28: PTEN'. A benign example: a splice-region variant whose RNA assay confirms no abnormal splicing; the single proband is unaffected with low disease penetrance."
+}

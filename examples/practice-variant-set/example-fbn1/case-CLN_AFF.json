@@ -1,0 +1,20 @@
+{
+  "vbc": {
+    "id": "CAID:CA016924",
+    "gene": { "symbol": "FBN1", "id": "HGNC:3603", "mde_associated_gene": "FBN1", "transcript": "NM_000138.5" }
+  },
+  "mde": { "curie": "MONDO:0007947", "label": "Marfan syndrome" },
+  "moi": "AD",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-EXAMPLE-FBN1-proband-2",
+    "family_id": "PVS-EXAMPLE-FBN1-FAM-2",
+    "phenotypes": [ { "name": "Ectopia lentis", "code": "HP:0001083" } ],
+    "pheno_specificity_for_mde": "SPECIFIC",
+    "testing": { "method": "Exome", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "PCT_80_100",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "FALSE"
+  }
+}

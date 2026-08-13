@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA8328608", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA8328608." },
+      "label": "AIPL1 c.150C>T (p.Asp50=) — PVS-v13-AIPL1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0100438", "label": "AIPL1-related retinopathy" },
+    "qualifiers": [ { "moi": "AR", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": -4.0,
+  "score_classification": "likely_benign",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v13-AIPL1-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 6000", "allelic_heterogeneity": 0.15, "genetic_heterogeneity": 0.20, "penetrance": 1.00, "inheritance": "biallelic", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr17-6434045-G-A?dataset=gnomad_r4"], "description": "POP inputs from the tab (biallelic threshold)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:POP_HMZ", "label": "Population homozygotes/hemizygotes (POP_HMZ)", "version": "draft-2026-pre-release" },
+      "code": "POP_HMZ_-2",
+      "evidence": [ { "id": "PVS-v13-AIPL1-hmz-001", "type": "population_frequency", "data": { "homozygotes_in_gnomad": 2, "expectation": "for a near-100%-penetrant, early-onset recessive disease, homozygotes are not expected in gnomAD", "counted": "2 hom minus 1 observation per the POP_HMZ recommendation" }, "references": [], "description": "Two homozygous individuals in gnomAD for a fully penetrant early-onset recessive disease — benign-leaning population evidence." } ],
+      "score": -2.0, "strength_direction": "benign_strong", "score_classification": null, "contribution": -2.0,
+      "description": "Population homozygotes (benign, illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_-2",
+      "evidence": [ { "id": "PVS-v13-AIPL1-mis-001", "type": "computational_prediction", "data": { "consequence": "synonymous (p.Asp50=)", "splice_impact": "none", "exon_context": "exon present in clinically relevant transcripts" }, "references": [], "description": "Synonymous change with no predicted splicing impact — benign-leaning." } ],
+      "score": -2.0, "strength_direction": "benign_supporting", "score_classification": null, "contribution": -2.0,
+      "description": "Synonymous / no-impact evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v13-AIPL1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v13: AIPL1'. A benign-leaning example: a synonymous variant with no splice impact plus homozygotes in gnomAD (POP_HMZ). No clinical data."
+}

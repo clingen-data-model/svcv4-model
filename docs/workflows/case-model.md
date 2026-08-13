@@ -51,68 +51,68 @@ Every attribute of the Case data structure across the seven workflows (five clin
 
 ### Per-workflow structures
 
-Expand a workflow to see its full input as a JSON example with mock data: the workflow parameters that apply (e.g. `moi`, `pop_frq_points`) plus a nested `case` object with only that workflow's applicable Case fields — **bold** = required, <span class="appl-c">underlined</span> = conditional, *italic* = optional; not-applicable fields are omitted. Use the **Hide optional** button (top-right of each example) to collapse the example to just the required and conditional fields.
+Expand a workflow to see its full input as a JSON example, with values drawn from the [Practice Variant Set](../examples/practice-variant-set/index.md) entry named in each heading (so the data is real, not invented): the workflow parameters that apply (e.g. `moi`, `pop_frq_points`) plus a nested `case` object with only that workflow's applicable Case fields — **bold** = required, <span class="appl-c">underlined</span> = conditional, *italic* = optional; not-applicable fields are omitted. Fields the source example does not populate show `...`. Use the **Hide optional** button (top-right of each example) to collapse the example to just the required and conditional fields.
 
 <details class="appl-detail">
-<summary>Affected <code>CLN_AFF</code></summary>
+<summary>Affected <code>CLN_AFF</code> <span class="appl-src">— from <code>PVS-v5-myh7</code></span></summary>
 <div class="appl-json-wrap">
 <input type="checkbox" class="appl-toggle-cb" id="appl-cb-CLN_AFF">
 <label class="appl-toggle" for="appl-cb-CLN_AFF"><span class="t-all">Hide optional</span><span class="t-req">Show optional</span></label>
 <pre class="appl-json appl-full">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA015454"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"MYH7"</span>,
+      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:7577"</span>,
+      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"MYH7"</span>,
+      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000257.4"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>,
-    <span class="j-key appl-o">"label"</span>: <span class="j-str">"Stargardt disease"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0005045"</span>,
+    <span class="j-key appl-o">"label"</span>: <span class="j-str">"hypertrophic cardiomyopathy"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"pop_frq_points"</span>: <span class="j-num">0</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
-    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"F"</span>,
-    <span class="j-key appl-o">"age"</span>: { <span class="j-key">"value"</span>: <span class="j-num">7</span>, <span class="j-key">"unit"</span>: <span class="j-str">"MONTH"</span>, <span class="j-key">"qualifier"</span>: <span class="j-str">"EXACT"</span>, <span class="j-key">"raw"</span>: <span class="j-str">"7 mo"</span> },
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v5-MYH7-proband-2"</span>,
+    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"PVS-v5-MYH7-FAM-2"</span>,
+    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"age"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-o">"phenotypes"</span>: [
       {
-        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Seizure"</span>,
-        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001250"</span>
+        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Hypertrophic cardiomyopathy"</span>,
+        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001639"</span>
       }
     ],
     <span class="j-key appl-c">"pheno_specificity_for_mde"</span>: <span class="j-str">"SPECIFIC"</span>,
     <span class="j-key appl-r">"testing"</span>: {
-      <span class="j-key appl-o">"method"</span>: <span class="j-str">"Exome"</span>,
+      <span class="j-key appl-o">"method"</span>: <span class="j-str">"Panel"</span>,
       <span class="j-key appl-r">"covers_all_genes_relevant_to_mde"</span>: <span class="j-str">"TRUE"</span>
     },
-    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"NEAR_100"</span>,
+    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"LT_80"</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
     <span class="j-key appl-c">"compound_het_variant"</span>: {
-      <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000002"</span>,
-      <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"HIGH"</span>,
-      <span class="j-key appl-r">"classification"</span>: <span class="j-str">"P"</span>
+      <span class="j-key appl-r">"id"</span>: <span class="j-str">"..."</span>,
+      <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"..."</span>,
+      <span class="j-key appl-r">"classification"</span>: <span class="j-str">"..."</span>
     },
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"FALSE"</span>,
     <span class="j-key appl-c">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"..."</span>,
         <span class="j-key appl-c">"gene"</span>: {
-          <span class="j-key appl-c">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-          <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-          <span class="j-key appl-c">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-          <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+          <span class="j-key appl-c">"symbol"</span>: <span class="j-str">"..."</span>,
+          <span class="j-key appl-o">"id"</span>: <span class="j-str">"..."</span>,
+          <span class="j-key appl-c">"mde_associated_gene"</span>: <span class="j-str">"..."</span>,
+          <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"..."</span>
         },
-        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
-        <span class="j-key appl-c">"phase_in_ref_to_vbc"</span>: <span class="j-str">"CIS"</span>,
-        <span class="j-key appl-c">"phase_confidence"</span>: <span class="j-str">"LOW"</span>,
-        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
+        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-c">"phase_in_ref_to_vbc"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-c">"phase_confidence"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"..."</span>
       }
     ]
   }
@@ -121,19 +121,19 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 <pre class="appl-json appl-req">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA015454"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"MYH7"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0005045"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"pop_frq_points"</span>: <span class="j-num">0</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v5-MYH7-proband-2"</span>,
+    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"PVS-v5-MYH7-FAM-2"</span>,
     <span class="j-key appl-c">"pheno_specificity_for_mde"</span>: <span class="j-str">"SPECIFIC"</span>,
     <span class="j-key appl-r">"testing"</span>: {
       <span class="j-key appl-r">"covers_all_genes_relevant_to_mde"</span>: <span class="j-str">"TRUE"</span>
@@ -141,22 +141,22 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
     <span class="j-key appl-c">"compound_het_variant"</span>: {
-      <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000002"</span>,
-      <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"HIGH"</span>,
-      <span class="j-key appl-r">"classification"</span>: <span class="j-str">"P"</span>
+      <span class="j-key appl-r">"id"</span>: <span class="j-str">"..."</span>,
+      <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"..."</span>,
+      <span class="j-key appl-r">"classification"</span>: <span class="j-str">"..."</span>
     },
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"FALSE"</span>,
     <span class="j-key appl-c">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"..."</span>,
         <span class="j-key appl-c">"gene"</span>: {
-          <span class="j-key appl-c">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-          <span class="j-key appl-c">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>
+          <span class="j-key appl-c">"symbol"</span>: <span class="j-str">"..."</span>,
+          <span class="j-key appl-c">"mde_associated_gene"</span>: <span class="j-str">"..."</span>
         },
-        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
-        <span class="j-key appl-c">"phase_in_ref_to_vbc"</span>: <span class="j-str">"CIS"</span>,
-        <span class="j-key appl-c">"phase_confidence"</span>: <span class="j-str">"LOW"</span>,
-        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
+        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-c">"phase_in_ref_to_vbc"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-c">"phase_confidence"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"..."</span>
       }
     ]
   }
@@ -166,45 +166,45 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 </details>
 
 <details class="appl-detail">
-<summary>De novo <code>CLN_DNV</code></summary>
+<summary>De novo <code>CLN_DNV</code> <span class="appl-src">— from <code>PVS-v10-scn2a</code></span></summary>
 <div class="appl-json-wrap">
 <input type="checkbox" class="appl-toggle-cb" id="appl-cb-CLN_DNV">
 <label class="appl-toggle" for="appl-cb-CLN_DNV"><span class="t-all">Hide optional</span><span class="t-req">Show optional</span></label>
 <pre class="appl-json appl-full">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA349020765"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"SCN2A"</span>,
+      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:10588"</span>,
+      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"SCN2A"</span>,
+      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_001040142.2"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>,
-    <span class="j-key appl-o">"label"</span>: <span class="j-str">"Stargardt disease"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0100038"</span>,
+    <span class="j-key appl-o">"label"</span>: <span class="j-str">"complex neurodevelopmental disorder"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"pop_frq_points"</span>: <span class="j-num">0</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-o">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
-    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"F"</span>,
-    <span class="j-key appl-o">"age"</span>: { <span class="j-key">"value"</span>: <span class="j-num">7</span>, <span class="j-key">"unit"</span>: <span class="j-str">"MONTH"</span>, <span class="j-key">"qualifier"</span>: <span class="j-str">"EXACT"</span>, <span class="j-key">"raw"</span>: <span class="j-str">"7 mo"</span> },
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v10-SCN2A-proband-1"</span>,
+    <span class="j-key appl-o">"family_id"</span>: <span class="j-str">"PVS-v10-SCN2A-FAM-1"</span>,
+    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"age"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-o">"phenotypes"</span>: [
       {
-        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Seizure"</span>,
-        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001250"</span>
+        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Epileptic encephalopathy"</span>,
+        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0200134"</span>
       }
     ],
-    <span class="j-key appl-c">"pheno_specificity_for_mde"</span>: <span class="j-str">"SPECIFIC"</span>,
+    <span class="j-key appl-c">"pheno_specificity_for_mde"</span>: <span class="j-str">"CONSISTENT"</span>,
     <span class="j-key appl-r">"testing"</span>: {
       <span class="j-key appl-o">"method"</span>: <span class="j-str">"Exome"</span>,
       <span class="j-key appl-r">"covers_all_genes_relevant_to_mde"</span>: <span class="j-str">"TRUE"</span>
     },
-    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"NEAR_100"</span>,
-    <span class="j-key appl-r">"confirmed_parental_relationship"</span>: <span class="j-str">"TRUE"</span>,
+    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"LT_80"</span>,
+    <span class="j-key appl-r">"confirmed_parental_relationship"</span>: <span class="j-str">"FALSE"</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>
   }
@@ -213,23 +213,23 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 <pre class="appl-json appl-req">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA349020765"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"SCN2A"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0100038"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"pop_frq_points"</span>: <span class="j-num">0</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-c">"pheno_specificity_for_mde"</span>: <span class="j-str">"SPECIFIC"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v10-SCN2A-proband-1"</span>,
+    <span class="j-key appl-c">"pheno_specificity_for_mde"</span>: <span class="j-str">"CONSISTENT"</span>,
     <span class="j-key appl-r">"testing"</span>: {
       <span class="j-key appl-r">"covers_all_genes_relevant_to_mde"</span>: <span class="j-str">"TRUE"</span>
     },
-    <span class="j-key appl-r">"confirmed_parental_relationship"</span>: <span class="j-str">"TRUE"</span>,
+    <span class="j-key appl-r">"confirmed_parental_relationship"</span>: <span class="j-str">"FALSE"</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>
   }
@@ -239,49 +239,49 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 </details>
 
 <details class="appl-detail">
-<summary>Alternative Cause-Variant <code>CLN_ALTV</code></summary>
+<summary>Alternative Cause-Variant <code>CLN_ALTV</code> <span class="appl-src">— from <code>PVS-v11-acvrl1</code></span></summary>
 <div class="appl-json-wrap">
 <input type="checkbox" class="appl-toggle-cb" id="appl-cb-CLN_ALTV">
 <label class="appl-toggle" for="appl-cb-CLN_ALTV"><span class="t-all">Hide optional</span><span class="t-req">Show optional</span></label>
 <pre class="appl-json appl-full">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA211326"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ACVRL1"</span>,
+      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:175"</span>,
+      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ACVRL1"</span>,
+      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000020.3"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>,
-    <span class="j-key appl-o">"label"</span>: <span class="j-str">"Stargardt disease"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0019180"</span>,
+    <span class="j-key appl-o">"label"</span>: <span class="j-str">"hereditary hemorrhagic telangiectasia"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-o">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
-    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"F"</span>,
-    <span class="j-key appl-o">"age"</span>: { <span class="j-key">"value"</span>: <span class="j-num">7</span>, <span class="j-key">"unit"</span>: <span class="j-str">"MONTH"</span>, <span class="j-key">"qualifier"</span>: <span class="j-str">"EXACT"</span>, <span class="j-key">"raw"</span>: <span class="j-str">"7 mo"</span> },
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v11-ACVRL1-case-1"</span>,
+    <span class="j-key appl-o">"family_id"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"age"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-o">"phenotypes"</span>: [
       {
-        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Seizure"</span>,
-        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001250"</span>
+        <span class="j-key appl-o">"name"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-o">"code"</span>: <span class="j-str">"..."</span>
       }
     ],
     <span class="j-key appl-r">"pheno_severity"</span>: <span class="j-str">"MONO_EQ_EXPECTED"</span>,
-    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"NEAR_100"</span>,
+    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
-        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
-        <span class="j-key appl-r">"phase_in_ref_to_vbc"</span>: <span class="j-str">"CIS"</span>,
-        <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"LOW"</span>,
-        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:ACVRL1-c.191delA"</span>,
+        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HET"</span>,
+        <span class="j-key appl-r">"phase_in_ref_to_vbc"</span>: <span class="j-str">"TRANS"</span>,
+        <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"HIGH"</span>,
+        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"P"</span>
       }
     ]
   }
@@ -290,28 +290,28 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 <pre class="appl-json appl-req">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA211326"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ACVRL1"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0019180"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v11-ACVRL1-case-1"</span>,
     <span class="j-key appl-r">"pheno_severity"</span>: <span class="j-str">"MONO_EQ_EXPECTED"</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
-        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
-        <span class="j-key appl-r">"phase_in_ref_to_vbc"</span>: <span class="j-str">"CIS"</span>,
-        <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"LOW"</span>,
-        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:ACVRL1-c.191delA"</span>,
+        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HET"</span>,
+        <span class="j-key appl-r">"phase_in_ref_to_vbc"</span>: <span class="j-str">"TRANS"</span>,
+        <span class="j-key appl-r">"phase_confidence"</span>: <span class="j-str">"HIGH"</span>,
+        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"P"</span>
       }
     ]
   }
@@ -321,53 +321,53 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 </details>
 
 <details class="appl-detail">
-<summary>Alternative Cause-Gene <code>CLN_ALTG</code></summary>
+<summary>Alternative Cause-Gene <code>CLN_ALTG</code> <span class="appl-src">— from <code>PVS-v11-acvrl1</code></span></summary>
 <div class="appl-json-wrap">
 <input type="checkbox" class="appl-toggle-cb" id="appl-cb-CLN_ALTG">
 <label class="appl-toggle" for="appl-cb-CLN_ALTG"><span class="t-all">Hide optional</span><span class="t-req">Show optional</span></label>
 <pre class="appl-json appl-full">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA211326"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ACVRL1"</span>,
+      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:175"</span>,
+      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ACVRL1"</span>,
+      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000020.3"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>,
-    <span class="j-key appl-o">"label"</span>: <span class="j-str">"Stargardt disease"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0019180"</span>,
+    <span class="j-key appl-o">"label"</span>: <span class="j-str">"hereditary hemorrhagic telangiectasia"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-o">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
-    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"F"</span>,
-    <span class="j-key appl-o">"age"</span>: { <span class="j-key">"value"</span>: <span class="j-num">7</span>, <span class="j-key">"unit"</span>: <span class="j-str">"MONTH"</span>, <span class="j-key">"qualifier"</span>: <span class="j-str">"EXACT"</span>, <span class="j-key">"raw"</span>: <span class="j-str">"7 mo"</span> },
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v11-ACVRL1-case-2"</span>,
+    <span class="j-key appl-o">"family_id"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"age"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-o">"phenotypes"</span>: [
       {
-        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Seizure"</span>,
-        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001250"</span>
+        <span class="j-key appl-o">"name"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-o">"code"</span>: <span class="j-str">"..."</span>
       }
     ],
     <span class="j-key appl-c">"pheno_severity"</span>: <span class="j-str">"MONO_EQ_EXPECTED"</span>,
-    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"NEAR_100"</span>,
+    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:ENG-pathogenic-LoF"</span>,
         <span class="j-key appl-r">"gene"</span>: {
-          <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-          <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-          <span class="j-key appl-r">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-          <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+          <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ENG"</span>,
+          <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:3349"</span>,
+          <span class="j-key appl-r">"mde_associated_gene"</span>: <span class="j-str">"ENG"</span>,
+          <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"..."</span>
         },
-        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
-        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
+        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HET"</span>,
+        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"P"</span>
       }
     ]
   }
@@ -376,30 +376,30 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 <pre class="appl-json appl-req">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA211326"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ACVRL1"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0019180"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v11-ACVRL1-case-2"</span>,
     <span class="j-key appl-c">"pheno_severity"</span>: <span class="j-str">"MONO_EQ_EXPECTED"</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:ENG-pathogenic-LoF"</span>,
         <span class="j-key appl-r">"gene"</span>: {
-          <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-          <span class="j-key appl-r">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>
+          <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ENG"</span>,
+          <span class="j-key appl-r">"mde_associated_gene"</span>: <span class="j-str">"ENG"</span>
         },
-        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
-        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
+        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HET"</span>,
+        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"P"</span>
       }
     ]
   }
@@ -409,38 +409,38 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 </details>
 
 <details class="appl-detail">
-<summary>Unaffected <code>CLN_UAF</code></summary>
+<summary>Unaffected <code>CLN_UAF</code> <span class="appl-src">— from <code>PVS-v1-actc1</code></span></summary>
 <div class="appl-json-wrap">
 <input type="checkbox" class="appl-toggle-cb" id="appl-cb-CLN_UAF">
 <label class="appl-toggle" for="appl-cb-CLN_UAF"><span class="t-all">Hide optional</span><span class="t-req">Show optional</span></label>
 <pre class="appl-json appl-full">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA2627662931"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ACTC1"</span>,
+      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:143"</span>,
+      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ACTC1"</span>,
+      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_005159.5"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>,
-    <span class="j-key appl-o">"label"</span>: <span class="j-str">"Stargardt disease"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0005045"</span>,
+    <span class="j-key appl-o">"label"</span>: <span class="j-str">"hypertrophic cardiomyopathy"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
-    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"F"</span>,
-    <span class="j-key appl-o">"age"</span>: { <span class="j-key">"value"</span>: <span class="j-num">7</span>, <span class="j-key">"unit"</span>: <span class="j-str">"MONTH"</span>, <span class="j-key">"qualifier"</span>: <span class="j-str">"EXACT"</span>, <span class="j-key">"raw"</span>: <span class="j-str">"7 mo"</span> },
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v1-ACTC1-proband-2"</span>,
+    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"PVS-v1-ACTC1-FAM-2"</span>,
+    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"age"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-o">"phenotypes"</span>: [
       {
-        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Seizure"</span>,
-        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001250"</span>
+        <span class="j-key appl-o">"name"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-o">"code"</span>: <span class="j-str">"..."</span>
       }
     ],
-    <span class="j-key appl-r">"age_matched_penetrance"</span>: <span class="j-str">"NEAR_100"</span>,
+    <span class="j-key appl-r">"age_matched_penetrance"</span>: <span class="j-str">"LT_80"</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>
   }
@@ -449,19 +449,19 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 <pre class="appl-json appl-req">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA2627662931"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ACTC1"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0005045"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
-    <span class="j-key appl-r">"age_matched_penetrance"</span>: <span class="j-str">"NEAR_100"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v1-ACTC1-proband-2"</span>,
+    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"PVS-v1-ACTC1-FAM-2"</span>,
+    <span class="j-key appl-r">"age_matched_penetrance"</span>: <span class="j-str">"LT_80"</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>
   }
@@ -471,53 +471,53 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 </details>
 
 <details class="appl-detail">
-<summary>Locus — Phenotype <code>LOC_PHE</code></summary>
+<summary>Locus — Phenotype <code>LOC_PHE</code> <span class="appl-src">— from <code>PVS-v1-actc1</code></span></summary>
 <div class="appl-json-wrap">
 <input type="checkbox" class="appl-toggle-cb" id="appl-cb-LOC_PHE">
 <label class="appl-toggle" for="appl-cb-LOC_PHE"><span class="t-all">Hide optional</span><span class="t-req">Show optional</span></label>
 <pre class="appl-json appl-full">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA2627662931"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ACTC1"</span>,
+      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:143"</span>,
+      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ACTC1"</span>,
+      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_005159.5"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>,
-    <span class="j-key appl-o">"label"</span>: <span class="j-str">"Stargardt disease"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0005045"</span>,
+    <span class="j-key appl-o">"label"</span>: <span class="j-str">"hypertrophic cardiomyopathy"</span>
   },
   <span class="j-key appl-r">"pop_frq_points"</span>: <span class="j-num">0</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-o">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
-    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"F"</span>,
-    <span class="j-key appl-o">"age"</span>: { <span class="j-key">"value"</span>: <span class="j-num">7</span>, <span class="j-key">"unit"</span>: <span class="j-str">"MONTH"</span>, <span class="j-key">"qualifier"</span>: <span class="j-str">"EXACT"</span>, <span class="j-key">"raw"</span>: <span class="j-str">"7 mo"</span> },
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v1-ACTC1-proband-1"</span>,
+    <span class="j-key appl-o">"family_id"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"age"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-o">"phenotypes"</span>: [
       {
-        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Seizure"</span>,
-        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001250"</span>
+        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Hypertrophic cardiomyopathy"</span>,
+        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001639"</span>
       }
     ],
-    <span class="j-key appl-r">"gene_specificity_for_phenotypes"</span>: <span class="j-str">"50%"</span>,
+    <span class="j-key appl-r">"gene_specificity_for_phenotypes"</span>: <span class="j-str">"3%"</span>,
     <span class="j-key appl-r">"testing"</span>: {
-      <span class="j-key appl-o">"method"</span>: <span class="j-str">"Exome"</span>,
+      <span class="j-key appl-o">"method"</span>: <span class="j-str">"Panel"</span>,
       <span class="j-key appl-r">"diagnostic_yield_for_phenotypes"</span>: <span class="j-str">"100%"</span>,
       <span class="j-key appl-o">"covers_all_genes_relevant_to_mde"</span>: <span class="j-str">"TRUE"</span>
     },
-    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"NEAR_100"</span>,
+    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-o">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"FALSE"</span>,
     <span class="j-key appl-c">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
-        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
-        <span class="j-key appl-r">"phase_in_ref_to_vbc"</span>: <span class="j-str">"CIS"</span>,
-        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-r">"phase_in_ref_to_vbc"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"..."</span>
       }
     ]
   }
@@ -526,29 +526,29 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 <pre class="appl-json appl-req">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA2627662931"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ACTC1"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0005045"</span>
   },
   <span class="j-key appl-r">"pop_frq_points"</span>: <span class="j-num">0</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-r">"gene_specificity_for_phenotypes"</span>: <span class="j-str">"50%"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v1-ACTC1-proband-1"</span>,
+    <span class="j-key appl-r">"gene_specificity_for_phenotypes"</span>: <span class="j-str">"3%"</span>,
     <span class="j-key appl-r">"testing"</span>: {
       <span class="j-key appl-r">"diagnostic_yield_for_phenotypes"</span>: <span class="j-str">"100%"</span>
     },
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"FALSE"</span>,
     <span class="j-key appl-c">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
-        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"HOM"</span>,
-        <span class="j-key appl-r">"phase_in_ref_to_vbc"</span>: <span class="j-str">"CIS"</span>,
-        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"LP"</span>
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-r">"zygosity"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-r">"phase_in_ref_to_vbc"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-r">"classification"</span>: <span class="j-str">"..."</span>
       }
     ]
   }
@@ -558,77 +558,77 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 </details>
 
 <details class="appl-detail">
-<summary>Locus — Segregation <code>LOC_SEG</code></summary>
+<summary>Locus — Segregation <code>LOC_SEG</code> <span class="appl-src">— from <code>PVS-v9-runx1</code></span></summary>
 <div class="appl-json-wrap">
 <input type="checkbox" class="appl-toggle-cb" id="appl-cb-LOC_SEG">
 <label class="appl-toggle" for="appl-cb-LOC_SEG"><span class="t-all">Hide optional</span><span class="t-req">Show optional</span></label>
 <pre class="appl-json appl-full">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA658799413"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"RUNX1"</span>,
+      <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:10471"</span>,
+      <span class="j-key appl-o">"mde_associated_gene"</span>: <span class="j-str">"RUNX1"</span>,
+      <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_001754.5"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>,
-    <span class="j-key appl-o">"label"</span>: <span class="j-str">"Stargardt disease"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0011071"</span>,
+    <span class="j-key appl-o">"label"</span>: <span class="j-str">"hereditary thrombocytopenia and hematologic cancer predisposition syndrome"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"pop_frq_points"</span>: <span class="j-num">0</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
-    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"F"</span>,
-    <span class="j-key appl-o">"age"</span>: { <span class="j-key">"value"</span>: <span class="j-num">7</span>, <span class="j-key">"unit"</span>: <span class="j-str">"MONTH"</span>, <span class="j-key">"qualifier"</span>: <span class="j-str">"EXACT"</span>, <span class="j-key">"raw"</span>: <span class="j-str">"7 mo"</span> },
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v9-RUNX1-proband-1"</span>,
+    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"PVS-v9-RUNX1-FAM-1"</span>,
+    <span class="j-key appl-o">"sex"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"age"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-o">"phenotypes"</span>: [
       {
-        <span class="j-key appl-o">"name"</span>: <span class="j-str">"Seizure"</span>,
-        <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001250"</span>
+        <span class="j-key appl-o">"name"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-o">"code"</span>: <span class="j-str">"..."</span>
       }
     ],
-    <span class="j-key appl-o">"pheno_specificity_for_mde"</span>: <span class="j-str">"SPECIFIC"</span>,
-    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"NEAR_100"</span>,
-    <span class="j-key appl-o">"confirmed_parental_relationship"</span>: <span class="j-str">"TRUE"</span>,
+    <span class="j-key appl-o">"pheno_specificity_for_mde"</span>: <span class="j-str">"CONSISTENT"</span>,
+    <span class="j-key appl-o">"age_matched_penetrance"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-o">"confirmed_parental_relationship"</span>: <span class="j-str">"..."</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
     <span class="j-key appl-o">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
     <span class="j-key appl-o">"compound_het_variant"</span>: {
-      <span class="j-key appl-o">"id"</span>: <span class="j-str">"clinvar:VCV000000002"</span>,
-      <span class="j-key appl-o">"phase_confidence"</span>: <span class="j-str">"HIGH"</span>,
-      <span class="j-key appl-o">"classification"</span>: <span class="j-str">"P"</span>
+      <span class="j-key appl-o">"id"</span>: <span class="j-str">"..."</span>,
+      <span class="j-key appl-o">"phase_confidence"</span>: <span class="j-str">"..."</span>,
+      <span class="j-key appl-o">"classification"</span>: <span class="j-str">"..."</span>
     },
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"FALSE"</span>,
     <span class="j-key appl-c">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"..."</span>,
         <span class="j-key appl-c">"gene"</span>: {
-          <span class="j-key appl-c">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-          <span class="j-key appl-o">"id"</span>: <span class="j-str">"HGNC:34"</span>,
-          <span class="j-key appl-c">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>,
-          <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"NM_000350.3"</span>
+          <span class="j-key appl-c">"symbol"</span>: <span class="j-str">"..."</span>,
+          <span class="j-key appl-o">"id"</span>: <span class="j-str">"..."</span>,
+          <span class="j-key appl-c">"mde_associated_gene"</span>: <span class="j-str">"..."</span>,
+          <span class="j-key appl-o">"transcript"</span>: <span class="j-str">"..."</span>
         },
-        <span class="j-key appl-o">"zygosity"</span>: <span class="j-str">"HOM"</span>,
-        <span class="j-key appl-o">"phase_in_ref_to_vbc"</span>: <span class="j-str">"CIS"</span>,
-        <span class="j-key appl-o">"phase_confidence"</span>: <span class="j-str">"LOW"</span>,
-        <span class="j-key appl-o">"classification"</span>: <span class="j-str">"LP"</span>
+        <span class="j-key appl-o">"zygosity"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-o">"phase_in_ref_to_vbc"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-o">"phase_confidence"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-o">"classification"</span>: <span class="j-str">"..."</span>
       }
     ],
     <span class="j-key appl-r">"relatives"</span>: [
       {
-        <span class="j-key appl-r">"parent_of_proband"</span>: <span class="j-str">"TRUE"</span>,
-        <span class="j-key appl-c">"sex"</span>: <span class="j-str">"F"</span>,
-        <span class="j-key appl-o">"age"</span>: { <span class="j-key">"value"</span>: <span class="j-num">35</span>, <span class="j-key">"unit"</span>: <span class="j-str">"YEAR"</span>, <span class="j-key">"qualifier"</span>: <span class="j-str">"EXACT"</span>, <span class="j-key">"raw"</span>: <span class="j-str">"35 yrs"</span> },
+        <span class="j-key appl-r">"parent_of_proband"</span>: <span class="j-str">"FALSE"</span>,
+        <span class="j-key appl-c">"sex"</span>: <span class="j-str">"..."</span>,
+        <span class="j-key appl-o">"age"</span>: <span class="j-str">"..."</span>,
         <span class="j-key appl-o">"phenotypes"</span>: [
           {
-            <span class="j-key appl-o">"name"</span>: <span class="j-str">"Seizure"</span>,
-            <span class="j-key appl-o">"code"</span>: <span class="j-str">"HP:0001250"</span>
+            <span class="j-key appl-o">"name"</span>: <span class="j-str">"..."</span>,
+            <span class="j-key appl-o">"code"</span>: <span class="j-str">"..."</span>
           }
         ],
         <span class="j-key appl-r">"affected_w_mde"</span>: <span class="j-str">"TRUE"</span>,
-        <span class="j-key appl-c">"severe_phenotype"</span>: <span class="j-str">"FALSE"</span>,
+        <span class="j-key appl-c">"severe_phenotype"</span>: <span class="j-str">"..."</span>,
         <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
         <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
         <span class="j-key appl-r">"cmp_het_variant_exists"</span>: <span class="j-str">"FALSE"</span>
@@ -640,36 +640,36 @@ Expand a workflow to see its full input as a JSON example with mock data: the wo
 <pre class="appl-json appl-req">
 {
   <span class="j-key appl-r">"vbc"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000001"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"CAID:CA658799413"</span>,
     <span class="j-key appl-r">"gene"</span>: {
-      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"ABCA4"</span>
+      <span class="j-key appl-r">"symbol"</span>: <span class="j-str">"RUNX1"</span>
     }
   },
   <span class="j-key appl-r">"mde"</span>: {
-    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0007254"</span>
+    <span class="j-key appl-r">"curie"</span>: <span class="j-str">"MONDO:0011071"</span>
   },
   <span class="j-key appl-r">"moi"</span>: <span class="j-str">"AD"</span>,
   <span class="j-key appl-r">"pop_frq_points"</span>: <span class="j-num">0</span>,
   <span class="j-key appl-r">"case"</span>: {
-    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PROBAND-1"</span>,
-    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"FAM-1"</span>,
+    <span class="j-key appl-r">"id"</span>: <span class="j-str">"PVS-v9-RUNX1-proband-1"</span>,
+    <span class="j-key appl-r">"family_id"</span>: <span class="j-str">"PVS-v9-RUNX1-FAM-1"</span>,
     <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
-    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"..."</span>,
+    <span class="j-key appl-r">"additional_variant_exists"</span>: <span class="j-str">"FALSE"</span>,
     <span class="j-key appl-c">"additional_variants"</span>: [
       {
-        <span class="j-key appl-r">"id"</span>: <span class="j-str">"clinvar:VCV000000003"</span>,
+        <span class="j-key appl-r">"id"</span>: <span class="j-str">"..."</span>,
         <span class="j-key appl-c">"gene"</span>: {
-          <span class="j-key appl-c">"symbol"</span>: <span class="j-str">"ABCA4"</span>,
-          <span class="j-key appl-c">"mde_associated_gene"</span>: <span class="j-str">"ABCA4"</span>
+          <span class="j-key appl-c">"symbol"</span>: <span class="j-str">"..."</span>,
+          <span class="j-key appl-c">"mde_associated_gene"</span>: <span class="j-str">"..."</span>
         }
       }
     ],
     <span class="j-key appl-r">"relatives"</span>: [
       {
-        <span class="j-key appl-r">"parent_of_proband"</span>: <span class="j-str">"TRUE"</span>,
-        <span class="j-key appl-c">"sex"</span>: <span class="j-str">"F"</span>,
+        <span class="j-key appl-r">"parent_of_proband"</span>: <span class="j-str">"FALSE"</span>,
+        <span class="j-key appl-c">"sex"</span>: <span class="j-str">"..."</span>,
         <span class="j-key appl-r">"affected_w_mde"</span>: <span class="j-str">"TRUE"</span>,
-        <span class="j-key appl-c">"severe_phenotype"</span>: <span class="j-str">"FALSE"</span>,
+        <span class="j-key appl-c">"severe_phenotype"</span>: <span class="j-str">"..."</span>,
         <span class="j-key appl-r">"vbc_exists"</span>: <span class="j-str">"TRUE"</span>,
         <span class="j-key appl-r">"vbc_zygosity"</span>: <span class="j-str">"HET"</span>,
         <span class="j-key appl-r">"cmp_het_variant_exists"</span>: <span class="j-str">"FALSE"</span>

@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA258396552", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA258396552." },
+      "label": "FOXG1 c.234_236delGCC (p.Pro79del) — PVS-v3-FOXG1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0100040", "label": "FOXG1-related disorder" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 0.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v3-FOXG1-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 40000", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 0.50, "penetrance": 0.50, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr14-28767497-AGCC-A?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+1",
+      "evidence": [ { "id": "PVS-v3-FOXG1-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "severe intellectual disability and microcephaly", "pop_frq_points": 0 }, "references": [], "description": "One proband with severe ID and microcephaly." } ],
+      "score": 1.0, "strength_direction": "pathogenic_supporting", "score_classification": null, "contribution": 1.0,
+      "description": "Affected proband (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_-1",
+      "evidence": [ { "id": "PVS-v3-FOXG1-mis-001", "type": "repeat_context", "data": { "variant": "in-frame deletion of one GCC repeat", "context": "6 GCC repeats in this region; region can be considered polymorphic based on gnomAD", "splice_impact": "none" }, "references": [], "description": "Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic — a benign-leaning caveat that makes this a genuine VUS." } ],
+      "score": -1.0, "strength_direction": "benign_supporting", "score_classification": null, "contribution": -1.0,
+      "description": "Polymorphic-repeat context (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v3-FOXG1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v3: FOXG1'. A deliberately borderline example: the variant sits in a polymorphic GCC-repeat region, so clinical support is offset by benign-leaning context."
+}

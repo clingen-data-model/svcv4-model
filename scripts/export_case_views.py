@@ -29,6 +29,7 @@ from svcv4_model.case_applicability import load_matrix
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CASE_SCHEMA_DIR = REPO_ROOT / "schemas" / "json" / "case"
+PVS_DIR = REPO_ROOT / "examples" / "practice-variant-set"
 DOCS_PAGE = REPO_ROOT / "docs" / "workflows" / "case-model.md"
 GEN_BEGIN = "<!-- BEGIN GENERATED: applicability tables -->"
 GEN_END = "<!-- END GENERATED: applicability tables -->"
@@ -176,76 +177,63 @@ ARRAYS = {
 
 def _case_matrix() -> dict[str, dict]:
     """Matrix entries for the Case data structure (excludes workflow parameters)."""
-    return {
-        p: e for p, e in load_matrix().items() if e.get("model") != "workflow_parameters"
-    }
+    return {p: e for p, e in load_matrix().items() if e.get("model") != "workflow_parameters"}
 
 
 def _param_matrix() -> dict[str, dict]:
     """Matrix entries for the WorkflowParameters model."""
-    return {
-        p: e for p, e in load_matrix().items() if e.get("model") == "workflow_parameters"
-    }
+    return {p: e for p, e in load_matrix().items() if e.get("model") == "workflow_parameters"}
 
 
-#: Mock values for leaf fields, used in the per-workflow JSON examples. Keyed by
-#: dotted path — workflow-parameter paths (moi, pop_frq_points) plus Case paths.
-MOCK: dict[str, object] = {
-    "moi": "AD",
-    "pop_frq_points": 0,
-    "id": "PROBAND-1",
-    "family_id": "FAM-1",
-    "sex": "F",
-    "age": {"value": 7, "unit": "MONTH", "qualifier": "EXACT", "raw": "7 mo"},
-    "phenotypes.code": "HP:0001250",
-    "phenotypes.name": "Seizure",
-    "pheno_specificity_for_mde": "SPECIFIC",
-    "gene_specificity_for_phenotypes": "50%",
-    "testing.method": "Exome",
-    "testing.diagnostic_yield_for_phenotypes": "100%",
-    "testing.covers_all_genes_relevant_to_mde": "TRUE",
-    "pheno_severity": "MONO_EQ_EXPECTED",
-    "age_matched_penetrance": "NEAR_100",
-    "confirmed_parental_relationship": "TRUE",
-    "relatives.parent_of_proband": "TRUE",
-    "relatives.sex": "F",
-    "relatives.age": {
-        "value": 35,
-        "unit": "YEAR",
-        "qualifier": "EXACT",
-        "raw": "35 yrs",
-    },
-    "relatives.phenotypes.code": "HP:0001250",
-    "relatives.phenotypes.name": "Seizure",
-    "relatives.affected_w_mde": "TRUE",
-    "relatives.severe_phenotype": "FALSE",
-    "relatives.vbc_exists": "TRUE",
-    "relatives.vbc_zygosity": "HET",
-    "relatives.cmp_het_variant_exists": "FALSE",
-    # workflow parameters (vbc / mde structures)
-    "vbc.id": "clinvar:VCV000000001",
-    "vbc.gene.symbol": "ABCA4",
-    "vbc.gene.id": "HGNC:34",
-    "vbc.gene.mde_associated_gene": "ABCA4",
-    "vbc.gene.transcript": "NM_000350.3",
-    "mde.curie": "MONDO:0007254",
-    "mde.label": "Stargardt disease",
-    # case-level VBC status
-    "vbc_exists": "TRUE",
-    "vbc_zygosity": "HET",
-    "compound_het_variant.id": "clinvar:VCV000000002",
-    "compound_het_variant.phase_confidence": "HIGH",
-    "compound_het_variant.classification": "P",
-    "additional_variants.id": "clinvar:VCV000000003",
-    "additional_variants.gene.symbol": "ABCA4",
-    "additional_variants.gene.id": "HGNC:34",
-    "additional_variants.gene.mde_associated_gene": "ABCA4",
-    "additional_variants.gene.transcript": "NM_000350.3",
-    "additional_variants.zygosity": "HOM",
-    "additional_variants.phase_in_ref_to_vbc": "CIS",
-    "additional_variants.phase_confidence": "LOW",
-    "additional_variants.classification": "LP",
+#: Per-workflow source of example values: the PVS entry whose ``case-<WF>.json``
+#: fixture supplies real, validated data for that workflow's JSON example. Keeps
+#: the docs examples grounded in the Practice Variant Set instead of ``MOCK``.
+WORKFLOW_SOURCE: dict[str, str] = {
+    "CLN_AFF": "v5-myh7",
+    "CLN_DNV": "v10-scn2a",
+    "CLN_ALTV": "v11-acvrl1",
+    "CLN_ALTG": "v11-acvrl1",
+    "CLN_UAF": "v1-actc1",
+    "LOC_PHE": "v1-actc1",
+    "LOC_SEG": "v9-runx1",
 }
+
+
+def _flatten_source(obj: Any, prefix: str = "") -> dict[str, object]:
+    """Flatten a case submission to dotted leaf paths.
+
+    Arrays render as a single example item, so the first element is used and the
+    path is not indexed (e.g. ``relatives.affected_w_mde``).
+    """
+    out: dict[str, object] = {}
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            out.update(_flatten_source(v, f"{prefix}.{k}" if prefix else k))
+    elif isinstance(obj, list):
+        if obj:
+            out.update(_flatten_source(obj[0], prefix))
+    else:
+        out[prefix] = obj
+    return out
+
+
+def _source_values(workflow: Workflow) -> dict[str, object]:
+    """Load the workflow's PVS fixture and key it by the paths the emitter uses.
+
+    Workflow-parameter paths (``vbc.*``/``mde.*``/``moi``/``pop_frq_points``) keep
+    their full path; Case fields drop the leading ``case.`` so they match the
+    Case tree paths (``id``, ``testing.method``, ...).
+    """
+    slug = WORKFLOW_SOURCE.get(workflow.value)
+    if not slug:
+        return {}
+    path = PVS_DIR / slug / f"case-{workflow.value}.json"
+    if not path.exists():
+        return {}
+    values: dict[str, object] = {}
+    for key, val in _flatten_source(json.loads(path.read_text())).items():
+        values[key[len("case.") :] if key.startswith("case.") else key] = val
+    return values
 
 
 def _build_tree(matrix: dict | None = None) -> dict:
@@ -331,8 +319,7 @@ def _matrix_table() -> str:
             child_count[path.rsplit(".", 1)[0]] = child_count.get(path.rsplit(".", 1)[0], 0) + 1
     max_depth = max((p.count(".") for p in matrix), default=0)
     level_btns = "".join(
-        f'<button type="button" data-appl-level="{n}">{n}</button>'
-        for n in range(1, max_depth + 2)
+        f'<button type="button" data-appl-level="{n}">{n}</button>' for n in range(1, max_depth + 2)
     )
     controls = (
         '<div class="appl-matrix-controls">'
@@ -342,9 +329,7 @@ def _matrix_table() -> str:
         "</div>"
     )
     rows = "".join(_row_html(p, e, cols, child_count) for p, e in matrix.items())
-    table = (
-        f'<table class="appl-matrix-table">{_header_html(cols)}<tbody>{rows}</tbody></table>'
-    )
+    table = f'<table class="appl-matrix-table">{_header_html(cols)}<tbody>{rows}</tbody></table>'
     return f'<div class="appl-matrix">\n{controls}\n{table}\n</div>'
 
 
@@ -362,14 +347,12 @@ def _params_table() -> str:
         )
         prop = f'<td class="appl-prop">{indent}<code>{name}</code></td>'
         rows += f'<tr>{cells}{prop}<td class="appl-notes">{_notes_html(entry)}</td></tr>'
-    table = (
-        f'<table class="appl-matrix-table">{_header_html(cols)}<tbody>{rows}</tbody></table>'
-    )
+    table = f'<table class="appl-matrix-table">{_header_html(cols)}<tbody>{rows}</tbody></table>'
     return f'<div class="appl-params">\n{table}\n</div>'
 
 
-def _value_html(path: str) -> str:
-    val = MOCK.get(path, "...")
+def _value_html(path: str, values: dict[str, object]) -> str:
+    val = values.get(path, "...")
     if isinstance(val, bool):
         return f'<span class="j-num">{str(val).lower()}</span>'
     if isinstance(val, (int, float)):
@@ -388,7 +371,11 @@ def _value_html(path: str) -> str:
 
 
 def _emit_obj(
-    children: dict, codes: dict[str, str], indent: int, drop: frozenset[str] = frozenset({"x"})
+    children: dict,
+    codes: dict[str, str],
+    indent: int,
+    values: dict[str, object],
+    drop: frozenset[str] = frozenset({"x"}),
 ) -> list[str]:
     """Emit JSON-example lines for one object.
 
@@ -407,15 +394,15 @@ def _emit_obj(
             if node["path"] in ARRAYS:
                 out.append(f"{pad}{key}: [")
                 out.append(f"{pad}  {{")
-                out += _emit_obj(node["children"], codes, indent + 2, drop)
+                out += _emit_obj(node["children"], codes, indent + 2, values, drop)
                 out.append(f"{pad}  }}")
                 out.append(f"{pad}]{comma}")
             else:
                 out.append(f"{pad}{key}: {{")
-                out += _emit_obj(node["children"], codes, indent + 1, drop)
+                out += _emit_obj(node["children"], codes, indent + 1, values, drop)
                 out.append(f"{pad}}}{comma}")
         else:
-            out.append(f"{pad}{key}: {_value_html(node['path'])}{comma}")
+            out.append(f"{pad}{key}: {_value_html(node['path'], values)}{comma}")
     return out
 
 
@@ -428,15 +415,18 @@ def _workflow_block(workflow: Workflow, tree: dict) -> str:
     codes = {**case_codes, **param_codes, "case": "r"}
     root: dict = dict(_build_tree(_param_matrix()))
     root["case"] = {"name": "case", "path": "case", "children": tree}
-    full = "\n".join(["{", *_emit_obj(root, codes, 1), "}"])
-    req = "\n".join(["{", *_emit_obj(root, codes, 1, frozenset({"x", "o"})), "}"])
+    values = _source_values(workflow)
+    full = "\n".join(["{", *_emit_obj(root, codes, 1, values), "}"])
+    req = "\n".join(["{", *_emit_obj(root, codes, 1, values, frozenset({"x", "o"})), "}"])
     label = WORKFLOW_LABELS[workflow.value]
+    slug = WORKFLOW_SOURCE.get(workflow.value)
+    src = f' <span class="appl-src">— from <code>PVS-{slug}</code></span>' if slug else ""
     cb = f"appl-cb-{workflow.value}"
     # Pure-CSS toggle: a hidden checkbox swaps which of two independently
     # rendered <pre> blocks is shown, so commas/delimiters are always correct.
     return (
         f'<details class="appl-detail">\n'
-        f"<summary>{label} <code>{workflow.value}</code></summary>\n"
+        f"<summary>{label} <code>{workflow.value}</code>{src}</summary>\n"
         f'<div class="appl-json-wrap">\n'
         f'<input type="checkbox" class="appl-toggle-cb" id="{cb}">\n'
         f'<label class="appl-toggle" for="{cb}">'
@@ -477,11 +467,14 @@ def write_docs_tables() -> None:
             "show the tree to a given depth. Conditional rules are summarized in **Notes**.",
             _matrix_table(),
             "### Per-workflow structures",
-            "Expand a workflow to see its full input as a JSON example with mock "
-            "data: the workflow parameters that apply (e.g. `moi`, `pop_frq_points`) "
-            "plus a nested `case` object with only that workflow's applicable Case "
-            'fields — **bold** = required, <span class="appl-c">underlined</span> = '
+            "Expand a workflow to see its full input as a JSON example, with values "
+            "drawn from the [Practice Variant Set](../examples/practice-variant-set/index.md) "
+            "entry named in each heading (so the data is real, not invented): the "
+            "workflow parameters that apply (e.g. `moi`, `pop_frq_points`) plus a "
+            "nested `case` object with only that workflow's applicable Case fields "
+            '— **bold** = required, <span class="appl-c">underlined</span> = '
             "conditional, *italic* = optional; not-applicable fields are omitted. "
+            "Fields the source example does not populate show `...`. "
             "Use the **Hide optional** button (top-right of each example) "
             "to collapse the example to just the required and conditional fields.",
             blocks,

@@ -1,0 +1,33 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA021404", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA021404." },
+      "label": "TNNI3 c.236G>T (p.Arg79Leu) — PVS-v18-TNNI3 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0005045", "label": "hypertrophic cardiomyopathy" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is NOT an established mechanism for TNNI3-related HCM." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 0.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v18-TNNI3-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 200", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 0.05, "penetrance": 0.30, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr19-55156247-C-A?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+0",
+      "evidence": [ { "id": "PVS-v18-TNNI3-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.542, "splice_impact": "none" }, "references": [], "description": "REVEL 0.542 is intermediate — uninformative on its own." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v18-TNNI3 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v18: TNNI3'. A VUS: the only proband (Framingham/Jackson Heart Study) has no clinical phenotype details, so no CLN_AFF or CLN_UAF points, and REVEL is intermediate."
+}

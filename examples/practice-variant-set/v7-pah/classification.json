@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA386294434", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA386294434." },
+      "label": "PAH c.865G>A (p.Gly289Arg) — PVS-v7-PAH VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0009861", "label": "phenylketonuria" },
+    "qualifiers": [ { "moi": "AR", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 8.0,
+  "score_classification": "pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v7-PAH-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 5000", "allelic_heterogeneity": 0.12, "genetic_heterogeneity": 0.90, "penetrance": 0.80, "inheritance": "biallelic", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr12-102851734-C-T?dataset=gnomad_r4"], "description": "POP inputs from the tab (biallelic threshold)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+4",
+      "evidence": [ { "id": "PVS-v7-PAH-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 2, "zygosity": "biallelic", "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "classic PKU (Phe >120 μM; BH4 deficiency excluded)", "compound_het_partners": ["Gly272Ter (P, in trans)", "Arg155Cys (P/LP, in trans)"], "pop_frq_points": 0 }, "references": [], "description": "Two biallelic probands with classic PKU, each with a second P/LP variant confirmed in trans." } ],
+      "score": 4.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 4.0,
+      "description": "Affected biallelic probands (illustrative). LOC_PHE also applicable (>82% yield)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+4",
+      "evidence": [ { "id": "PVS-v7-PAH-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.98, "bayesdel": 0.58, "splice_impact": "none" }, "references": [], "description": "REVEL 0.98 and BayesDel 0.58 — strong in-silico missense support; no predicted splicing impact." } ],
+      "score": 4.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 4.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v7-PAH rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v7: PAH'."
+}

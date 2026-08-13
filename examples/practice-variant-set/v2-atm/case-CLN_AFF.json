@@ -1,0 +1,25 @@
+{
+  "vbc": {
+    "id": "CAID:CA382538604",
+    "gene": { "symbol": "ATM", "id": "HGNC:795", "mde_associated_gene": "ATM", "transcript": "NM_000051.4" }
+  },
+  "mde": { "curie": "MONDO:0008840", "label": "ataxia telangiectasia" },
+  "moi": "AR",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v2-ATM-proband-1",
+    "family_id": "PVS-v2-ATM-FAM-1",
+    "phenotypes": [ { "name": "Ataxia", "code": "HP:0001251" } ],
+    "pheno_specificity_for_mde": "CONSISTENT",
+    "testing": { "method": "Panel", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "PCT_80_100",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "compound_het_variant": {
+      "id": "CAID:ATM-second-LoF-in-trans",
+      "phase_confidence": "HIGH",
+      "classification": "P"
+    },
+    "additional_variant_exists": "FALSE"
+  }
+}

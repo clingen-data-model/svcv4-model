@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA3246685756", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA3246685756. Deletion of exons 63-64 (breakpoints unknown)." },
+      "label": "USH2A del exons 63-64 (c.12295-?_14133+?del) — PVS-v20-USH2A VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0019501", "label": "Usher syndrome" },
+    "qualifiers": [ { "moi": "AR", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 5.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v20-USH2A-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 30000", "allelic_heterogeneity": 0.20, "genetic_heterogeneity": 0.30, "penetrance": 0.80, "inheritance": "biallelic", "grpmax_filtering_af": 0.0001388, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/DEL_CHR1_311284BE?dataset=gnomad_sv_r4"], "description": "POP inputs from the tab (biallelic threshold; inverse-AF calculation)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+3",
+      "evidence": [ { "id": "PVS-v20-USH2A-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 3, "pheno_specificity_for_mde": "SPECIFIC", "phenotype": "congenital bilateral sensorineural hearing loss + retinitis pigmentosa", "zygosity": "proband 1 homozygous; probands 2-3 in trans (VUS / known Pathogenic LoF)", "diagnostic_yield": "~60% (LOC_PHE applicable)", "pop_frq_points": 0 }, "references": [], "description": "Three biallelic probands with a USH2A-specific dual sensory phenotype." } ],
+      "score": 3.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 3.0,
+      "description": "Affected biallelic probands (illustrative). LOC_PHE (~60% yield) also applicable."
+    },
+    {
+      "method": { "code": "svcv4:CDS", "label": "RNA / coding alteration (CDS)", "version": "draft-2026-pre-release" },
+      "code": "CDS_+2",
+      "evidence": [ { "id": "PVS-v20-USH2A-cds-001", "type": "structural", "data": { "consequence": "in-frame deletion of exons 63-64 (aa 4099-4711)", "fraction_removed": "11.7% of protein (612 / 5202 aa)", "domain": "region not known to encode a critical functional domain" }, "references": [], "description": "In-frame multi-exon deletion removing >10% of the protein, outside a known critical domain." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Coding-alteration evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v20-USH2A rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v20: USH2A'. A structural (multi-exon deletion) biallelic example with three affected probands."
+}

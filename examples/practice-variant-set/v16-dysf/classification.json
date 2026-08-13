@@ -1,0 +1,47 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA222190", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA222190." },
+      "label": "DYSF c.5626G>A (p.Asp1876Asn) — PVS-v16-DYSF VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0015152", "label": "autosomal recessive limb-girdle muscular dystrophy" },
+    "qualifiers": [ { "moi": "AR", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 8.0,
+  "score_classification": "pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v16-DYSF-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 50000", "allelic_heterogeneity": 0.08, "genetic_heterogeneity": 0.50, "penetrance": 0.85, "inheritance": "biallelic", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr2-71669191-G-A?dataset=gnomad_r4"], "description": "POP inputs from the tab (biallelic threshold)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+2",
+      "evidence": [ { "id": "PVS-v16-DYSF-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "zygosity": "homozygous", "pheno_specificity_for_mde": "SPECIFIC", "phenotype": "progressive limb-girdle weakness with absent dysferlin on skeletal muscle; diagnostic yield >82%", "segregation": "3 affected siblings also homozygous (LOC_SEG applicable)", "pop_frq_points": 0 }, "references": [], "description": "Homozygous proband with a DYSF-specific phenotype; three affected homozygous siblings co-segregate." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Affected homozygous proband (illustrative). LOC_SEG (3 affected sibs) applicable, captured separately."
+    },
+    {
+      "method": { "code": "svcv4:FNC", "label": "Functional assay (FNC)", "version": "draft-2026-pre-release" },
+      "code": "FNC_+2",
+      "evidence": [ { "id": "PVS-v16-DYSF-fnc-001", "type": "functional_assay", "data": { "assay": "dysferlin membrane localization (immunofluorescence / 2-A) in HEK293T", "result": "p.Asp1876Asn did not reach the cell membrane → impact on protein function", "vcep_controls": "3 pathogenic, 9 benign controls → +2 weight per the LGMD VCEP lookup" }, "references": ["PMID:35028538"], "description": "Membrane-localization assay shows loss of function; VCEP-calibrated to +2." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Functional assay (PFD, illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+2",
+      "evidence": [ { "id": "PVS-v16-DYSF-mis-001", "type": "same_residue_variant", "data": { "residue": "p.Asp1876", "revel": 0.819, "other_variant": "ClinVar:2885593 (c.5626G>C, p.Asp1876His)", "other_variant_classification": "LP", "grantham_other": 81, "grantham_vbc": 23 }, "references": ["https://www.ncbi.nlm.nih.gov/clinvar/variation/2885593/"], "description": "REVEL 0.819 and a same-residue LP comparator (a more conservative Asp→Asn change than the LP Asp→His)." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Predictive missense + same-residue evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v16-DYSF rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v16: DYSF'. A rich biallelic example: homozygous proband, functional assay, same-residue comparator, and segregating affected siblings (LOC_SEG)."
+}

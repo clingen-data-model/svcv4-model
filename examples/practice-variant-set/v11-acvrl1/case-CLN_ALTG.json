@@ -1,0 +1,23 @@
+{
+  "vbc": {
+    "id": "CAID:CA211326",
+    "gene": { "symbol": "ACVRL1", "id": "HGNC:175", "mde_associated_gene": "ACVRL1", "transcript": "NM_000020.3" }
+  },
+  "mde": { "curie": "MONDO:0019180", "label": "hereditary hemorrhagic telangiectasia" },
+  "moi": "AD",
+  "case": {
+    "id": "PVS-v11-ACVRL1-case-2",
+    "pheno_severity": "MONO_EQ_EXPECTED",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "TRUE",
+    "additional_variants": [
+      {
+        "id": "CAID:ENG-pathogenic-LoF",
+        "gene": { "symbol": "ENG", "id": "HGNC:3349", "mde_associated_gene": "ENG" },
+        "zygosity": "HET",
+        "classification": "P"
+      }
+    ]
+  }
+}

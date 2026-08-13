@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA007963", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA007963." },
+      "label": "MSH6 c.107C>T (p.Ala36Val) — PVS-v26-MSH6 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0005835", "label": "Lynch syndrome / hereditary non-polyposis colorectal cancer" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 0.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v26-MSH6-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 14", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 0.01, "penetrance": 0.16, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr2-47783340-C-T?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_ALTV", "label": "Affected with an alternate cause — variant (CLN_ALTV)", "version": "draft-2026-pre-release" },
+      "code": "CLN_ALTV_-1",
+      "evidence": [ { "id": "PVS-v26-MSH6-alt-001", "type": "clinical_observation", "data": { "phenotype": "colorectal cancer", "alternate_cause": "a Pathogenic truncating MSH6 variant (c.3202C>T, p.Arg1068*) confirmed in trans accounts for the dominant phenotype", "pheno_severity": "MONO_EQ_EXPECTED (no CMMRD/biallelic features)" }, "references": [], "description": "The affected phenotype is explained by an in-trans Pathogenic variant, so this proband is an alternate-cause (variant) observation — it does not credit the VBC." } ],
+      "score": -1.0, "strength_direction": "benign_supporting", "score_classification": null, "contribution": -1.0,
+      "description": "Alternate cause — variant (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+0",
+      "evidence": [ { "id": "PVS-v26-MSH6-mis-001", "type": "computational_prediction", "data": { "tool": "BayesDel", "score": -0.20, "splice_impact": "none" }, "references": [], "description": "BayesDel -0.20 is mildly benign-leaning; no same-codon informative variants." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v26-MSH6 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v26: MSH6'. A CLN_ALTV example: the proband's colorectal cancer is explained by an in-trans Pathogenic truncating variant, so it gives the VBC no positive clinical credit."
+}

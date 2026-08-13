@@ -1,0 +1,23 @@
+{
+  "vbc": {
+    "id": "CAID:CA3246641821",
+    "gene": { "symbol": "ATXN7L3", "id": "HGNC:28758", "mde_associated_gene": "ATXN7L3", "transcript": "NM_001382309.1" }
+  },
+  "mde": { "curie": "MONDO:0100038", "label": "complex neurodevelopmental disorder (ATXN7L3-related; MONDO pending)" },
+  "moi": "AD",
+  "pop_frq_points": 0,
+  "case": {
+    "id": "PVS-v14-ATXN7L3-proband-1",
+    "family_id": "PVS-v14-ATXN7L3-FAM-1",
+    "phenotypes": [
+      { "name": "Global developmental delay", "code": "HP:0001263" },
+      { "name": "Hypotonia", "code": "HP:0001252" }
+    ],
+    "pheno_specificity_for_mde": "CONSISTENT",
+    "testing": { "method": "Exome", "covers_all_genes_relevant_to_mde": "TRUE" },
+    "age_matched_penetrance": "LT_80",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "FALSE"
+  }
+}

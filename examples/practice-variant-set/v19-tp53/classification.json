@@ -1,0 +1,40 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA16603036", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA16603036." },
+      "label": "TP53 c.641A>T (p.His214Leu) — PVS-v19-TP53 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0018875", "label": "Li-Fraumeni syndrome" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 5.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v19-TP53-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 3000", "allelic_heterogeneity": 0.40, "genetic_heterogeneity": 1.00, "penetrance": 0.30, "gnomad": "absent", "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/region/17-7674870-7674910?dataset=gnomad_r4"], "description": "POP inputs from the tab; variant absent from gnomAD." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:FNC", "label": "Functional assay (FNC)", "version": "draft-2026-pre-release" },
+      "code": "FNC_+4",
+      "evidence": [ { "id": "PVS-v19-TP53-fnc-001", "type": "functional_assay", "data": { "assays": "yeast and human cell lines: non-functional transactivation and loss of growth suppression", "vcep": "TP53 VCEP combines the 3 LoF assay outputs → +4 functional points" }, "references": ["PMID:12826609", "PMID:30224644", "PMID:29979965"], "description": "Multiple assays show loss of transactivation and growth suppression → strong functional impact." } ],
+      "score": 4.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 4.0,
+      "description": "Functional assays (PFD, illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
+      "code": "MIS_+1",
+      "evidence": [ { "id": "PVS-v19-TP53-mis-001", "type": "same_residue_variant", "data": { "residue": "p.His214", "bayesdel": 0.32, "grantham_vbc": 99, "other_variant": "ClinVar:376615 (c.641A>G, p.His214Arg)", "other_variant_classification": "Pathogenic (TP53 VCEP)", "grantham_other": 29 }, "references": ["https://www.ncbi.nlm.nih.gov/clinvar/variation/376615/"], "description": "A different missense at the same residue (p.His214Arg) is Pathogenic (PM5-type); the VBC change is less conservative (Grantham 99 vs 29)." } ],
+      "score": 1.0, "strength_direction": "pathogenic_supporting", "score_classification": null, "contribution": 1.0,
+      "description": "Same-residue (PM5-type) evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v19-TP53 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v19: TP53'. Evidence-driven: strong functional data plus a same-residue Pathogenic comparator. The single proband is unaffected (family history only), so contributes no clinical points."
+}

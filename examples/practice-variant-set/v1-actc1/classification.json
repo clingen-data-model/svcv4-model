@@ -1,0 +1,47 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA2627662931", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA2627662931." },
+      "label": "ACTC1 c.488dup (p.His163GlnfsTer7) — PVS-v1-ACTC1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0005045", "label": "hypertrophic cardiomyopathy" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is NOT an established mechanism for ACTC1-related HCM." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 1.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v1-ACTC1-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 200", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 0.05, "penetrance": 0.40, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr15-34792535-G-GT?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+1",
+      "evidence": [ { "id": "PVS-v1-ACTC1-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "proband 1: clinical HCM; all HCM genes tested", "pop_frq_points": 0 }, "references": [], "description": "Proband 1 with HCM (all HCM genes tested)." } ],
+      "score": 1.0, "strength_direction": "pathogenic_supporting", "score_classification": null, "contribution": 1.0,
+      "description": "Affected proband (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_UAF", "label": "Clinical observation in unaffected individual(s) (CLN_UAF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_UAF_+0",
+      "evidence": [ { "id": "PVS-v1-ACTC1-uaf-001", "type": "clinical_observation", "data": { "affected": false, "context": "proband 2: currently unaffected, family history of DCM" }, "references": [], "description": "An unaffected carrier (proband 2)." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Unaffected carrier (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:LOC_PHE", "label": "Locus specificity — phenotype (LOC_PHE)", "version": "draft-2026-pre-release" },
+      "code": "LOC_PHE_+0",
+      "evidence": [ { "id": "PVS-v1-ACTC1-loc-001", "type": "locus_specificity", "data": { "gene_specificity_for_phenotypes": "~3% (ACTC1 accounts for <3% of HCM)", "all_genes_tested": true }, "references": [], "description": "ACTC1 is a minor HCM gene, so locus specificity for the phenotype is low." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Locus specificity for phenotype (illustrative)."
+    }
+  ],
+  "description": "PVS-v1-ACTC1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v1: ACTC1'. A multi-workflow example: an affected proband (CLN_AFF) plus an unaffected carrier (CLN_UAF) and low locus specificity (LOC_PHE); a third proband is an alternate cause (MYBPC3 LoF). LoF is not the ACTC1-HCM mechanism, so the frameshift does not count. VUS."
+}

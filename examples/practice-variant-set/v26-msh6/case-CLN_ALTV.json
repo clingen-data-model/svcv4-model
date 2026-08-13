@@ -1,0 +1,24 @@
+{
+  "vbc": {
+    "id": "CAID:CA007963",
+    "gene": { "symbol": "MSH6", "id": "HGNC:7329", "mde_associated_gene": "MSH6", "transcript": "NM_000179.3" }
+  },
+  "mde": { "curie": "MONDO:0005835", "label": "Lynch syndrome / hereditary non-polyposis colorectal cancer" },
+  "moi": "AD",
+  "case": {
+    "id": "PVS-v26-MSH6-case-1",
+    "pheno_severity": "MONO_EQ_EXPECTED",
+    "vbc_exists": "TRUE",
+    "vbc_zygosity": "HET",
+    "additional_variant_exists": "TRUE",
+    "additional_variants": [
+      {
+        "id": "CAID:MSH6-c.3202C>T-p.Arg1068Ter",
+        "zygosity": "HET",
+        "phase_in_ref_to_vbc": "TRANS",
+        "phase_confidence": "HIGH",
+        "classification": "P"
+      }
+    ]
+  }
+}

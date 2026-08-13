@@ -1,0 +1,149 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": {
+        "id": "CAID:CA015454",
+        "type": "Allele",
+        "_note": "Placeholder VRS Variation payload — will be typed as ga4gh.vrs.models.Variation in a follow-up PR. Source: ClinGen Allele ID CA015454."
+      },
+      "label": "MYH7 c.4909G>A (p.Ala1637Thr) — PVS-v5-MYH7 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": {
+      "curie": "MONDO:0005045",
+      "label": "hypertrophic cardiomyopathy"
+    },
+    "qualifiers": [
+      { "moi": "AD", "note": "Loss of function is NOT an established disease mechanism for this MDE." }
+    ]
+  },
+  "method": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release",
+    "description": "Placeholder reference to the baseline SVCv4 specification version in CSpec."
+  },
+  "final_score": 1.0,
+  "score_classification": "variant_of_uncertain_significance",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": {
+        "code": "svcv4:POP_FRQ",
+        "label": "Population allele frequency (POP_FRQ) — placeholder",
+        "version": "draft-2026-pre-release"
+      },
+      "code": "POP_FRQ_+0",
+      "evidence": [
+        {
+          "id": "PVS-v5-MYH7-pop-001",
+          "type": "population_frequency",
+          "data": {
+            "prevalence_estimate": "1 in 200",
+            "allelic_heterogeneity": 0.05,
+            "genetic_heterogeneity": 0.40,
+            "penetrance": 0.40,
+            "pop_frq_points": 0
+          },
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr14-23416048-C-T?dataset=gnomad_r4",
+            "https://www.cardiodb.org/allelefrequencyapp/"
+          ],
+          "description": "Placeholder: POP inputs from the tab. The raw POP_FRQ score (which the -3.0 affecteds/de-novo gate uses) and the DAF Threshold are not modeled yet; only the capped pop_frq_points is carried, and it feeds the CLN methods as an input datum."
+        }
+      ],
+      "score": 0.0,
+      "strength_direction": null,
+      "score_classification": null,
+      "contribution": 0.0,
+      "description": "Population frequency contributes no points for this VBC (illustrative)."
+    },
+    {
+      "method": {
+        "code": "svcv4:CLN_AFF",
+        "label": "Clinical observation in affected individual(s) (CLN_AFF) — placeholder",
+        "version": "draft-2026-pre-release"
+      },
+      "code": "CLN_AFF_+1",
+      "evidence": [
+        {
+          "id": "PVS-v5-MYH7-cln-001",
+          "type": "clinical_observation",
+          "data": {
+            "individuals_observed": 3,
+            "probands": [
+              { "phenotype": "hypertrophic cardiomyopathy", "pheno_specificity_for_mde": "SPECIFIC" },
+              { "phenotype": "unspecified cardiomyopathy", "pheno_specificity_for_mde": "CONSISTENT" },
+              { "phenotype": "dilated cardiomyopathy", "pheno_specificity_for_mde": "INCONSISTENT" }
+            ],
+            "pop_frq_points": 0
+          },
+          "references": [],
+          "description": "Placeholder: three probands from the tab. pop_frq_points is carried in as an input datum to the CLN_AFF method (per the deferred POP-scoring decision)."
+        }
+      ],
+      "score": 1.0,
+      "strength_direction": "pathogenic_supporting",
+      "score_classification": null,
+      "contribution": 1.0,
+      "description": "Affected-individual observations, weighted by phenotype specificity (illustrative)."
+    },
+    {
+      "method": {
+        "code": "svcv4:MIS",
+        "label": "Single-amino-acid change (MIS) — placeholder",
+        "version": "draft-2026-pre-release"
+      },
+      "code": "MIS_+0",
+      "evidence": [
+        {
+          "id": "PVS-v5-MYH7-mis-001",
+          "type": "computational_prediction",
+          "data": { "tool": "REVEL", "score": 0.577 },
+          "references": [],
+          "description": "Placeholder: REVEL 0.577 is intermediate; the threshold call is CSpec's."
+        },
+        {
+          "id": "PVS-v5-MYH7-mis-002",
+          "type": "same_residue_variant",
+          "data": {
+            "residue": "p.Ala1637",
+            "other_variant": "ClinVar:525029",
+            "other_variant_classification": "VUS"
+          },
+          "references": ["https://www.ncbi.nlm.nih.gov/clinvar/variation/525029/"],
+          "description": "Placeholder: another missense at the same codon, classified VUS. Classic PM5 needs a pathogenic comparator, so this likely carries little/no positive weight; captured as context."
+        }
+      ],
+      "score": 0.0,
+      "strength_direction": null,
+      "score_classification": null,
+      "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD/MIS): REVEL plus a same-residue comparator (illustrative, uninformative)."
+    },
+    {
+      "method": {
+        "code": "svcv4:SPL",
+        "label": "Splicing (SPL) — placeholder",
+        "version": "draft-2026-pre-release"
+      },
+      "code": "SPL_+0",
+      "evidence": [
+        {
+          "id": "PVS-v5-MYH7-spl-001",
+          "type": "computational_prediction",
+          "data": { "splice_impact": "none" },
+          "references": [],
+          "description": "Placeholder: no predicted splicing impact."
+        }
+      ],
+      "score": 0.0,
+      "strength_direction": null,
+      "score_classification": null,
+      "contribution": 0.0,
+      "description": "Splicing prediction (PFD/SPL): no predicted impact (illustrative)."
+    }
+  ],
+  "description": "PVS-v5-MYH7 rolled-up SVCv4 classification. Values are illustrative — scoring lives in CSpec. Source tab: Practice Variant Set 'v5: MYH7' (gid 1923098172). LOC_PHE is applicable (probands are counted) but not scored here: the tab lacks the gene-specificity and diagnostic-yield inputs the LOC_PHE method needs."
+}

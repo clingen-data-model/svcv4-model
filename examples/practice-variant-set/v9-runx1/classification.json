@@ -1,0 +1,47 @@
+{
+  "proposition": {
+    "subject": {
+      "variation": { "id": "CAID:CA658799413", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA658799413." },
+      "label": "RUNX1 c.1412_1413dup (p.Leu472AlafsTer123) — PVS-v9-RUNX1 VBC"
+    },
+    "predicate": "is_causal_for",
+    "object": { "curie": "MONDO:0011071", "label": "hereditary thrombocytopenia and hematologic cancer predisposition syndrome" },
+    "qualifiers": [ { "moi": "AD", "note": "Loss of function is an established disease mechanism." } ]
+  },
+  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
+  "final_score": 6.0,
+  "score_classification": "likely_pathogenic",
+  "strength_direction": null,
+  "contribution": null,
+  "evidence_lines": [
+    {
+      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
+      "code": "POP_FRQ_+0",
+      "evidence": [ { "id": "PVS-v9-RUNX1-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 40", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 0.10, "penetrance": 0.85, "gnomad": "absent", "pop_frq_points": 0 }, "references": [], "description": "POP inputs from the tab; variant absent from gnomAD." } ],
+      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "description": "Population frequency (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CLN_AFF", "label": "Clinical observation in affected individual(s) (CLN_AFF)", "version": "draft-2026-pre-release" },
+      "code": "CLN_AFF_+1",
+      "evidence": [ { "id": "PVS-v9-RUNX1-cln-001", "type": "clinical_observation", "data": { "individuals_observed": 1, "pheno_specificity_for_mde": "CONSISTENT", "phenotype": "thrombocytopenia and acute myeloid leukemia; all relevant genes tested", "pop_frq_points": 0 }, "references": [], "description": "Proband with thrombocytopenia + AML." } ],
+      "score": 1.0, "strength_direction": "pathogenic_supporting", "score_classification": null, "contribution": 1.0,
+      "description": "Affected proband (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:LOC_SEG", "label": "Locus specificity — segregation (LOC_SEG)", "version": "draft-2026-pre-release" },
+      "code": "LOC_SEG_+3",
+      "evidence": [ { "id": "PVS-v9-RUNX1-seg-001", "type": "segregation", "data": { "affected_relatives_segregating": 7, "phenotype": "FPD/AML" }, "references": [], "description": "Segregates with the FPD/AML phenotype in seven affected relatives." } ],
+      "score": 3.0, "strength_direction": "pathogenic_strong", "score_classification": null, "contribution": 3.0,
+      "description": "Co-segregation (illustrative)."
+    },
+    {
+      "method": { "code": "svcv4:CDS", "label": "RNA / coding alteration (CDS)", "version": "draft-2026-pre-release" },
+      "code": "CDS_+2",
+      "evidence": [ { "id": "PVS-v9-RUNX1-cds-001", "type": "structural", "data": { "consequence": "frameshift at Leu472 (exon 9/9); NMD NOT predicted (past the c.917 boundary)", "domain": "alters aa 472-480 including the VWRPY motif — a critical functional domain", "elongation": "new stop >100 codons past the native stop (481)" }, "references": [], "description": "Frameshift escaping NMD that removes/alters the critical VWRPY motif." } ],
+      "score": 2.0, "strength_direction": "pathogenic_moderate", "score_classification": null, "contribution": 2.0,
+      "description": "Coding-alteration / critical-domain evidence (PFD, illustrative)."
+    }
+  ],
+  "description": "PVS-v9-RUNX1 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v9: RUNX1'. Strong co-segregation (7 affected relatives) plus a frameshift altering the critical VWRPY motif."
+}
