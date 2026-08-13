@@ -1,4 +1,5 @@
-"""SVCv4 Case model — the case-level clinical-observation and locus-specificity (CLN/LOC) evidence payload.
+"""SVCv4 Case model — the case-level clinical-observation and
+locus-specificity (CLN/LOC) evidence payload.
 
 A ``Case`` is the structured payload behind a ``clinical_observation``
 Evidence Item: the superset of all attributes a curator captures from the
@@ -6,7 +7,7 @@ literature to represent a single human clinical observation supporting (or
 opposing) variant pathogenicity.
 
 The model is intentionally **permissive** — every field is optional. Which
-fields are required / optional / conditional / not-applicable per CLN
+fields are required / optional / conditional / not-applicable per CLN/LOC
 workflow is expressed by the declarative applicability matrix
 (``schemas/applicability/case_applicability.yaml``), NOT by this type. See
 ``docs/superpowers/specs/2026-06-11-case-model-design.md``.
