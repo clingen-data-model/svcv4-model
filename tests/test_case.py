@@ -16,6 +16,7 @@ from svcv4_model.case import (
     CaseTesting,
     CompoundHetVariant,
     Gene,
+    GeneDiseaseValidity,
     Mde,
     Phase,
     PhenoSeverity,
@@ -151,7 +152,18 @@ def _maximal_params() -> WorkflowParameters:
         mde=Mde(curie="MONDO:0007254", label="Stargardt disease"),
         moi=MOI.AR,
         pop_frq_points=-1.0,
+        gene_disease_validity=GeneDiseaseValidity.MODERATE,
     )
+
+
+def test_gene_disease_validity_accepts_all_values() -> None:
+    for level in GeneDiseaseValidity:
+        params = WorkflowParameters(gene_disease_validity=level)
+        assert params.gene_disease_validity is level
+    # NOT_CLASSIFIED is a real, distinct state (looked, none exists)…
+    assert GeneDiseaseValidity.NOT_CLASSIFIED.value == "NOT_CLASSIFIED"
+    # …and is distinct from the field being absent (not captured).
+    assert WorkflowParameters().gene_disease_validity is None
 
 
 def test_workflow_parameters_round_trip() -> None:
