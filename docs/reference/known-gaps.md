@@ -15,8 +15,6 @@ roadmap with dates.
 | Gap | Area | Notes |
 |---|---|---|
 | `CLN_CCS` has no `Workflow` entry or fields | Case model (CLN) | SVCv4 gives scoring guidance for it ([Supplementary Material 4](https://docs.google.com/document/d/17XnPmgTpzgQ8hfzOZNCcXIBwnNwbVkP0KIv3Dw5Bz_M/edit)) but not decomposed evidence concepts the way it has for `CLN_AFF`/`CLN_DNV`/`CLN_ALT`/`CLN_UAF` — blocked on a future SVCv4 version defining those, not simply unstarted. See [Clinical Observations (CLN)](../workflows/hod/cln/index.md). |
-| gnomAD co-occurrence-likelihood bucket | Case model (`CLN_AFF`, biallelic) | Used to select the correct scoring-table row for biallelic `CLN_AFF` per [Supplementary Material 4](https://docs.google.com/document/d/17XnPmgTpzgQ8hfzOZNCcXIBwnNwbVkP0KIv3Dw5Bz_M/edit); not yet a field on `CompoundHetVariant` or elsewhere on `Case`. |
-| "Non-genetic etiology excluded" flag | Case model (`CLN_AFF`) | A sibling condition to the existing `testing.covers_all_genes_relevant_to_mde` — both are AND-conditions in the SVCv4 flow diagram, but only one is modeled. |
 | Rule enforcement (`validate_case`) | Case model | Applicability-matrix rules are stored/documented, not enforced at validation time. Deferred since the Case model's initial design (PR #17). |
 | Case aggregation & counting | Case model | Aggregating/counting multiple proband observations within a workflow. Deferred since PR #17. |
 | SVCv4 point-mapping | Case model / Statement | Mapping aggregated case evidence to the SVCv4 point system, one workflow at a time. Deferred since PR #17. |
