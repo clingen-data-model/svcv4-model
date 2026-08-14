@@ -1,0 +1,192 @@
+{
+  "$defs": {
+    "DaftCalculatorInputs": {
+      "additionalProperties": false,
+      "description": "The four quantitative inputs to the DAFT calculator method (SM 3).\n\nThe fifth calculator input, inheritance pattern, is the shared\n``WorkflowParameters.moi`` and is not re-captured here.",
+      "properties": {
+        "allelic_heterogeneity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fraction of disease alleles this variant could represent (0-1).",
+          "title": "Allelic Heterogeneity"
+        },
+        "locus_heterogeneity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fraction of cases attributable to this locus (0-1).",
+          "title": "Locus Heterogeneity"
+        },
+        "penetrance": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Expected penetrance (0-1); use the lowest reasonable estimate.",
+          "title": "Penetrance"
+        },
+        "prevalence_denominator": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "X in a phenotype prevalence of '1 in X'; use the smallest reasonable X.",
+          "title": "Prevalence Denominator"
+        }
+      },
+      "title": "DaftCalculatorInputs",
+      "type": "object"
+    },
+    "DaftMethod": {
+      "description": "How the Disease Allele Frequency Threshold was derived (SM 3).\n\n``VCEP_CURATED`` is the preferred source (an expert-consensus threshold);\nthe other three are derivation methods when no curated threshold exists.",
+      "enum": [
+        "VCEP_CURATED",
+        "CALCULATOR",
+        "BINNING",
+        "PATHOGENIC_VARIANTS"
+      ],
+      "title": "DaftMethod",
+      "type": "string"
+    },
+    "TriState": {
+      "description": "Tri-state truth value.\n\n``TRUE``/``FALSE`` \u2014 the curator established the value. ``UNKNOWN`` \u2014\nthe curator looked and could not determine it. A ``null`` field (absent)\nmeans the value was **not captured at all**; ``UNKNOWN`` and ``null`` are\nsemantically distinct.",
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN"
+      ],
+      "title": "TriState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Population-database frequency evidence for the VBC (POP_FRQ + POP_HMZ).\n\nPermissive superset: every field is optional. The payload behind a\n``population_frequency`` Evidence Item; a curation-level counterpart to the\nVA-Spec Cohort Allele Frequency Study Result.",
+  "properties": {
+    "daft": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Disease Allele Frequency Threshold: the MDE-specific ceiling the FAF is compared against.",
+      "title": "Daft"
+    },
+    "daft_calculator_inputs": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DaftCalculatorInputs"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The calculator method's inputs, when daft_method is CALCULATOR (optional, for reproducibility)."
+    },
+    "daft_method": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DaftMethod"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "How the DAFT was obtained/derived (see DaftMethod)."
+    },
+    "faf": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Filtering Allele Frequency (population-max, lower-95%-CI-bound AF), e.g. from gnomAD.",
+      "title": "Faf"
+    },
+    "faf_source": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Source/version of the FAF, e.g. 'gnomAD v4.1.1'.",
+      "title": "Faf Source"
+    },
+    "hemizygote_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Number of hemizygous occurrences (X-linked) of the VBC.",
+      "title": "Hemizygote Count"
+    },
+    "hmz_eligible": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the MDE's penetrance + severity make affected individuals implausible in the population database, so occurrences count as benignity evidence (SM 3, Table 7)."
+    },
+    "homozygote_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Number of homozygous occurrences of the VBC in the population database.",
+      "title": "Homozygote Count"
+    }
+  },
+  "title": "PopulationEvidence",
+  "type": "object"
+}

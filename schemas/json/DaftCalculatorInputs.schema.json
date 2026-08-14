@@ -1,0 +1,60 @@
+{
+  "additionalProperties": false,
+  "description": "The four quantitative inputs to the DAFT calculator method (SM 3).\n\nThe fifth calculator input, inheritance pattern, is the shared\n``WorkflowParameters.moi`` and is not re-captured here.",
+  "properties": {
+    "allelic_heterogeneity": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fraction of disease alleles this variant could represent (0-1).",
+      "title": "Allelic Heterogeneity"
+    },
+    "locus_heterogeneity": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fraction of cases attributable to this locus (0-1).",
+      "title": "Locus Heterogeneity"
+    },
+    "penetrance": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Expected penetrance (0-1); use the lowest reasonable estimate.",
+      "title": "Penetrance"
+    },
+    "prevalence_denominator": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "X in a phenotype prevalence of '1 in X'; use the smallest reasonable X.",
+      "title": "Prevalence Denominator"
+    }
+  },
+  "title": "DaftCalculatorInputs",
+  "type": "object"
+}
