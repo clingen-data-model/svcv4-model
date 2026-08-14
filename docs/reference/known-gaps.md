@@ -14,7 +14,7 @@ roadmap with dates.
 
 | Gap | Area | Notes |
 |---|---|---|
-| `CLN_CCS` has no `Workflow` entry or fields | Case model (CLN) | SVCv4 gives scoring guidance for it ([Supplementary Material 4](https://docs.google.com/document/d/17XnPmgTpzgQ8hfzOZNCcXIBwnNwbVkP0KIv3Dw5Bz_M/edit)) but not decomposed evidence concepts the way it has for `CLN_AFF`/`CLN_DNV`/`CLN_ALT`/`CLN_UAF` — blocked on a future SVCv4 version defining those, not simply unstarted. See [Clinical Observations (CLN)](../workflows/hod/cln/index.md). |
+| `CLN_CCS` (case-control studies) not modeled | Case model (CLN) | SVCv4 defines a usable case-control process ([Supplementary Material 4](https://docs.google.com/document/d/17XnPmgTpzgQ8hfzOZNCcXIBwnNwbVkP0KIv3Dw5Bz_M/edit)): an odds ratio + confidence interval (`OR > 5.0` → `CLN_CCS_+4.0`; CI including 1.0 → no points; OR ≤ 1.0 → benignity), with an exclusivity rule making other CLN codes NA except `CLN_DNV`. Modelable as a capture-only case-control study result (OR, CI, case/control cohort sizes, variant counts); not yet built. Only *finer* guidance is deferred to future SVCv4 iterations. See [Clinical Observations (CLN)](../workflows/hod/cln/index.md). |
 | Rule enforcement (`validate_case`) | Case model | Applicability-matrix rules are stored/documented, not enforced at validation time. Deferred since the Case model's initial design (PR #17). |
 | Case aggregation & counting | Case model | Aggregating/counting multiple proband observations within a workflow. Deferred since PR #17. |
 | SVCv4 point-mapping | Case model / Statement | Mapping aggregated case evidence to the SVCv4 point system, one workflow at a time. Deferred since PR #17. |
