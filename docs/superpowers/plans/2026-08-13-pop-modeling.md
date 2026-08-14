@@ -208,7 +208,7 @@ Pure docs. Verification is `mkdocs build --strict` + targeted greps. External SM
 **Files:**
 - Modify: `docs/reference/spec-alignment.md`
 
-- [ ] **Step 1:** Change the SM 3 row's Model-coverage cell from "Not yet modeled …" to: "**Modeled** (inputs) — `PopulationEvidence` captures FAF/DAFT/method + homozygote occurrences; scoring documented, not computed. See [Population (POP)](../workflows/hod/pop.md)." Keep the existing SM 3 Google Doc link on the title.
+- [ ] **Step 1:** Change the SM 3 row's Model-coverage cell from "Not yet modeled …" to: "**Modeled** (inputs) — `PopulationEvidence` captures FAF/DAFT/method + homozygote occurrences; scoring documented, not computed. See `[Population (POP)](../workflows/hod/pop.md)`." Keep the existing SM 3 Google Doc link on the title.
 
 - [ ] **Step 2: Verify.** SM 3 row now says "Modeled"; row count unchanged.
 
@@ -221,7 +221,7 @@ applicability-matrix entries (it isn't a Case workflow — spec §3.4).
 **Files:**
 - Modify: `docs/getting-started/capturing-basic-evidence.md`
 
-- [ ] **Step 1: Revise the "What this project models today" opening (lines 53–60).** Replace the "is **not yet modeled** in this repo. Population (POP) is a genuine stub… both documented there as forward-looking concepts only." passage. New framing: the raw evidence above (FAF as a first-class value, DAFT + method, homozygote/hemizygote occurrences) **is now captured** by `PopulationEvidence` (see [Population (POP)](../workflows/hod/pop.md) and [Core concepts](../reference/concepts.md)). Preserve the accurate distinction: POP still has **no `Workflow` enum entry and no applicability-matrix entries** (unlike the CLN/LOC workflows), because it is a standalone Evidence Item payload rather than a Case workflow; and scoring is documented, not computed.
+- [ ] **Step 1: Revise the "What this project models today" opening (lines 53–60).** Replace the "is **not yet modeled** in this repo. Population (POP) is a genuine stub… both documented there as forward-looking concepts only." passage. New framing: the raw evidence above (FAF as a first-class value, DAFT + method, homozygote/hemizygote occurrences) **is now captured** by `PopulationEvidence` (see `[Population (POP)](../workflows/hod/pop.md)` and `[Core concepts](../reference/concepts.md)`). Preserve the accurate distinction: POP still has **no `Workflow` enum entry and no applicability-matrix entries** (unlike the CLN/LOC workflows), because it is a standalone Evidence Item payload rather than a Case workflow; and scoring is documented, not computed.
 
 - [ ] **Step 2: Update the result paragraph (lines 62–69).** Keep it (the `pop_frq_points` result on `WorkflowParameters` is unchanged), but adjust any wording implying the raw evidence *isn't* modeled — e.g. change "without yet modeling the evaluation itself" to note the model now carries the **evidence inputs** (`PopulationEvidence`) *and* the scored `pop_frq_points` result, while the point **computation** between them remains out of scope.
 

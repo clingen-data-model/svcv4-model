@@ -50,14 +50,17 @@ scoring math itself.
 
 ## What this project models today
 
-Here's the honest state of things: `POP_FRQ` itself — the raw evidence capture
-described above (FAF as a first-class value, DAFT, the comparison between
-them) — is **not yet modeled** in this repo. Population (POP) is a genuine
-stub: there's no `Workflow` enum entry for it and no applicability-matrix
-entries, unlike the CLN and LOC workflows this model already covers in detail.
-See [Population (POP)](../workflows/hod/pop.md) for that stub page, and
-[Core concepts](../reference/concepts.md) for Cohort Allele Frequency and DAFT,
-both documented there as forward-looking concepts only.
+Here's the honest state of things: the raw evidence capture described above —
+FAF as a first-class value, DAFT and how it was derived, and the
+homozygote/hemizygote occurrences behind `POP_HMZ` — **is now modeled**, as
+[`PopulationEvidence`](../workflows/hod/pop.md). What the model does *not* do is
+compute the points: the FAF-vs-DAFT fold-change scoring is documented, not
+calculated here. And note POP is still not a *Case workflow* — it has no
+`Workflow` enum entry and no applicability-matrix entries (unlike the CLN and
+LOC workflows), because it's a standalone Evidence Item payload rather than a
+Case. See [Population (POP)](../workflows/hod/pop.md) for the fields and scoring
+tables, and [Core concepts](../reference/concepts.md) for Cohort Allele
+Frequency and DAFT.
 
 What the model *does* carry today is the **result** of a `POP_FRQ` assessment:
 a single float field, `pop_frq_points`, on `WorkflowParameters`. It's supplied
@@ -65,8 +68,10 @@ alongside a `Case`, not computed by anything in this model, and it's required
 input to `CLN_AFF`, `CLN_DNV`, `LOC_PHE`, and `LOC_SEG` (it's marked not
 applicable to `CLN_ALTV`, `CLN_ALTG`, and `CLN_UAF` in the current
 applicability matrix — see [Case model & applicability](../workflows/case-model.md)).
-In other words: this model consumes the *outcome* of a `POP_FRQ` evaluation
-everywhere it's needed, without yet modeling the evaluation itself.
+In other words: this model now carries **both** the evidence inputs behind a
+`POP_FRQ` evaluation (`PopulationEvidence`) and the scored `pop_frq_points`
+result it feeds into — while the point *computation* between them remains out of
+scope.
 
 ## What happens next
 
@@ -82,10 +87,9 @@ the way to a Statement.
 
 ## See also
 
-- [Population (POP)](../workflows/hod/pop.md) — the stub page for the wider
-  Population Evidence Concept.
-- [Core concepts](../reference/concepts.md) — Cohort Allele Frequency and DAFT,
-  documented as forward-looking-only.
+- [Population (POP)](../workflows/hod/pop.md) — the Population Evidence Concept,
+  now modeled (`PopulationEvidence`), with the scoring tables.
+- [Core concepts](../reference/concepts.md) — Cohort Allele Frequency and DAFT.
 - [Capture your first case](first-case.md) — a full worked example that uses
   `pop_frq_points` as one of its inputs.
 - [Evidence Lines & Evidence Items](evidence-lines-and-items.md) — what happens

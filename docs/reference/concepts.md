@@ -192,58 +192,51 @@ VBC/variant status (`vbc_exists`, `vbc_zygosity`, `compound_het_variant`,
 
 ## Cohort Allele Frequency
 
-!!! note "Not yet modeled here"
-
-    Cohort Allele Frequency is **not yet covered by this data model** — it is
-    described here only as a forward-looking concept. Population (POP) is a
-    genuine stub today (see [Population (POP)](../workflows/hod/pop.md)).
-
 **What it is.** Population-database allele-frequency data (gnomAD-style) for
-the VBC, expressed as a first-class VA-Spec entity: the [Cohort Allele
-Frequency Study
+the VBC, expressed by the VA-Spec [Cohort Allele Frequency Study
 Result](https://va-spec.ga4gh.org/en/1.0/va-standard-profiles/base-profiles/study-result-profiles.html#cohort-allele-frequency-study-result)
 profile, one of VA-Spec's base Study Result Profiles.
 
-**Why it matters (for when it's modeled).** VA-Spec is this repo's primary
-dependency, so when `POP_FRQ`/`POP_HMZ` are eventually built, the Cohort
-Allele Frequency Study Result is the natural, already-standardized shape to
-adopt for representing "how frequent is this variant in population
-database X" as structured input, rather than inventing a bespoke frequency
-representation.
+**Why it matters.** It is *what was observed* for the VBC in a population
+database — the raw evidence that `POP_FRQ` weighs against the DAFT (below). In
+SVCv4 the specific statistic compared is the **Filtering Allele Frequency
+(FAF)**: the population-max, lower-95%-CI-bound allele frequency, a derived
+value rather than the raw cohort frequency.
 
-**Which workflows would use it.** `POP_FRQ` (population/allele frequency) and
+**Which workflows use it.** `POP_FRQ` (population/allele frequency) and
 `POP_HMZ` (population observations of homozygotes/hemizygotes) — see
 [Population (POP)](../workflows/hod/pop.md).
 
-**Current representation.** None. No field in this model represents Cohort
-Allele Frequency today.
+**Current representation.** `PopulationEvidence.faf` / `faf_source` (and the
+homozygote/hemizygote occurrence fields for `POP_HMZ`) — a **curation-level
+counterpart** to the formal VA-Spec Cohort Allele Frequency Study Result, the
+two reconciled in a later phase. Inputs are captured; scoring is documented on
+[Population (POP)](../workflows/hod/pop.md), not computed.
 
 ## Disease Allele Frequency Threshold (DAFT)
 
-!!! note "Not yet modeled here"
-
-    DAFT is **not yet covered by this data model** — it is described here only
-    as a forward-looking concept, from the SVCv4 Standards' Population
-    Database Frequency material ([Supplementary Material 3](https://docs.google.com/document/d/1XON2eq4HSM-guWlqitEnb8PghY0quNbA7_1WmmxvLj8/edit);
-    see [Spec coverage](../reference/spec-alignment.md)).
-
 **What it is.** The calculated ceiling on how frequent a *pathogenic* variant
-for a given MDE is expected to be in the population — a threshold against
-which an observed variant's population frequency is compared. SVCv4 defines
-three methods for deriving it: a calculator method, a binning method, and a
+for a given MDE is expected to be in the population — the threshold the FAF is
+compared against. A VCEP/community-curated threshold is preferred; otherwise the
+SVCv4 Standards' Population Database Frequency material ([Supplementary
+Material 3](https://docs.google.com/document/d/1XON2eq4HSM-guWlqitEnb8PghY0quNbA7_1WmmxvLj8/edit))
+defines three derivation methods: a calculator method, a binning method, and a
 pathogenic-variants method.
 
-**Why it matters (for when it's modeled).** DAFT is distinct from, but always
-compared against, Cohort Allele Frequency above: Cohort Allele Frequency is
-*what was observed* for the VBC in a population database; DAFT is *the MDE-
-specific ceiling* that observed frequency is judged against to help drive the
-`POP_FRQ` evaluation.
+**Why it matters.** DAFT is distinct from, but always compared against, Cohort
+Allele Frequency above: Cohort Allele Frequency is *what was observed* for the
+VBC; DAFT is *the MDE-specific ceiling* that observed frequency is judged
+against to drive the `POP_FRQ` evaluation.
 
-**Which workflows would use it.** `POP_FRQ` — see
+**Which workflows use it.** `POP_FRQ` — see
 [Population (POP)](../workflows/hod/pop.md).
 
-**Current representation.** None. No field in this model represents DAFT
-today.
+**Current representation.** `PopulationEvidence.daft`, `daft_method`
+(`VCEP_CURATED` / `CALCULATOR` / `BINNING` / `PATHOGENIC_VARIANTS`), and the
+optional `daft_calculator_inputs` (prevalence, penetrance, locus/allelic
+heterogeneity). The fold-change scoring against the FAF is documented on
+[Population (POP)](../workflows/hod/pop.md), not computed. The binning lookup
+grids and pathogenic-variants list are not modeled structurally this phase.
 
 ## Gene-Disease Validity
 
