@@ -47,6 +47,31 @@ class MOI(StrEnum):
     SD = "SD"
 
 
+class GeneDiseaseValidity(StrEnum):
+    """ClinGen gene-disease validity classification for the gene↔MDE pair.
+
+    A classification-level *precondition*, not a per-workflow evidence input:
+    it gates which final classification tiers are reachable (Limited blocks
+    P/LP; Disputed/Refuted block reporting) and, per SVCv4 Supplementary
+    Material 18, whether the molecular-mechanism multiplier may be applied at
+    all (usable only at MODERATE or higher; LIMITED or below is treated as an
+    'Uncertain' mechanism and zeroed). Gating is documented, not enforced this
+    phase.
+
+    ``NOT_CLASSIFIED`` means ClinGen has no gene-disease validity classification
+    for this gene↔MDE pair — distinct from the field being absent (``None``),
+    which means the value was not captured at all.
+    """
+
+    DEFINITIVE = "DEFINITIVE"
+    STRONG = "STRONG"
+    MODERATE = "MODERATE"
+    LIMITED = "LIMITED"
+    DISPUTED = "DISPUTED"
+    REFUTED = "REFUTED"
+    NOT_CLASSIFIED = "NOT_CLASSIFIED"
+
+
 class Sex(StrEnum):
     """Proband sex: Male / Female / Unknown / Trans."""
 
@@ -394,4 +419,12 @@ class WorkflowParameters(BaseModel):
     moi: MOI | None = Field(default=None, description="Mode of inheritance.")
     pop_frq_points: float | None = Field(
         default=None, ge=-1.0, description="Population-frequency points (must be >= -1.0)."
+    )
+    gene_disease_validity: GeneDiseaseValidity | None = Field(
+        default=None,
+        description=(
+            "ClinGen gene-disease validity for the gene↔MDE pair — a "
+            "classification-level precondition (see the enum docstring). "
+            "Captured here; gating is documented, not enforced this phase."
+        ),
     )

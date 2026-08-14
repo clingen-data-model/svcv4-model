@@ -60,6 +60,20 @@
       "title": "Gene",
       "type": "object"
     },
+    "GeneDiseaseValidity": {
+      "description": "ClinGen gene-disease validity classification for the gene\u2194MDE pair.\n\nA classification-level *precondition*, not a per-workflow evidence input:\nit gates which final classification tiers are reachable (Limited blocks\nP/LP; Disputed/Refuted block reporting) and, per SVCv4 Supplementary\nMaterial 18, whether the molecular-mechanism multiplier may be applied at\nall (usable only at MODERATE or higher; LIMITED or below is treated as an\n'Uncertain' mechanism and zeroed). Gating is documented, not enforced this\nphase.\n\n``NOT_CLASSIFIED`` means ClinGen has no gene-disease validity classification\nfor this gene\u2194MDE pair \u2014 distinct from the field being absent (``None``),\nwhich means the value was not captured at all.",
+      "enum": [
+        "DEFINITIVE",
+        "STRONG",
+        "MODERATE",
+        "LIMITED",
+        "DISPUTED",
+        "REFUTED",
+        "NOT_CLASSIFIED"
+      ],
+      "title": "GeneDiseaseValidity",
+      "type": "string"
+    },
     "MOI": {
       "description": "Mode of inheritance. ALTV does not yet support AR/XLR.",
       "enum": [
@@ -143,6 +157,18 @@
   "additionalProperties": false,
   "description": "Parameters required by the workflows but not part of the Case data\nstructure. These feed the (forthcoming) workflow matrix that determines\napplicability and scoring; they are captured alongside a Case, not within it.",
   "properties": {
+    "gene_disease_validity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/GeneDiseaseValidity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "ClinGen gene-disease validity for the gene\u2194MDE pair \u2014 a classification-level precondition (see the enum docstring). Captured here; gating is documented, not enforced this phase."
+    },
     "mde": {
       "anyOf": [
         {

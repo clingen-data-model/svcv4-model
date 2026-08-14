@@ -16,3 +16,7 @@ site/
 
 # Local source material (decks, raw graphics) — not published
 tmp/
+
+# Ingested draft SVCv4 Supplementary Materials (verbatim WG drafts) — not published,
+# kept locally as working source material. See docs/reference/spec-alignment.md for coverage.
+source-material/

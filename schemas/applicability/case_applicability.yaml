@@ -66,6 +66,12 @@ pop_frq_points:
   applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: r, LOC_SEG: r }
   notes: "must be >= -1.0"
 
+gene_disease_validity:
+  model: workflow_parameters
+  applicability: { CLN_AFF: o, CLN_DNV: o, CLN_ALTV: o, CLN_ALTG: o, CLN_UAF: o, LOC_PHE: o, LOC_SEG: o }
+  value: "DEFINITIVE, STRONG, MODERATE, LIMITED, DISPUTED, REFUTED, NOT_CLASSIFIED"
+  notes: "ClinGen gene-disease validity for the gene<->MDE pair; a classification-level precondition (gates final tier-reachability and the future SM18 mechanism multiplier), not a per-workflow field driver like moi"
+
 id:
   applicability: { CLN_AFF: r, CLN_DNV: r, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: r, LOC_PHE: r, LOC_SEG: r }
   notes: "match individuals across workflows (DNV/AFF, PHE/AFF, ALT/AFF, UAF standalone)"
