@@ -72,6 +72,22 @@ class GeneDiseaseValidity(StrEnum):
     NOT_CLASSIFIED = "NOT_CLASSIFIED"
 
 
+class CoOccurrenceLikelihood(StrEnum):
+    """gnomAD co-occurrence likelihood that the VBC and the in-trans variant are
+    two independent rare heterozygous variants, used to place a biallelic
+    ``CLN_AFF`` proband in the correct scoring-table row (SVCv4 Supplementary
+    Material 4). Computed as (in-trans + unphased counts) / gnomAD v2 exome
+    total; SM 4 buckets it as <0.0001 or >0.0001-0.01.
+
+    ``NOT_ASSESSED`` means the analyst did not/could not compute it — distinct
+    from the field being absent (``None``), which means it was not captured.
+    """
+
+    LT_0_0001 = "LT_0_0001"
+    BETWEEN_0_0001_0_01 = "BETWEEN_0_0001_0_01"
+    NOT_ASSESSED = "NOT_ASSESSED"
+
+
 class Sex(StrEnum):
     """Proband sex: Male / Female / Unknown / Trans."""
 
@@ -219,6 +235,14 @@ class CaseTesting(BaseModel):
         default=None,
         description="Whether the test covered all genes relevant to the MDE.",
     )
+    non_genetic_etiology_excluded: TriState | None = Field(
+        default=None,
+        description=(
+            "Whether a non-genetic etiology for the proband's phenotype has "
+            "been excluded — a CLN_AFF refinement factor (SM 4), sibling to "
+            "covers_all_genes_relevant_to_mde."
+        ),
+    )
 
 
 class CaseRelative(BaseModel):
@@ -319,6 +343,14 @@ class CompoundHetVariant(BaseModel):
     )
     classification: str | None = Field(
         default=None, description="Variant classification (placeholder string this phase)."
+    )
+    co_occurrence_likelihood: CoOccurrenceLikelihood | None = Field(
+        default=None,
+        description=(
+            "gnomAD co-occurrence likelihood bucket for the VBC + in-trans "
+            "variant pairing (biallelic CLN_AFF, SM 4 Table 2). Captured; "
+            "row-selection/scoring is documented, not computed."
+        ),
     )
 
 

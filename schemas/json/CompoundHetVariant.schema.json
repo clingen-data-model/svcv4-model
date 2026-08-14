@@ -1,5 +1,15 @@
 {
   "$defs": {
+    "CoOccurrenceLikelihood": {
+      "description": "gnomAD co-occurrence likelihood that the VBC and the in-trans variant are\ntwo independent rare heterozygous variants, used to place a biallelic\n``CLN_AFF`` proband in the correct scoring-table row (SVCv4 Supplementary\nMaterial 4). Computed as (in-trans + unphased counts) / gnomAD v2 exome\ntotal; SM 4 buckets it as <0.0001 or >0.0001-0.01.\n\n``NOT_ASSESSED`` means the analyst did not/could not compute it \u2014 distinct\nfrom the field being absent (``None``), which means it was not captured.",
+      "enum": [
+        "LT_0_0001",
+        "BETWEEN_0_0001_0_01",
+        "NOT_ASSESSED"
+      ],
+      "title": "CoOccurrenceLikelihood",
+      "type": "string"
+    },
     "PhaseConfidence": {
       "description": "Confidence in a phase determination.",
       "enum": [
@@ -26,6 +36,18 @@
       "default": null,
       "description": "Variant classification (placeholder string this phase).",
       "title": "Classification"
+    },
+    "co_occurrence_likelihood": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CoOccurrenceLikelihood"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "gnomAD co-occurrence likelihood bucket for the VBC + in-trans variant pairing (biallelic CLN_AFF, SM 4 Table 2). Captured; row-selection/scoring is documented, not computed."
     },
     "id": {
       "anyOf": [

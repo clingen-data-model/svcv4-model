@@ -51,6 +51,18 @@
       "default": null,
       "description": "Test method(s), e.g. Sanger, Exome, Genome, Cyto; CSV allowed for multiple.",
       "title": "Method"
+    },
+    "non_genetic_etiology_excluded": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TriState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether a non-genetic etiology for the proband's phenotype has been excluded \u2014 a CLN_AFF refinement factor (SM 4), sibling to covers_all_genes_relevant_to_mde."
     }
   },
   "title": "CaseTesting",

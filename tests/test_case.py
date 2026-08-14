@@ -15,6 +15,7 @@ from svcv4_model.case import (
     CaseRelative,
     CaseTesting,
     CompoundHetVariant,
+    CoOccurrenceLikelihood,
     Gene,
     GeneDiseaseValidity,
     Mde,
@@ -70,6 +71,7 @@ def _maximal_case() -> Case:
             method="Exome",
             diagnostic_yield_for_phenotypes="100%",
             covers_all_genes_relevant_to_mde=TriState.TRUE,
+            non_genetic_etiology_excluded=TriState.TRUE,
         ),
         pheno_severity=PhenoSeverity.MONO_EQ_EXPECTED,
         age_matched_penetrance=AgeMatchedPenetrance.NEAR_100,
@@ -80,6 +82,7 @@ def _maximal_case() -> Case:
             id="clinvar:VCV000000002",
             phase_confidence="HIGH",
             classification="P",
+            co_occurrence_likelihood=CoOccurrenceLikelihood.LT_0_0001,
         ),
         additional_variant_exists=TriState.TRUE,
         additional_variants=[
@@ -108,6 +111,22 @@ def _maximal_case() -> Case:
             )
         ],
     )
+
+
+def test_co_occurrence_likelihood_accepts_all_values() -> None:
+    for level in CoOccurrenceLikelihood:
+        chv = CompoundHetVariant(co_occurrence_likelihood=level)
+        assert chv.co_occurrence_likelihood is level
+    # NOT_ASSESSED (looked, didn't compute) is distinct from absent (not captured)
+    assert CoOccurrenceLikelihood.NOT_ASSESSED.value == "NOT_ASSESSED"
+    assert CompoundHetVariant().co_occurrence_likelihood is None
+
+
+def test_non_genetic_etiology_excluded_accepts_tristate() -> None:
+    for state in TriState:
+        testing = CaseTesting(non_genetic_etiology_excluded=state)
+        assert testing.non_genetic_etiology_excluded is state
+    assert CaseTesting().non_genetic_etiology_excluded is None
 
 
 def test_case_round_trips_json() -> None:
