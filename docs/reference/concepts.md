@@ -42,8 +42,9 @@ inheritance, different mechanisms, or both (for example, one gene causing a
 dominant, gain-of-function disorder and a separate, recessive, loss-of-function
 disorder). Because of this, a classification is always made with respect to
 one specific MDE — never "the gene" in general. This design constraint traces
-back to the SVCv4 Standards' Multiple Disorders Guidance (Supplementary
-Material 21); see the corresponding row on the
+back to the SVCv4 Standards' Multiple Disorders Guidance ([Supplementary
+Material 21](https://docs.google.com/document/d/1_qkcglOow-l6hLKNH2QipxAJDOn3XZEmoC8Koq9EB6o/edit));
+see the corresponding row on the
 [Spec coverage](../reference/spec-alignment.md) page.
 
 **Which workflows use it.** All of them — like VBC, MDE is a
@@ -223,8 +224,8 @@ Allele Frequency today.
 
     DAFT is **not yet covered by this data model** — it is described here only
     as a forward-looking concept, from the SVCv4 Standards' Population
-    Database Frequency material (Supplementary Material 3; see
-    [Spec coverage](../reference/spec-alignment.md)).
+    Database Frequency material ([Supplementary Material 3](https://docs.google.com/document/d/1XON2eq4HSM-guWlqitEnb8PghY0quNbA7_1WmmxvLj8/edit);
+    see [Spec coverage](../reference/spec-alignment.md)).
 
 **What it is.** The calculated ceiling on how frequent a *pathogenic* variant
 for a given MDE is expected to be in the population — a threshold against
@@ -246,31 +247,56 @@ today.
 
 ## Gene-Disease Validity
 
-!!! note "Not yet modeled here"
-
-    Gene-Disease Validity is a genuine **model gap**, not just a docs gap — no
-    field anywhere in this model represents this precondition today, and no
-    workflow page currently discusses it either.
-
 **What it is.** The ClinGen Gene-Disease Validity classification for the
 gene↔MDE pair under evaluation: `Definitive`, `Strong`, `Moderate`,
 `Limited`, `Disputed`, or `Refuted`.
 
-**Why it matters (for when it's modeled).** Gene-Disease Validity is a
-*precondition* that gates which classification tiers are reachable at all,
-independent of how much variant-level evidence is accumulated. For example: a
-`Limited` validity classification blocks a `Pathogenic`/`Likely Pathogenic`
-outcome outright, no matter the evidence score; a `Disputed` or `Refuted`
-classification blocks reporting entirely. Put another way, this is a gate
-evaluated *before* — and independently of — the points-based scoring that the
-rest of this model represents.
+**Why it matters.** Gene-Disease Validity is a *precondition* that gates
+scoring and outcomes in two distinct places, independent of how much
+variant-level evidence is accumulated:
 
-**Which workflows would use it.** Potentially all of them, as an upstream
-gate rather than a per-workflow evidence input — every CLN/LOC/POP/PFD
-workflow's output could ultimately be constrained by it.
+- **Downstream — which classification tiers are reachable.** A `Limited`
+  validity classification blocks a `Pathogenic`/`Likely Pathogenic` outcome
+  outright, no matter the evidence score; a `Disputed` or `Refuted`
+  classification blocks reporting entirely. This is a gate evaluated *after*
+  the points-based scoring, bounding what the score is allowed to conclude.
+- **Upstream — whether molecular-mechanism evidence counts at all.** Per the
+  SVCv4 Standards' [Supplementary Material 18 (Molecular Mechanism and Exon
+  Relevance)](https://docs.google.com/document/d/1BLnsgxLY0TibwylFWz0SeGGeCusWwSokrgU4qsmBiaw/edit),
+  the molecular-mechanism multiplier that scales predictive points in the PFD
+  (Predictive & Functional Data) workflows may only be applied for MDEs at
+  **Moderate or higher** validity. For MDEs at **Limited or below**, the
+  mechanism is treated as `Uncertain`, which zeroes the mechanism multiplier
+  (and hence the mechanism-scaled predictive points). So validity feeds the
+  PFD scoring pipeline upstream, before any final-tier gate.
 
-**Current representation.** None. No field, enum, or workflow in this model
-represents Gene-Disease Validity today.
+**Captured, but not enforced this phase.** This model *captures* Gene-Disease
+Validity so a curation records it, and documents both gates above — but it does
+**not** enforce either one (no tier-blocking, no mechanism-zeroing). Enforcement
+is consistent with, and deferred alongside, the rest of the applicability-rule
+enforcement this model documents rather than executes (see the
+[Case](#case) note on applicability being documented, not yet type-enforced).
+The upstream SM 18 mechanism multiplier itself is not modeled yet either — it
+arrives with the PFD workflows (see [Spec coverage](spec-alignment.md)).
+
+**Not classified vs. not captured.** The enum includes a distinct
+`NOT_CLASSIFIED` value for a gene↔MDE pair ClinGen has not assessed — which is
+*not* the same as leaving the field absent. An absent (`None`) value means the
+curator did not capture validity at all; `NOT_CLASSIFIED` means they looked and
+ClinGen has no classification for this pair (SM 18 notes such an MDE must then
+be assessed manually). This mirrors the model's `TriState` `null`-vs-`UNKNOWN`
+distinction elsewhere.
+
+**Which workflows use it.** Potentially all of them, as a classification-level
+precondition rather than a per-workflow evidence input — every CLN/LOC/POP/PFD
+workflow's scoring or output can ultimately be constrained by it. In the
+applicability matrix it is marked optional across all seven current CLN/LOC
+workflows, since it drives none of *their* field applicability today (unlike
+MOI); its effect lands in PFD scoring and final-tier gating.
+
+**Current representation.** `WorkflowParameters.gene_disease_validity` →
+`GeneDiseaseValidity`, a `StrEnum` with the six ClinGen tiers plus
+`NOT_CLASSIFIED`.
 
 ## See also
 

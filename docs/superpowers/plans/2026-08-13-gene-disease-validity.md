@@ -215,7 +215,7 @@ build --strict` validates internal links only — external Google Doc URLs are a
 
 - [ ] **Step 1:** Delete the `Gene-Disease Validity field` row from the Model-gaps table (per the page's own "remove or update the row once it's underway" instruction).
 
-- [ ] **Step 2:** Update the "Remaining Supplementary Materials" row in the Documentation/content-gaps table: all 20 available SMs (SM 1–16, 18–21) are now ingested and linked from [Spec coverage](spec-alignment.md); SM 17 remains unavailable (WG placeholder). Drop the now-obsolete "Drive folder has inconsistent search-index visibility" phrasing.
+- [ ] **Step 2:** Update the "Remaining Supplementary Materials" row in the Documentation/content-gaps table: all 20 available SMs (SM 1–16, 18–21) are now ingested and linked from the Spec coverage page (`docs/reference/spec-alignment.md`); SM 17 remains unavailable (WG placeholder). Drop the now-obsolete "Drive folder has inconsistent search-index visibility" phrasing.
 
 - [ ] **Step 3:** Add SM 3/SM 4 link-outs on the DAFT and CLN_CCS/co-occurrence rows that name those supplements (use the URL table above).
 
