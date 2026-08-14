@@ -348,10 +348,32 @@
           "default": null,
           "description": "Test method(s), e.g. Sanger, Exome, Genome, Cyto; CSV allowed for multiple.",
           "title": "Method"
+        },
+        "non_genetic_etiology_excluded": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether a non-genetic etiology for the proband's phenotype has been excluded \u2014 a CLN_AFF refinement factor (SM 4), sibling to covers_all_genes_relevant_to_mde."
         }
       },
       "title": "CaseTesting",
       "type": "object"
+    },
+    "CoOccurrenceLikelihood": {
+      "description": "gnomAD co-occurrence likelihood that the VBC and the in-trans variant are\ntwo independent rare heterozygous variants, used to place a biallelic\n``CLN_AFF`` proband in the correct scoring-table row (SVCv4 Supplementary\nMaterial 4). Computed as (in-trans + unphased counts) / gnomAD v2 exome\ntotal; SM 4 buckets it as <0.0001 or >0.0001-0.01.\n\n``NOT_ASSESSED`` means the analyst did not/could not compute it \u2014 distinct\nfrom the field being absent (``None``), which means it was not captured.",
+      "enum": [
+        "LT_0_0001",
+        "BETWEEN_0_0001_0_01",
+        "NOT_ASSESSED"
+      ],
+      "title": "CoOccurrenceLikelihood",
+      "type": "string"
     },
     "CompoundHetVariant": {
       "additionalProperties": false,
@@ -369,6 +391,18 @@
           "default": null,
           "description": "Variant classification (placeholder string this phase).",
           "title": "Classification"
+        },
+        "co_occurrence_likelihood": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoOccurrenceLikelihood"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "gnomAD co-occurrence likelihood bucket for the VBC + in-trans variant pairing (biallelic CLN_AFF, SM 4 Table 2). Captured; row-selection/scoring is documented, not computed."
         },
         "id": {
           "anyOf": [

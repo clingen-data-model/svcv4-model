@@ -193,6 +193,17 @@
           "title": "Classification",
           "type": "string"
         },
+        "co_occurrence_likelihood": {
+          "default": null,
+          "description": "gnomAD co-occurrence likelihood that the VBC and the in-trans variant are\ntwo independent rare heterozygous variants, used to place a biallelic\n``CLN_AFF`` proband in the correct scoring-table row (SVCv4 Supplementary\nMaterial 4). Computed as (in-trans + unphased counts) / gnomAD v2 exome\ntotal; SM 4 buckets it as <0.0001 or >0.0001-0.01.\n\n``NOT_ASSESSED`` means the analyst did not/could not compute it \u2014 distinct\nfrom the field being absent (``None``), which means it was not captured.",
+          "enum": [
+            "LT_0_0001",
+            "BETWEEN_0_0001_0_01",
+            "NOT_ASSESSED"
+          ],
+          "title": "CoOccurrenceLikelihood",
+          "type": "string"
+        },
         "id": {
           "default": null,
           "title": "Id",
@@ -302,6 +313,17 @@
           "default": null,
           "description": "Test method(s), e.g. Sanger, Exome, Genome, Cyto; CSV allowed for multiple.",
           "title": "Method",
+          "type": "string"
+        },
+        "non_genetic_etiology_excluded": {
+          "default": null,
+          "description": "Tri-state truth value.\n\n``TRUE``/``FALSE`` \u2014 the curator established the value. ``UNKNOWN`` \u2014\nthe curator looked and could not determine it. A ``null`` field (absent)\nmeans the value was **not captured at all**; ``UNKNOWN`` and ``null`` are\nsemantically distinct.",
+          "enum": [
+            "TRUE",
+            "FALSE",
+            "UNKNOWN"
+          ],
+          "title": "TriState",
           "type": "string"
         }
       },

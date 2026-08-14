@@ -127,6 +127,11 @@ testing.covers_all_genes_relevant_to_mde:
   value: "true, false"
   notes: "all relevant genes for the disease were covered by the test"
 
+testing.non_genetic_etiology_excluded:
+  applicability: { CLN_AFF: o, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: x }
+  value: "TRUE / FALSE / UNKNOWN"
+  notes: "whether a non-genetic etiology was excluded — CLN_AFF refinement factor (SM 4)"
+
 pheno_severity:
   applicability: { CLN_AFF: x, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: c, CLN_UAF: x, LOC_PHE: x, LOC_SEG: x }
   rule: { workflow: CLN_ALTG, effect: enum_exclude, value: BIALLELIC_LT_EXPECTED }
@@ -164,6 +169,11 @@ compound_het_variant.phase_confidence:
 
 compound_het_variant.classification:
   applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: o }
+
+compound_het_variant.co_occurrence_likelihood:
+  applicability: { CLN_AFF: o, CLN_DNV: x, CLN_ALTV: x, CLN_ALTG: x, CLN_UAF: x, LOC_PHE: x, LOC_SEG: x }
+  value: "LT_0_0001, BETWEEN_0_0001_0_01, NOT_ASSESSED"
+  notes: "gnomAD co-occurrence likelihood bucket for biallelic CLN_AFF (SM 4 Table 2); captured, not scored"
 
 additional_variant_exists:
   applicability: { CLN_AFF: r, CLN_DNV: x, CLN_ALTV: r, CLN_ALTG: r, CLN_UAF: x, LOC_PHE: r, LOC_SEG: r }
