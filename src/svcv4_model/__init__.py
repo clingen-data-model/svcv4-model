@@ -40,6 +40,11 @@ from svcv4_model.evidence_item import EvidenceData, EvidenceItem
 from svcv4_model.evidence_line import EvidenceLine
 from svcv4_model.inputs import MDE, VBC
 from svcv4_model.method import Method
+from svcv4_model.population import (
+    DaftCalculatorInputs,
+    DaftMethod,
+    PopulationEvidence,
+)
 from svcv4_model.proposition import Predicate, Proposition
 from svcv4_model.statement import Statement
 
@@ -56,6 +61,8 @@ __all__ = [
     "CaseRelative",
     "CaseTesting",
     "CompoundHetVariant",
+    "DaftCalculatorInputs",
+    "DaftMethod",
     "EvidenceData",
     "EvidenceItem",
     "EvidenceLine",
@@ -67,6 +74,7 @@ __all__ = [
     "Phenotype",
     "PhenoSeverity",
     "PhenoSpecificity",
+    "PopulationEvidence",
     "Predicate",
     "Proposition",
     "Sex",
