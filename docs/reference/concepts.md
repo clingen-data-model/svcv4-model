@@ -269,8 +269,14 @@ Validity so a curation records it, and documents both gates above — but it doe
 is consistent with, and deferred alongside, the rest of the applicability-rule
 enforcement this model documents rather than executes (see the
 [Case](#case) note on applicability being documented, not yet type-enforced).
-The upstream SM 18 mechanism multiplier itself is not modeled yet either — it
-arrives with the PFD workflows (see [Spec coverage](spec-alignment.md)).
+The SM 18 mechanism/exon-relevance *inputs* are now modeled as
+`MechanismExonRelevanceEvidence` (see [Predictive & Functional Data](../workflows/pfd/index.md));
+the multiplier *computation* the validity gate feeds into is still documented,
+not computed. Note that `MechanismExonRelevanceEvidence`'s `GenccMechanism` enum
+intentionally has **no** `NOT_ASSESSED`/`NOT_CLASSIFIED` member (unlike
+Gene-Disease Validity below): SM 18 treats a not-assessed mechanism identically
+to `UNCERTAIN` (×0), so `None` = not captured vs `UNCERTAIN` = ×0 is a lossless
+split — the asymmetry with GDV is deliberate.
 
 **Not classified vs. not captured.** The enum includes a distinct
 `NOT_CLASSIFIED` value for a gene↔MDE pair ClinGen has not assessed — which is
