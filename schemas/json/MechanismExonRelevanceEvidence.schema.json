@@ -1,0 +1,103 @@
+{
+  "$defs": {
+    "ExonRelevance": {
+      "description": "Clinical relevance of the exon containing (or affected by) the VBC across\ndisease-relevant transcripts (SM 18): ALL (\u00d71.0), MOST (\u00d70.5), FEW (\u00d70).",
+      "enum": [
+        "ALL",
+        "MOST",
+        "FEW"
+      ],
+      "title": "ExonRelevance",
+      "type": "string"
+    },
+    "GenccMechanism": {
+      "description": "GenCC level to which loss-of-function is established as the MDE's disease\nmechanism (SM 18). Full strength at ESTABLISHED, halved at LIKELY, quartered\nat SUSPECTED, zeroed at UNCERTAIN. Usable only for MDEs at Moderate+\ngene-disease validity (``WorkflowParameters.gene_disease_validity``);\nLimited-or-below is treated as UNCERTAIN.",
+      "enum": [
+        "ESTABLISHED",
+        "LIKELY",
+        "SUSPECTED",
+        "UNCERTAIN"
+      ],
+      "title": "GenccMechanism",
+      "type": "string"
+    },
+    "ManeStatus": {
+      "description": "MANE membership of the assessed transcript, anchoring exon relevance.",
+      "enum": [
+        "MANE_SELECT",
+        "MANE_PLUS_CLINICAL",
+        "NEITHER"
+      ],
+      "title": "ManeStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "SM 18 mechanism \u00d7 exon-relevance inputs for a PFD assessment.\n\nPermissive superset (every field optional). Captured; the multiplier\n(mechanism fraction \u00d7 exon-relevance fraction, applied to positive PRD\npoints, not compounded) is documented, not computed.",
+  "properties": {
+    "exon_has_established_pathogenic": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SM 18 override: the exon contains expert/established pathogenic variants, so no exon-relevance reduction is applied.",
+      "title": "Exon Has Established Pathogenic"
+    },
+    "exon_known_irrelevant": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SM 18 override: the exon is known to be clinically irrelevant (e.g. TRDN exons 9-41), forcing exon relevance to zero.",
+      "title": "Exon Known Irrelevant"
+    },
+    "exon_relevance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExonRelevance"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Clinical relevance of the VBC's exon across transcripts (All/Most/Few)."
+    },
+    "gencc_mechanism": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/GenccMechanism"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "GenCC level LoF is established as the disease mechanism; gated on Moderate+ gene-disease validity (see GenccMechanism)."
+    },
+    "mane_status": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ManeStatus"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "MANE membership of the assessed transcript."
+    }
+  },
+  "title": "MechanismExonRelevanceEvidence",
+  "type": "object"
+}
