@@ -180,7 +180,7 @@ Pure docs. Verification is `mkdocs build --strict`. External SM link isn't check
 
 **Files:** Modify `docs/reference/spec-alignment.md`
 
-- [ ] **Step 1:** Change the SM 19 row (currently `(shared sub-module) | Not yet modeled`) to: "**Modeled (inputs)** — `InformativeVariantsEvidence` captures the distinct informative variants (classification, similarity basis, eligibility flags); the scoring is documented, not computed. See [Predictive & Functional Data](../workflows/pfd/index.md)." Keep the SM 19 Google Doc link on the title.
+- [ ] **Step 1:** Change the SM 19 row (currently `(shared sub-module) | Not yet modeled`) to: "**Modeled (inputs)** — `InformativeVariantsEvidence` captures the distinct informative variants (classification, similarity basis, eligibility flags); the scoring is documented, not computed. See `[Predictive & Functional Data](../workflows/pfd/index.md)`." Keep the SM 19 Google Doc link on the title.
 
 ### Task 5: `known-gaps.md` — note SM 19 landed
 

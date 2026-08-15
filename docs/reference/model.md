@@ -61,3 +61,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.MechanismExonRelevanceEvidence
+
+---
+
+::: svcv4_model.InformativeVariantsEvidence
