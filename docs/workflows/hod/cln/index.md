@@ -19,21 +19,25 @@ Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
 | [`CLN_UAF`](cln-uaf.md) | Unaffected individuals (AD; AR / X-linked) | ✅ |
 | `CLN_CCS` | Case-control studies | — |
 
-!!! warning "Out of scope for this Classification Model (for now)"
+!!! note "Not yet modeled here"
 
-    SVCv4 provides scoring guidance for **`CLN_CCS` (Case-Control studies)** — a
-    point scale keyed to an odds ratio and confidence interval — but does not yet
-    define decomposed **evidence concepts** for it the way it does for
-    `CLN_AFF`/`CLN_DNV`/`CLN_ALT`/`CLN_UAF`. This project models structured,
-    verifiable **evidence**, not just derived scores, so there isn't yet a robust
-    evidence shape here to capture beyond a single statistic. Subsequent SVCv4
-    versions aim to add more evidence-based workflow scoring for `CLN_CCS`; this
-    model will cover it once that exists. (This is different from
-    [Population (POP)](../pop.md) and
-    [Predictive & Functional Data](../../pfd/index.md), which the Standards
-    specify with decomposed evidence concepts this project simply hasn't modeled
-    yet. Locus Specificity is already covered — see
-    [Locus Specificity (LOC)](../loc/index.md).)
+    SVCv4 **does** define a `CLN_CCS` (Case-Control studies) process
+    ([Supplementary Material 4](https://docs.google.com/document/d/17XnPmgTpzgQ8hfzOZNCcXIBwnNwbVkP0KIv3Dw5Bz_M/edit)):
+    a variant-specific case-control analysis, restricted to moderate-frequency
+    variants with a sufficient case cohort (≥5 observations of the variant in
+    cases, ≥100 unrelated cases, matched controls), measured by an **odds ratio
+    (OR)** with its **confidence interval** — `OR > 5.0` awards `CLN_CCS_+4.0`,
+    a CI including 1.0 awards no points, and an OR near or below 1.0 is evidence
+    of benignity. When `CLN_CCS` is applied, all other CLN codes become **NA
+    except `CLN_DNV`**.
+
+    This is a real, addressable evidence shape (a case-control study result: the
+    OR and CI, the case/control cohort sizes, and the variant counts) — it is
+    simply **not yet modeled** here, alongside [Population (POP)](../pop.md) and
+    [Predictive & Functional Data](../../pfd/index.md). Only *finer* case-control
+    guidance is anticipated in future SVCv4 iterations; the core process above is
+    usable now. Locus Specificity is already covered — see
+    [Locus Specificity (LOC)](../loc/index.md).
 
 ## How to read each workflow page
 
