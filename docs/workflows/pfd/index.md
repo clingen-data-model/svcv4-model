@@ -70,6 +70,28 @@ on gene-disease validity: it applies only for MDEs at **Moderate+**
 `WorkflowParameters.gene_disease_validity` — Limited-or-below is treated as
 `UNCERTAIN` (→ ×0). See [Core concepts](../../reference/concepts.md) for that gate.
 
-The remaining shared sub-modules (Informative Variants, Functional Assays,
-Determining Critical Amino Acids), the PRD/FXN/INF scaffold and parent codes, and
-the per-variant-type workflows are still to come.
+### Informative Variants ✅ modeled (inputs)
+
+The second shared sub-module is modeled as `InformativeVariantsEvidence` — a list
+of `InformativeVariant`
+([Supplementary Material 19](https://docs.google.com/document/d/1hNfdtdvDT4dob9oDBrL_UzVV_MYiWnwERfli76EAbyQ/edit)).
+An informative variant is a variant **other than the VBC** that informs its
+classification. Each captures the variant `id`, its `classification`
+(P/LP/VUS/LB/B), the `similarity_basis` (similar position / same exon / similar
+effect / gene deletion), and the eligibility gates: `distinct_evidence_from_vbc`
+(it must have reached its classification via *different* evidence codes than the
+VBC to count), and — for external classifications — `star_rating` (usable only at
+3–4 stars) and `circularity_checked` (the VBC was not used as evidence for it).
+
+The scoring is **documented, not computed**: **+2.0** for the first distinct
+Pathogenic informative variant and **+1.0** each additional distinct P; **+1.0**
+each for LP-only. **Only distinct variants count** — a single observation counts
+the same as ten. This evidence has its own cap of **−8 to +8**; the negative
+(Benign / Likely-Benign) side is *inferred from that cap* rather than spelled out
+in SM 19. Unlike the other pipeline steps, informative-variant points are **not**
+reduced by the [Molecular Mechanism & Exon Relevance](#molecular-mechanism-exon-relevance-modeled-inputs)
+matrix.
+
+The remaining shared sub-modules (Functional Assays, Determining Critical Amino
+Acids), the PRD/FXN/INF scaffold and parent codes, and the per-variant-type
+workflows are still to come.

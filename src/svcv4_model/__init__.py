@@ -39,6 +39,12 @@ from svcv4_model.case import (
 from svcv4_model.classification import VariantPathogenicityClassification
 from svcv4_model.evidence_item import EvidenceData, EvidenceItem
 from svcv4_model.evidence_line import EvidenceLine
+from svcv4_model.informative import (
+    InformativeVariant,
+    InformativeVariantsEvidence,
+    SimilarityBasis,
+    VariantClassification,
+)
 from svcv4_model.inputs import MDE, VBC
 from svcv4_model.mechanism import (
     ExonRelevance,
@@ -78,6 +84,8 @@ __all__ = [
     "GenccMechanism",
     "Gene",
     "GeneDiseaseValidity",
+    "InformativeVariant",
+    "InformativeVariantsEvidence",
     "ManeStatus",
     "MechanismExonRelevanceEvidence",
     "Method",
@@ -90,8 +98,10 @@ __all__ = [
     "Predicate",
     "Proposition",
     "Sex",
+    "SimilarityBasis",
     "Statement",
     "TriState",
+    "VariantClassification",
     "VariantPathogenicityClassification",
     "Workflow",
     "WorkflowParameters",
