@@ -200,7 +200,7 @@ Pure docs. Verification is `mkdocs build --strict`. External SM link isn't check
 
 **Files:** Modify `docs/reference/spec-alignment.md`
 
-- [ ] **Step 1:** Change the SM 18 row (currently "Not yet modeled — but the **gene-disease validity** gate … the mechanism multiplier itself arrives with PFD") to: "**Modeled (inputs)** — `MechanismExonRelevanceEvidence` captures mechanism level + exon relevance + MANE status; the multiplier is documented, not computed. See [Predictive & Functional Data](../workflows/pfd/index.md)." Keep the SM 18 Google Doc link on the title.
+- [ ] **Step 1:** Change the SM 18 row (currently "Not yet modeled — but the **gene-disease validity** gate … the mechanism multiplier itself arrives with PFD") to: "**Modeled (inputs)** — `MechanismExonRelevanceEvidence` captures mechanism level + exon relevance + MANE status; the multiplier is documented, not computed. See `[Predictive & Functional Data](../workflows/pfd/index.md)`." Keep the SM 18 Google Doc link on the title.
 
 ### Task 6: `known-gaps.md` — note the first PFD submodule landed
 

@@ -12,11 +12,14 @@ evaluated impact (e.g. missense, nonsense, splice, indel).
 *The Variant Impact (Predictive & Functional Data) section of the SVCv4 Summary
 Table, with its code workflows. (Figure provided by the SVCv4 Standards group.)*
 
-!!! note "Not yet modeled here"
+!!! note "Modeling underway — first submodule landed"
 
-    PFD is specified by the SVCv4 Standards but is **not yet covered by this data
-    model**. This page summarizes its concepts; detailed modeling is a later
-    phase.
+    The **first PFD submodule — Molecular Mechanism & Exon Relevance
+    (Supplementary Material 18)** — is now modeled (inputs captured, scoring
+    documented not computed); see [below](#the-shape-of-the-remaining-work). The
+    rest of the PFD pipeline (the PRD/FXN/INF scaffold, Informative Variants,
+    Functional Assays, and the variant-type workflows) is a later phase. This
+    page summarizes the concepts and tracks what has landed.
 
 ## Concepts and codes
 
@@ -42,5 +45,31 @@ deletion, start loss, stop loss, and others) follows the same pipeline:
 evidence → informative variants → capped code total.** Four sub-modules are
 shared across all of them: Determining Critical Amino Acids, Molecular
 Mechanism and Exon Relevance, Informative Variants, and Functional Assays.
-Modeling this pipeline once, as a reusable shape, is the likely starting point
-when PFD modeling begins.
+Modeling these shared sub-modules first — so the variant-type workflows can
+compose them — is the starting point.
+
+### Molecular Mechanism & Exon Relevance ✅ modeled (inputs)
+
+The first shared sub-module is modeled as `MechanismExonRelevanceEvidence`
+([Supplementary Material 18](https://docs.google.com/document/d/1BLnsgxLY0TibwylFWz0SeGGeCusWwSokrgU4qsmBiaw/edit)).
+It captures the two axes of the SM 18 multiplier — the GenCC **mechanism** level
+and the **exon relevance** category — plus the assessed transcript's MANE status
+and two override flags (a known-irrelevant exon; an exon with established
+pathogenic variants). The multiplier itself is **documented here, not computed**:
+
+| GenCC mechanism | × | | Exon relevance | × |
+|---|---|---|---|---|
+| Established | 1.0 | | All | 1.0 |
+| Likely | 0.5 | | Most | 0.5 |
+| Suspected | 0.25 | | Few | 0 |
+| Uncertain | 0 | | | |
+
+It scales positive predictive (PRD) points by *mechanism fraction × exon-relevance
+fraction* (the two reductions are **not** compounded). The mechanism axis is gated
+on gene-disease validity: it applies only for MDEs at **Moderate+**
+`WorkflowParameters.gene_disease_validity` — Limited-or-below is treated as
+`UNCERTAIN` (→ ×0). See [Core concepts](../../reference/concepts.md) for that gate.
+
+The remaining shared sub-modules (Informative Variants, Functional Assays,
+Determining Critical Amino Acids), the PRD/FXN/INF scaffold and parent codes, and
+the per-variant-type workflows are still to come.
