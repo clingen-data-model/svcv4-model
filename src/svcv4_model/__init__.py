@@ -40,6 +40,12 @@ from svcv4_model.classification import VariantPathogenicityClassification
 from svcv4_model.evidence_item import EvidenceData, EvidenceItem
 from svcv4_model.evidence_line import EvidenceLine
 from svcv4_model.inputs import MDE, VBC
+from svcv4_model.mechanism import (
+    ExonRelevance,
+    GenccMechanism,
+    ManeStatus,
+    MechanismExonRelevanceEvidence,
+)
 from svcv4_model.method import Method
 from svcv4_model.population import (
     DaftCalculatorInputs,
@@ -68,8 +74,12 @@ __all__ = [
     "EvidenceData",
     "EvidenceItem",
     "EvidenceLine",
+    "ExonRelevance",
+    "GenccMechanism",
     "Gene",
     "GeneDiseaseValidity",
+    "ManeStatus",
+    "MechanismExonRelevanceEvidence",
     "Method",
     "Phase",
     "PhaseConfidence",
