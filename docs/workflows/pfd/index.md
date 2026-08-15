@@ -89,7 +89,7 @@ each for LP-only. **Only distinct variants count** — a single observation coun
 the same as ten. This evidence has its own cap of **−8 to +8**; the negative
 (Benign / Likely-Benign) side is *inferred from that cap* rather than spelled out
 in SM 19. Unlike the other pipeline steps, informative-variant points are **not**
-reduced by the [Molecular Mechanism & Exon Relevance](#molecular-mechanism--exon-relevance--modeled-inputs)
+reduced by the [Molecular Mechanism & Exon Relevance](#molecular-mechanism-exon-relevance-modeled-inputs)
 matrix.
 
 The remaining shared sub-modules (Functional Assays, Determining Critical Amino
