@@ -36,6 +36,7 @@ from svcv4_model.case import (
     WorkflowParameters,
     Zygosity,
 )
+from svcv4_model.case_control import CaseControlStudyEvidence
 from svcv4_model.classification import VariantPathogenicityClassification
 from svcv4_model.evidence_item import EvidenceData, EvidenceItem
 from svcv4_model.evidence_line import EvidenceLine
@@ -82,6 +83,7 @@ __all__ = [
     "AnimalModelEvidence",
     "AnimalModelType",
     "Case",
+    "CaseControlStudyEvidence",
     "CaseRelative",
     "CaseTesting",
     "CompoundHetVariant",

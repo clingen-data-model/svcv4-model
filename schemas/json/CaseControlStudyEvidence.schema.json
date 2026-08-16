@@ -1,0 +1,112 @@
+{
+  "additionalProperties": false,
+  "description": "CLN_CCS case-control study inputs for a VBC.\n\nPermissive superset (every field optional). Captured; the scoring\n(OR > 5.0 \u2192 +4.0; CI including 1.0 \u2192 no points; OR \u2264 1.0 \u2192 benignity) and\nthe exclusivity rule (other CLN codes NA except CLN_DNV) are documented,\nnot computed.",
+  "properties": {
+    "ascertainment_bias_considered": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether ascertainment bias was considered (SM 4).",
+      "title": "Ascertainment Bias Considered"
+    },
+    "case_cohort_size": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Number of unrelated cases in the cohort (SM 4 recommends >= 100).",
+      "title": "Case Cohort Size"
+    },
+    "case_variant_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Observations of the VBC in the case cohort (SM 4 recommends >= 5).",
+      "title": "Case Variant Count"
+    },
+    "ci_lower": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Lower bound of the confidence interval around the OR.",
+      "title": "Ci Lower"
+    },
+    "ci_upper": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Upper bound of the confidence interval around the OR.",
+      "title": "Ci Upper"
+    },
+    "control_cohort_size": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Number of individuals in the control cohort.",
+      "title": "Control Cohort Size"
+    },
+    "controls_matched": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether cases and controls were matched (ancestry, sequencing platform, QC) per SM 4.",
+      "title": "Controls Matched"
+    },
+    "odds_ratio": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Odds ratio for the VBC's enrichment in cases vs controls.",
+      "title": "Odds Ratio"
+    }
+  },
+  "title": "CaseControlStudyEvidence",
+  "type": "object"
+}

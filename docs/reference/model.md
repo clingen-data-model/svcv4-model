@@ -69,3 +69,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.FunctionalAssayEvidence
+
+---
+
+::: svcv4_model.CaseControlStudyEvidence
