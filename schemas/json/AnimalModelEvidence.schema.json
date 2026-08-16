@@ -1,0 +1,119 @@
+{
+  "$defs": {
+    "AnimalModelType": {
+      "description": "Kind of animal-model functional evidence (SM 20).",
+      "enum": [
+        "ENGINEERED",
+        "NATURALLY_OCCURRING",
+        "COMPLEMENTATION"
+      ],
+      "title": "AnimalModelType",
+      "type": "string"
+    },
+    "PhenotypeReplication": {
+      "description": "How well the animal model replicates the human phenotype (SM 20, Table 3).",
+      "enum": [
+        "SPECIFIC",
+        "KEY_FEATURES",
+        "NONE"
+      ],
+      "title": "PhenotypeReplication",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Whole-animal-model functional evidence (SM 20); range *_FXN_0.0 to +4.0.",
+  "properties": {
+    "fidelity_to_mechanism": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the model faithfully recapitulates the disease mechanism.",
+      "title": "Fidelity To Mechanism"
+    },
+    "inheritance_match": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the inheritance pattern matches the human MDE.",
+      "title": "Inheritance Match"
+    },
+    "local_sequence_similarity_high": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether local sequence similarity around the VBC is high (for some variant types).",
+      "title": "Local Sequence Similarity High"
+    },
+    "model_type": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AnimalModelType"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Engineered / naturally-occurring / complementation."
+    },
+    "ortholog_established": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the animal gene is an established ortholog of the human gene.",
+      "title": "Ortholog Established"
+    },
+    "phenotype_replication": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PhenotypeReplication"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "How well the model replicates the human phenotype."
+    },
+    "species": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Model organism, e.g. mouse, zebrafish.",
+      "title": "Species"
+    }
+  },
+  "title": "AnimalModelEvidence",
+  "type": "object"
+}

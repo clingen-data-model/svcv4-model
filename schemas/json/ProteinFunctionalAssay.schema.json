@@ -1,0 +1,125 @@
+{
+  "$defs": {
+    "ProteinAssayType": {
+      "description": "Kind of protein/cellular functional assay (SM 20).",
+      "enum": [
+        "ENZYME_KINETIC",
+        "SIGNAL_TRANSDUCTION",
+        "MEMBRANE_CONFORMATION",
+        "MAVE",
+        "OTHER"
+      ],
+      "title": "ProteinAssayType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A protein/cellular functional assay, OddsPath-calibrated (SM 20).\n\nRequires both pathogenic and benign variant controls; small experiments with\nno false positives/negatives use lookup Tables 1/2 (documented, not computed).",
+  "properties": {
+    "assay_type": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ProteinAssayType"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Kind of protein/cellular assay."
+    },
+    "benign_control_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Number of benign controls in the calibration set.",
+      "title": "Benign Control Count"
+    },
+    "fidelity_to_mechanism": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the assay faithfully recapitulates the disease mechanism.",
+      "title": "Fidelity To Mechanism"
+    },
+    "has_benign_controls": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether known benign variant controls were used.",
+      "title": "Has Benign Controls"
+    },
+    "has_false_positives_or_negatives": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the experiment had false positives/negatives (which route calibration to expert math, beyond the lookup tables).",
+      "title": "Has False Positives Or Negatives"
+    },
+    "has_pathogenic_controls": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether known pathogenic variant controls were used.",
+      "title": "Has Pathogenic Controls"
+    },
+    "odds_path": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "OddsPath / likelihood ratio from the calibrated truth set.",
+      "title": "Odds Path"
+    },
+    "pathogenic_control_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Number of pathogenic controls in the calibration set.",
+      "title": "Pathogenic Control Count"
+    }
+  },
+  "title": "ProteinFunctionalAssay",
+  "type": "object"
+}
