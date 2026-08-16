@@ -65,3 +65,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.InformativeVariantsEvidence
+
+---
+
+::: svcv4_model.FunctionalAssayEvidence

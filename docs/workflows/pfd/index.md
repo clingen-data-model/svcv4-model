@@ -92,6 +92,36 @@ in SM 19. Unlike the other pipeline steps, informative-variant points are **not*
 reduced by the [Molecular Mechanism & Exon Relevance](#molecular-mechanism-exon-relevance-modeled-inputs)
 matrix.
 
-The remaining shared sub-modules (Functional Assays, Determining Critical Amino
-Acids), the PRD/FXN/INF scaffold and parent codes, and the per-variant-type
-workflows are still to come.
+### Functional Assays ✅ modeled (inputs)
+
+The third shared sub-module is modeled as `FunctionalAssayEvidence`
+([Supplementary Material 20](https://docs.google.com/document/d/1X68otBl4YvdXlP1bOD83JO4kIod0Ol5BoLB4CLxqijA/edit)),
+holding two lists plus a shared `disease_mechanism`
+(`MolecularMechanism`):
+
+- **`protein_assays`** (`ProteinFunctionalAssay`) — `assay_type`, `odds_path`,
+  `has_pathogenic_controls` / `has_benign_controls` (+ counts),
+  `has_false_positives_or_negatives`, `fidelity_to_mechanism`.
+- **`animal_models`** (`AnimalModelEvidence`) — `model_type`, `species`,
+  `ortholog_established`, `phenotype_replication`, `inheritance_match`,
+  `local_sequence_similarity_high`, `fidelity_to_mechanism`.
+
+The scoring is **documented, not computed**. Protein/cellular assays are
+calibrated by an **OddsPath** (likelihood ratio) that **requires both pathogenic
+and benign variant controls**; small experiments with no false positives/
+negatives read points from lookup Tables 1/2, while experiments with FP/FN,
+trichotomized data, or MAVE need expert calibration (out of scope). Animal-model
+evidence ranges **`_FXN_0.0` to `+4.0`** per Table 3, weighted by phenotype
+replication, inheritance match, and local sequence similarity.
+
+Two gates apply: an assay that does **not** faithfully recapitulate the disease
+molecular mechanism scores `FXN_0.0`; and multiple assays combine by rule (same
+readout + same direction → strongest only; opposite directions → sum; distinct
+functions → the most disease-relevant). Functional (`*_FXN`) points **add to**
+predictive (`*_PRD`) points. **Carve-out:** RNA splicing assays (RT-PCR / RNAseq
+/ minigene) are **not** `*_FXN` — they are `SPL_SPA`, handled in the splice flow
+diagrams (SM 6/11/12), and are not modeled here.
+
+**All three shared sub-modules are now modeled** (inputs). The remaining PFD work
+— Determining Critical Amino Acids (SM 7), the PRD/FXN/INF scaffold and parent
+codes, and the per-variant-type workflows — is still to come.
