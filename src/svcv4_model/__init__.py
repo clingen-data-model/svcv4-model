@@ -39,6 +39,15 @@ from svcv4_model.case import (
 from svcv4_model.classification import VariantPathogenicityClassification
 from svcv4_model.evidence_item import EvidenceData, EvidenceItem
 from svcv4_model.evidence_line import EvidenceLine
+from svcv4_model.functional import (
+    AnimalModelEvidence,
+    AnimalModelType,
+    FunctionalAssayEvidence,
+    MolecularMechanism,
+    PhenotypeReplication,
+    ProteinAssayType,
+    ProteinFunctionalAssay,
+)
 from svcv4_model.informative import (
     InformativeVariant,
     InformativeVariantsEvidence,
@@ -70,6 +79,8 @@ __all__ = [
     "AgeMatchedPenetrance",
     "AgeQualifier",
     "AgeUnit",
+    "AnimalModelEvidence",
+    "AnimalModelType",
     "Case",
     "CaseRelative",
     "CaseTesting",
@@ -81,6 +92,7 @@ __all__ = [
     "EvidenceItem",
     "EvidenceLine",
     "ExonRelevance",
+    "FunctionalAssayEvidence",
     "GenccMechanism",
     "Gene",
     "GeneDiseaseValidity",
@@ -89,14 +101,18 @@ __all__ = [
     "ManeStatus",
     "MechanismExonRelevanceEvidence",
     "Method",
+    "MolecularMechanism",
     "Phase",
     "PhaseConfidence",
     "Phenotype",
     "PhenoSeverity",
     "PhenoSpecificity",
+    "PhenotypeReplication",
     "PopulationEvidence",
     "Predicate",
     "Proposition",
+    "ProteinAssayType",
+    "ProteinFunctionalAssay",
     "Sex",
     "SimilarityBasis",
     "Statement",
