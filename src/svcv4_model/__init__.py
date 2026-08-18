@@ -63,6 +63,11 @@ from svcv4_model.mechanism import (
     MechanismExonRelevanceEvidence,
 )
 from svcv4_model.method import Method
+from svcv4_model.pfd import (
+    PfdCodeAssessment,
+    PfdParentCode,
+    PfdPredictiveEvidence,
+)
 from svcv4_model.population import (
     DaftCalculatorInputs,
     DaftMethod,
@@ -104,6 +109,9 @@ __all__ = [
     "MechanismExonRelevanceEvidence",
     "Method",
     "MolecularMechanism",
+    "PfdCodeAssessment",
+    "PfdParentCode",
+    "PfdPredictiveEvidence",
     "Phase",
     "PhaseConfidence",
     "Phenotype",

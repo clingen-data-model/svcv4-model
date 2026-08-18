@@ -1,0 +1,99 @@
+{
+  "additionalProperties": false,
+  "description": "The predictive (PRD) step of a PFD assessment.\n\nVariant-type-agnostic shape: an in-silico prediction, its SM 18 transcript-\nrelevance / mechanism adjustment, and the resulting coded ``_PRD`` value.\nTyped predictor/path enums arrive with the per-variant-type workflows.",
+  "properties": {
+    "adjusted_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded _PRD points after the SM 18 adjustment.",
+      "title": "Adjusted Points"
+    },
+    "initial_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Initial evidence points before the SM 18 adjustment.",
+      "title": "Initial Points"
+    },
+    "mechanism_applied": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the SM 18 mechanism step applied (not for the missense amino-acid path, where predictors capture both LoF and GoF).",
+      "title": "Mechanism Applied"
+    },
+    "path_label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Flow-diagram path/color (e.g. GREEN, YELLOW); typed later.",
+      "title": "Path Label"
+    },
+    "predictor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "In-silico predictor or basis used (e.g. REVEL, NMD prediction).",
+      "title": "Predictor"
+    },
+    "raw_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The predictor's raw score, if applicable.",
+      "title": "Raw Score"
+    },
+    "transcript_relevance_applied": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the SM 18 transcript-relevance step reduced the points.",
+      "title": "Transcript Relevance Applied"
+    }
+  },
+  "title": "PfdPredictiveEvidence",
+  "type": "object"
+}
