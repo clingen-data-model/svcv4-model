@@ -12,20 +12,21 @@ evaluated impact (e.g. missense, nonsense, splice, indel).
 *The Variant Impact (Predictive & Functional Data) section of the SVCv4 Summary
 Table, with its code workflows. (Figure provided by the SVCv4 Standards group.)*
 
-!!! note "Modeling underway — first submodule landed"
+!!! note "Modeling underway — shared submodules + scaffold landed"
 
-    The **first PFD submodule — Molecular Mechanism & Exon Relevance
-    (Supplementary Material 18)** — is now modeled (inputs captured, scoring
-    documented not computed); see [below](#the-shape-of-the-remaining-work). The
-    rest of the PFD pipeline (the PRD/FXN/INF scaffold, Informative Variants,
-    Functional Assays, and the variant-type workflows) is a later phase. This
-    page summarizes the concepts and tracks what has landed.
+    The **three shared PFD submodules** — Molecular Mechanism & Exon Relevance
+    (SM 18), Informative Variants (SM 19), Functional Assays (SM 20) — and the
+    **variant-agnostic scaffold** (`PfdCodeAssessment`) that composes them are now
+    modeled (inputs captured, scoring documented not computed); see
+    [below](#the-shape-of-the-remaining-work). What remains is the per-variant-type
+    workflows (Missense first) and Critical Amino Acids (SM 7). This page
+    summarizes the concepts and tracks what has landed.
 
 ## Concepts and codes
 
 Each concept uses a common code pattern: **`_PRD`** (prediction), **`_FXN`**
 (functional assessment), **`_INF`** (informative variants), plus **`_SPA`**
-(observation) for splicing.
+(splice assay) for splicing.
 
 | Concept | Codes |
 |---|---|
@@ -122,6 +123,29 @@ predictive (`*_PRD`) points. **Carve-out:** RNA splicing assays (RT-PCR / RNAseq
 / minigene) are **not** `*_FXN` — they are `SPL_SPA`, handled in the splice flow
 diagrams (SM 6/11/12), and are not modeled here.
 
-**All three shared sub-modules are now modeled** (inputs). The remaining PFD work
-— Determining Critical Amino Acids (SM 7), the PRD/FXN/INF scaffold and parent
-codes, and the per-variant-type workflows — is still to come.
+### PFD scaffold ✅ modeled (inputs)
+
+The shared, variant-agnostic scaffold is modeled as `PfdCodeAssessment`. It ties
+one **parent code**'s pipeline together: a `predictive` (`_PRD`) step
+(`PfdPredictiveEvidence`), the three embedded shared submodules
+(`mechanism_exon_relevance` / `functional` / `informative`, SM 18/19/20), the
+coded sub-code point values (`prd_points` / `spa_points` / `fxn_points` /
+`inf_points`), and the capped `parent_total`. The `parent_code` is one of
+`NUL` / `CDS` / `SPL` / `MIS` (plus `NCG` / `REG`) — `PfdParentCode`.
+
+The pipeline is **documented here, not computed**: `_PRD` (in-silico prediction)
+→ adjusted by the [Molecular Mechanism & Exon Relevance](#molecular-mechanism-exon-relevance-modeled-inputs)
+matrix (SM 18) → for splice paths, an `_SPA` (splice-assay) step → `_FXN`
+(functional) → `_INF` (informative) → the capped parent-code total. Each sub-code
+and intermediate has its own cap (SM 6 gives `MIS_` −8.0 to +9.0 and `SPL_` −8.0
+to +10.0). Following SM 6, the model records **both** the separate coded sub-code
+values and the parent total; the *combined-held* intermediates (e.g. PRD+FXN,
+which has no distinct evidence code) and the `_ND` (No Data) coding for an absent
+step are captured through the same optional fields. The typed predictor/path
+enums and the dual missense **MIS_ / SPL_** path (evaluate both, apply the
+higher) arrive with the per-variant-type workflows.
+
+**The three shared sub-modules and the scaffold are now modeled** (inputs). The
+remaining PFD work — Determining Critical Amino Acids (SM 7) and the
+per-variant-type workflows (Missense first, with its typed predictors and dual
+MIS_/SPL_ path) — is still to come.

@@ -73,3 +73,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.CaseControlStudyEvidence
+
+---
+
+::: svcv4_model.PfdCodeAssessment
