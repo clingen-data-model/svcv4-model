@@ -5,7 +5,12 @@ from __future__ import annotations
 import pytest
 
 from svcv4_model.functional import FunctionalAssayEvidence, ProteinFunctionalAssay
-from svcv4_model.informative import InformativeVariantsEvidence, VariantClassification
+from svcv4_model.informative import (
+    InformativeVariant,
+    InformativeVariantsEvidence,
+    SimilarityBasis,
+    VariantClassification,
+)
 from svcv4_model.mechanism import ExonRelevance, MechanismExonRelevanceEvidence
 from svcv4_model.missense import (
     MissenseAminoAcidAssessment,
@@ -126,14 +131,24 @@ def _maximal_splice_assessment() -> MissenseSpliceAssessment:
             alternative_start_rescue=False,
             adjusted_points=3.0,
         ),
-        mechanism_exon_relevance=MechanismExonRelevanceEvidence(),
+        mechanism_exon_relevance=MechanismExonRelevanceEvidence(
+            exon_relevance=ExonRelevance.ALL,
+        ),
         splice_assay=SpliceAssayEvidence(
             assay_type="minigene",
             result=SpliceAssayResult.NEAR_COMPLETE_OR_COMPLETE,
             calibrated=False,
         ),
         functional=FunctionalAssayEvidence(protein_assays=[ProteinFunctionalAssay()]),
-        informative=InformativeVariantsEvidence(),
+        informative=InformativeVariantsEvidence(
+            variants=[
+                InformativeVariant(
+                    id="clinvar:VCV000000042",
+                    classification=VariantClassification.PATHOGENIC,
+                    similarity_basis=SimilarityBasis.SAME_EXON,
+                )
+            ]
+        ),
         prd_points=3.0,
         spa_points=3.0,
         fxn_points=2.0,
