@@ -1,0 +1,98 @@
+{
+  "$defs": {
+    "ExonRelevance": {
+      "description": "Clinical relevance of the exon containing (or affected by) the VBC across\ndisease-relevant transcripts (SM 18): ALL (\u00d71.0), MOST (\u00d70.5), FEW (\u00d70).",
+      "enum": [
+        "ALL",
+        "MOST",
+        "FEW"
+      ],
+      "title": "ExonRelevance",
+      "type": "string"
+    },
+    "MissensePredictor": {
+      "description": "A calibrated in-silico missense predictor, pre-selected per VBC (SM 6).",
+      "enum": [
+        "ALPHAMISSENSE",
+        "BAYESDEL",
+        "ESM1B",
+        "MUTPRED2",
+        "REVEL",
+        "VARITY_R",
+        "VEST4",
+        "OTHER_CALIBRATED"
+      ],
+      "title": "MissensePredictor",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The amino-acid predictive (MIS_PRD) step: one calibrated predictor.\n\nTranscript relevance (ExonRelevance) reduces positive points; the molecular-\nmechanism axis is deliberately not applied on the missense amino-acid path,\nsince predictors capture both loss- and gain-of-function effects.",
+  "properties": {
+    "adjusted_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded MIS_PRD points after transcript relevance (\u22124.0 to +4.0).",
+      "title": "Adjusted Points"
+    },
+    "initial_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Calibrated points before the transcript-relevance step.",
+      "title": "Initial Points"
+    },
+    "predictor": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MissensePredictor"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The single pre-selected calibrated predictor."
+    },
+    "raw_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The predictor's raw score, if applicable.",
+      "title": "Raw Score"
+    },
+    "transcript_relevance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExonRelevance"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Exon presence across disease-relevant transcripts (All/Most/Few)."
+    }
+  },
+  "title": "MissensePredictiveEvidence",
+  "type": "object"
+}
