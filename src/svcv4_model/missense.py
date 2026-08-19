@@ -15,8 +15,8 @@ from enum import StrEnum
 from pydantic import BaseModel, ConfigDict, Field
 
 from svcv4_model.functional import FunctionalAssayEvidence
-from svcv4_model.informative import VariantClassification
-from svcv4_model.mechanism import ExonRelevance
+from svcv4_model.informative import InformativeVariantsEvidence, VariantClassification
+from svcv4_model.mechanism import ExonRelevance, MechanismExonRelevanceEvidence
 
 
 class MissensePredictor(StrEnum):
@@ -129,4 +129,126 @@ class MissenseAminoAcidAssessment(BaseModel):
     )
     mis_total: float | None = Field(
         default=None, description="Capped MIS_ parent-code total (−8.0 to +9.0)."
+    )
+
+
+class SplicePredictionOutcome(StrEnum):
+    """The in-silico splice-prediction outcome selecting one of five paths (SM 6)."""
+
+    NMD_PREDICTED = "NMD_PREDICTED"
+    FRAMESHIFT_NO_NMD = "FRAMESHIFT_NO_NMD"
+    SPLICE_NO_FRAMESHIFT = "SPLICE_NO_FRAMESHIFT"
+    UNCERTAIN = "UNCERTAIN"
+    UNLIKELY = "UNLIKELY"
+
+
+class SplicePredictor(StrEnum):
+    """An in-silico splice-effect predictor (SM 6)."""
+
+    SPLICEAI = "SPLICEAI"
+    PANGOLIN = "PANGOLIN"
+    OTHER = "OTHER"
+
+
+class SpliceAssayResult(StrEnum):
+    """The qualitative degree of aberrant splice product in a splice assay (SM 6)."""
+
+    NEAR_COMPLETE_OR_COMPLETE = "NEAR_COMPLETE_OR_COMPLETE"
+    SUBSTANTIAL = "SUBSTANTIAL"
+    INCOMPLETE_OR_NONE = "INCOMPLETE_OR_NONE"
+
+
+class SplicePredictiveEvidence(BaseModel):
+    """The splice predictive (SPL_PRD) step of a splice path (SM 6).
+
+    Positive initial points (yellow/orange paths) are reduced by the SM 18
+    mechanism/exon matrix; blue starts at 0.0 and violet at −1.0.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    splice_predictor: SplicePredictor | None = Field(
+        default=None, description="The in-silico splice predictor used (e.g. SpliceAI)."
+    )
+    initial_points: float | None = Field(
+        default=None, description="Initial SPL_PRD points before the SM 18 adjustment."
+    )
+    protein_fraction_altered: float | None = Field(
+        default=None,
+        description="Fraction of protein altered (orange paths' initial-points table).",
+    )
+    alternative_start_rescue: bool | None = Field(
+        default=None,
+        description="An alternative start codon rescues the 5' PTC (the −1.0 case).",
+    )
+    adjusted_points: float | None = Field(
+        default=None, description="Coded SPL_PRD points after the SM 18 adjustment."
+    )
+    # Note: the lower-orange path's protein-deletion in-silico tool input
+    # (MutationTaster/Provean, +2.0 / −0.5; SM 6, not yet calibrated) folds into
+    # ``initial_points`` for now rather than a dedicated field.
+
+
+class SpliceAssayEvidence(BaseModel):
+    """The splice-assay (SPL_SPA) step: RNA / minigene evidence for splicing (SM 6).
+
+    Distinct from SM 20 functional evidence (which is SPL_FXN). Semantics vary by
+    path: it scales SPL_PRD (yellow/orange), is additive (blue), or adds benignity
+    (violet). Absent = SPL_SPA_ND.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    assay_type: str | None = Field(
+        default=None, description="Assay modality (e.g. RT-PCR, RNAseq, minigene)."
+    )
+    result: SpliceAssayResult | None = Field(
+        default=None, description="Qualitative degree of the aberrant splice product."
+    )
+    calibrated: bool | None = Field(
+        default=None,
+        description="Whether an activity-threshold calibration allows adjusted scoring.",
+    )
+
+
+class MissenseSpliceAssessment(BaseModel):
+    """The missense splice (SPL_) path assessment (SM 6).
+
+    One entity for all five color-paths, parameterized by ``prediction_outcome``;
+    reuses the SM 18/19/20 submodules. Permissive superset; the per-path pipeline
+    and its caps are documented, not computed.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    prediction_outcome: SplicePredictionOutcome | None = Field(
+        default=None, description="Which of the five splice prediction paths applies."
+    )
+    predictive: SplicePredictiveEvidence | None = Field(
+        default=None, description="The SPL_PRD splice-prediction step."
+    )
+    mechanism_exon_relevance: MechanismExonRelevanceEvidence | None = Field(
+        default=None, description="SM 18 molecular-mechanism & exon-relevance inputs."
+    )
+    splice_assay: SpliceAssayEvidence | None = Field(
+        default=None, description="SM 6 splice-assay evidence (SPL_SPA)."
+    )
+    functional: FunctionalAssayEvidence | None = Field(
+        default=None, description="SM 20 functional-assay evidence (SPL_FXN)."
+    )
+    informative: InformativeVariantsEvidence | None = Field(
+        default=None, description="SM 19 informative-variants evidence (SPL_INF)."
+    )
+    prd_points: float | None = Field(default=None, description="Coded SPL_PRD point value.")
+    spa_points: float | None = Field(default=None, description="Coded SPL_SPA point value.")
+    fxn_points: float | None = Field(default=None, description="Coded SPL_FXN point value.")
+    inf_points: float | None = Field(default=None, description="Coded SPL_INF point value.")
+    prd_spa_combined: float | None = Field(
+        default=None, description="Held SPL_PRD + SPL_SPA combined value."
+    )
+    prd_spa_fxn_combined: float | None = Field(
+        default=None, description="Held SPL_PRD + SPL_SPA + SPL_FXN combined value."
+    )
+    spl_total: float | None = Field(
+        default=None, description="Capped SPL_ parent-code total for this path."
     )
