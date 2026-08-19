@@ -1,0 +1,84 @@
+{
+  "$defs": {
+    "SplicePredictor": {
+      "description": "An in-silico splice-effect predictor (SM 6).",
+      "enum": [
+        "SPLICEAI",
+        "PANGOLIN",
+        "OTHER"
+      ],
+      "title": "SplicePredictor",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The splice predictive (SPL_PRD) step of a splice path (SM 6).\n\nPositive initial points (yellow/orange paths) are reduced by the SM 18\nmechanism/exon matrix; blue starts at 0.0 and violet at \u22121.0.",
+  "properties": {
+    "adjusted_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded SPL_PRD points after the SM 18 adjustment.",
+      "title": "Adjusted Points"
+    },
+    "alternative_start_rescue": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "An alternative start codon rescues the 5' PTC (the \u22121.0 case).",
+      "title": "Alternative Start Rescue"
+    },
+    "initial_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Initial SPL_PRD points before the SM 18 adjustment.",
+      "title": "Initial Points"
+    },
+    "protein_fraction_altered": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fraction of protein altered (orange paths' initial-points table).",
+      "title": "Protein Fraction Altered"
+    },
+    "splice_predictor": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SplicePredictor"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The in-silico splice predictor used (e.g. SpliceAI)."
+    }
+  },
+  "title": "SplicePredictiveEvidence",
+  "type": "object"
+}

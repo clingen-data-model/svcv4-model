@@ -1,0 +1,58 @@
+{
+  "$defs": {
+    "SpliceAssayResult": {
+      "description": "The qualitative degree of aberrant splice product in a splice assay (SM 6).",
+      "enum": [
+        "NEAR_COMPLETE_OR_COMPLETE",
+        "SUBSTANTIAL",
+        "INCOMPLETE_OR_NONE"
+      ],
+      "title": "SpliceAssayResult",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The splice-assay (SPL_SPA) step: RNA / minigene evidence for splicing (SM 6).\n\nDistinct from SM 20 functional evidence (which is SPL_FXN). Semantics vary by\npath: it scales SPL_PRD (yellow/orange), is additive (blue), or adds benignity\n(violet). Absent = SPL_SPA_ND.",
+  "properties": {
+    "assay_type": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Assay modality (e.g. RT-PCR, RNAseq, minigene).",
+      "title": "Assay Type"
+    },
+    "calibrated": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether an activity-threshold calibration allows adjusted scoring.",
+      "title": "Calibrated"
+    },
+    "result": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SpliceAssayResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Qualitative degree of the aberrant splice product."
+    }
+  },
+  "title": "SpliceAssayEvidence",
+  "type": "object"
+}

@@ -81,3 +81,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.MissenseAminoAcidAssessment
+
+---
+
+::: svcv4_model.MissenseSpliceAssessment

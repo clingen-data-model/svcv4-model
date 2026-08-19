@@ -5,8 +5,13 @@ from __future__ import annotations
 import pytest
 
 from svcv4_model.functional import FunctionalAssayEvidence, ProteinFunctionalAssay
-from svcv4_model.informative import VariantClassification
-from svcv4_model.mechanism import ExonRelevance
+from svcv4_model.informative import (
+    InformativeVariant,
+    InformativeVariantsEvidence,
+    SimilarityBasis,
+    VariantClassification,
+)
+from svcv4_model.mechanism import ExonRelevance, MechanismExonRelevanceEvidence
 from svcv4_model.missense import (
     MissenseAminoAcidAssessment,
     MissenseInfCategory,
@@ -14,6 +19,12 @@ from svcv4_model.missense import (
     MissenseInformativeVariant,
     MissensePredictiveEvidence,
     MissensePredictor,
+    MissenseSpliceAssessment,
+    SpliceAssayEvidence,
+    SpliceAssayResult,
+    SplicePredictionOutcome,
+    SplicePredictiveEvidence,
+    SplicePredictor,
 )
 
 
@@ -106,5 +117,104 @@ def test_importable_from_package_root() -> None:
         "MissenseInformativeVariant",
         "MissensePredictiveEvidence",
         "MissensePredictor",
+    ):
+        assert name in svcv4_model.__all__
+
+
+def _maximal_splice_assessment() -> MissenseSpliceAssessment:
+    return MissenseSpliceAssessment(
+        prediction_outcome=SplicePredictionOutcome.NMD_PREDICTED,
+        predictive=SplicePredictiveEvidence(
+            splice_predictor=SplicePredictor.SPLICEAI,
+            initial_points=3.0,
+            protein_fraction_altered=0.6,
+            alternative_start_rescue=False,
+            adjusted_points=3.0,
+        ),
+        mechanism_exon_relevance=MechanismExonRelevanceEvidence(
+            exon_relevance=ExonRelevance.ALL,
+        ),
+        splice_assay=SpliceAssayEvidence(
+            assay_type="minigene",
+            result=SpliceAssayResult.NEAR_COMPLETE_OR_COMPLETE,
+            calibrated=False,
+        ),
+        functional=FunctionalAssayEvidence(protein_assays=[ProteinFunctionalAssay()]),
+        informative=InformativeVariantsEvidence(
+            variants=[
+                InformativeVariant(
+                    id="clinvar:VCV000000042",
+                    classification=VariantClassification.PATHOGENIC,
+                    similarity_basis=SimilarityBasis.SAME_EXON,
+                )
+            ]
+        ),
+        prd_points=3.0,
+        spa_points=3.0,
+        fxn_points=2.0,
+        inf_points=1.0,
+        prd_spa_combined=6.0,
+        prd_spa_fxn_combined=8.0,
+        spl_total=9.0,
+    )
+
+
+def test_splice_assessment_round_trips_json() -> None:
+    original = _maximal_splice_assessment()
+    rehydrated = MissenseSpliceAssessment.model_validate(original.model_dump(mode="json"))
+    assert rehydrated == original
+
+
+def test_splice_assessment_is_permissive_when_empty() -> None:
+    empty = MissenseSpliceAssessment()
+    assert empty.prediction_outcome is None
+    assert empty.predictive is None
+    assert empty.mechanism_exon_relevance is None
+    assert empty.splice_assay is None
+    assert empty.functional is None
+    assert empty.informative is None
+    assert empty.spl_total is None
+
+
+def test_splice_assessment_forbids_extra() -> None:
+    with pytest.raises(ValueError):
+        MissenseSpliceAssessment(not_a_field=1)
+
+
+def test_splice_predictive_forbids_extra() -> None:
+    with pytest.raises(ValueError):
+        SplicePredictiveEvidence(not_a_field=1)
+
+
+def test_splice_assay_forbids_extra() -> None:
+    with pytest.raises(ValueError):
+        SpliceAssayEvidence(not_a_field=1)
+
+
+def test_splice_prediction_outcome_values_round_trip() -> None:
+    for outcome in SplicePredictionOutcome:
+        assert MissenseSpliceAssessment(prediction_outcome=outcome).prediction_outcome is outcome
+
+
+def test_splice_predictor_values_round_trip() -> None:
+    for predictor in SplicePredictor:
+        assert SplicePredictiveEvidence(splice_predictor=predictor).splice_predictor is predictor
+
+
+def test_splice_assay_result_values_round_trip() -> None:
+    for result in SpliceAssayResult:
+        assert SpliceAssayEvidence(result=result).result is result
+
+
+def test_splice_names_importable_from_package_root() -> None:
+    import svcv4_model
+
+    for name in (
+        "MissenseSpliceAssessment",
+        "SpliceAssayEvidence",
+        "SpliceAssayResult",
+        "SplicePredictionOutcome",
+        "SplicePredictiveEvidence",
+        "SplicePredictor",
     ):
         assert name in svcv4_model.__all__
