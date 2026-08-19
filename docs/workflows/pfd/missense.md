@@ -6,12 +6,12 @@ green path → the `MIS_` parent code) and a **splicing effect** path (the lower
 yellow/orange/blue/violet paths → the `SPL_` parent code). The analyst follows
 **both**, then applies the higher (more positive) of the two scores.
 
-!!! note "Modeling underway — amino-acid path landed"
+!!! note "Modeling underway — both paths landed"
 
-    This increment models the **amino-acid (`MIS_`) path** as
-    `MissenseAminoAcidAssessment` (inputs captured, scoring documented not
-    computed). The splice (`SPL_`) paths and the `MIS_`-vs-`SPL_` comparison are
-    later increments.
+    Both the **amino-acid (`MIS_`) path** (`MissenseAminoAcidAssessment`) and the
+    **splice (`SPL_`) paths** (`MissenseSpliceAssessment`) are modeled (inputs
+    captured, scoring documented not computed). The `MIS_`-vs-`SPL_` comparison
+    ("take the higher") is a later increment.
 
 ## Amino-acid effect path (`MIS_`) ✅ modeled (inputs)
 
@@ -70,8 +70,57 @@ The `MIS_INF_` points are combined with the prior steps and coded with the paren
 code `MIS_ −8.0 to +9.0` (`mis_total`). This value is later compared with the
 splice path's `SPL_` total (a future increment) to decide which applies.
 
-## Splice effect path (`SPL_`)
+## Splice effect path (`SPL_`) ✅ modeled (inputs)
 
-Modeled in a later increment — the five color sub-paths (yellow/upper-orange/
-lower-orange/blue/violet), the `SPL_SPA` splice-assay module, and the
-`MIS_`-vs-`SPL_` comparison.
+The splice path evaluates the nucleotide change's effect on splicing. The in-silico
+splice prediction (SpliceAI / Pangolin — `SplicePredictor`) selects **one** of five
+paths (`SplicePredictionOutcome`), and all five run the same pipeline: **SPL_PRD**
+(prediction) → **SPL_SPA** (splice assay) → **SPL_FXN** (functional, SM 20) →
+**SPL_INF** (informative, SM 19) → the capped **SPL_** total. Modeled as one
+`MissenseSpliceAssessment`; each step is **documented, not computed**.
+
+| Path (`prediction_outcome`) | Splice prediction | SPL_PRD initial | SPL_ total |
+|---|---|---|---|
+| `NMD_PREDICTED` (yellow) | frameshift + NMD | `+3.0` | `−8.0 to +10.0` |
+| `FRAMESHIFT_NO_NMD` (upper orange) | frameshift, no NMD | `−1.0 to +3.0` | `−8.0 to +10.0` |
+| `SPLICE_NO_FRAMESHIFT` (lower orange) | splice, no frameshift/NMD | `−1.0 to +3.0` | `−8.0 to +10.0` |
+| `UNCERTAIN` (blue) | uncertain | `0.0` | `−8.0 to 0.0` |
+| `UNLIKELY` (violet) | unlikely | `−1.0` | `−8.0 to +8.0` |
+
+### Splice prediction (`SPL_PRD_`)
+
+Positive initial points (yellow/orange) are reduced by the
+[Molecular Mechanism & Exon Relevance](index.md#molecular-mechanism-exon-relevance-modeled-inputs)
+matrix (SM 18) — unlike the amino-acid path, the splice paths **do** apply it. The
+orange paths derive their initial points from a critical-amino-acid table (the
+fraction of protein altered; an alternative start codon that rescues a 5′ PTC gives
+`−1.0`). The lower-orange path may also fold in a protein-deletion in-silico tool
+(MutationTaster / Provean, not yet calibrated). Captured on `SplicePredictiveEvidence`.
+
+### Splice assay (`SPL_SPA_`)
+
+`SpliceAssayEvidence` captures RNA / minigene / RT-PCR evidence for the aberrant
+splice product (`SpliceAssayResult`: near-complete / substantial / incomplete-or-none;
+absent = `SPL_SPA_ND`). Its semantics differ by path: for yellow/orange it **scales**
+SPL_PRD (near-complete → full/double, substantial → half, incomplete/none → zero);
+for blue it is **additive** (`−2.0 to +2.0`); for violet it adds **benignity**
+(`−2.0 to 0.0`). This is distinct from SPL_FXN, to avoid double-counting.
+
+### Functional (`SPL_FXN_`) and informative (`SPL_INF_`)
+
+`SPL_FXN` reuses the generic [Functional Assays](index.md#functional-assays-modeled-inputs)
+module (`FunctionalAssayEvidence`), coded `−8.0 to +8.0`. `SPL_INF` reuses the
+generic [Informative Variants](index.md#informative-variants-modeled-inputs) module
+(`InformativeVariantsEvidence`, SM 19): a P/LP/B/LB variant in the **same exon** with
+the **same predicted splice impact** (+2.0 first P / +1.0 first LP / +1.0 each
+additional; negatives for B/LB), coded `−8.0 to +8.0`; the violet path restricts it
+to B/LB only. (`similarity_basis` is single-valued, so the compound same-exon-and-
+same-impact eligibility is a documented rule rather than fully typed.)
+
+### Held combined values and the `SPL_` total
+
+Per SM 6, the model records **both** the separate coded values and the two held
+combined values (`prd_spa_combined` = SPL_PRD + SPL_SPA; `prd_spa_fxn_combined` =
+SPL_PRD + SPL_SPA + SPL_FXN), then the capped parent `SPL_` total (`spl_total`),
+whose range depends on the path (table above). The `SPL_` total is later compared
+with the amino-acid `MIS_` total (increment 2c) to decide which applies.
