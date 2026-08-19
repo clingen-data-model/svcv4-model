@@ -63,6 +63,14 @@ from svcv4_model.mechanism import (
     MechanismExonRelevanceEvidence,
 )
 from svcv4_model.method import Method
+from svcv4_model.missense import (
+    MissenseAminoAcidAssessment,
+    MissenseInfCategory,
+    MissenseInformativeEvidence,
+    MissenseInformativeVariant,
+    MissensePredictiveEvidence,
+    MissensePredictor,
+)
 from svcv4_model.pfd import (
     PfdCodeAssessment,
     PfdParentCode,
@@ -108,6 +116,12 @@ __all__ = [
     "ManeStatus",
     "MechanismExonRelevanceEvidence",
     "Method",
+    "MissenseAminoAcidAssessment",
+    "MissenseInfCategory",
+    "MissenseInformativeEvidence",
+    "MissenseInformativeVariant",
+    "MissensePredictiveEvidence",
+    "MissensePredictor",
     "MolecularMechanism",
     "PfdCodeAssessment",
     "PfdParentCode",

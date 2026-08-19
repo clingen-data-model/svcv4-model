@@ -1,0 +1,604 @@
+{
+  "$defs": {
+    "AnimalModelEvidence": {
+      "additionalProperties": false,
+      "description": "Whole-animal-model functional evidence (SM 20); range *_FXN_0.0 to +4.0.",
+      "properties": {
+        "fidelity_to_mechanism": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the model faithfully recapitulates the disease mechanism.",
+          "title": "Fidelity To Mechanism"
+        },
+        "inheritance_match": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the inheritance pattern matches the human MDE.",
+          "title": "Inheritance Match"
+        },
+        "local_sequence_similarity_high": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether local sequence similarity around the VBC is high (for some variant types).",
+          "title": "Local Sequence Similarity High"
+        },
+        "model_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AnimalModelType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Engineered / naturally-occurring / complementation."
+        },
+        "ortholog_established": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the animal gene is an established ortholog of the human gene.",
+          "title": "Ortholog Established"
+        },
+        "phenotype_replication": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PhenotypeReplication"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "How well the model replicates the human phenotype."
+        },
+        "species": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Model organism, e.g. mouse, zebrafish.",
+          "title": "Species"
+        }
+      },
+      "title": "AnimalModelEvidence",
+      "type": "object"
+    },
+    "AnimalModelType": {
+      "description": "Kind of animal-model functional evidence (SM 20).",
+      "enum": [
+        "ENGINEERED",
+        "NATURALLY_OCCURRING",
+        "COMPLEMENTATION"
+      ],
+      "title": "AnimalModelType",
+      "type": "string"
+    },
+    "ExonRelevance": {
+      "description": "Clinical relevance of the exon containing (or affected by) the VBC across\ndisease-relevant transcripts (SM 18): ALL (\u00d71.0), MOST (\u00d70.5), FEW (\u00d70).",
+      "enum": [
+        "ALL",
+        "MOST",
+        "FEW"
+      ],
+      "title": "ExonRelevance",
+      "type": "string"
+    },
+    "FunctionalAssayEvidence": {
+      "additionalProperties": false,
+      "description": "SM 20 functional-assay inputs for a PFD assessment.\n\nCaptured; the scoring (OddsPath\u2192points via Tables 1/2 for protein assays;\nTable 3's 0.0 to +4.0 for animal models; the combination rules) is\ndocumented, not computed.",
+      "properties": {
+        "animal_models": {
+          "description": "0..many animal-model functional evidence entries.",
+          "items": {
+            "$ref": "#/$defs/AnimalModelEvidence"
+          },
+          "title": "Animal Models",
+          "type": "array"
+        },
+        "disease_mechanism": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MolecularMechanism"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MDE's molecular mechanism the assays are evaluated against."
+        },
+        "protein_assays": {
+          "description": "0..many protein/cellular functional assays.",
+          "items": {
+            "$ref": "#/$defs/ProteinFunctionalAssay"
+          },
+          "title": "Protein Assays",
+          "type": "array"
+        }
+      },
+      "title": "FunctionalAssayEvidence",
+      "type": "object"
+    },
+    "MissenseInfCategory": {
+      "description": "One of the four summable MIS_INF informative-variant categories (SM 6).",
+      "enum": [
+        "SAME_AA_PATHOGENIC",
+        "DISTINCT_AA_PATHOGENIC",
+        "DISTINCT_AA_BENIGN",
+        "SAME_AA_BENIGN"
+      ],
+      "title": "MissenseInfCategory",
+      "type": "string"
+    },
+    "MissenseInformativeEvidence": {
+      "additionalProperties": false,
+      "description": "The MIS_INF step: the summable informative variants for the VBC's codon.",
+      "properties": {
+        "variants": {
+          "description": "Distinct informative variants; summed, not counted.",
+          "items": {
+            "$ref": "#/$defs/MissenseInformativeVariant"
+          },
+          "title": "Variants",
+          "type": "array"
+        }
+      },
+      "title": "MissenseInformativeEvidence",
+      "type": "object"
+    },
+    "MissenseInformativeVariant": {
+      "additionalProperties": false,
+      "description": "One MIS_INF informative variant in the same codon as the VBC (SM 6).",
+      "properties": {
+        "category": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MissenseInfCategory"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Which of the four summable MIS_INF categories applies."
+        },
+        "classification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VariantClassification"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The informative variant's classification (P/LP/B/LB)."
+        },
+        "grantham_wt_to_informative": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Grantham distance wild-type \u2192 informative amino acid (categories 2 & 3).",
+          "title": "Grantham Wt To Informative"
+        },
+        "grantham_wt_to_vbc": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Grantham distance wild-type \u2192 VBC amino acid (categories 2 & 3).",
+          "title": "Grantham Wt To Vbc"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Variant identifier (e.g. a ClinVar VCV).",
+          "title": "Id"
+        }
+      },
+      "title": "MissenseInformativeVariant",
+      "type": "object"
+    },
+    "MissensePredictiveEvidence": {
+      "additionalProperties": false,
+      "description": "The amino-acid predictive (MIS_PRD) step: one calibrated predictor.\n\nTranscript relevance (ExonRelevance) reduces positive points; the molecular-\nmechanism axis is deliberately not applied on the missense amino-acid path,\nsince predictors capture both loss- and gain-of-function effects.",
+      "properties": {
+        "adjusted_points": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Coded MIS_PRD points after transcript relevance (\u22124.0 to +4.0).",
+          "title": "Adjusted Points"
+        },
+        "initial_points": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Calibrated points before the transcript-relevance step.",
+          "title": "Initial Points"
+        },
+        "predictor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MissensePredictor"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The single pre-selected calibrated predictor."
+        },
+        "raw_score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The predictor's raw score, if applicable.",
+          "title": "Raw Score"
+        },
+        "transcript_relevance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExonRelevance"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Exon presence across disease-relevant transcripts (All/Most/Few)."
+        }
+      },
+      "title": "MissensePredictiveEvidence",
+      "type": "object"
+    },
+    "MissensePredictor": {
+      "description": "A calibrated in-silico missense predictor, pre-selected per VBC (SM 6).",
+      "enum": [
+        "ALPHAMISSENSE",
+        "BAYESDEL",
+        "ESM1B",
+        "MUTPRED2",
+        "REVEL",
+        "VARITY_R",
+        "VEST4",
+        "OTHER_CALIBRATED"
+      ],
+      "title": "MissensePredictor",
+      "type": "string"
+    },
+    "MolecularMechanism": {
+      "description": "The MDE's molecular mechanism of disease that an assay must faithfully\nrecapitulate to count (SM 20).",
+      "enum": [
+        "LOSS_OF_FUNCTION",
+        "INCREASED_FUNCTION",
+        "TOXIC_GAIN_OF_FUNCTION",
+        "DOMINANT_NEGATIVE"
+      ],
+      "title": "MolecularMechanism",
+      "type": "string"
+    },
+    "PhenotypeReplication": {
+      "description": "How well the animal model replicates the human phenotype (SM 20, Table 3).",
+      "enum": [
+        "SPECIFIC",
+        "KEY_FEATURES",
+        "NONE"
+      ],
+      "title": "PhenotypeReplication",
+      "type": "string"
+    },
+    "ProteinAssayType": {
+      "description": "Kind of protein/cellular functional assay (SM 20).",
+      "enum": [
+        "ENZYME_KINETIC",
+        "SIGNAL_TRANSDUCTION",
+        "MEMBRANE_CONFORMATION",
+        "MAVE",
+        "OTHER"
+      ],
+      "title": "ProteinAssayType",
+      "type": "string"
+    },
+    "ProteinFunctionalAssay": {
+      "additionalProperties": false,
+      "description": "A protein/cellular functional assay, OddsPath-calibrated (SM 20).\n\nRequires both pathogenic and benign variant controls; small experiments with\nno false positives/negatives use lookup Tables 1/2 (documented, not computed).",
+      "properties": {
+        "assay_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProteinAssayType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Kind of protein/cellular assay."
+        },
+        "benign_control_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Number of benign controls in the calibration set.",
+          "title": "Benign Control Count"
+        },
+        "fidelity_to_mechanism": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the assay faithfully recapitulates the disease mechanism.",
+          "title": "Fidelity To Mechanism"
+        },
+        "has_benign_controls": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether known benign variant controls were used.",
+          "title": "Has Benign Controls"
+        },
+        "has_false_positives_or_negatives": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the experiment had false positives/negatives (which route calibration to expert math, beyond the lookup tables).",
+          "title": "Has False Positives Or Negatives"
+        },
+        "has_pathogenic_controls": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether known pathogenic variant controls were used.",
+          "title": "Has Pathogenic Controls"
+        },
+        "odds_path": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "OddsPath / likelihood ratio from the calibrated truth set.",
+          "title": "Odds Path"
+        },
+        "pathogenic_control_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Number of pathogenic controls in the calibration set.",
+          "title": "Pathogenic Control Count"
+        }
+      },
+      "title": "ProteinFunctionalAssay",
+      "type": "object"
+    },
+    "VariantClassification": {
+      "description": "A variant's pathogenicity classification. Introduced for informative\nvariants (SM 19), whose scoring keys on P/LP vs B/LB. Not (yet) applied to\nthe placeholder ``classification`` strings on other Case sub-models.",
+      "enum": [
+        "PATHOGENIC",
+        "LIKELY_PATHOGENIC",
+        "VUS",
+        "LIKELY_BENIGN",
+        "BENIGN"
+      ],
+      "title": "VariantClassification",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The missense amino-acid (MIS_) path assessment (SM 6).\n\nMirrors the PFD scaffold but swaps in the missense-specific predictive step and\nthe Grantham informative module, reusing the shared SM 20 functional module.\nPermissive superset; the pipeline and its caps are documented, not computed.",
+  "properties": {
+    "functional": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FunctionalAssayEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SM 20 functional-assay evidence (MIS_FXN)."
+    },
+    "fxn_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded MIS_FXN point value.",
+      "title": "Fxn Points"
+    },
+    "inf_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded MIS_INF point value.",
+      "title": "Inf Points"
+    },
+    "informative": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MissenseInformativeEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The four-category Grantham informative evidence (MIS_INF)."
+    },
+    "mis_total": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Capped MIS_ parent-code total (\u22128.0 to +9.0).",
+      "title": "Mis Total"
+    },
+    "prd_fxn_combined": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Held MIS_PRD + MIS_FXN combined value (\u22128.0 to +6.0).",
+      "title": "Prd Fxn Combined"
+    },
+    "prd_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded MIS_PRD point value.",
+      "title": "Prd Points"
+    },
+    "predictive": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MissensePredictiveEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The MIS_PRD amino-acid predictive step."
+    }
+  },
+  "title": "MissenseAminoAcidAssessment",
+  "type": "object"
+}

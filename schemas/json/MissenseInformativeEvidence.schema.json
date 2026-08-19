@@ -1,0 +1,112 @@
+{
+  "$defs": {
+    "MissenseInfCategory": {
+      "description": "One of the four summable MIS_INF informative-variant categories (SM 6).",
+      "enum": [
+        "SAME_AA_PATHOGENIC",
+        "DISTINCT_AA_PATHOGENIC",
+        "DISTINCT_AA_BENIGN",
+        "SAME_AA_BENIGN"
+      ],
+      "title": "MissenseInfCategory",
+      "type": "string"
+    },
+    "MissenseInformativeVariant": {
+      "additionalProperties": false,
+      "description": "One MIS_INF informative variant in the same codon as the VBC (SM 6).",
+      "properties": {
+        "category": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MissenseInfCategory"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Which of the four summable MIS_INF categories applies."
+        },
+        "classification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VariantClassification"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The informative variant's classification (P/LP/B/LB)."
+        },
+        "grantham_wt_to_informative": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Grantham distance wild-type \u2192 informative amino acid (categories 2 & 3).",
+          "title": "Grantham Wt To Informative"
+        },
+        "grantham_wt_to_vbc": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Grantham distance wild-type \u2192 VBC amino acid (categories 2 & 3).",
+          "title": "Grantham Wt To Vbc"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Variant identifier (e.g. a ClinVar VCV).",
+          "title": "Id"
+        }
+      },
+      "title": "MissenseInformativeVariant",
+      "type": "object"
+    },
+    "VariantClassification": {
+      "description": "A variant's pathogenicity classification. Introduced for informative\nvariants (SM 19), whose scoring keys on P/LP vs B/LB. Not (yet) applied to\nthe placeholder ``classification`` strings on other Case sub-models.",
+      "enum": [
+        "PATHOGENIC",
+        "LIKELY_PATHOGENIC",
+        "VUS",
+        "LIKELY_BENIGN",
+        "BENIGN"
+      ],
+      "title": "VariantClassification",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The MIS_INF step: the summable informative variants for the VBC's codon.",
+  "properties": {
+    "variants": {
+      "description": "Distinct informative variants; summed, not counted.",
+      "items": {
+        "$ref": "#/$defs/MissenseInformativeVariant"
+      },
+      "title": "Variants",
+      "type": "array"
+    }
+  },
+  "title": "MissenseInformativeEvidence",
+  "type": "object"
+}
