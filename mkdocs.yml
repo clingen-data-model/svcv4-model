@@ -108,6 +108,7 @@ nav:
               - Segregation (LOC_SEG): workflows/hod/loc/loc-seg.md
       - Predictive & Functional Data (PFD):
           - workflows/pfd/index.md
+          - Missense (MIS_/SPL_): workflows/pfd/missense.md
       - Case model & applicability: workflows/case-model.md
   - Examples:
       - examples/practice-variant-set/index.md

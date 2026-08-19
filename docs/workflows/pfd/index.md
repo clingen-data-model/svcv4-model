@@ -146,6 +146,7 @@ enums and the dual missense **MIS_ / SPL_** path (evaluate both, apply the
 higher) arrive with the per-variant-type workflows.
 
 **The three shared sub-modules and the scaffold are now modeled** (inputs). The
-remaining PFD work — Determining Critical Amino Acids (SM 7) and the
-per-variant-type workflows (Missense first, with its typed predictors and dual
-MIS_/SPL_ path) — is still to come.
+first per-variant-type workflow has begun: the
+[Missense](missense.md) amino-acid (`MIS_`) path is now modeled (inputs); its
+splice (`SPL_`) paths and the `MIS_`-vs-`SPL_` comparison, the other variant-type
+workflows, and Determining Critical Amino Acids (SM 7) are still to come.
