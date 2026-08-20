@@ -79,6 +79,11 @@ from svcv4_model.missense import (
     SplicePredictiveEvidence,
     SplicePredictor,
 )
+from svcv4_model.nonsense import (
+    NonsenseAssessment,
+    NonsensePredictionOutcome,
+    NonsensePredictiveEvidence,
+)
 from svcv4_model.pfd import (
     PfdCodeAssessment,
     PfdParentCode,
@@ -134,6 +139,9 @@ __all__ = [
     "MissenseSelectedPath",
     "MissenseSpliceAssessment",
     "MolecularMechanism",
+    "NonsenseAssessment",
+    "NonsensePredictionOutcome",
+    "NonsensePredictiveEvidence",
     "PfdCodeAssessment",
     "PfdParentCode",
     "PfdPredictiveEvidence",
