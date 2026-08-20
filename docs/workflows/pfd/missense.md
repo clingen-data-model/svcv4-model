@@ -4,14 +4,16 @@
 diagram (Supplementary Material 6): an **amino-acid effect** path (the upper,
 green path → the `MIS_` parent code) and a **splicing effect** path (the lower
 yellow/orange/blue/violet paths → the `SPL_` parent code). The analyst follows
-**both**, then applies the higher (more positive) of the two scores.
+**both**, then selects one to apply — see
+[Selecting the final code](#selecting-the-final-code-mis_-vs-spl_) below.
 
-!!! note "Modeling underway — both paths landed"
+!!! note "Modeling complete — both paths + the comparison landed"
 
-    Both the **amino-acid (`MIS_`) path** (`MissenseAminoAcidAssessment`) and the
-    **splice (`SPL_`) paths** (`MissenseSpliceAssessment`) are modeled (inputs
-    captured, scoring documented not computed). The `MIS_`-vs-`SPL_` comparison
-    ("take the higher") is a later increment.
+    The full Missense workflow is modeled (inputs captured, scoring documented not
+    computed): the **amino-acid (`MIS_`) path** (`MissenseAminoAcidAssessment`), the
+    **splice (`SPL_`) paths** (`MissenseSpliceAssessment`), and the `MIS_`-vs-`SPL_`
+    comparison (`MissenseAssessment`, "take the higher"). Only the motif-variant
+    special case (with SM 7) remains.
 
 ## Amino-acid effect path (`MIS_`) ✅ modeled (inputs)
 
@@ -124,3 +126,22 @@ combined values (`prd_spa_combined` = SPL_PRD + SPL_SPA; `prd_spa_fxn_combined` 
 SPL_PRD + SPL_SPA + SPL_FXN), then the capped parent `SPL_` total (`spl_total`),
 whose range depends on the path (table above). The `SPL_` total is later compared
 with the amino-acid `MIS_` total (increment 2c) to decide which applies.
+
+## Selecting the final code (`MIS_` vs `SPL_`)
+
+The analyst evaluates **both** paths for every missense VBC, then applies one. The
+overall workflow assessment is captured as `MissenseAssessment`, which holds both
+the `amino_acid` (`MissenseAminoAcidAssessment`) and `splice`
+(`MissenseSpliceAssessment`) assessments — SM 6 requires **saving both** so a
+future re-evaluation can reconsider — plus the `selected_path`
+(`MissenseSelectedPath`: amino-acid or splice) and the `applied_total`.
+
+The selection rule is **documented, not computed**:
+
+- if the splice (`SPL_`) total is **negative**, use the **amino-acid** (`MIS_`) path;
+- if the splice total is **positive**, use the **higher** (more positive) of the two;
+- if both are positive **and equal**, use the **amino-acid** path (higher prior
+  probability the effect is via the amino-acid change).
+
+The applied code is `MIS_ −8.0 to +9.0` or `SPL_ −8.0 to +10.0` accordingly (the
+code follows from `selected_path`).
