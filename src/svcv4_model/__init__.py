@@ -40,6 +40,11 @@ from svcv4_model.case_control import CaseControlStudyEvidence
 from svcv4_model.classification import VariantPathogenicityClassification
 from svcv4_model.evidence_item import EvidenceData, EvidenceItem
 from svcv4_model.evidence_line import EvidenceLine
+from svcv4_model.frameshift import (
+    FrameshiftAssessment,
+    FrameshiftPredictionOutcome,
+    FrameshiftPredictiveEvidence,
+)
 from svcv4_model.functional import (
     AnimalModelEvidence,
     AnimalModelType,
@@ -120,6 +125,9 @@ __all__ = [
     "EvidenceItem",
     "EvidenceLine",
     "ExonRelevance",
+    "FrameshiftAssessment",
+    "FrameshiftPredictionOutcome",
+    "FrameshiftPredictiveEvidence",
     "FunctionalAssayEvidence",
     "GenccMechanism",
     "Gene",

@@ -1,0 +1,99 @@
+{
+  "additionalProperties": false,
+  "description": "The frameshift predictive (PRD) step of a frameshift branch (SM 9).\n\nNMD-predicted (yellow) starts at a fixed +6.0 and non-stop decay (green) at\n+4.0; the rescue (orange), no-NMD (violet), and extension (green) branches\nderive initial points from a table. Positive points are reduced by the SM 18\nmechanism/exon matrix.",
+  "properties": {
+    "adjusted_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded PRD points after the SM 18 adjustment.",
+      "title": "Adjusted Points"
+    },
+    "alternative_met_rescue": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Evidence an alternative-Met start codon rescues function (orange branch).",
+      "title": "Alternative Met Rescue"
+    },
+    "basis": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Predictive basis (e.g. NMD prediction; PTC position).",
+      "title": "Basis"
+    },
+    "extension_length_aa": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Non-native C-terminal amino acids added past the stop (extension branch).",
+      "title": "Extension Length Aa"
+    },
+    "initial_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Initial PRD points before the SM 18 adjustment.",
+      "title": "Initial Points"
+    },
+    "non_stop_decay_predicted": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "ORF runs to the polyA with no in-frame stop, predicting NSD (green).",
+      "title": "Non Stop Decay Predicted"
+    },
+    "protein_fraction_reduced": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fraction of protein lost (the orange/violet initial-points table).",
+      "title": "Protein Fraction Reduced"
+    }
+  },
+  "title": "FrameshiftPredictiveEvidence",
+  "type": "object"
+}
