@@ -89,3 +89,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.MissenseAssessment
+
+---
+
+::: svcv4_model.NonsenseAssessment
