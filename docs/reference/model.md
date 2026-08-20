@@ -93,3 +93,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.NonsenseAssessment
+
+---
+
+::: svcv4_model.FrameshiftAssessment
