@@ -252,3 +252,35 @@ class MissenseSpliceAssessment(BaseModel):
     spl_total: float | None = Field(
         default=None, description="Capped SPL_ parent-code total for this path."
     )
+
+
+class MissenseSelectedPath(StrEnum):
+    """Which missense path was applied to the VBC after the comparison (SM 6)."""
+
+    AMINO_ACID = "AMINO_ACID"
+    SPLICE = "SPLICE"
+
+
+class MissenseAssessment(BaseModel):
+    """The overall missense workflow assessment (SM 6).
+
+    Holds both the amino-acid (MIS_) and splice (SPL_) path assessments — SM 6
+    requires saving both — plus which path was applied and the final applied
+    total. The comparison rule (splice-negative → amino-acid; else the higher;
+    ties → amino-acid) is documented, not computed.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    amino_acid: MissenseAminoAcidAssessment | None = Field(
+        default=None, description="The amino-acid (MIS_) path assessment."
+    )
+    splice: MissenseSpliceAssessment | None = Field(
+        default=None, description="The splice (SPL_) path assessment."
+    )
+    selected_path: MissenseSelectedPath | None = Field(
+        default=None, description="Which path was applied to the VBC after the comparison."
+    )
+    applied_total: float | None = Field(
+        default=None, description="The final points applied to the VBC (the MIS_ or SPL_ total)."
+    )
