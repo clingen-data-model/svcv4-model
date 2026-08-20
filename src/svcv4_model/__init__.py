@@ -60,6 +60,11 @@ from svcv4_model.informative import (
     SimilarityBasis,
     VariantClassification,
 )
+from svcv4_model.inframe_indel import (
+    InframeIndelAssessment,
+    InframeIndelBranch,
+    InframeIndelPredictiveEvidence,
+)
 from svcv4_model.inputs import MDE, VBC
 from svcv4_model.mechanism import (
     ExonRelevance,
@@ -134,6 +139,9 @@ __all__ = [
     "GeneDiseaseValidity",
     "InformativeVariant",
     "InformativeVariantsEvidence",
+    "InframeIndelAssessment",
+    "InframeIndelBranch",
+    "InframeIndelPredictiveEvidence",
     "ManeStatus",
     "MechanismExonRelevanceEvidence",
     "Method",
