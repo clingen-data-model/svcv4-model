@@ -58,6 +58,25 @@ def test_assessment_round_trips_json() -> None:
     assert rehydrated == original
 
 
+def test_ssr_branch_round_trips_json() -> None:
+    original = InframeIndelAssessment(
+        branch=InframeIndelBranch.SIMPLE_SEQUENCE_REPEAT,
+        parent_code=PfdParentCode.CDS,
+        predictive=InframeIndelPredictiveEvidence(
+            basis="Repeat polymorphic in gnomAD",
+            initial_points=-1.0,
+            repeat_stable_in_controls=False,
+            adjusted_points=-1.0,
+        ),
+        prd_points=-1.0,
+        parent_total=-1.0,
+    )
+    rehydrated = InframeIndelAssessment.model_validate(original.model_dump(mode="json"))
+    assert rehydrated == original
+    assert rehydrated.predictive is not None
+    assert rehydrated.predictive.repeat_stable_in_controls is False
+
+
 def test_assessment_is_permissive_when_empty() -> None:
     empty = InframeIndelAssessment()
     assert empty.branch is None
