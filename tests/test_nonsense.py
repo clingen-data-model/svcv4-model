@@ -5,8 +5,12 @@ from __future__ import annotations
 import pytest
 
 from svcv4_model.functional import FunctionalAssayEvidence, ProteinFunctionalAssay
-from svcv4_model.informative import InformativeVariant, InformativeVariantsEvidence
-from svcv4_model.mechanism import MechanismExonRelevanceEvidence
+from svcv4_model.informative import (
+    InformativeVariant,
+    InformativeVariantsEvidence,
+    VariantClassification,
+)
+from svcv4_model.mechanism import ExonRelevance, MechanismExonRelevanceEvidence
 from svcv4_model.nonsense import (
     NonsenseAssessment,
     NonsensePredictionOutcome,
@@ -26,9 +30,18 @@ def _maximal_assessment() -> NonsenseAssessment:
             alternative_met_rescue=False,
             adjusted_points=6.0,
         ),
-        mechanism_exon_relevance=MechanismExonRelevanceEvidence(),
+        mechanism_exon_relevance=MechanismExonRelevanceEvidence(
+            exon_relevance=ExonRelevance.ALL,
+        ),
         functional=FunctionalAssayEvidence(protein_assays=[ProteinFunctionalAssay()]),
-        informative=InformativeVariantsEvidence(variants=[InformativeVariant()]),
+        informative=InformativeVariantsEvidence(
+            variants=[
+                InformativeVariant(
+                    id="clinvar:VCV000000088",
+                    classification=VariantClassification.PATHOGENIC,
+                )
+            ]
+        ),
         prd_points=6.0,
         fxn_points=2.0,
         inf_points=1.0,

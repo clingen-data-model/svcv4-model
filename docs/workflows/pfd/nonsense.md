@@ -20,9 +20,11 @@ computed**.
 | `NMD_WITH_RESCUE` (orange) | yes | yes | `CDS_` | `−1.0 to +6.0` | `−8.0 to +10.0` |
 | `NO_NMD` (violet) | no | — | `CDS_` | `0.0 to +6.0` | `−8.0 to +10.0` |
 
-The parent code reuses `PfdParentCode` (`NUL` / `CDS`).
+The parent code reuses `PfdParentCode` (`NUL` / `CDS`) and **follows from**
+`prediction_outcome` (yellow → `NUL`; orange/violet → `CDS`) — `parent_code` records
+that resolved code and should be kept consistent with the branch.
 
-### Predictive (`*_PRD_`)
+## Predictive (`*_PRD_`)
 
 The **yellow** branch awards a fixed **+6.0** for a predicted NMD event. The
 **orange** and **violet** branches instead read initial points from a table keyed on
@@ -34,7 +36,7 @@ the orange branch. Positive initial points are then reduced by the
 [Molecular Mechanism & Exon Relevance](index.md#molecular-mechanism-exon-relevance-modeled-inputs)
 matrix (SM 18); the result is coded `*_PRD_` per the branch's range above.
 
-### Functional (`*_FXN_`) and informative (`*_INF_`)
+## Functional (`*_FXN_`) and informative (`*_INF_`)
 
 `FXN` reuses the generic [Functional Assays](index.md#functional-assays-modeled-inputs)
 module (`FunctionalAssayEvidence`), coded `−8.0 to +8.0` — for the yellow branch the
@@ -47,7 +49,7 @@ truncated-protein effect. `INF` reuses the generic
 same-NMD (yellow); a P/LP PTC between the VBC and the alternate start (orange); a PTC
 downstream of the VBC (violet) — a documented eligibility rule, not separate fields.
 
-### Held combined value and the parent total
+## Held combined value and the parent total
 
 Per SM 8, the model records **both** the separate coded values and the one held
 `PRD + FXN` combined value (`prd_fxn_combined`, no distinct code). Note the held cap
