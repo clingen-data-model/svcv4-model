@@ -14,11 +14,13 @@ from svcv4_model.informative import (
 from svcv4_model.mechanism import ExonRelevance, MechanismExonRelevanceEvidence
 from svcv4_model.missense import (
     MissenseAminoAcidAssessment,
+    MissenseAssessment,
     MissenseInfCategory,
     MissenseInformativeEvidence,
     MissenseInformativeVariant,
     MissensePredictiveEvidence,
     MissensePredictor,
+    MissenseSelectedPath,
     MissenseSpliceAssessment,
     SpliceAssayEvidence,
     SpliceAssayResult,
@@ -217,4 +219,44 @@ def test_splice_names_importable_from_package_root() -> None:
         "SplicePredictiveEvidence",
         "SplicePredictor",
     ):
+        assert name in svcv4_model.__all__
+
+
+def _maximal_missense_assessment() -> MissenseAssessment:
+    return MissenseAssessment(
+        amino_acid=_maximal_assessment(),
+        splice=_maximal_splice_assessment(),
+        selected_path=MissenseSelectedPath.AMINO_ACID,
+        applied_total=8.0,
+    )
+
+
+def test_missense_assessment_round_trips_json() -> None:
+    original = _maximal_missense_assessment()
+    rehydrated = MissenseAssessment.model_validate(original.model_dump(mode="json"))
+    assert rehydrated == original
+
+
+def test_missense_assessment_is_permissive_when_empty() -> None:
+    empty = MissenseAssessment()
+    assert empty.amino_acid is None
+    assert empty.splice is None
+    assert empty.selected_path is None
+    assert empty.applied_total is None
+
+
+def test_missense_assessment_forbids_extra() -> None:
+    with pytest.raises(ValueError):
+        MissenseAssessment(not_a_field=1)
+
+
+def test_selected_path_values_round_trip() -> None:
+    for path in MissenseSelectedPath:
+        assert MissenseAssessment(selected_path=path).selected_path is path
+
+
+def test_missense_assessment_importable_from_package_root() -> None:
+    import svcv4_model
+
+    for name in ("MissenseAssessment", "MissenseSelectedPath"):
         assert name in svcv4_model.__all__

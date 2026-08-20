@@ -85,3 +85,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.MissenseSpliceAssessment
+
+---
+
+::: svcv4_model.MissenseAssessment
