@@ -97,3 +97,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.FrameshiftAssessment
+
+---
+
+::: svcv4_model.InframeIndelAssessment
