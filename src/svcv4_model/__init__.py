@@ -41,6 +41,11 @@ from svcv4_model.case_control import CaseControlStudyEvidence
 from svcv4_model.classification import VariantPathogenicityClassification
 from svcv4_model.evidence_item import EvidenceData, EvidenceItem
 from svcv4_model.evidence_line import EvidenceLine
+from svcv4_model.exon_deletion import (
+    ExonDeletionAssessment,
+    ExonDeletionOutcome,
+    ExonDeletionPredictiveEvidence,
+)
 from svcv4_model.frameshift import (
     FrameshiftAssessment,
     FrameshiftPredictionOutcome,
@@ -134,6 +139,9 @@ __all__ = [
     "EvidenceData",
     "EvidenceItem",
     "EvidenceLine",
+    "ExonDeletionAssessment",
+    "ExonDeletionOutcome",
+    "ExonDeletionPredictiveEvidence",
     "ExonRelevance",
     "FrameshiftAssessment",
     "FrameshiftPredictionOutcome",

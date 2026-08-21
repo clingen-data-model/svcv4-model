@@ -1,0 +1,73 @@
+{
+  "additionalProperties": false,
+  "description": "The exon-deletion predictive (PRD) step of a deletion branch (SM 13).\n\nWhole-gene starts at +10.0; the NMD / start-exon branches at +6.0; the no-NMD\nand unproven-alt-start branches derive initial points from the fraction of\nprotein removed; the functional-alt-start branch starts at \u22121.0. Positive points\nare reduced by the SM 18 matrix (mechanism-only for whole-gene).",
+  "properties": {
+    "adjusted_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded PRD points after the SM 18 adjustment.",
+      "title": "Adjusted Points"
+    },
+    "alternative_start_functional": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Demonstrated functional alternative in-frame start (the grey branch).",
+      "title": "Alternative Start Functional"
+    },
+    "basis": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Predictive basis (e.g. whole-gene LoF; NMD; % protein lost).",
+      "title": "Basis"
+    },
+    "initial_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Initial PRD points before the SM 18 adjustment.",
+      "title": "Initial Points"
+    },
+    "protein_fraction_removed": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fraction of protein removed (the violet/blue initial-points table).",
+      "title": "Protein Fraction Removed"
+    }
+  },
+  "title": "ExonDeletionPredictiveEvidence",
+  "type": "object"
+}
