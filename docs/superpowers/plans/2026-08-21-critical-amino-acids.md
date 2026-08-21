@@ -158,7 +158,7 @@ class CriticalAminoAcidEvidence(BaseModel):
     )
     additional_points: float | None = Field(
         default=None,
-        description="Additional evidence points added on top of in-silico (up to +2.0 for a residue).",
+        description="Additional points on top of the in-silico score (up to +2.0 for a residue).",
     )
     max_score_not_reached: bool | None = Field(
         default=None,
@@ -298,7 +298,7 @@ caution applies throughout: avoid using this to reach **+6.0 on prediction alone
 especially for a variant never observed in an affected individual (`observed_in_affected`).
 ````
 
-- [ ] **Step 2: Update the "shape of remaining work" framing** — `pfd/index.md`, lines 46-50. OLD:
+- [ ] **Step 2: Update the "shape of remaining work" framing** — `pfd/index.md`, lines 47-50. OLD:
 
 ```markdown
 shared across all of them: Determining Critical Amino Acids, Molecular
