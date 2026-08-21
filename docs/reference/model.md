@@ -117,3 +117,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.ExonDuplicationAssessment
+
+---
+
+::: svcv4_model.StartLostAssessment
