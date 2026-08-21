@@ -121,3 +121,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.StartLostAssessment
+
+---
+
+::: svcv4_model.StopLostAssessment

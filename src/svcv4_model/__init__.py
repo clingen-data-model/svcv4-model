@@ -125,6 +125,12 @@ from svcv4_model.start_lost import (
     StartLostPredictiveEvidence,
 )
 from svcv4_model.statement import Statement
+from svcv4_model.stop_lost import (
+    StopLostAssessment,
+    StopLostInterference,
+    StopLostOutcome,
+    StopLostPredictiveEvidence,
+)
 
 __all__ = [
     "MDE",
@@ -210,6 +216,10 @@ __all__ = [
     "StartLostOutcome",
     "StartLostPredictiveEvidence",
     "Statement",
+    "StopLostAssessment",
+    "StopLostInterference",
+    "StopLostOutcome",
+    "StopLostPredictiveEvidence",
     "TriState",
     "VariantClassification",
     "VariantPathogenicityClassification",
