@@ -97,6 +97,11 @@ entry.
 - `docs/workflows/pfd/index.md`: add a `### Determining Critical Amino Acids ✅ modeled
   (inputs)` subsection (mirroring the SM 18/19/20 subsections), and flip the four-shared-
   submodules framing so Critical Amino Acids is no longer "the starting point / to come".
+  Include a **compact Mermaid decision diagram** in this subsection — SM 7 has a genuine
+  small decision flow (critical residue vs domain → the two residue gates → up to +2.0 /
+  analyst-discretion for domains), so a diagram is useful here (unlike SM 18/19/20, which
+  are matrices/calibration tables and get none). Keep `<br/>` in node labels only, never in
+  edge labels (the established Mermaid lesson).
 - `spec-alignment.md` SM 7 row: `Not yet modeled` → Modeled inputs.
 - `known-gaps.md` PFD row: SM 7 is no longer outstanding — update "What remains" to name
   only the scoring computation (SM 7 is now modeled).
