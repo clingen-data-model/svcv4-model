@@ -14,6 +14,32 @@ step is **documented, not computed**.
     Both models (`FrameshiftAssessment`, `FrameshiftPredictiveEvidence`) capture the
     analyst's inputs; the scoring is documented, not computed.
 
+## Decision tree
+
+The branch is selected by the predicted consequence of the frameshift (and, for NMD, whether
+an alternative Met rescues translation). The two green branches (non-stop decay / protein
+extension) are alternatives the analyst weighs against the violet path, taking the more
+pathogenic — not additive. Each terminal node is tinted its SM 9 color-path. (Diagram
+derived from the flow logic; not the source figure.)
+
+```mermaid
+flowchart TD
+    START([Frameshift VBC]) --> D1{Predicted consequence?}
+    D1 -->|NMD| D2{Alternative Met rescue?}
+    D1 -->|C-terminal truncation, no NMD| VIO[NO_NMD<br/>violet · CDS_ · PRD 0..+6]:::violet
+    D1 -->|Non-stop decay| NSD[NON_STOP_DECAY<br/>green · NUL_ · PRD +4.0]:::green
+    D1 -->|Non-native C-terminal extension| EXT[PROTEIN_EXTENSION<br/>green · CDS_ · PRD 0..+4]:::green
+    D2 -->|No rescue| YEL[NMD_NO_RESCUE<br/>yellow · NUL_ · PRD +6.0]:::yellow
+    D2 -->|Rescue| ORA[NMD_WITH_RESCUE<br/>orange · CDS_ · PRD −1..+6]:::orange
+
+    classDef yellow fill:#f4cf5a,stroke:#d8ad2f,color:#3a3005;
+    classDef orange fill:#ef9d4a,stroke:#cf7f2c,color:#3a2405;
+    classDef violet fill:#9b6bd6,stroke:#7d4dbd,color:#faf7ff;
+    classDef green fill:#58b368,stroke:#3d9a4d,color:#08240f;
+```
+
+## Branches
+
 | Branch (`prediction_outcome`) | Predicted consequence | Parent code | PRD initial | Parent total |
 |---|---|---|---|---|
 | `NMD_NO_RESCUE` (yellow) | NMD, no rescue | `NUL_` | `+6.0` | `−8.0 to +10.0` |

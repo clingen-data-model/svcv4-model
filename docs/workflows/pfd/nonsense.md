@@ -14,6 +14,27 @@ computed**.
     Both models (`NonsenseAssessment`, `NonsensePredictiveEvidence`) capture the
     analyst's inputs; the scoring is documented, not computed.
 
+## Decision tree
+
+The branch is selected by the NMD prediction and, when NMD occurs, whether an alternative
+Met rescues translation. Each terminal node is tinted its SM 8 color-path. (Diagram derived
+from the flow logic; not the source figure.)
+
+```mermaid
+flowchart TD
+    START([Nonsense VBC · PTC introduced]) --> D1{NMD predicted?}
+    D1 -->|Yes| D2{Alternative Met rescue?}
+    D1 -->|No| VIO[NO_NMD<br/>violet · CDS_ · PRD 0..+6]:::violet
+    D2 -->|No rescue| YEL[NMD_NO_RESCUE<br/>yellow · NUL_ · PRD +6.0]:::yellow
+    D2 -->|Rescue| ORA[NMD_WITH_RESCUE<br/>orange · CDS_ · PRD −1..+6]:::orange
+
+    classDef yellow fill:#f4cf5a,stroke:#d8ad2f,color:#3a3005;
+    classDef orange fill:#ef9d4a,stroke:#cf7f2c,color:#3a2405;
+    classDef violet fill:#9b6bd6,stroke:#7d4dbd,color:#faf7ff;
+```
+
+## Branches
+
 | Branch (`prediction_outcome`) | NMD? | Rescue? | Parent code | PRD initial | Parent total |
 |---|---|---|---|---|---|
 | `NMD_NO_RESCUE` (yellow) | yes | no | `NUL_` | `+6.0` | `−8.0 to +10.0` |
