@@ -1,0 +1,834 @@
+{
+  "$defs": {
+    "AnimalModelEvidence": {
+      "additionalProperties": false,
+      "description": "Whole-animal-model functional evidence (SM 20); range *_FXN_0.0 to +4.0.",
+      "properties": {
+        "fidelity_to_mechanism": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the model faithfully recapitulates the disease mechanism.",
+          "title": "Fidelity To Mechanism"
+        },
+        "inheritance_match": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the inheritance pattern matches the human MDE.",
+          "title": "Inheritance Match"
+        },
+        "local_sequence_similarity_high": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether local sequence similarity around the VBC is high (for some variant types).",
+          "title": "Local Sequence Similarity High"
+        },
+        "model_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AnimalModelType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Engineered / naturally-occurring / complementation."
+        },
+        "ortholog_established": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the animal gene is an established ortholog of the human gene.",
+          "title": "Ortholog Established"
+        },
+        "phenotype_replication": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PhenotypeReplication"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "How well the model replicates the human phenotype."
+        },
+        "species": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Model organism, e.g. mouse, zebrafish.",
+          "title": "Species"
+        }
+      },
+      "title": "AnimalModelEvidence",
+      "type": "object"
+    },
+    "AnimalModelType": {
+      "description": "Kind of animal-model functional evidence (SM 20).",
+      "enum": [
+        "ENGINEERED",
+        "NATURALLY_OCCURRING",
+        "COMPLEMENTATION"
+      ],
+      "title": "AnimalModelType",
+      "type": "string"
+    },
+    "ExonRelevance": {
+      "description": "Clinical relevance of the exon containing (or affected by) the VBC across\ndisease-relevant transcripts (SM 18): ALL (\u00d71.0), MOST (\u00d70.5), FEW (\u00d70).",
+      "enum": [
+        "ALL",
+        "MOST",
+        "FEW"
+      ],
+      "title": "ExonRelevance",
+      "type": "string"
+    },
+    "FunctionalAssayEvidence": {
+      "additionalProperties": false,
+      "description": "SM 20 functional-assay inputs for a PFD assessment.\n\nCaptured; the scoring (OddsPath\u2192points via Tables 1/2 for protein assays;\nTable 3's 0.0 to +4.0 for animal models; the combination rules) is\ndocumented, not computed.",
+      "properties": {
+        "animal_models": {
+          "description": "0..many animal-model functional evidence entries.",
+          "items": {
+            "$ref": "#/$defs/AnimalModelEvidence"
+          },
+          "title": "Animal Models",
+          "type": "array"
+        },
+        "disease_mechanism": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MolecularMechanism"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MDE's molecular mechanism the assays are evaluated against."
+        },
+        "protein_assays": {
+          "description": "0..many protein/cellular functional assays.",
+          "items": {
+            "$ref": "#/$defs/ProteinFunctionalAssay"
+          },
+          "title": "Protein Assays",
+          "type": "array"
+        }
+      },
+      "title": "FunctionalAssayEvidence",
+      "type": "object"
+    },
+    "GenccMechanism": {
+      "description": "GenCC level to which loss-of-function is established as the MDE's disease\nmechanism (SM 18). Full strength at ESTABLISHED, halved at LIKELY, quartered\nat SUSPECTED, zeroed at UNCERTAIN. Usable only for MDEs at Moderate+\ngene-disease validity (``WorkflowParameters.gene_disease_validity``);\nLimited-or-below is treated as UNCERTAIN.",
+      "enum": [
+        "ESTABLISHED",
+        "LIKELY",
+        "SUSPECTED",
+        "UNCERTAIN"
+      ],
+      "title": "GenccMechanism",
+      "type": "string"
+    },
+    "InformativeVariant": {
+      "additionalProperties": false,
+      "description": "A single distinct variant (not the VBC) informative for the VBC's\nclassification. Only distinct variants count; observation counts are\nirrelevant (SM 19).",
+      "properties": {
+        "circularity_checked": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the analyst confirmed the VBC was not used as evidence for this variant's classification (circularity avoided).",
+          "title": "Circularity Checked"
+        },
+        "classification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VariantClassification"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The informative variant's own pathogenicity classification."
+        },
+        "distinct_evidence_from_vbc": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether it reached its classification via different evidence codes/weights than the VBC \u2014 required for it to count (SM 19).",
+          "title": "Distinct Evidence From Vbc"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Identifier for the informative variant.",
+          "title": "Id"
+        },
+        "similarity_basis": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SimilarityBasis"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Why it is informative for the VBC (position/exon/effect/deletion)."
+        },
+        "star_rating": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ClinVar review star rating, for external classifications (usable only at 3-4 stars with circularity avoided).",
+          "title": "Star Rating"
+        }
+      },
+      "title": "InformativeVariant",
+      "type": "object"
+    },
+    "InformativeVariantsEvidence": {
+      "additionalProperties": false,
+      "description": "SM 19 informative-variants inputs for a PFD assessment.\n\nCaptured; the scoring (+2.0 first distinct P / +1.0 each additional, cap\n\u00b18; mirror negatives for B/LB) is documented, not computed.",
+      "properties": {
+        "variants": {
+          "description": "0..many distinct informative variants (observation counts do not matter).",
+          "items": {
+            "$ref": "#/$defs/InformativeVariant"
+          },
+          "title": "Variants",
+          "type": "array"
+        }
+      },
+      "title": "InformativeVariantsEvidence",
+      "type": "object"
+    },
+    "ManeStatus": {
+      "description": "MANE membership of the assessed transcript, anchoring exon relevance.",
+      "enum": [
+        "MANE_SELECT",
+        "MANE_PLUS_CLINICAL",
+        "NEITHER"
+      ],
+      "title": "ManeStatus",
+      "type": "string"
+    },
+    "MechanismExonRelevanceEvidence": {
+      "additionalProperties": false,
+      "description": "SM 18 mechanism \u00d7 exon-relevance inputs for a PFD assessment.\n\nPermissive superset (every field optional). Captured; the multiplier\n(mechanism fraction \u00d7 exon-relevance fraction, applied to positive PRD\npoints, not compounded) is documented, not computed.",
+      "properties": {
+        "exon_has_established_pathogenic": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "SM 18 override: the exon contains expert/established pathogenic variants, so no exon-relevance reduction is applied.",
+          "title": "Exon Has Established Pathogenic"
+        },
+        "exon_known_irrelevant": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "SM 18 override: the exon is known to be clinically irrelevant (e.g. TRDN exons 9-41), forcing exon relevance to zero.",
+          "title": "Exon Known Irrelevant"
+        },
+        "exon_relevance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExonRelevance"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Clinical relevance of the VBC's exon across transcripts (All/Most/Few)."
+        },
+        "gencc_mechanism": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GenccMechanism"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "GenCC level LoF is established as the disease mechanism; gated on Moderate+ gene-disease validity (see GenccMechanism)."
+        },
+        "mane_status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ManeStatus"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "MANE membership of the assessed transcript."
+        }
+      },
+      "title": "MechanismExonRelevanceEvidence",
+      "type": "object"
+    },
+    "MolecularMechanism": {
+      "description": "The MDE's molecular mechanism of disease that an assay must faithfully\nrecapitulate to count (SM 20).",
+      "enum": [
+        "LOSS_OF_FUNCTION",
+        "INCREASED_FUNCTION",
+        "TOXIC_GAIN_OF_FUNCTION",
+        "DOMINANT_NEGATIVE"
+      ],
+      "title": "MolecularMechanism",
+      "type": "string"
+    },
+    "PhenotypeReplication": {
+      "description": "How well the animal model replicates the human phenotype (SM 20, Table 3).",
+      "enum": [
+        "SPECIFIC",
+        "KEY_FEATURES",
+        "NONE"
+      ],
+      "title": "PhenotypeReplication",
+      "type": "string"
+    },
+    "ProteinAssayType": {
+      "description": "Kind of protein/cellular functional assay (SM 20).",
+      "enum": [
+        "ENZYME_KINETIC",
+        "SIGNAL_TRANSDUCTION",
+        "MEMBRANE_CONFORMATION",
+        "MAVE",
+        "OTHER"
+      ],
+      "title": "ProteinAssayType",
+      "type": "string"
+    },
+    "ProteinFunctionalAssay": {
+      "additionalProperties": false,
+      "description": "A protein/cellular functional assay, OddsPath-calibrated (SM 20).\n\nRequires both pathogenic and benign variant controls; small experiments with\nno false positives/negatives use lookup Tables 1/2 (documented, not computed).",
+      "properties": {
+        "assay_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProteinAssayType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Kind of protein/cellular assay."
+        },
+        "benign_control_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Number of benign controls in the calibration set.",
+          "title": "Benign Control Count"
+        },
+        "fidelity_to_mechanism": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the assay faithfully recapitulates the disease mechanism.",
+          "title": "Fidelity To Mechanism"
+        },
+        "has_benign_controls": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether known benign variant controls were used.",
+          "title": "Has Benign Controls"
+        },
+        "has_false_positives_or_negatives": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the experiment had false positives/negatives (which route calibration to expert math, beyond the lookup tables).",
+          "title": "Has False Positives Or Negatives"
+        },
+        "has_pathogenic_controls": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether known pathogenic variant controls were used.",
+          "title": "Has Pathogenic Controls"
+        },
+        "odds_path": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "OddsPath / likelihood ratio from the calibrated truth set.",
+          "title": "Odds Path"
+        },
+        "pathogenic_control_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Number of pathogenic controls in the calibration set.",
+          "title": "Pathogenic Control Count"
+        }
+      },
+      "title": "ProteinFunctionalAssay",
+      "type": "object"
+    },
+    "SimilarityBasis": {
+      "description": "Why a variant is informative for the VBC (SM 19) \u2014 variant-type dependent.",
+      "enum": [
+        "SIMILAR_POSITION",
+        "SAME_EXON",
+        "SIMILAR_EFFECT",
+        "GENE_DELETION"
+      ],
+      "title": "SimilarityBasis",
+      "type": "string"
+    },
+    "SpliceAssayEvidence": {
+      "additionalProperties": false,
+      "description": "The splice-assay (SPL_SPA) step: RNA / minigene evidence for splicing (SM 6).\n\nDistinct from SM 20 functional evidence (which is SPL_FXN). Semantics vary by\npath: it scales SPL_PRD (yellow/orange), is additive (blue), or adds benignity\n(violet). Absent = SPL_SPA_ND.",
+      "properties": {
+        "assay_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Assay modality (e.g. RT-PCR, RNAseq, minigene).",
+          "title": "Assay Type"
+        },
+        "calibrated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether an activity-threshold calibration allows adjusted scoring.",
+          "title": "Calibrated"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SpliceAssayResult"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Qualitative degree of the aberrant splice product."
+        }
+      },
+      "title": "SpliceAssayEvidence",
+      "type": "object"
+    },
+    "SpliceAssayResult": {
+      "description": "The qualitative degree of aberrant splice product in a splice assay (SM 6).",
+      "enum": [
+        "NEAR_COMPLETE_OR_COMPLETE",
+        "SUBSTANTIAL",
+        "INCOMPLETE_OR_NONE"
+      ],
+      "title": "SpliceAssayResult",
+      "type": "string"
+    },
+    "SplicePredictionOutcome": {
+      "description": "The in-silico splice-prediction outcome selecting one of five paths (SM 6).",
+      "enum": [
+        "NMD_PREDICTED",
+        "FRAMESHIFT_NO_NMD",
+        "SPLICE_NO_FRAMESHIFT",
+        "UNCERTAIN",
+        "UNLIKELY"
+      ],
+      "title": "SplicePredictionOutcome",
+      "type": "string"
+    },
+    "SplicePredictiveEvidence": {
+      "additionalProperties": false,
+      "description": "The splice predictive (SPL_PRD) step of a splice path (SM 6).\n\nPositive initial points (yellow/orange paths) are reduced by the SM 18\nmechanism/exon matrix; blue starts at 0.0 and violet at \u22121.0.",
+      "properties": {
+        "adjusted_points": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Coded SPL_PRD points after the SM 18 adjustment.",
+          "title": "Adjusted Points"
+        },
+        "alternative_start_rescue": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "An alternative start codon rescues the 5' PTC (the \u22121.0 case).",
+          "title": "Alternative Start Rescue"
+        },
+        "initial_points": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Initial SPL_PRD points before the SM 18 adjustment.",
+          "title": "Initial Points"
+        },
+        "protein_fraction_altered": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fraction of protein altered (orange paths' initial-points table).",
+          "title": "Protein Fraction Altered"
+        },
+        "splice_predictor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SplicePredictor"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The in-silico splice predictor used (e.g. SpliceAI)."
+        }
+      },
+      "title": "SplicePredictiveEvidence",
+      "type": "object"
+    },
+    "SplicePredictor": {
+      "description": "An in-silico splice-effect predictor (SM 6).",
+      "enum": [
+        "SPLICEAI",
+        "PANGOLIN",
+        "OTHER"
+      ],
+      "title": "SplicePredictor",
+      "type": "string"
+    },
+    "VariantClassification": {
+      "description": "A variant's pathogenicity classification. Introduced for informative\nvariants (SM 19), whose scoring keys on P/LP vs B/LB. Not (yet) applied to\nthe placeholder ``classification`` strings on other Case sub-models.",
+      "enum": [
+        "PATHOGENIC",
+        "LIKELY_PATHOGENIC",
+        "VUS",
+        "LIKELY_BENIGN",
+        "BENIGN"
+      ],
+      "title": "VariantClassification",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "An intronic / synonymous variant (SPL_) assessment (SM 12).\n\nOne entity for all five splice paths, parameterized by ``prediction_outcome``;\nreuses the shared splice vocabulary and the SM 18/19/20 submodules. Permissive\nsuperset; the per-path pipeline and its caps are documented, not computed.",
+  "properties": {
+    "functional": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FunctionalAssayEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SM 20 functional-assay evidence (SPL_FXN)."
+    },
+    "fxn_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded SPL_FXN point value.",
+      "title": "Fxn Points"
+    },
+    "inf_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded SPL_INF point value.",
+      "title": "Inf Points"
+    },
+    "informative": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/InformativeVariantsEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SM 19 informative-variants evidence (SPL_INF)."
+    },
+    "mechanism_exon_relevance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MechanismExonRelevanceEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SM 18 molecular-mechanism & exon-relevance inputs."
+    },
+    "prd_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded SPL_PRD point value.",
+      "title": "Prd Points"
+    },
+    "prd_spa_combined": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Held SPL_PRD + SPL_SPA combined value.",
+      "title": "Prd Spa Combined"
+    },
+    "prd_spa_fxn_combined": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Held SPL_PRD + SPL_SPA + SPL_FXN combined value.",
+      "title": "Prd Spa Fxn Combined"
+    },
+    "prediction_outcome": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SplicePredictionOutcome"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Which of the five splice prediction paths applies."
+    },
+    "predictive": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SplicePredictiveEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The SPL_PRD splice-prediction step."
+    },
+    "spa_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded SPL_SPA point value.",
+      "title": "Spa Points"
+    },
+    "spl_total": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Capped SPL_ parent-code total for this path.",
+      "title": "Spl Total"
+    },
+    "splice_assay": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SpliceAssayEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SM 12 splice-assay evidence (SPL_SPA)."
+    }
+  },
+  "title": "IntronicSynonymousAssessment",
+  "type": "object"
+}
