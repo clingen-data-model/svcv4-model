@@ -105,3 +105,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.CanonicalSpliceAssessment
+
+---
+
+::: svcv4_model.IntronicSynonymousAssessment

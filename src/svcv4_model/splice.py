@@ -2,7 +2,8 @@
 
 The splice prediction outcome, predictor, assay result, and the SPL_PRD /
 SPL_SPA evidence models are shared by every PFD workflow that has a splice path —
-the Missense splice half (SM 6) and Canonical Splice variants (SM 11). They are
+the Missense splice half (SM 6), Canonical Splice variants (SM 11), and Intronic &
+Synonymous variants (SM 12). They are
 capture-only; the per-workflow point values and splice-assay semantics are
 documented on each workflow page, not computed here.
 """
