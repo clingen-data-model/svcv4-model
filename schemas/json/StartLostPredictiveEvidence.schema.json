@@ -1,0 +1,99 @@
+{
+  "additionalProperties": false,
+  "description": "The start-lost predictive (PRD) step of a branch (SM 15).\n\nNo-alt-start (yellow) starts at +6.0; the potential-alt-start (orange) branch derives\ninitial points from the fraction of protein lost if the alternative start is used; the\nfunctional-alt-start (violet) branch starts at -1.0 and skips the SM 18 matrix. Positive\npoints on the yellow/orange branches are reduced by the SM 18 matrix.",
+  "properties": {
+    "adjusted_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded PRD points after the SM 18 adjustment.",
+      "title": "Adjusted Points"
+    },
+    "alternative_start_functional": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The alternative start codon is experimentally shown functional (violet).",
+      "title": "Alternative Start Functional"
+    },
+    "alternative_start_present": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "A potential alternate in-frame MET start codon exists.",
+      "title": "Alternative Start Present"
+    },
+    "basis": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Predictive basis (e.g. no alt-start; % protein lost; proven alt-start).",
+      "title": "Basis"
+    },
+    "initial_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Initial PRD points before the SM 18 adjustment.",
+      "title": "Initial Points"
+    },
+    "protein_fraction_lost": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fraction of protein lost if the alternative start is used (orange table).",
+      "title": "Protein Fraction Lost"
+    },
+    "rescue_blocked_by_ptc": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "P/LP PTC variants between the VBC and the alt-MET make rescue unlikely.",
+      "title": "Rescue Blocked By Ptc"
+    }
+  },
+  "title": "StartLostPredictiveEvidence",
+  "type": "object"
+}

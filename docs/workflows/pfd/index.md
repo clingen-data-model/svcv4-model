@@ -145,7 +145,7 @@ step are captured through the same optional fields. The typed predictor/path
 enums and the dual missense **MIS_ / SPL_** path (evaluate both, apply the
 higher) arrive with the per-variant-type workflows.
 
-**The three shared sub-modules and the scaffold are now modeled** (inputs). Eight
+**The three shared sub-modules and the scaffold are now modeled** (inputs). Nine
 per-variant-type workflows are modeled: the full [Missense](missense.md) workflow
 (the `MIS_` amino-acid path, the `SPL_` splice paths, and the `MIS_`-vs-`SPL_`
 comparison), the [Nonsense](nonsense.md) workflow (`NUL_`/`CDS_`, three branches),
@@ -155,5 +155,6 @@ the [Frameshift](frameshift.md) workflow (`NUL_`/`CDS_`, five branches), the
 [Intronic & Synonymous](intronic-synonymous.md) workflow (`SPL_`, five splice paths),
 the [Exon Deletion](exon-deletion.md) workflow (`NUL_`/`CDS_`, six branches), and the
 [Exon Duplication](exon-duplication.md) workflow (`NUL_`/`CDS_`, six scored branches plus
-a whole-gene NA outcome). The remaining variant-type workflows and Determining Critical
-Amino Acids (SM 7) are still to come.
+a whole-gene NA outcome), and the [Start-Lost](start-lost.md) workflow (`NUL_`/`CDS_`, three
+branches). The remaining variant-type workflows and Determining Critical Amino Acids (SM 7)
+are still to come.
