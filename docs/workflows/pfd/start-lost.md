@@ -23,10 +23,10 @@ not the source figure.)
 ```mermaid
 flowchart TD
     START([Start-lost VBC · MET codon disrupted]) --> D1{Potential alternate<br/>in-frame MET start?}
-    D1 -->|No, or blocked by<br/>P/LP PTC variants| YEL[NO_ALT_START<br/>yellow · NUL_ · PRD +6.0]:::yellow
+    D1 -->|No / blocked by P/LP PTC| YEL[NO_ALT_START<br/>yellow · NUL_ · PRD +6.0]:::yellow
     D1 -->|Yes| D2{Alt-start experimentally<br/>proven functional?}
     D2 -->|No — unproven| ORA[ALT_START_UNPROVEN<br/>orange · CDS_ · PRD 0..+6]:::orange
-    D2 -->|Yes — proven| VIO[ALT_START_FUNCTIONAL<br/>violet · CDS_ · PRD −1.0<br/>benignity-only]:::violet
+    D2 -->|Yes — proven| VIO[ALT_START_FUNCTIONAL<br/>violet · CDS_ · PRD −1.0<br/>FXN/INF benignity-only]:::violet
 
     classDef yellow fill:#f4cf5a,stroke:#d8ad2f,color:#3a3005;
     classDef orange fill:#ef9d4a,stroke:#cf7f2c,color:#3a2405;

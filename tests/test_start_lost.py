@@ -80,10 +80,52 @@ def _alt_start_functional_assessment() -> StartLostAssessment:
     )
 
 
+def _alt_start_unproven_assessment() -> StartLostAssessment:
+    """The orange (ALT_START_UNPROVEN) branch: CDS_ with the held prd_fxn_combined (-8..+9)."""
+    return StartLostAssessment(
+        prediction_outcome=StartLostOutcome.ALT_START_UNPROVEN,
+        parent_code=PfdParentCode.CDS,
+        predictive=StartLostPredictiveEvidence(
+            basis="Plausible alt-start, unproven; >50% of protein lost if used",
+            initial_points=6.0,
+            alternative_start_present=True,
+            rescue_blocked_by_ptc=False,
+            protein_fraction_lost=0.6,
+            alternative_start_functional=False,
+            adjusted_points=6.0,
+        ),
+        mechanism_exon_relevance=MechanismExonRelevanceEvidence(
+            exon_relevance=ExonRelevance.MOST,
+        ),
+        functional=FunctionalAssayEvidence(protein_assays=[ProteinFunctionalAssay()]),
+        informative=InformativeVariantsEvidence(
+            variants=[
+                InformativeVariant(
+                    id="clinvar:VCV000000133",
+                    classification=VariantClassification.LIKELY_PATHOGENIC,
+                )
+            ]
+        ),
+        prd_points=6.0,
+        fxn_points=2.0,
+        inf_points=1.0,
+        prd_fxn_combined=8.0,
+        parent_total=9.0,
+    )
+
+
 def test_assessment_round_trips_json() -> None:
     original = _maximal_assessment()
     rehydrated = StartLostAssessment.model_validate(original.model_dump(mode="json"))
     assert rehydrated == original
+
+
+def test_alt_start_unproven_assessment_round_trips_json() -> None:
+    original = _alt_start_unproven_assessment()
+    rehydrated = StartLostAssessment.model_validate(original.model_dump(mode="json"))
+    assert rehydrated == original
+    assert rehydrated.parent_code is PfdParentCode.CDS
+    assert rehydrated.prd_fxn_combined == 8.0
 
 
 def test_alt_start_functional_assessment_round_trips_json() -> None:
