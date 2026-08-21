@@ -79,10 +79,53 @@ def _gain_terminal_exon_assessment() -> ExonDuplicationAssessment:
     )
 
 
+def _tandem_no_nmd_assessment() -> ExonDuplicationAssessment:
+    """The upper-orange (TANDEM_NO_NMD) branch: CDS_ with populated functional + held combined."""
+    return ExonDuplicationAssessment(
+        prediction_outcome=ExonDuplicationOutcome.TANDEM_NO_NMD,
+        parent_code=PfdParentCode.CDS,
+        predictive=ExonDuplicationPredictiveEvidence(
+            basis="Tandem, in-frame elongation; >50% of ORF duplicated",
+            initial_points=3.0,
+            molecularly_tandem=True,
+            nmd_predicted=False,
+            includes_terminal_exon_or_utr=False,
+            orf_fraction_duplicated=0.6,
+            adjusted_points=3.0,
+        ),
+        mechanism_exon_relevance=MechanismExonRelevanceEvidence(
+            exon_relevance=ExonRelevance.MOST,
+        ),
+        functional=FunctionalAssayEvidence(protein_assays=[ProteinFunctionalAssay()]),
+        informative=InformativeVariantsEvidence(
+            variants=[
+                InformativeVariant(
+                    id="clinvar:VCV000000133",
+                    classification=VariantClassification.LIKELY_PATHOGENIC,
+                )
+            ]
+        ),
+        prd_points=3.0,
+        fxn_points=2.0,
+        inf_points=1.0,
+        prd_fxn_combined=5.0,
+        parent_total=6.0,
+    )
+
+
 def test_assessment_round_trips_json() -> None:
     original = _maximal_assessment()
     rehydrated = ExonDuplicationAssessment.model_validate(original.model_dump(mode="json"))
     assert rehydrated == original
+
+
+def test_tandem_no_nmd_assessment_round_trips_json() -> None:
+    original = _tandem_no_nmd_assessment()
+    rehydrated = ExonDuplicationAssessment.model_validate(original.model_dump(mode="json"))
+    assert rehydrated == original
+    assert rehydrated.parent_code is PfdParentCode.CDS
+    assert rehydrated.functional is not None
+    assert rehydrated.prd_fxn_combined == 5.0
 
 
 def test_gain_terminal_exon_assessment_round_trips_json() -> None:

@@ -1,7 +1,8 @@
 # Single/Multi-Exon Duplication/Gain variants (`NUL_` / `CDS_`)
 
 **Single- or multi-exon duplication/gain variants** begin and end within a single gene
-(the sequence ontology calls these "transcript amplification"). SVCv4 (Supplementary
+(the sequence ontology calls these "transcript amplification"), with some branches also
+covering variants that extend beyond one end of the gene. SVCv4 (Supplementary
 Material 14) carries a decision axis the other LoF workflows do not: whether the variant
 is **molecularly proven to be a tandem duplication** ("duplication") or is an **unproven
 copy-number gain** ("gain"). Only ~80% of subgenic gains are actually tandem, which sits
@@ -35,7 +36,7 @@ flowchart TD
     D2 -->|Yes| WGN[WHOLE_GENE_NA<br/>CDS_ · NA]:::na
     D2 -->|No — subgenic| D3{Molecularly<br/>proven tandem?}
     D3 -->|Yes · tandem| D4{First / last<br/>exon or UTR?}
-    D3 -->|No · gain| D5{First / last<br/>exon or UTR?}
+    D3 -->|No · gain| D5{First / last<br/>intron or UTR?}
     D4 -->|Yes| LO[TANDEM_TERMINAL_EXON<br/>lower orange · CDS_]:::orange
     D4 -->|No| D6{NMD predicted?}
     D6 -->|Yes| YEL[TANDEM_NMD<br/>yellow · NUL_ · PRD +6.0]:::yellow
@@ -68,7 +69,9 @@ flowchart TD
 
 The parent code reuses `PfdParentCode` (`NUL` / `CDS`). The `molecularly_tandem`,
 `nmd_predicted`, and `includes_terminal_exon_or_utr` predictive fields record the three
-decision-tree axes that select the branch.
+decision-tree axes that select the branch. (SM 14 phrases the terminal-region test as
+first/last *exon* or UTR for the tandem group and first/last *intron* or UTR for the gain
+group; the single `includes_terminal_exon_or_utr` field captures either.)
 
 ## Predictive (`*_PRD_`)
 
