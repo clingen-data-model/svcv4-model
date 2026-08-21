@@ -1,0 +1,99 @@
+{
+  "additionalProperties": false,
+  "description": "The in-frame InDel predictive (CDS_PRD) step (SM 10).\n\nThe SSR branch scores 0.0 (stable in controls) or \u22121.0 (polymorphic); the\nnon-repeat branch derives initial points from the protein fraction removed / a\ncritical domain / an indel in-silico predictor, then applies the SM 18 matrix.",
+  "properties": {
+    "adjusted_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded CDS_PRD points after the SM 18 adjustment.",
+      "title": "Adjusted Points"
+    },
+    "basis": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Predictive basis (e.g. repeat length; deleted fraction).",
+      "title": "Basis"
+    },
+    "in_silico_calibrated": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the indel predictor is calibrated (calibrated reaches +2.0).",
+      "title": "In Silico Calibrated"
+    },
+    "in_silico_predictor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Indel in-silico predictor used (e.g. MutationTaster2021, PROVEAN).",
+      "title": "In Silico Predictor"
+    },
+    "initial_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Initial CDS_PRD points before the SM 18 adjustment.",
+      "title": "Initial Points"
+    },
+    "protein_fraction_reduced": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fraction of protein removed (the non-repeat initial-points table).",
+      "title": "Protein Fraction Reduced"
+    },
+    "repeat_stable_in_controls": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SSR branch: the repeat is stable in large control sets (else polymorphic).",
+      "title": "Repeat Stable In Controls"
+    }
+  },
+  "title": "InframeIndelPredictiveEvidence",
+  "type": "object"
+}

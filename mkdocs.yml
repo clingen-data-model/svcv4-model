@@ -111,6 +111,7 @@ nav:
           - Missense (MIS_/SPL_): workflows/pfd/missense.md
           - Nonsense (NUL_/CDS_): workflows/pfd/nonsense.md
           - Frameshift (NUL_/CDS_): workflows/pfd/frameshift.md
+          - In-Frame InDel (CDS_): workflows/pfd/inframe-indel.md
       - Case model & applicability: workflows/case-model.md
   - Examples:
       - examples/practice-variant-set/index.md
