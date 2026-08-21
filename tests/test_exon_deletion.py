@@ -50,10 +50,46 @@ def _maximal_assessment() -> ExonDeletionAssessment:
     )
 
 
+def _grey_path_assessment() -> ExonDeletionAssessment:
+    """The functional-alt-start (grey) branch: CDS_, skips SM 18, benignity-only caps."""
+    return ExonDeletionAssessment(
+        prediction_outcome=ExonDeletionOutcome.START_CODON_ALT_START_FUNCTIONAL,
+        parent_code=PfdParentCode.CDS,
+        predictive=ExonDeletionPredictiveEvidence(
+            basis="Deletes start exon; demonstrated functional alternative in-frame start",
+            initial_points=-1.0,
+            alternative_start_functional=True,
+            adjusted_points=-1.0,
+        ),
+        functional=FunctionalAssayEvidence(protein_assays=[ProteinFunctionalAssay()]),
+        informative=InformativeVariantsEvidence(
+            variants=[
+                InformativeVariant(
+                    id="clinvar:VCV000000132",
+                    classification=VariantClassification.BENIGN,
+                )
+            ]
+        ),
+        prd_points=-1.0,
+        fxn_points=-4.0,
+        inf_points=-2.0,
+        prd_fxn_combined=-5.0,
+        parent_total=-8.0,
+    )
+
+
 def test_assessment_round_trips_json() -> None:
     original = _maximal_assessment()
     rehydrated = ExonDeletionAssessment.model_validate(original.model_dump(mode="json"))
     assert rehydrated == original
+
+
+def test_grey_path_assessment_round_trips_json() -> None:
+    original = _grey_path_assessment()
+    rehydrated = ExonDeletionAssessment.model_validate(original.model_dump(mode="json"))
+    assert rehydrated == original
+    assert rehydrated.parent_code is PfdParentCode.CDS
+    assert rehydrated.mechanism_exon_relevance is None
 
 
 def test_assessment_is_permissive_when_empty() -> None:
