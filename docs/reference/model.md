@@ -125,3 +125,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.StopLostAssessment
+
+---
+
+::: svcv4_model.CriticalAminoAcidEvidence

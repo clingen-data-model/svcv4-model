@@ -12,15 +12,15 @@ evaluated impact (e.g. missense, nonsense, splice, indel).
 *The Variant Impact (Predictive & Functional Data) section of the SVCv4 Summary
 Table, with its code workflows. (Figure provided by the SVCv4 Standards group.)*
 
-!!! note "Modeling underway — shared submodules + scaffold landed"
+!!! note "Modeling landed — submodules, scaffold, and all ten workflows"
 
-    The **three shared PFD submodules** — Molecular Mechanism & Exon Relevance
-    (SM 18), Informative Variants (SM 19), Functional Assays (SM 20) — and the
-    **variant-agnostic scaffold** (`PfdCodeAssessment`) that composes them are now
+    The **four shared PFD submodules** — Determining Critical Amino Acids (SM 7),
+    Molecular Mechanism & Exon Relevance (SM 18), Informative Variants (SM 19),
+    Functional Assays (SM 20) — the **variant-agnostic scaffold** (`PfdCodeAssessment`)
+    that composes them, and **all ten released per-variant-type workflows** are now
     modeled (inputs captured, scoring documented not computed); see
-    [below](#the-shape-of-the-remaining-work). What remains is the per-variant-type
-    workflows (Missense first) and Critical Amino Acids (SM 7). This page
-    summarizes the concepts and tracks what has landed.
+    [below](#the-shape-of-the-remaining-work). What remains is the cross-cutting scoring
+    computation. This page summarizes the concepts and tracks what has landed.
 
 ## Concepts and codes
 
@@ -46,8 +46,8 @@ deletion, start loss, stop loss, and others) follows the same pipeline:
 evidence → informative variants → capped code total.** Four sub-modules are
 shared across all of them: Determining Critical Amino Acids, Molecular
 Mechanism and Exon Relevance, Informative Variants, and Functional Assays.
-Modeling these shared sub-modules first — so the variant-type workflows can
-compose them — is the starting point.
+All four are now modeled (inputs), so the variant-type workflows can
+compose them.
 
 ### Molecular Mechanism & Exon Relevance ✅ modeled (inputs)
 
@@ -123,6 +123,42 @@ predictive (`*_PRD`) points. **Carve-out:** RNA splicing assays (RT-PCR / RNAseq
 / minigene) are **not** `*_FXN` — they are `SPL_SPA`, handled in the splice flow
 diagrams (SM 6/11/12), and are not modeled here.
 
+### Determining Critical Amino Acids ✅ modeled (inputs)
+
+The fourth shared sub-module is modeled as `CriticalAminoAcidEvidence`
+([Supplementary Material 7](https://docs.google.com/document/d/1a64UTev9P35YGStF7YjaprB8znWS5OC5qbBZBMMLA_s/edit)).
+It captures an analyst's determination that a VBC lies in a critical residue or domain (a
+`CriticalityKind`), the named motif/domain, the small additional evidence that may be added
+on top of the in-silico predictor, and the SM 7 gating conditions. It has **no parent code**
+of its own — the points add to whichever `_PRD_` applies (most commonly `MIS_PRD_`).
+
+```mermaid
+flowchart TD
+    START([VBC in a critical residue or domain?]) --> D1{Residue or domain?}
+    D1 -->|Critical domain| DOM[No specific point recommendation<br/>double-counting risk · analyst discretion]:::domain
+    D1 -->|Critical residue| D2{Function role well-established<br/>AND max score not yet reached?}
+    D2 -->|Yes| ADD[May add up to +2.0<br/>on top of the in-silico score]:::residue
+    D2 -->|No| NONE[No additional points]:::none
+
+    classDef domain fill:#cdb4db,stroke:#9d7bb0,color:#241a2e;
+    classDef residue fill:#8ecae6,stroke:#4f9fc4,color:#06222e;
+    classDef none fill:#e5e7eb,stroke:#b8bcc6,color:#20232e;
+```
+
+The scoring is **documented, not computed**. For **critical domains**, SM 7 makes no
+specific point recommendation — v4 substantially strengthened the in-silico predictors
+(which already capture much of v3's PM1 "critical domain" evidence), so adding domain points
+risks *double-counting* (`double_counting_considered` records that the analyst checked this).
+Not every conserved domain is critical: immunoglobulin-like domains generally do not qualify,
+and a duplicated domain (e.g. the BRCA1 BRCT motif) may tolerate disruption of one copy. For
+**critical residues** (e.g. the Gly-X-Y motif glycine in triple-helical collagens; Cys-Cys
+bridge cysteines in FBN1/NOTCH3; the cys/his of a C2H2 zinc finger in GLI3 — SM 7 prints
+"C2H4", an apparent typo), an analyst may add **up to +2.0 points**, but **only if** the
+residue's functional role is well-established (`function_role_established`) **and** the
+`_PRD_` + `_INF_` combination has not already reached its cap (`max_score_not_reached`). A
+caution applies throughout: avoid using this to reach **+6.0 on prediction alone**,
+especially for a variant never observed in an affected individual (`observed_in_affected`).
+
 ### PFD scaffold ✅ modeled (inputs)
 
 The shared, variant-agnostic scaffold is modeled as `PfdCodeAssessment`. It ties
@@ -145,7 +181,7 @@ step are captured through the same optional fields. The typed predictor/path
 enums and the dual missense **MIS_ / SPL_** path (evaluate both, apply the
 higher) arrive with the per-variant-type workflows.
 
-**The three shared sub-modules and the scaffold are now modeled** (inputs). Ten
+**The four shared sub-modules and the scaffold are now modeled** (inputs). Ten
 per-variant-type workflows are modeled: the full [Missense](missense.md) workflow
 (the `MIS_` amino-acid path, the `SPL_` splice paths, and the `MIS_`-vs-`SPL_`
 comparison), the [Nonsense](nonsense.md) workflow (`NUL_`/`CDS_`, three branches),
@@ -158,5 +194,4 @@ the [Exon Deletion](exon-deletion.md) workflow (`NUL_`/`CDS_`, six branches), an
 a whole-gene NA outcome), the [Start-Lost](start-lost.md) workflow (`NUL_`/`CDS_`, three
 branches), and the [Stop-Lost](stop-lost.md) workflow (`NUL_`/`CDS_`, two branches). This
 completes every variant-type workflow the Working Group has released (Non-Coding, SM 17, is
-not yet released); Determining Critical Amino Acids (SM 7) and the cross-cutting scoring
-computation are still to come.
+not yet released); the cross-cutting scoring computation is still to come.

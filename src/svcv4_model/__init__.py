@@ -39,6 +39,10 @@ from svcv4_model.case import (
 )
 from svcv4_model.case_control import CaseControlStudyEvidence
 from svcv4_model.classification import VariantPathogenicityClassification
+from svcv4_model.critical_amino_acid import (
+    CriticalAminoAcidEvidence,
+    CriticalityKind,
+)
 from svcv4_model.evidence_item import EvidenceData, EvidenceItem
 from svcv4_model.evidence_line import EvidenceLine
 from svcv4_model.exon_deletion import (
@@ -150,6 +154,8 @@ __all__ = [
     "CaseTesting",
     "CompoundHetVariant",
     "CoOccurrenceLikelihood",
+    "CriticalAminoAcidEvidence",
+    "CriticalityKind",
     "DaftCalculatorInputs",
     "DaftMethod",
     "EvidenceData",
