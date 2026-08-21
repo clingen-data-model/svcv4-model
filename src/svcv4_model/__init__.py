@@ -119,6 +119,11 @@ from svcv4_model.splice import (
     SplicePredictiveEvidence,
     SplicePredictor,
 )
+from svcv4_model.start_lost import (
+    StartLostAssessment,
+    StartLostOutcome,
+    StartLostPredictiveEvidence,
+)
 from svcv4_model.statement import Statement
 
 __all__ = [
@@ -201,6 +206,9 @@ __all__ = [
     "SplicePredictionOutcome",
     "SplicePredictiveEvidence",
     "SplicePredictor",
+    "StartLostAssessment",
+    "StartLostOutcome",
+    "StartLostPredictiveEvidence",
     "Statement",
     "TriState",
     "VariantClassification",
