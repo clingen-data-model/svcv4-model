@@ -46,6 +46,11 @@ from svcv4_model.exon_deletion import (
     ExonDeletionOutcome,
     ExonDeletionPredictiveEvidence,
 )
+from svcv4_model.exon_duplication import (
+    ExonDuplicationAssessment,
+    ExonDuplicationOutcome,
+    ExonDuplicationPredictiveEvidence,
+)
 from svcv4_model.frameshift import (
     FrameshiftAssessment,
     FrameshiftPredictionOutcome,
@@ -142,6 +147,9 @@ __all__ = [
     "ExonDeletionAssessment",
     "ExonDeletionOutcome",
     "ExonDeletionPredictiveEvidence",
+    "ExonDuplicationAssessment",
+    "ExonDuplicationOutcome",
+    "ExonDuplicationPredictiveEvidence",
     "ExonRelevance",
     "FrameshiftAssessment",
     "FrameshiftPredictionOutcome",

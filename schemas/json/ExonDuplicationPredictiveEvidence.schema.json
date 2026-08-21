@@ -1,0 +1,112 @@
+{
+  "additionalProperties": false,
+  "description": "The duplication/gain predictive (PRD) step of a branch (SM 14).\n\nTandem NMD starts at +6.0; gain NMD at +4.0; the tandem/gain no-NMD branches derive\ninitial points from the fraction of ORF duplicated (upper orange) or protein disrupted\n(violet) or the criticality of the duplicated amino acids; the terminal-exon branches\naward no initial points (SM 18 not applicable). Positive points are reduced by the\nSM 18 matrix on the branches that award them.",
+  "properties": {
+    "adjusted_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded PRD points after the SM 18 adjustment.",
+      "title": "Adjusted Points"
+    },
+    "basis": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Predictive basis (e.g. tandem NMD; % ORF duplicated; critical domain).",
+      "title": "Basis"
+    },
+    "duplicated_domain_critical": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Duplicated amino acids alter a proven critical disease-relevant domain.",
+      "title": "Duplicated Domain Critical"
+    },
+    "includes_terminal_exon_or_utr": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Duplication includes the first exon, last exon, or either UTR.",
+      "title": "Includes Terminal Exon Or Utr"
+    },
+    "initial_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Initial PRD points before the SM 18 adjustment.",
+      "title": "Initial Points"
+    },
+    "molecularly_tandem": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "VBC molecularly proven tandem (vs an unproven copy-number gain).",
+      "title": "Molecularly Tandem"
+    },
+    "nmd_predicted": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Introduced PTC >50 bp upstream of the last exon-intron boundary predicts NMD.",
+      "title": "Nmd Predicted"
+    },
+    "orf_fraction_duplicated": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fraction of ORF duplicated / protein disrupted (the >50%..<10% table).",
+      "title": "Orf Fraction Duplicated"
+    }
+  },
+  "title": "ExonDuplicationPredictiveEvidence",
+  "type": "object"
+}

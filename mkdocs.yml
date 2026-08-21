@@ -115,6 +115,7 @@ nav:
           - Canonical Splice (SPL_): workflows/pfd/canonical-splice.md
           - Intronic & Synonymous (SPL_): workflows/pfd/intronic-synonymous.md
           - Exon Deletion (NUL_/CDS_): workflows/pfd/exon-deletion.md
+          - Exon Duplication (NUL_/CDS_): workflows/pfd/exon-duplication.md
       - Case model & applicability: workflows/case-model.md
   - Examples:
       - examples/practice-variant-set/index.md
