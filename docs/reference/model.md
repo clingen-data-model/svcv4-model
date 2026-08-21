@@ -101,3 +101,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.InframeIndelAssessment
+
+---
+
+::: svcv4_model.CanonicalSpliceAssessment

@@ -11,6 +11,7 @@ Community Profile as the SVCv4 Standards and the VA-Spec profile
 firm up. See `docs/concepts/` for the conceptual narrative.
 """
 
+from svcv4_model.canonical_splice import CanonicalSpliceAssessment
 from svcv4_model.case import (
     MOI,
     AdditionalVariant,
@@ -83,11 +84,6 @@ from svcv4_model.missense import (
     MissensePredictor,
     MissenseSelectedPath,
     MissenseSpliceAssessment,
-    SpliceAssayEvidence,
-    SpliceAssayResult,
-    SplicePredictionOutcome,
-    SplicePredictiveEvidence,
-    SplicePredictor,
 )
 from svcv4_model.nonsense import (
     NonsenseAssessment,
@@ -105,6 +101,13 @@ from svcv4_model.population import (
     PopulationEvidence,
 )
 from svcv4_model.proposition import Predicate, Proposition
+from svcv4_model.splice import (
+    SpliceAssayEvidence,
+    SpliceAssayResult,
+    SplicePredictionOutcome,
+    SplicePredictiveEvidence,
+    SplicePredictor,
+)
 from svcv4_model.statement import Statement
 
 __all__ = [
@@ -118,6 +121,7 @@ __all__ = [
     "AgeUnit",
     "AnimalModelEvidence",
     "AnimalModelType",
+    "CanonicalSpliceAssessment",
     "Case",
     "CaseControlStudyEvidence",
     "CaseRelative",

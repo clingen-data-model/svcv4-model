@@ -112,6 +112,7 @@ nav:
           - Nonsense (NUL_/CDS_): workflows/pfd/nonsense.md
           - Frameshift (NUL_/CDS_): workflows/pfd/frameshift.md
           - In-Frame InDel (CDS_): workflows/pfd/inframe-indel.md
+          - Canonical Splice (SPL_): workflows/pfd/canonical-splice.md
       - Case model & applicability: workflows/case-model.md
   - Examples:
       - examples/practice-variant-set/index.md
