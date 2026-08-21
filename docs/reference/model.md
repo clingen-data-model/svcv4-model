@@ -113,3 +113,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.ExonDeletionAssessment
+
+---
+
+::: svcv4_model.ExonDuplicationAssessment
