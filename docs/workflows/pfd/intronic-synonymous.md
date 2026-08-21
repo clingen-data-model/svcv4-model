@@ -38,7 +38,7 @@ not the source figure.)
 ```mermaid
 flowchart TD
     START([Intronic / synonymous VBC]) --> D1{SpliceAI prediction?}
-    D1 -->|Likely| D2{Frameshift, and NMD?}
+    D1 -->|Likely| D2{Predicted consequence?}
     D1 -->|Uncertain| BLU[UNCERTAIN<br/>blue · SPL_ · PRD 0.0]:::blue
     D1 -->|Unlikely| LIL[UNLIKELY<br/>lilac · SPL_ · PRD −1.0]:::lilac
     D2 -->|Frameshift + NMD| YEL[NMD_PREDICTED<br/>yellow · SPL_ · PRD +3.0]:::yellow
