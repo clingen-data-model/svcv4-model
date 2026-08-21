@@ -11,6 +11,7 @@ Community Profile as the SVCv4 Standards and the VA-Spec profile
 firm up. See `docs/concepts/` for the conceptual narrative.
 """
 
+from svcv4_model.canonical_splice import CanonicalSpliceAssessment
 from svcv4_model.case import (
     MOI,
     AdditionalVariant,
@@ -120,6 +121,7 @@ __all__ = [
     "AgeUnit",
     "AnimalModelEvidence",
     "AnimalModelType",
+    "CanonicalSpliceAssessment",
     "Case",
     "CaseControlStudyEvidence",
     "CaseRelative",
