@@ -22,6 +22,8 @@ from svcv4_model.missense import (
     MissensePredictor,
     MissenseSelectedPath,
     MissenseSpliceAssessment,
+)
+from svcv4_model.splice import (
     SpliceAssayEvidence,
     SpliceAssayResult,
     SplicePredictionOutcome,
