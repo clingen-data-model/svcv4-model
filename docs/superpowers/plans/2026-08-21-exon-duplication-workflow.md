@@ -214,7 +214,8 @@ class ExonDuplicationPredictiveEvidence(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     basis: str | None = Field(
-        default=None, description="Predictive basis (e.g. tandem NMD; % ORF duplicated; critical domain)."
+        default=None,
+        description="Predictive basis (e.g. tandem NMD; % ORF duplicated; critical domain).",
     )
     initial_points: float | None = Field(
         default=None, description="Initial PRD points before the SM 18 adjustment."
@@ -410,7 +411,7 @@ flowchart TD
     D2 -->|Yes| WGN[WHOLE_GENE_NA<br/>CDS_ · NA]:::na
     D2 -->|No — subgenic| D3{Molecularly<br/>proven tandem?}
     D3 -->|Yes · tandem| D4{First / last<br/>exon or UTR?}
-    D3 -->|No · gain| D5{First / last<br/>intron or UTR?}
+    D3 -->|No · gain| D5{First / last<br/>exon or UTR?}
     D4 -->|Yes| LO[TANDEM_TERMINAL_EXON<br/>lower orange · CDS_]:::orange
     D4 -->|No| D6{NMD predicted?}
     D6 -->|Yes| YEL[TANDEM_NMD<br/>yellow · NUL_ · PRD +6.0]:::yellow
