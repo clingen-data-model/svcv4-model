@@ -30,7 +30,8 @@ SM 7 is guidance, not a scored decision tree. Its structured content:
 - **Critical residues (individual amino acids):** some residues are critical to structure /
   function — e.g. the Glycine of the Gly-X-Y motif in triple-helical collagens; cysteines
   forming a Cys–Cys bridge (FBN1, NOTCH3); the cysteines/histidines of a C2H2 zinc finger
-  (GLI3). For these, an analyst **may add up to +2.0 points** on top of the in-silico score,
+  (GLI3). (SM 7 prints "C2H4" here — an apparent source typo; the canonical GLI3 motif is
+  C2H2.) For these, an analyst **may add up to +2.0 points** on top of the in-silico score,
   **only if**:
     1. the residue's involvement in protein function is **well-established**, **and**
     2. a maximum score has **not already been reached** through the combination of the
@@ -121,8 +122,10 @@ notes is out of scope for this increment.)
   Gly-X-Y glycine with `function_role_established=True`, `additional_points=2.0`,
   `max_score_not_reached=True`, `observed_in_affected=True`,
   `double_counting_considered=True`).
-- A `CRITICAL_DOMAIN` round-trip (e.g. a BRCT motif, `additional_points=0.0` / analyst
-  discretion).
+- A `CRITICAL_DOMAIN` round-trip (a documented critical functional domain,
+  `additional_points=0.0` / analyst discretion — SM 7 makes no specific recommendation for
+  domains). Deliberately not BRCT: SM 7 cites the BRCA1 BRCT motif as a *duplicated,
+  disruption-tolerant* domain, i.e. the opposite of a clear-cut critical one.
 - Permissive-empty; `extra="forbid"`; all `CriticalityKind` values round-trip; importable
   from package root.
 
