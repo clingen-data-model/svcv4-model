@@ -1,0 +1,97 @@
+{
+  "$defs": {
+    "StopLostInterference": {
+      "description": "Functional evidence of interference from similar stop-lost variants (SM 16, orange).",
+      "enum": [
+        "LOSS_OF_FUNCTION",
+        "SOME_INTERFERENCE",
+        "NONE"
+      ],
+      "title": "StopLostInterference",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The stop-lost predictive (PRD) step of a branch (SM 16).\n\nNSD-predicted (yellow) starts at +4.0. The no-NSD (orange) branch derives initial points\nfrom a four-tier scale: loss-of-function in similar variants -> +4.0; some interference\nAND extension >=30 aa -> +3.0; some interference OR extension >=30 aa -> +2.0; no\nfunctional data -> 0.0. Positive points are then reduced by the SM 18 matrix.",
+  "properties": {
+    "adjusted_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Coded PRD points after the SM 18 adjustment.",
+      "title": "Adjusted Points"
+    },
+    "basis": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Predictive basis (e.g. NSD predicted; extension length; interference).",
+      "title": "Basis"
+    },
+    "extension_length_aa": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Predicted extension in amino acids past the native stop (>=30 threshold).",
+      "title": "Extension Length Aa"
+    },
+    "initial_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Initial PRD points before the SM 18 adjustment.",
+      "title": "Initial Points"
+    },
+    "nsd_predicted": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "No in-frame stop before the polyA site -> non-stop decay (the yellow gate).",
+      "title": "Nsd Predicted"
+    },
+    "similar_variant_interference": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StopLostInterference"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Functional evidence of interference from similar variants (orange tier)."
+    }
+  },
+  "title": "StopLostPredictiveEvidence",
+  "type": "object"
+}
