@@ -262,7 +262,7 @@ CI drift gate: `git diff --quiet -- schemas/json docs/workflows/case-model.md`.
   (vs additive blue, benignity violet), the SM 20 (FXN) and SM 19 (INF) reuse (violet
   INF is B/LB only), the two held-combined values, and the parent ranges (yellow/
   orange `−8..+10`; blue `−8..+8`; violet `−8..0`). Note it shares the `Splice*`
-  vocabulary with [Missense](missense.md) and that the point values / SPA direction
+  vocabulary with the Missense splice page and that the point values / SPA direction
   differ. GoF out of scope. All *documented, not computed*.
 - **`mkdocs.yml`** — add `- Canonical Splice (SPL_): workflows/pfd/canonical-splice.md`
   under the PFD nav section (after `workflows/pfd/inframe-indel.md`).
