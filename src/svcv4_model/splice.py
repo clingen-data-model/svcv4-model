@@ -67,8 +67,9 @@ class SplicePredictiveEvidence(BaseModel):
         default=None, description="Coded SPL_PRD points after the SM 18 adjustment."
     )
     # Note: the lower-orange path's protein-deletion in-silico tool input
-    # (MutationTaster/Provean, +2.0 / −0.5; SM 6, not yet calibrated) folds into
-    # ``initial_points`` for now rather than a dedicated field.
+    # (MutationTaster/Provean; SM 6 missense +2.0 / −0.5, SM 11 canonical +0.5 /
+    # −0.5; not yet calibrated) folds into ``initial_points`` rather than a
+    # dedicated field.
 
 
 class SpliceAssayEvidence(BaseModel):
