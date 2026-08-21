@@ -1,0 +1,109 @@
+{
+  "$defs": {
+    "CriticalityKind": {
+      "description": "Whether the VBC affects a critical single residue or a critical domain (SM 7).",
+      "enum": [
+        "CRITICAL_RESIDUE",
+        "CRITICAL_DOMAIN"
+      ],
+      "title": "CriticalityKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "SM 7 critical-residue / critical-domain inputs for a PFD predictive step.\n\nStandalone curation-level payload (the SM 18/19/20 pattern); permissive superset. The\nup-to-+2.0 residue cap, the two gating conditions, and the +6.0-on-prediction-alone\ncaution are documented, not computed. SM 7 has no parent code; the additional points\nadd to whichever ``_PRD_`` applies (most commonly ``MIS_PRD_``).",
+  "properties": {
+    "additional_points": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Additional points on top of the in-silico score (up to +2.0 for a residue).",
+      "title": "Additional Points"
+    },
+    "criticality_kind": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CriticalityKind"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Whether the VBC affects a critical residue or a critical domain."
+    },
+    "double_counting_considered": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The analyst confirmed this does not double-count the in-silico predictor.",
+      "title": "Double Counting Considered"
+    },
+    "function_role_established": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The residue's/domain's involvement in protein function is well-established.",
+      "title": "Function Role Established"
+    },
+    "max_score_not_reached": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The _PRD_ + _INF_ combination has not already reached its maximum cap.",
+      "title": "Max Score Not Reached"
+    },
+    "motif_or_domain_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The named motif / domain / residue role (e.g. Gly-X-Y triple-helix glycine).",
+      "title": "Motif Or Domain Name"
+    },
+    "observed_in_affected": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The variant has been observed in an individual affected with the MDE.",
+      "title": "Observed In Affected"
+    }
+  },
+  "title": "CriticalAminoAcidEvidence",
+  "type": "object"
+}
