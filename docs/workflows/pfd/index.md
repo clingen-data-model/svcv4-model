@@ -157,5 +157,6 @@ the [Exon Deletion](exon-deletion.md) workflow (`NUL_`/`CDS_`, six branches), an
 [Exon Duplication](exon-duplication.md) workflow (`NUL_`/`CDS_`, six scored branches plus
 a whole-gene NA outcome), the [Start-Lost](start-lost.md) workflow (`NUL_`/`CDS_`, three
 branches), and the [Stop-Lost](stop-lost.md) workflow (`NUL_`/`CDS_`, two branches). This
-completes the per-variant-type workflows; Determining Critical Amino Acids (SM 7) and the
-cross-cutting scoring computation are still to come.
+completes every variant-type workflow the Working Group has released (Non-Coding, SM 17, is
+not yet released); Determining Critical Amino Acids (SM 7) and the cross-cutting scoring
+computation are still to come.
