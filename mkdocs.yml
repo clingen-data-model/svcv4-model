@@ -95,13 +95,13 @@ nav:
       - Workflows overview: workflows/index.md
       - Human Observational Data (HOD):
           - workflows/hod/index.md
+          - Population (POP): workflows/hod/pop.md
           - Clinical Observations (CLN):
               - workflows/hod/cln/index.md
               - Affected (CLN_AFF): workflows/hod/cln/cln-aff.md
               - De novo (CLN_DNV): workflows/hod/cln/cln-dnv.md
               - Alternative Cause (CLN_ALT): workflows/hod/cln/cln-alt.md
               - Unaffected (CLN_UAF): workflows/hod/cln/cln-uaf.md
-          - Population (POP): workflows/hod/pop.md
           - Locus Specificity (LOC):
               - workflows/hod/loc/index.md
               - Phenotype (LOC_PHE): workflows/hod/loc/loc-phe.md
