@@ -117,6 +117,7 @@ nav:
           - Exon Deletion (NUL_/CDS_): workflows/pfd/exon-deletion.md
           - Exon Duplication (NUL_/CDS_): workflows/pfd/exon-duplication.md
           - Start Lost (NUL_/CDS_): workflows/pfd/start-lost.md
+          - Stop Lost (NUL_/CDS_): workflows/pfd/stop-lost.md
       - Case model & applicability: workflows/case-model.md
   - Examples:
       - examples/practice-variant-set/index.md
