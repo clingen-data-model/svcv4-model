@@ -109,3 +109,7 @@ its fields with their types, defaults, and descriptions.
 ---
 
 ::: svcv4_model.IntronicSynonymousAssessment
+
+---
+
+::: svcv4_model.ExonDeletionAssessment

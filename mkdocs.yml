@@ -114,6 +114,7 @@ nav:
           - In-Frame InDel (CDS_): workflows/pfd/inframe-indel.md
           - Canonical Splice (SPL_): workflows/pfd/canonical-splice.md
           - Intronic & Synonymous (SPL_): workflows/pfd/intronic-synonymous.md
+          - Exon Deletion (NUL_/CDS_): workflows/pfd/exon-deletion.md
       - Case model & applicability: workflows/case-model.md
   - Examples:
       - examples/practice-variant-set/index.md
