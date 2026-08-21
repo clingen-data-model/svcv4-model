@@ -67,6 +67,7 @@ from svcv4_model.inframe_indel import (
     InframeIndelPredictiveEvidence,
 )
 from svcv4_model.inputs import MDE, VBC
+from svcv4_model.intronic_synonymous import IntronicSynonymousAssessment
 from svcv4_model.mechanism import (
     ExonRelevance,
     GenccMechanism,
@@ -146,6 +147,7 @@ __all__ = [
     "InframeIndelAssessment",
     "InframeIndelBranch",
     "InframeIndelPredictiveEvidence",
+    "IntronicSynonymousAssessment",
     "ManeStatus",
     "MechanismExonRelevanceEvidence",
     "Method",
