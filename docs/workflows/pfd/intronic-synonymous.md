@@ -32,6 +32,25 @@ consistently. Using SpliceAI's SVI-calibrated thresholds: **likely** (score > 0.
 consequence (e.g. near-equal normal-loss and cryptic-gain deltas) is treated as
 **uncertain**.
 
+Each terminal node is tinted its SM 12 color-path. (Diagram derived from the flow logic;
+not the source figure.)
+
+```mermaid
+flowchart TD
+    START([Intronic / synonymous VBC]) --> D1{SpliceAI prediction?}
+    D1 -->|Likely| D2{Predicted consequence?}
+    D1 -->|Uncertain| BLU[UNCERTAIN<br/>blue · SPL_ · PRD 0.0]:::blue
+    D1 -->|Unlikely| LIL[UNLIKELY<br/>lilac · SPL_ · PRD −1.0]:::lilac
+    D2 -->|Frameshift + NMD| YEL[NMD_PREDICTED<br/>yellow · SPL_ · PRD +3.0]:::yellow
+    D2 -->|Frameshift, no NMD| UO[FRAMESHIFT_NO_NMD<br/>upper orange · SPL_ · PRD −1..+3]:::orange
+    D2 -->|No frameshift| LO[SPLICE_NO_FRAMESHIFT<br/>lower orange · SPL_ · PRD −1..+3]:::orange
+
+    classDef yellow fill:#f4cf5a,stroke:#d8ad2f,color:#3a3005;
+    classDef orange fill:#ef9d4a,stroke:#cf7f2c,color:#3a2405;
+    classDef blue fill:#5b8def,stroke:#3f6fd0,color:#08122e;
+    classDef lilac fill:#c9b3e6,stroke:#a888d0,color:#241a2e;
+```
+
 | Path (`prediction_outcome`) | Splice prediction | SPL_PRD initial | SPL_ total |
 |---|---|---|---|
 | `NMD_PREDICTED` (yellow) | likely, frameshift + NMD | `+3.0` | `−8.0 to +10.0` |

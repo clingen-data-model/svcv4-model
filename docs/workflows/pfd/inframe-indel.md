@@ -14,6 +14,24 @@ SM 19) → the capped `CDS_` total. Modeled as one `InframeIndelAssessment`
     Both models (`InframeIndelAssessment`, `InframeIndelPredictiveEvidence`) capture
     the analyst's inputs; the scoring is documented, not computed.
 
+## Decision tree
+
+The branch is selected by whether the in-frame InDel lies in a simple sequence repeat.
+Both branches resolve to `CDS_`. (Diagram derived from the SM 10 flow logic; not the source
+figure.)
+
+```mermaid
+flowchart TD
+    START([In-frame InDel VBC]) --> D1{Simple sequence repeat?}
+    D1 -->|Yes| SSR[SIMPLE_SEQUENCE_REPEAT<br/>CDS_ · PRD 0.0 stable / −1.0 polymorphic]:::ssr
+    D1 -->|No| NR[NON_REPEAT<br/>CDS_ · PRD −1.0..+6.0]:::nr
+
+    classDef ssr fill:#a8dadc,stroke:#6fb3b6,color:#0b2b2c;
+    classDef nr fill:#8ecae6,stroke:#4f9fc4,color:#06222e;
+```
+
+## Branches
+
 | Branch (`branch`) | PRD initial | Held PRD+FXN | `CDS_` total |
 |---|---|---|---|
 | `SIMPLE_SEQUENCE_REPEAT` | `0.0` (stable in controls) / `−1.0` (polymorphic) | `−8.0 to +8.0` | `−8.0 to +10.0` |

@@ -16,6 +16,29 @@ code via the shared pipeline: **SPL_PRD** (prediction) → **SPL_SPA** (splice a
     the same types the missense splice half uses. Only the point values and the
     splice-assay direction differ (documented below), so the *structure* is shared.
 
+## Decision tree
+
+The path is selected by the predicted splice consequence of the canonical (±1,2) variant.
+Each terminal node is tinted its SM 11 color-path. (Diagram derived from the flow logic;
+not the source figure.)
+
+```mermaid
+flowchart TD
+    START([Canonical splice VBC · ±1,2 site]) --> D1{Predicted splice consequence?}
+    D1 -->|Frameshift + NMD| YEL[NMD_PREDICTED<br/>yellow · SPL_ · PRD +6.0]:::yellow
+    D1 -->|Frameshift, no NMD| UO[FRAMESHIFT_NO_NMD<br/>upper orange · SPL_ · PRD −1..+6]:::orange
+    D1 -->|No frameshift, no NMD| LO[SPLICE_NO_FRAMESHIFT<br/>lower orange · SPL_ · PRD −1..+6]:::orange
+    D1 -->|Uncertain| BLU[UNCERTAIN<br/>blue · SPL_ · PRD 0.0]:::blue
+    D1 -->|Unlikely| VIO[UNLIKELY<br/>violet · SPL_ · PRD −1.0]:::violet
+
+    classDef yellow fill:#f4cf5a,stroke:#d8ad2f,color:#3a3005;
+    classDef orange fill:#ef9d4a,stroke:#cf7f2c,color:#3a2405;
+    classDef blue fill:#5b8def,stroke:#3f6fd0,color:#08122e;
+    classDef violet fill:#9b6bd6,stroke:#7d4dbd,color:#faf7ff;
+```
+
+## Branches
+
 | Path (`prediction_outcome`) | Splice prediction | SPL_PRD initial | SPL_ total |
 |---|---|---|---|
 | `NMD_PREDICTED` (yellow) | frameshift + NMD | `+6.0` | `−8.0 to +10.0` |

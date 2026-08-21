@@ -15,6 +15,27 @@ yellow/orange/blue/violet paths → the `SPL_` parent code). The analyst follows
     comparison (`MissenseAssessment`, "take the higher"). Only the motif-variant
     special case (with SM 7) remains.
 
+## Decision flow — the two paths
+
+Unlike the single-tree workflows, missense runs **two** pipelines in parallel and then keeps
+one: the amino-acid (`MIS_`) path and the splice (`SPL_`) path are each scored to a parent
+total, and the analyst applies the higher (more positive) — ties and a negative splice total
+resolve to the amino-acid path. (Diagram derived from the SM 6 flow logic; not the source
+figure.)
+
+```mermaid
+flowchart TD
+    START([Missense VBC]) --> MIS[Amino-acid path · MIS_<br/>predictor → FXN → INF → MIS_ total]:::mis
+    START --> SPL[Splice path · SPL_<br/>five splice outcomes → SPL_ total]:::spl
+    MIS --> CMP{Compare MIS_ vs SPL_}
+    SPL --> CMP
+    CMP -->|SPL_ negative, or a tie| USEMIS[Apply the MIS_ amino-acid code]:::mis
+    CMP -->|SPL_ higher and positive| USESPL[Apply the SPL_ splice code]:::spl
+
+    classDef mis fill:#8ecae6,stroke:#4f9fc4,color:#06222e;
+    classDef spl fill:#ffb703,stroke:#d4930a,color:#3a2a00;
+```
+
 ## Amino-acid effect path (`MIS_`) ✅ modeled (inputs)
 
 The amino-acid path runs the shared PFD pipeline for the `MIS_` parent code. Each

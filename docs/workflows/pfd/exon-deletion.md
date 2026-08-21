@@ -16,6 +16,36 @@ computed**.
     Both models (`ExonDeletionAssessment`, `ExonDeletionPredictiveEvidence`) capture
     the analyst's inputs; the scoring is documented, not computed.
 
+## Decision tree
+
+The branch is selected by whether the deletion removes the whole gene, includes the first
+(start) exon, triggers NMD, and — for the start-exon paths — the status of an alternative
+start codon. Each terminal node is tinted its SM 13 color-path. (Diagram derived from the
+flow logic; not the source figure.)
+
+```mermaid
+flowchart TD
+    START([Exon deletion VBC]) --> D1{Whole-gene deletion?}
+    D1 -->|Yes| WG[WHOLE_GENE<br/>yellow · NUL_ · PRD +10.0]:::yellow
+    D1 -->|No · subgenic| D2{Includes the first / start exon?}
+    D2 -->|No| D3{NMD predicted?}
+    D2 -->|Yes| D4{Alternative start codon?}
+    D3 -->|Yes| SN[SUBGENIC_NMD<br/>orange · NUL_ · PRD +6.0]:::orange
+    D3 -->|No| SNN[SUBGENIC_NO_NMD<br/>violet · CDS_ · PRD 0..+6]:::violet
+    D4 -->|None| NAS[START_CODON_NO_ALT_START<br/>green · NUL_ · PRD +6.0]:::green
+    D4 -->|Unproven| UAS[START_CODON_ALT_START_UNPROVEN<br/>blue · CDS_ · PRD 0..+6]:::blue
+    D4 -->|Functional| FAS[START_CODON_ALT_START_FUNCTIONAL<br/>grey · CDS_ · PRD −1.0]:::grey
+
+    classDef yellow fill:#f4cf5a,stroke:#d8ad2f,color:#3a3005;
+    classDef orange fill:#ef9d4a,stroke:#cf7f2c,color:#3a2405;
+    classDef violet fill:#9b6bd6,stroke:#7d4dbd,color:#faf7ff;
+    classDef green fill:#58b368,stroke:#3d9a4d,color:#08240f;
+    classDef blue fill:#5b8def,stroke:#3f6fd0,color:#08122e;
+    classDef grey fill:#b7bccb,stroke:#9aa0b4,color:#20232e;
+```
+
+## Branches
+
 | Branch (`prediction_outcome`) | Condition | Parent code | PRD initial | Parent total |
 |---|---|---|---|---|
 | `WHOLE_GENE` (yellow) | whole-gene deletion | `NUL_` | `+10.0` | `−8.0 to +10.0` |
