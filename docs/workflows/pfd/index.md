@@ -12,15 +12,15 @@ evaluated impact (e.g. missense, nonsense, splice, indel).
 *The Variant Impact (Predictive & Functional Data) section of the SVCv4 Summary
 Table, with its code workflows. (Figure provided by the SVCv4 Standards group.)*
 
-!!! note "Modeling underway — shared submodules + scaffold landed"
+!!! note "Modeling landed — submodules, scaffold, and all ten workflows"
 
-    The **three shared PFD submodules** — Molecular Mechanism & Exon Relevance
-    (SM 18), Informative Variants (SM 19), Functional Assays (SM 20) — and the
-    **variant-agnostic scaffold** (`PfdCodeAssessment`) that composes them are now
+    The **four shared PFD submodules** — Determining Critical Amino Acids (SM 7),
+    Molecular Mechanism & Exon Relevance (SM 18), Informative Variants (SM 19),
+    Functional Assays (SM 20) — the **variant-agnostic scaffold** (`PfdCodeAssessment`)
+    that composes them, and **all ten released per-variant-type workflows** are now
     modeled (inputs captured, scoring documented not computed); see
-    [below](#the-shape-of-the-remaining-work). What remains is the per-variant-type
-    workflows (Missense first) and Critical Amino Acids (SM 7). This page
-    summarizes the concepts and tracks what has landed.
+    [below](#the-shape-of-the-remaining-work). What remains is the cross-cutting scoring
+    computation. This page summarizes the concepts and tracks what has landed.
 
 ## Concepts and codes
 
