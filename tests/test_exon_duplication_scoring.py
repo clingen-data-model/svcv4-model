@@ -101,6 +101,34 @@ def test_gain_green_benignity_only() -> None:
     assert r.parent_total == 0.0
 
 
+def test_lower_orange_terminal_exon() -> None:
+    # TANDEM_TERMINAL_EXON: tandem (consumes FXN), CDS_, PRD fixed 0, held +9
+    a = ExonDuplicationAssessment(
+        prediction_outcome=ExonDuplicationOutcome.TANDEM_TERMINAL_EXON,
+        predictive=ExonDuplicationPredictiveEvidence(initial_points=0.0),
+        mechanism_exon_relevance=_mer(GenccMechanism.ESTABLISHED, ExonRelevance.ALL),
+        fxn_points=8.0,
+    )
+    r = reference_score_exon_duplication(a, gene_disease_validity=MOD)
+    assert r.parent_code == "CDS"
+    assert r.sub_code_points["PRD"] == 0.0
+    assert r.sub_code_points["FXN"] == 8.0  # tandem path consumes FXN
+    assert r.held_combined["PRD+FXN"] == 8.0  # 0+8 (within held cap +9)
+
+
+def test_violet_gain_no_nmd_floor() -> None:
+    # violet GAIN_NO_NMD: CDS_, FXN-NA, parent floors at -1 (PRD suppressed, benign INF)
+    a = ExonDuplicationAssessment(
+        prediction_outcome=ExonDuplicationOutcome.GAIN_NO_NMD,
+        fxn_points=8.0,  # ignored (FXN NA)
+        informative=_inf(B, 1),  # INF -2.0
+    )
+    r = reference_score_exon_duplication(a, gene_disease_validity=MOD)
+    assert r.parent_code == "CDS"
+    assert "FXN" not in r.sub_code_points
+    assert r.parent_total == -1.0  # cap(-2, [-1, 6]) -> -1.0
+
+
 def test_whole_gene_na() -> None:
     a = ExonDuplicationAssessment(prediction_outcome=ExonDuplicationOutcome.WHOLE_GENE_NA)
     r = reference_score_exon_duplication(a, gene_disease_validity=MOD)
