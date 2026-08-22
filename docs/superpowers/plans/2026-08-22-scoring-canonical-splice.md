@@ -176,7 +176,10 @@ def score_spl_workflow(
         adj = apply_sm18_multiplier(initial, mech, exon, gene_disease_validity)
         prd = cap(adj, branch.prd_lo, branch.prd_hi)
         sub["PRD"] = prd
-        prov.append(f"SPL_PRD: {initial} x SM18 = {adj}, capped [{branch.prd_lo}, {branch.prd_hi}] -> {prd}")
+        prov.append(
+            f"SPL_PRD: {initial} x SM18 = {adj}, "
+            f"capped [{branch.prd_lo}, {branch.prd_hi}] -> {prd}"
+        )
 
     # SPA (consumed raw)
     spa = assessment.spa_points
