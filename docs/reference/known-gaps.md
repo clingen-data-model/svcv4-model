@@ -27,6 +27,18 @@ roadmap with dates.
 | Workflow decision-tree diagrams | Documentation assets | The official "Workflow Images" Drive folder (linked from the SVCv4 Pilot Launch announcement) is currently empty. Dozens of named figures are referenced throughout the supplements (missense/nonsense/frameshift/splice flow diagrams, the DAFT derivation diagrams, etc.) — need to follow up with the SVCv4 Working Group (Alicia Byrne / Steven Harrison) for official, releasable versions before embedding any. |
 | SM 17 (Non-Coding Variants) not yet released | Source material | The 20 currently-available SVCv4 Supplementary Materials (SM 1–16, 18–21) have been read into this project's working understanding and are linked from [Spec coverage](spec-alignment.md). SM 17 (Non-Coding Variants) is the one not yet released — the Working Group has deferred it; the manuscript flags that section as an unwritten placeholder. |
 
+## Working Group follow-ups (suspected source issues)
+
+Open questions surfaced while building the reference scorer where the Supplementary
+Material is ambiguous or appears internally inconsistent. The reference scorer encodes
+each **faithfully to the documented rule** and flags the assumption in its `provenance`;
+these are candidates to raise with the SVCv4 Working Group for confirmation.
+
+| Item | Source | Notes |
+|---|---|---|
+| SM 18 Figure-1 `Suspected × Most` matrix cell | SM 18 | The `Suspected × Most` mechanism/exon cell lives in SM 18 Figure 1 (an image, absent from the text extracts). The reference scorer **assumes `0.25`** (keep the Suspected fraction; do not further halve). This is a good candidate to raise with the working group. |
+| SM 6 missense-splice blue/violet parent caps | SM 6 | SM 6's missense-splice **blue (`UNCERTAIN`) → `−8..0`** and **violet (`UNLIKELY`) → `−8..+8`** parent caps are inverted vs Canonical (SM 11) / Intronic (SM 12), and read backwards (uncertain capped at 0; unlikely allowed positive). Encoded faithfully to SM 6 + `missense.md`. This is a good candidate to raise with the working group — same category as the SM 18 Figure-1 open item. |
+
 ## How to use this page
 
 When picking up one of these: move the detail into a proper spec (see
