@@ -32,3 +32,29 @@ class ScoreResult:
                 "ScoreResult is a reference (non-authoritative) computation; "
                 "authoritative must be False — CSpec is the authoritative scorer."
             )
+
+
+@dataclass(frozen=True)
+class MissenseScoreResult:
+    """A reference (NON-AUTHORITATIVE) Missense result holding BOTH sub-path scores (SM 6).
+
+    SM 6 requires saving both the amino-acid (``MIS_``) and splice (``SPL_``) path results so a
+    future re-evaluation can reconsider the comparison. ``selected_path`` / ``applied_total`` /
+    ``applied_parent_code`` record the take-higher outcome. ``authoritative`` is fixed False
+    (constructing it True raises); CSpec is the authoritative scorer.
+    """
+
+    amino_acid: ScoreResult
+    splice: ScoreResult
+    selected_path: str
+    applied_parent_code: str
+    applied_total: float | None
+    provenance: list[str] = field(default_factory=list)
+    authoritative: bool = False
+
+    def __post_init__(self) -> None:
+        if self.authoritative:
+            raise ValueError(
+                "MissenseScoreResult is a reference (non-authoritative) computation; "
+                "authoritative must be False — CSpec is the authoritative scorer."
+            )

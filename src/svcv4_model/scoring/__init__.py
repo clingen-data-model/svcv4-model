@@ -10,20 +10,25 @@ from svcv4_model.scoring.pfd.exon_deletion import reference_score_exon_deletion
 from svcv4_model.scoring.pfd.exon_duplication import reference_score_exon_duplication
 from svcv4_model.scoring.pfd.frameshift import reference_score_frameshift
 from svcv4_model.scoring.pfd.intronic_synonymous import reference_score_intronic_synonymous
+from svcv4_model.scoring.pfd.missense import reference_score_missense
 from svcv4_model.scoring.pfd.missense_amino_acid import reference_score_missense_amino_acid
+from svcv4_model.scoring.pfd.missense_splice import reference_score_missense_splice
 from svcv4_model.scoring.pfd.nonsense import reference_score_nonsense
 from svcv4_model.scoring.pfd.start_lost import reference_score_start_lost
 from svcv4_model.scoring.pfd.stop_lost import reference_score_stop_lost
-from svcv4_model.scoring.result import ScoreResult
+from svcv4_model.scoring.result import MissenseScoreResult, ScoreResult
 
 __all__ = [
+    "MissenseScoreResult",
     "ScoreResult",
     "reference_score_canonical_splice",
     "reference_score_exon_deletion",
     "reference_score_exon_duplication",
     "reference_score_frameshift",
     "reference_score_intronic_synonymous",
+    "reference_score_missense",
     "reference_score_missense_amino_acid",
+    "reference_score_missense_splice",
     "reference_score_nonsense",
     "reference_score_start_lost",
     "reference_score_stop_lost",
