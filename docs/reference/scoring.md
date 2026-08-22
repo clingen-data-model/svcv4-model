@@ -27,6 +27,8 @@ result.provenance        # the audit trail, step by step
 - **Shared primitives** — the SM 18 mechanism/exon multiplier, caps, held-combined, and the
   informative-variant tally (`svcv4_model.scoring.primitives`).
 - **Nonsense** (SM 8) — `reference_score_nonsense`, all three branches.
+- **Frameshift** (SM 9) — `reference_score_frameshift`, all five branches (shares the
+  `score_nul_cds_workflow` pipeline with Nonsense).
 
 The remaining PFD workflows, POP/LOC/CLN, case aggregation, the classification band, and
 `validate_case` follow in later increments (see the scoping doc).
