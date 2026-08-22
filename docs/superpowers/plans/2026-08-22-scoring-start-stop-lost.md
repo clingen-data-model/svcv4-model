@@ -57,7 +57,14 @@ Change the helper signature `branch_table: Mapping[object, BranchSpec]` and upda
     branch = branch_table.get(outcome) if outcome is not None else None
     parent_code = branch.parent_code if branch else None
     ...
+        adj = apply_sm18_multiplier(initial, mech, exon, gene_disease_validity)
         prd = cap(adj, branch.prd_lo, branch.prd_hi)      # was branch[1], branch[2]
+        sub["PRD"] = prd
+        prov.append(
+            f"PRD: initial {initial} x SM18(mech={mech}, exon={exon}, "
+            f"gdv={gene_disease_validity}) = {adj}, capped "
+            f"[{branch.prd_lo}, {branch.prd_hi}] -> {prd}"   # was branch[1], branch[2]
+        )
     ...
     held_hi = branch.held_hi if branch else _DEFAULT_HELD_HI   # was branch[3]
     held_val = hold_combined(prd, fxn, lo=_HELD_LO, hi=held_hi)
@@ -74,7 +81,10 @@ Change the helper signature `branch_table: Mapping[object, BranchSpec]` and upda
         prov.append(f"parent_total: {parent_total} (cap [{parent_lo}, {parent_hi}])")
 ```
 
-(The `NulCdsAssessment` Protocol, PRD/FXN/INF provenance strings, and the captured-parent_code cross-check are unchanged.)
+(The PRD provenance f-string **must also change `branch[1]`/`branch[2]` → `branch.prd_lo`/
+`branch.prd_hi`** — `BranchSpec` is not subscriptable, so leaving the old `branch[1]` there
+crashes with `TypeError` on every scored-PRD test. The `NulCdsAssessment` Protocol, the FXN/INF
+provenance strings, and the captured-parent_code cross-check are otherwise unchanged.)
 
 - [ ] **Step 2: Refactor `nonsense.py`** — branch table becomes `BranchSpec` (behaviour identical):
 
