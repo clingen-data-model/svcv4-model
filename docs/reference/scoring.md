@@ -29,6 +29,12 @@ result.provenance        # the audit trail, step by step
 - **Nonsense** (SM 8) — `reference_score_nonsense`, all three branches.
 - **Frameshift** (SM 9) — `reference_score_frameshift`, all five branches (shares the
   `score_nul_cds_workflow` pipeline with Nonsense).
+- **Start-Lost** (SM 15) — `reference_score_start_lost`, three branches (yellow/orange floor
+  the parent total at −4.0; violet is benignity-only).
+- **Stop-Lost** (SM 16) — `reference_score_stop_lost`, two branches.
+
+The shared `score_nul_cds_workflow` now carries per-branch caps via a `BranchSpec` (parent
+floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table.
 
 The remaining PFD workflows, POP/LOC/CLN, case aggregation, the classification band, and
 `validate_case` follow in later increments (see the scoping doc).
