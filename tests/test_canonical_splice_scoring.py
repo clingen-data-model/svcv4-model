@@ -57,6 +57,33 @@ def test_yellow_prd_spa_fxn_cap_9() -> None:
     assert r.held_combined["PRD+SPA+FXN"] == 9.0  # 6+0+8 capped at +9 (not parent +10)
 
 
+def test_orange_frameshift_prd_floor_and_held_9() -> None:
+    # upper-orange FRAMESHIFT_NO_NMD: prd_lo=-1 floor; held PRD+SPA+FXN caps at +9 (not +10)
+    a = CanonicalSpliceAssessment(
+        prediction_outcome=SplicePredictionOutcome.FRAMESHIFT_NO_NMD,
+        predictive=SplicePredictiveEvidence(initial_points=6.0),
+        mechanism_exon_relevance=_mer(),
+        spa_points=0.0,
+        fxn_points=8.0,
+        informative=_inf(VariantClassification.PATHOGENIC, 1),
+    )
+    r = reference_score_canonical_splice(a, gene_disease_validity=MOD)
+    assert r.sub_code_points["PRD"] == 6.0
+    assert r.held_combined["PRD+SPA+FXN"] == 9.0  # cap(6+0+8, +9)
+    assert r.parent_total == 10.0  # cap(9+2, [-8, 10])
+
+
+def test_orange_splice_prd_negative_floor() -> None:
+    # lower-orange SPLICE_NO_FRAMESHIFT: a very negative PRD input floors at prd_lo=-1
+    a = CanonicalSpliceAssessment(
+        prediction_outcome=SplicePredictionOutcome.SPLICE_NO_FRAMESHIFT,
+        predictive=SplicePredictiveEvidence(initial_points=-5.0),  # SM18 no-op on negatives
+    )
+    r = reference_score_canonical_splice(a, gene_disease_validity=MOD)
+    assert r.sub_code_points["PRD"] == -1.0  # cap(-5, [-1, 6]) -> -1.0
+    assert r.parent_total == -1.0
+
+
 def test_blue_parent_cap_8() -> None:
     a = CanonicalSpliceAssessment(
         prediction_outcome=SplicePredictionOutcome.UNCERTAIN,
