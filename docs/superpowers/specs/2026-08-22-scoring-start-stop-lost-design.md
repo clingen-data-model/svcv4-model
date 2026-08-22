@@ -21,9 +21,12 @@ The Nonsense/Frameshift scorers held two things constant that Start-Lost does no
 
 - **Parent floor.** Nonsense/Frameshift/Stop-Lost all cap the parent total at `−8.0 .. +10.0`.
   **Start-Lost's yellow and orange branches floor at `−4.0`** (not −8), and its **violet branch
-  caps at `−8.0 .. 0.0`** (ceiling 0, benignity-only). A strongly-benign INF (e.g. −6.0) on a
-  yellow Start-Lost must clamp to −4.0; the current shared `−8.0` floor would wrongly leave it
-  at −6.0. This is a real fidelity gap the 4-tuple cannot fix.
+  caps at `−8.0 .. 0.0`** (ceiling 0, benignity-only). The floor bites only when the positive
+  held (PRD+FXN) is small: e.g. a yellow Start-Lost with **no positive predictive/functional
+  evidence** and a strongly-benign INF of `−6.0` must clamp to `−4.0`, where the shared `−8.0`
+  floor would wrongly leave it at `−6.0`. (With yellow's canonical PRD `+6.0`, both floors give
+  the same result — the change only shows up once held is low.) This is a real fidelity gap the
+  4-tuple cannot fix.
 - **INF ceiling.** Start-Lost's **violet** branch is benignity-only: INF `−8.0 .. 0.0`. The
   shared `−8.0 .. +8.0` INF cap only matches when the analyst captured B/LB-only variants;
   to be faithful the ceiling must be per-branch.
@@ -106,7 +109,10 @@ from `svcv4_model.scoring` (sorted `__all__`).
 ## Tests (TDD)
 
 - `tests/test_start_lost_scoring.py`: yellow maximal (PRD +6, parent cap +10); **the −4 floor**
-  (a benign INF of −6 on yellow → `parent_total == -4.0`, proving the per-branch floor);
+  — a yellow branch with **`predictive=None`** (PRD `_ND` → held `None`, so no positive held)
+  and a benign INF of `−6.0` (five B variants: −2 + 4×−1) → `parent_total == -4.0`; the shared
+  −8 floor would give −6.0, so this proves the per-branch floor. (With PRD +6 present, the floor
+  cannot bite — the minimum reachable is −2 — so PRD must be suppressed for this test.) Then
   orange held cap +9; violet (`parent_code == "CDS"`, PRD −1.0, benign INF, parent capped to
   `[−8, 0]`, INF ceiling 0); empty → all `_ND`.
 - `tests/test_stop_lost_scoring.py`: yellow (PRD +4, `NUL`, held +9); orange (`CDS`, held +9);
