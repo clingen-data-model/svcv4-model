@@ -37,9 +37,17 @@ result.provenance        # the audit trail, step by step
 - **Exon Duplication** (SM 14) — `reference_score_exon_duplication`, six scored branches + a
   whole-gene-NA outcome (the gain paths code functional data as NA; the shared helper skips
   FXN on those branches via `BranchSpec.fxn_na`). **All six NUL_/CDS_ scorers are now modeled.**
+- **Canonical Splice** (SM 11) — `reference_score_canonical_splice`, five paths. The first
+  `SPL_` scorer: it uses a separate `score_spl_workflow` helper whose pipeline adds an
+  **SPL_SPA** (splice-assay) step and records **two** held values (`PRD+SPA`, `PRD+SPA+FXN`);
+  the parent code is always `SPL`. SPA is consumed raw — `spa_points` is the analyst's coded
+  delta (on the canonical paths the assay *reduces* the PRD). Per-path caps live in a
+  `SplBranchSpec` (the yellow/orange second held value caps at +9, the violet path is
+  benignity-only).
 
-The shared `score_nul_cds_workflow` now carries per-branch caps via a `BranchSpec` (parent
-floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table.
+The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
+floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
+`SPL_` workflows use the parallel `score_spl_workflow` / `SplBranchSpec` pair.
 
 The remaining PFD workflows, POP/LOC/CLN, case aggregation, the classification band, and
 `validate_case` follow in later increments (see the scoping doc).
