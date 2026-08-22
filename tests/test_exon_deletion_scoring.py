@@ -96,6 +96,37 @@ def test_grey_benignity_only() -> None:
     assert r.parent_total == -1.0  # within [-8, 0]
 
 
+def test_start_codon_branches_parent_and_held() -> None:
+    # the two START_CODON_* branches: green (NUL_, held +10) and blue (CDS_, held +9)
+    green = ExonDeletionAssessment(
+        prediction_outcome=ExonDeletionOutcome.START_CODON_NO_ALT_START,
+        predictive=ExonDeletionPredictiveEvidence(initial_points=6.0),
+        mechanism_exon_relevance=_mer(GenccMechanism.ESTABLISHED, ExonRelevance.ALL),
+        fxn_points=8.0,
+    )
+    rg = reference_score_exon_deletion(green, gene_disease_validity=MOD)
+    assert rg.parent_code == "NUL"
+    assert rg.held_combined["PRD+FXN"] == 10.0
+
+    blue = ExonDeletionAssessment(
+        prediction_outcome=ExonDeletionOutcome.START_CODON_ALT_START_UNPROVEN,
+        predictive=ExonDeletionPredictiveEvidence(initial_points=6.0),
+        mechanism_exon_relevance=_mer(GenccMechanism.ESTABLISHED, ExonRelevance.ALL),
+        fxn_points=8.0,
+    )
+    rb = reference_score_exon_deletion(blue, gene_disease_validity=MOD)
+    assert rb.parent_code == "CDS"
+    assert rb.held_combined["PRD+FXN"] == 9.0
+
+
+def test_all_six_outcomes_score_without_error() -> None:
+    for outcome in ExonDeletionOutcome:
+        r = reference_score_exon_deletion(
+            ExonDeletionAssessment(prediction_outcome=outcome), gene_disease_validity=MOD
+        )
+        assert r.parent_code in {"NUL", "CDS"}
+
+
 def test_empty_is_all_nd() -> None:
     r = reference_score_exon_deletion(ExonDeletionAssessment(), gene_disease_validity=MOD)
     assert r.sub_code_points == {}
