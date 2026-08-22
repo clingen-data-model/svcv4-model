@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from typing import Protocol
 
 from svcv4_model.case import GeneDiseaseValidity
+from svcv4_model.informative import InformativeVariant
 from svcv4_model.mechanism import ExonRelevance, GenccMechanism
 from svcv4_model.pfd import PfdParentCode
 from svcv4_model.scoring.primitives import (
@@ -32,7 +33,7 @@ class _Predictive(Protocol):
 
 
 class _Informative(Protocol):
-    variants: list
+    variants: list[InformativeVariant]
 
 
 class NulCdsAssessment(Protocol):
