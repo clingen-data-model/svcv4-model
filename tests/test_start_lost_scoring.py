@@ -83,6 +83,31 @@ def test_violet_benignity_only() -> None:
     assert r.parent_total == -3.0  # within [-8, 0]
 
 
+def test_orange_minus4_floor() -> None:
+    # orange also floors the parent total at -4.0 (PRD suppressed so the floor can bite)
+    a = StartLostAssessment(
+        prediction_outcome=StartLostOutcome.ALT_START_UNPROVEN,
+        informative=_benign(5),  # INF -6.0
+    )
+    r = reference_score_start_lost(a, gene_disease_validity=MOD)
+    assert r.parent_total == -4.0
+
+
+def test_violet_pathogenic_inf_clamped_to_zero() -> None:
+    # violet is benignity-only: a P informative variant that would tally +2 is clamped by
+    # the inf_hi=0 ceiling (a default +8 ceiling would leave +2 and lift the parent to +1).
+    a = StartLostAssessment(
+        prediction_outcome=StartLostOutcome.ALT_START_FUNCTIONAL,
+        predictive=StartLostPredictiveEvidence(initial_points=-1.0),
+        informative=InformativeVariantsEvidence(
+            variants=[InformativeVariant(id="p", classification=VariantClassification.PATHOGENIC)]
+        ),
+    )
+    r = reference_score_start_lost(a, gene_disease_validity=MOD)
+    assert r.sub_code_points["INF"] == 0.0  # +2 tally clamped to the benignity-only ceiling
+    assert r.parent_total == -1.0  # PRD -1 + INF 0, within [-8, 0]
+
+
 def test_empty_is_all_nd() -> None:
     r = reference_score_start_lost(StartLostAssessment(), gene_disease_validity=MOD)
     assert r.sub_code_points == {}
