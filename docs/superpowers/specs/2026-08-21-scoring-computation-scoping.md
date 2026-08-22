@@ -125,17 +125,14 @@ following the established brainstorm → spec → plan → TDD → review → PR
 - The reference scorer does **not** change any capture model, schema, or the applicability
   matrix; it is purely additive.
 
-## Open questions for the user
+## Resolved decisions (user-approved 2026-08-21)
 
-1. **First slice = Nonsense + primitives?** (recommended, as above) — or start with **POP**,
-   which is fully self-contained and has the exact SM 3 golden fixture but doesn't exercise the
-   shared PFD primitives that most of the work reuses?
-2. **`ScoreResult` shape:** is a coded-points + held-combined + `parent_total` + `provenance[]`
-   + `authoritative=False` result the right contract, or do you want it richer (e.g. carrying
-   the per-step `_ND`/NA reasons as a structured enum rather than provenance strings)?
-3. **Where the reference totals surface in docs:** a single new reference page
-   (`reference/scoring.md`) describing the contract + linking worked examples — agreed? And do
-   you want computed totals shown inline on the practice-variant-set example pages, or kept in
-   tests only for now?
-4. **`validate_case` timing:** fold it in early (it's rule-enforcement, useful on its own and
-   independent of the point scorers), or defer until after the PFD scorers land?
+1. **First slice = Nonsense + shared primitives.** Increment 0 builds `ScoreResult`,
+   `primitives.py`, and `reference_score_nonsense` (all three branches).
+2. **`ScoreResult` shape as proposed:** coded sub-code points + held-combined + `parent_total`
+   + `provenance: list[str]` + hard-wired `authoritative = False`.
+3. **Docs surfacing:** one new `reference/scoring.md` page describing the non-authoritative
+   contract + linking worked examples; **computed totals live in tests only for now** — the
+   practice-variant-set example pages are left unchanged.
+4. **`validate_case` deferred** until after the PFD scorers land (this scoping's decomposition
+   keeps it as a later, parallel-capable track).
