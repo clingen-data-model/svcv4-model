@@ -14,6 +14,9 @@ class ScoreResult:
     each step). A sub-code that is un-scoreable / No-Data is OMITTED from ``sub_code_points``
     (never recorded as 0.0). ``authoritative`` is fixed False — constructing it True raises,
     so the non-authoritative contract cannot be bypassed.
+
+    ``frozen=True`` prevents attribute reassignment; the ``dict``/``list`` fields are held by
+    reference and are not deep-frozen — treat a returned ``ScoreResult`` as read-only.
     """
 
     parent_code: str | None = None

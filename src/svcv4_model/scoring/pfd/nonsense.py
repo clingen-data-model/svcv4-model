@@ -23,11 +23,15 @@ _BRANCH: dict[NonsensePredictionOutcome, tuple[str, float, float, float]] = {
 def reference_score_nonsense(
     assessment: NonsenseAssessment,
     *,
-    gene_disease_validity: GeneDiseaseValidity | None = None,
+    gene_disease_validity: GeneDiseaseValidity | None,
 ) -> ScoreResult:
     """Compute the reference (NON-AUTHORITATIVE) Nonsense point total from a captured
     ``NonsenseAssessment``. CSpec is authoritative. FXN is consumed from ``fxn_points``
     (OddsPath is not recomputed).
+
+    ``gene_disease_validity`` is a **required** keyword (pass an explicit ``None`` for a
+    not-classified / below-Moderate MDE) — it materially changes the SM 18 reduction (below
+    Moderate zeroes positive predictive points), so it must never be omitted by accident.
     """
     prov: list[str] = []
     sub: dict[str, float] = {}
