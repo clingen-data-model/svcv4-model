@@ -32,6 +32,8 @@ result.provenance        # the audit trail, step by step
 - **Start-Lost** (SM 15) — `reference_score_start_lost`, three branches (yellow/orange floor
   the parent total at −4.0; violet is benignity-only).
 - **Stop-Lost** (SM 16) — `reference_score_stop_lost`, two branches.
+- **Exon Deletion** (SM 13) — `reference_score_exon_deletion`, six branches (the whole-gene
+  branch applies SM 18 mechanism-only; the grey functional-alt-start branch is benignity-only).
 
 The shared `score_nul_cds_workflow` now carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table.
