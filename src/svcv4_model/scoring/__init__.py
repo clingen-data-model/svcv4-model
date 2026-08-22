@@ -7,6 +7,14 @@ re-exported from the top-level ``svcv4_model`` package (so schema generation ign
 
 from svcv4_model.scoring.pfd.frameshift import reference_score_frameshift
 from svcv4_model.scoring.pfd.nonsense import reference_score_nonsense
+from svcv4_model.scoring.pfd.start_lost import reference_score_start_lost
+from svcv4_model.scoring.pfd.stop_lost import reference_score_stop_lost
 from svcv4_model.scoring.result import ScoreResult
 
-__all__ = ["ScoreResult", "reference_score_frameshift", "reference_score_nonsense"]
+__all__ = [
+    "ScoreResult",
+    "reference_score_frameshift",
+    "reference_score_nonsense",
+    "reference_score_start_lost",
+    "reference_score_stop_lost",
+]
