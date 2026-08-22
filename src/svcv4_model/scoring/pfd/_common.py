@@ -2,12 +2,13 @@
 
 The Nonsense/Frameshift/Exon-Deletion/Exon-Duplication/Start-Lost/Stop-Lost scorers share one
 pipeline (PRD -> SM 18 -> FXN -> held PRD+FXN -> INF -> capped parent); only the per-branch
-PRD range and held-PRD+FXN ceiling differ, carried in each workflow's ``branch_table``.
+caps differ, carried in each workflow's ``branch_table`` of ``BranchSpec``.
 """
 
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import dataclass
 from typing import Protocol
 
 from svcv4_model.case import GeneDiseaseValidity
@@ -53,17 +54,35 @@ _HELD_LO = -8.0
 _DEFAULT_HELD_HI = 9.0
 
 
+@dataclass(frozen=True)
+class BranchSpec:
+    """Per-branch caps for a NUL_/CDS_ workflow.
+
+    Defaults match the shared constants; a workflow overrides only where SM says its branch
+    differs (e.g. Start-Lost's -4 parent floor, or a benignity-only INF/parent ceiling).
+    """
+
+    parent_code: str
+    prd_lo: float
+    prd_hi: float
+    held_hi: float = _DEFAULT_HELD_HI
+    parent_lo: float = _PARENT_LO
+    parent_hi: float = _PARENT_HI
+    inf_lo: float = _INF_LO
+    inf_hi: float = _INF_HI
+
+
 def score_nul_cds_workflow(
     assessment: NulCdsAssessment,
-    branch_table: Mapping[object, tuple[str, float, float, float]],
+    branch_table: Mapping[object, BranchSpec],
     *,
     gene_disease_validity: GeneDiseaseValidity | None,
 ) -> ScoreResult:
     """Reference (NON-AUTHORITATIVE) score for a NUL_/CDS_ LoF workflow. CSpec is authoritative.
 
-    ``branch_table`` maps ``prediction_outcome`` -> ``(parent_code, prd_lo, prd_hi, held_hi)``.
-    FXN is consumed raw from ``fxn_points`` (already coded; OddsPath not recomputed).
-    ``gene_disease_validity`` is required (pass explicit None for a below-Moderate MDE).
+    ``branch_table`` maps ``prediction_outcome`` -> ``BranchSpec``. FXN is consumed raw from
+    ``fxn_points`` (already coded; OddsPath not recomputed). ``gene_disease_validity`` is
+    required (pass explicit None for a below-Moderate MDE).
     """
     prov: list[str] = []
     sub: dict[str, float] = {}
@@ -71,7 +90,7 @@ def score_nul_cds_workflow(
 
     outcome = assessment.prediction_outcome
     branch = branch_table.get(outcome) if outcome is not None else None
-    parent_code = branch[0] if branch else None
+    parent_code = branch.parent_code if branch else None
 
     # PRD
     prd: float | None = None
@@ -83,11 +102,12 @@ def score_nul_cds_workflow(
         prov.append("PRD: _ND (no initial points and/or unknown branch)")
     else:
         adj = apply_sm18_multiplier(initial, mech, exon, gene_disease_validity)
-        prd = cap(adj, branch[1], branch[2])
+        prd = cap(adj, branch.prd_lo, branch.prd_hi)
         sub["PRD"] = prd
         prov.append(
             f"PRD: initial {initial} x SM18(mech={mech}, exon={exon}, "
-            f"gdv={gene_disease_validity}) = {adj}, capped [{branch[1]}, {branch[2]}] -> {prd}"
+            f"gdv={gene_disease_validity}) = {adj}, capped "
+            f"[{branch.prd_lo}, {branch.prd_hi}] -> {prd}"
         )
 
     # FXN (consumed raw, not recomputed and not re-capped)
@@ -99,7 +119,7 @@ def score_nul_cds_workflow(
         prov.append(f"FXN: consumed coded value {fxn}")
 
     # held PRD+FXN
-    held_hi = branch[3] if branch else _DEFAULT_HELD_HI
+    held_hi = branch.held_hi if branch else _DEFAULT_HELD_HI
     held_val = hold_combined(prd, fxn, lo=_HELD_LO, hi=held_hi)
     if held_val is not None:
         held["PRD+FXN"] = held_val
@@ -107,18 +127,22 @@ def score_nul_cds_workflow(
 
     # INF
     inf: float | None = None
+    inf_lo = branch.inf_lo if branch else _INF_LO
+    inf_hi = branch.inf_hi if branch else _INF_HI
     if assessment.informative is not None:
-        inf = cap(informative_points(assessment.informative.variants), _INF_LO, _INF_HI)
+        inf = cap(informative_points(assessment.informative.variants), inf_lo, inf_hi)
     if inf is None:
         prov.append("INF: _ND (no classified informative variants)")
     else:
         sub["INF"] = inf
-        prov.append(f"INF: {inf} (cap [{_INF_LO}, {_INF_HI}])")
+        prov.append(f"INF: {inf} (cap [{inf_lo}, {inf_hi}])")
 
     # parent total
-    parent_total = hold_combined(held_val, inf, lo=_PARENT_LO, hi=_PARENT_HI)
+    parent_lo = branch.parent_lo if branch else _PARENT_LO
+    parent_hi = branch.parent_hi if branch else _PARENT_HI
+    parent_total = hold_combined(held_val, inf, lo=parent_lo, hi=parent_hi)
     if parent_total is not None:
-        prov.append(f"parent_total: {parent_total} (cap [{_PARENT_LO}, {_PARENT_HI}])")
+        prov.append(f"parent_total: {parent_total} (cap [{parent_lo}, {parent_hi}])")
 
     # captured parent_code cross-check (report, do not fix)
     captured = assessment.parent_code

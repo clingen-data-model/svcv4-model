@@ -4,16 +4,15 @@ from __future__ import annotations
 
 from svcv4_model.case import GeneDiseaseValidity
 from svcv4_model.frameshift import FrameshiftAssessment, FrameshiftPredictionOutcome
-from svcv4_model.scoring.pfd._common import score_nul_cds_workflow
+from svcv4_model.scoring.pfd._common import BranchSpec, score_nul_cds_workflow
 from svcv4_model.scoring.result import ScoreResult
 
-# per-branch: (parent_code, prd_lo, prd_hi, held_hi)
-_BRANCH: dict[FrameshiftPredictionOutcome, tuple[str, float, float, float]] = {
-    FrameshiftPredictionOutcome.NMD_NO_RESCUE: ("NUL", 0.0, 6.0, 10.0),
-    FrameshiftPredictionOutcome.NMD_WITH_RESCUE: ("CDS", -1.0, 6.0, 9.0),
-    FrameshiftPredictionOutcome.NO_NMD: ("CDS", 0.0, 6.0, 9.0),
-    FrameshiftPredictionOutcome.NON_STOP_DECAY: ("NUL", 0.0, 4.0, 9.0),
-    FrameshiftPredictionOutcome.PROTEIN_EXTENSION: ("CDS", 0.0, 4.0, 9.0),
+_BRANCH: dict[FrameshiftPredictionOutcome, BranchSpec] = {
+    FrameshiftPredictionOutcome.NMD_NO_RESCUE: BranchSpec("NUL", 0.0, 6.0, held_hi=10.0),
+    FrameshiftPredictionOutcome.NMD_WITH_RESCUE: BranchSpec("CDS", -1.0, 6.0, held_hi=9.0),
+    FrameshiftPredictionOutcome.NO_NMD: BranchSpec("CDS", 0.0, 6.0, held_hi=9.0),
+    FrameshiftPredictionOutcome.NON_STOP_DECAY: BranchSpec("NUL", 0.0, 4.0, held_hi=9.0),
+    FrameshiftPredictionOutcome.PROTEIN_EXTENSION: BranchSpec("CDS", 0.0, 4.0, held_hi=9.0),
 }
 
 

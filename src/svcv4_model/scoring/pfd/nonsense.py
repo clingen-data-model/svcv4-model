@@ -4,14 +4,13 @@ from __future__ import annotations
 
 from svcv4_model.case import GeneDiseaseValidity
 from svcv4_model.nonsense import NonsenseAssessment, NonsensePredictionOutcome
-from svcv4_model.scoring.pfd._common import score_nul_cds_workflow
+from svcv4_model.scoring.pfd._common import BranchSpec, score_nul_cds_workflow
 from svcv4_model.scoring.result import ScoreResult
 
-# per-branch: (parent_code, prd_lo, prd_hi, held_hi)
-_BRANCH: dict[NonsensePredictionOutcome, tuple[str, float, float, float]] = {
-    NonsensePredictionOutcome.NMD_NO_RESCUE: ("NUL", 0.0, 6.0, 10.0),
-    NonsensePredictionOutcome.NMD_WITH_RESCUE: ("CDS", -1.0, 6.0, 9.0),
-    NonsensePredictionOutcome.NO_NMD: ("CDS", 0.0, 6.0, 9.0),
+_BRANCH: dict[NonsensePredictionOutcome, BranchSpec] = {
+    NonsensePredictionOutcome.NMD_NO_RESCUE: BranchSpec("NUL", 0.0, 6.0, held_hi=10.0),
+    NonsensePredictionOutcome.NMD_WITH_RESCUE: BranchSpec("CDS", -1.0, 6.0, held_hi=9.0),
+    NonsensePredictionOutcome.NO_NMD: BranchSpec("CDS", 0.0, 6.0, held_hi=9.0),
 }
 
 
