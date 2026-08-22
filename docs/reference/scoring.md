@@ -48,6 +48,12 @@ result.provenance        # the audit trail, step by step
   same `score_spl_workflow`, a new `SplBranchSpec` table). Field-identical to Canonical Splice;
   the point values differ — PRD tops at +3, the orange paths carry an explicit held `PRD+SPA`
   cap (`−1..+6`, since SPA scales the PRD *up* here), and blue's second held caps at +9.
+- **Missense — amino-acid path** (SM 6) — `reference_score_missense_amino_acid`, the first
+  `MIS_` scorer. A standalone single-path pipeline: MIS_PRD is reduced by **transcript relevance
+  only** (no molecular mechanism, **no GDV gate** — so this scorer takes no
+  `gene_disease_validity`), and MIS_INF is a computed **4-category Grantham tally**
+  (`missense_informative_points`). The `SPL_` splice path and the `MIS_`-vs-`SPL_` take-higher
+  comparison are a follow-up increment.
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
