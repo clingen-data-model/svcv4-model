@@ -259,7 +259,10 @@ def apply_sm18_multiplier(
     return points * fraction
 ```
 
-- [ ] **Step 5: Implement `scoring/__init__.py`**
+- [ ] **Step 5: Implement `scoring/__init__.py` (minimal — ScoreResult only for now)**
+
+The nonsense scorer does not exist until Task 2, so Task 1's `__init__` exports only
+`ScoreResult`. Task 2 Step 5 extends this file with the `reference_score_nonsense` import.
 
 ```python
 """Reference (non-authoritative) scoring layer for the SVCv4 model.
@@ -269,18 +272,15 @@ point rules for tests, worked examples, and the practice-variant-set. It is inte
 re-exported from the top-level ``svcv4_model`` package (so schema generation ignores it).
 """
 
-from svcv4_model.scoring.nonsense import reference_score_nonsense
 from svcv4_model.scoring.result import ScoreResult
 
-__all__ = ["ScoreResult", "reference_score_nonsense"]
+__all__ = ["ScoreResult"]
 ```
-
-(Note: this imports `nonsense`, created in Task 2 — Task 1's primitive tests import `ScoreResult` and `primitives` directly, which exist after this step. The full-suite run happens after Task 2.)
 
 - [ ] **Step 6: Run the primitive tests**
 
 Run: `uv run pytest tests/test_scoring_primitives.py -q`
-Expected: FAIL only on the `scoring/__init__.py` import of the not-yet-created `nonsense` module. Temporarily, implement `scoring/__init__.py` WITHOUT the nonsense import for this step (just `from svcv4_model.scoring.result import ScoreResult`), run the primitive tests green, then add the nonsense import in Task 2. All primitive tests PASS.
+Expected: all primitive tests PASS (they import `ScoreResult` and `svcv4_model.scoring.primitives` directly; the nonsense scorer is added in Task 2).
 
 - [ ] **Step 7: Commit**
 
