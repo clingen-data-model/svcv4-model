@@ -82,6 +82,22 @@ def test_inf_cap_and_categories() -> None:
     assert r.sub_code_points["INF"] == 0.0
 
 
+def test_inf_cap_binds_at_plus_and_minus_8() -> None:
+    # 4x cat1 P tallies +10 -> clamped to +8; 4x cat4 B tallies -10 -> clamped to -8
+    hi = MissenseAminoAcidAssessment(
+        informative=_inf(
+            *([(MissenseInfCategory.SAME_AA_PATHOGENIC, VariantClassification.PATHOGENIC)] * 4)
+        )
+    )
+    lo = MissenseAminoAcidAssessment(
+        informative=_inf(
+            *([(MissenseInfCategory.SAME_AA_BENIGN, VariantClassification.BENIGN)] * 4)
+        )
+    )
+    assert reference_score_missense_amino_acid(hi).sub_code_points["INF"] == 8.0
+    assert reference_score_missense_amino_acid(lo).sub_code_points["INF"] == -8.0
+
+
 def test_fxn_nd_and_inf_nd() -> None:
     a = MissenseAminoAcidAssessment(
         predictive=MissensePredictiveEvidence(

@@ -133,7 +133,11 @@ def _doubled_tally(n_strong: int, n_weak: int) -> float:
 
 
 def _standard_tally(n_strong: int, n_weak: int) -> float:
-    """Cat 2/3 magnitude: the standard +2 first strong / +1 first weak / +1 each additional."""
+    """Cat 2/3 magnitude: the standard +2 first strong / +1 first weak / +1 each additional.
+
+    This is the single-polarity form of the same first/additional rule ``informative_points``
+    applies (there over a variant list, both polarities); keep the two in sync if SM 19 changes.
+    """
     if n_strong + n_weak == 0:
         return 0.0
     pts = (2.0 if n_strong else 0.0) + (1.0 if n_weak else 0.0)
