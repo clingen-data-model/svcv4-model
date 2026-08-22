@@ -108,10 +108,13 @@ functions — `reference_score_missense` < `reference_score_missense_amino_acid`
 ## Tests (TDD)
 
 `tests/test_missense_splice_scoring.py` (the SPL_ path): yellow maximal (PRD +3, SPA scales to
-held `PRD+SPA`=+6, FXN, INF → parent +10); the **blue parent-0 clamp** (blue with +2 SPA/+8
-FXN/+8 INF → parent capped **0**, proving the oddity); the **violet +8-via-FXN** (violet PRD −1,
-FXN +8, no INF → parent up to +8, proving the oddity); violet INF B/LB-only (a P INF clamped by
-`inf_hi=0`); all-five-outcomes loop (`parent_code "SPL"`); empty → `_ND`.
+held `PRD+SPA`=+6, FXN +8, INF +8 → parent +10). **The oddity is the blue-vs-violet contrast:**
+the **blue parent-0 clamp** (blue with +2 SPA/+8 FXN/+8 INF → 2nd held +9, parent capped **0** —
+an *uncertain* variant's positive evidence is zeroed) vs the **violet positive total** (violet
+PRD −1, FXN +8, no SPA/INF → 2nd held cap(−1+8, +9)=+7, parent **+7** — an *unlikely* variant
+reaching positive). Note the violet `parent_hi=+8` (SM 6 L155) is faithful but never binds — the
+reachable violet max is +7 (PRD −1 + FXN +8; SPA ≤0, INF ≤0). Also: violet INF B/LB-only (a P INF
+clamped to 0 by `inf_hi=0`); all-five-outcomes loop (`parent_code "SPL"`); empty → `_ND`.
 
 `tests/test_missense_compare_scoring.py` (the take-higher + DTO): splice negative → amino;
 splice positive & higher → splice; positive tie → amino; splice None (empty) → amino; amino None
