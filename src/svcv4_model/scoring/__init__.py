@@ -5,6 +5,7 @@ point rules for tests, worked examples, and the practice-variant-set. It is inte
 re-exported from the top-level ``svcv4_model`` package (so schema generation ignores it).
 """
 
+from svcv4_model.scoring.pfd.exon_deletion import reference_score_exon_deletion
 from svcv4_model.scoring.pfd.frameshift import reference_score_frameshift
 from svcv4_model.scoring.pfd.nonsense import reference_score_nonsense
 from svcv4_model.scoring.pfd.start_lost import reference_score_start_lost
@@ -13,6 +14,7 @@ from svcv4_model.scoring.result import ScoreResult
 
 __all__ = [
     "ScoreResult",
+    "reference_score_exon_deletion",
     "reference_score_frameshift",
     "reference_score_nonsense",
     "reference_score_start_lost",

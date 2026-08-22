@@ -78,6 +78,8 @@ def apply_sm18_multiplier(
     gencc_mechanism: GenccMechanism | None,
     exon_relevance: ExonRelevance | None,
     gene_disease_validity: GeneDiseaseValidity | None,
+    *,
+    mechanism_only: bool = False,
 ) -> float | None:
     """SM 18 mechanism x exon-relevance reduction, applied ONLY to positive ``points``.
 
@@ -85,13 +87,17 @@ def apply_sm18_multiplier(
     -> x0 (documented project gate, SM 18 L11). None mechanism -> 0.0; None exon -> no
     reduction (x1.0, the generous default, asymmetric with mechanism by project choice).
     Suspected x Most is special-cased to 0.25 (Figure-1-pending assumption), not the 0.125
-    product SM 18 declined to use.
+    product SM 18 declined to use. ``mechanism_only`` removes the exon-relevance axis (SM 13
+    whole-gene deletion): the reduction is the mechanism fraction alone (exon and the
+    Suspected x Most special-case are not consulted).
     """
     if points is None or points <= 0:
         return points
     if gene_disease_validity not in _GDV_MODERATE_PLUS:
         return 0.0
     mech = _MECHANISM_FRACTION.get(gencc_mechanism, 0.0) if gencc_mechanism else 0.0
+    if mechanism_only:
+        return points * mech
     exon = 1.0 if exon_relevance is None else _EXON_FRACTION.get(exon_relevance, 1.0)
     if gencc_mechanism == GenccMechanism.SUSPECTED and exon_relevance == ExonRelevance.MOST:
         fraction = 0.25

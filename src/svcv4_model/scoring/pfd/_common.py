@@ -70,6 +70,7 @@ class BranchSpec:
     parent_hi: float = _PARENT_HI
     inf_lo: float = _INF_LO
     inf_hi: float = _INF_HI
+    sm18_mechanism_only: bool = False
 
 
 def score_nul_cds_workflow(
@@ -101,7 +102,13 @@ def score_nul_cds_workflow(
     if initial is None or branch is None:
         prov.append("PRD: _ND (no initial points and/or unknown branch)")
     else:
-        adj = apply_sm18_multiplier(initial, mech, exon, gene_disease_validity)
+        adj = apply_sm18_multiplier(
+            initial,
+            mech,
+            exon,
+            gene_disease_validity,
+            mechanism_only=branch.sm18_mechanism_only,
+        )
         prd = cap(adj, branch.prd_lo, branch.prd_hi)
         sub["PRD"] = prd
         prov.append(
