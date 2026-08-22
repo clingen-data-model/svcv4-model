@@ -53,7 +53,14 @@ result.provenance        # the audit trail, step by step
   only** (no molecular mechanism, **no GDV gate** — so this scorer takes no
   `gene_disease_validity`), and MIS_INF is a computed **4-category Grantham tally**
   (`missense_informative_points`). The `SPL_` splice path and the `MIS_`-vs-`SPL_` take-higher
-  comparison are a follow-up increment.
+  comparison are below.
+- **Missense — splice path + comparison** (SM 6) — `reference_score_missense_splice` (a
+  `score_spl_workflow` branch table) and `reference_score_missense`, the `MIS_`-vs-`SPL_`
+  **take-higher** (negative/absent splice or a positive tie → the amino-acid path; else the
+  higher), returning a `MissenseScoreResult` that saves both sub-path scores. **Note:** SM 6's
+  splice blue/violet parent caps are inverted vs SM 11/12 (blue `−8..0`, violet `−8..+8`) —
+  encoded faithfully and flagged as a suspected SM 6 inconsistency. This completes the splice
+  family (Canonical, Intronic, Missense).
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
