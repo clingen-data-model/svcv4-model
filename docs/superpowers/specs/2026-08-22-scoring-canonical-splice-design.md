@@ -31,16 +31,19 @@ SPL_PRD  ->  SPL_SPA  ->  held prd_spa  ->  SPL_FXN  ->  held prd_spa_fxn  ->  S
   (`−3.0 .. 0.0`); other paths default to the parent range.
 - **SPL_FXN — consumed raw** (like every FXN; violet's benignity is enforced by the held/parent
   caps, not recomputed).
-- **held prd_spa_fxn** = `hold_combined(prd_spa, fxn)` — SM 11 gives no explicit per-path cap;
-  default to the parent range.
+- **held prd_spa_fxn** = `hold_combined(prd_spa, fxn)` — SM 11 caps this explicitly per path:
+  **`−8.0 .. +9.0`** for yellow/orange (SM 11: "the (SPL_PRD_ and SPL_SPA_) points ... added to
+  the SPL_FXN_ points ... capped at −8.0 to +9.0"), `−8.0 .. +8.0` for blue, `−8.0 .. 0.0` for
+  violet (the latter two coincide with their parent caps).
 - **SPL_INF** — computed tally (the shared `informative_points`), capped per path.
 - **spl_total** = `hold_combined(prd_spa_fxn, inf)`, capped to the parent range. Parent code is
   **always `SPL`**.
 
-**Held-cap assumption (flagged):** SM 11 documents an explicit intermediate held cap only for
-the violet path (`prd_spa −3..0`). For the other paths and for `prd_spa_fxn`, the reference
-scorer caps the held value to the **parent range** (the natural bound — an intermediate cannot
-exceed the parent total's cap). This is recorded in `provenance` and noted on the docs page.
+**Held-cap note:** the second held value `prd_spa_fxn` has explicit SM 11 caps (+9 yellow/
+orange, +8 blue, 0 violet — a `prd_spa_fxn_hi` field). The **first** held value `prd_spa` has an
+explicit cap only on violet (`−3..0`); on the other paths SM 11 gives none, so the reference
+scorer caps `prd_spa` to the **parent range** (the natural bound — and since SPA reduces PRD on
+yellow/orange, `prd_spa ≤ PRD` there anyway). This one default is flagged in `provenance`.
 
 ## `score_spl_workflow` + `SplBranchSpec` — `scoring/pfd/_spl_common.py`
 
@@ -53,6 +56,7 @@ class SplBranchSpec:
     prd_hi: float
     prd_spa_lo: float = -8.0      # held prd_spa floor (violet -3.0)
     prd_spa_hi: float = 10.0      # held prd_spa ceiling (violet 0.0)
+    prd_spa_fxn_hi: float = 9.0   # held prd_spa_fxn ceiling (SM 11: +9 yellow/orange, +8 blue, 0 violet)
     inf_lo: float = -8.0
     inf_hi: float = 8.0
     parent_lo: float = -8.0
@@ -61,8 +65,8 @@ class SplBranchSpec:
 
 `score_spl_workflow(assessment, branch_table, *, gene_disease_validity) -> ScoreResult`:
 PRD (compute) → SPA (consume `spa_points`) → held `prd_spa` (cap `[prd_spa_lo, prd_spa_hi]`) →
-FXN (consume `fxn_points`) → held `prd_spa_fxn` (cap `[parent_lo, parent_hi]`) → INF (tally, cap
-`[inf_lo, inf_hi]`) → `spl_total` (cap `[parent_lo, parent_hi]`); `parent_code = "SPL"`. Each
+FXN (consume `fxn_points`) → held `prd_spa_fxn` (cap `[parent_lo, prd_spa_fxn_hi]`) → INF (tally,
+cap `[inf_lo, inf_hi]`) → `spl_total` (cap `[parent_lo, parent_hi]`); `parent_code = "SPL"`. Each
 sub-code (`PRD`/`SPA`/`FXN`/`INF`) is omitted when its input is absent (`_ND`). The
 `held_combined` dict carries `PRD+SPA` and `PRD+SPA+FXN` keys. A `NulCdsAssessment`-style
 Protocol (`SplAssessment`) captures the fields read (`prediction_outcome`, `predictive`,
@@ -91,8 +95,9 @@ _BRANCH = {
     NMD_PREDICTED: SplBranchSpec(0.0, 6.0),
     FRAMESHIFT_NO_NMD: SplBranchSpec(-1.0, 6.0),
     SPLICE_NO_FRAMESHIFT: SplBranchSpec(-1.0, 6.0),
-    UNCERTAIN: SplBranchSpec(0.0, 0.0, parent_hi=8.0),
-    UNLIKELY: SplBranchSpec(-1.0, 0.0, prd_spa_lo=-3.0, prd_spa_hi=0.0, inf_hi=0.0, parent_hi=0.0),
+    UNCERTAIN: SplBranchSpec(0.0, 0.0, prd_spa_fxn_hi=8.0, parent_hi=8.0),
+    UNLIKELY: SplBranchSpec(-1.0, 0.0, prd_spa_lo=-3.0, prd_spa_hi=0.0,
+                            prd_spa_fxn_hi=0.0, inf_hi=0.0, parent_hi=0.0),
 }
 ```
 
@@ -107,6 +112,8 @@ _BRANCH = {
   "SPL"`.
 - SPA consumed as a reduction: yellow PRD +6, `spa_points=-1.5` (substantial −25%) → held
   `PRD+SPA`=+4.5.
+- **held `PRD+SPA+FXN` +9 cap:** yellow PRD +6, `spa_points=0.0`, `fxn_points=+8.0` → held
+  `PRD+SPA+FXN`=cap(14, [−8,+9])=**+9.0** (proves the yellow/orange +9 cap, not the parent +10).
 - Blue additive: `UNCERTAIN`, PRD 0, `spa_points=+2.0` → held `PRD+SPA`=+2.0; parent capped +8.
 - Violet benignity: `UNLIKELY`, PRD −1.0, `spa_points=-2.0` → held `PRD+SPA`=cap(−3, [−3,0])=−3.0;
   a P informative clamped to 0 by `inf_hi=0`; parent in `[−8, 0]`.
