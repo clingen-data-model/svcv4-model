@@ -42,7 +42,9 @@ A **compute DTO**, deliberately a `@dataclass(frozen=True)` rather than a Pydant
 it is scorer output, not a captured evidence entity, and must never land in `schemas/json`
 or the model reference. Fields:
 
-- `parent_code: str | None` — e.g. `"NUL_"` / `"CDS_"`.
+- `parent_code: str | None` — the `PfdParentCode` **value**, i.e. `"NUL"` / `"CDS"` (no
+  trailing underscore — `PfdParentCode.NUL == "NUL"`). The `_`-suffixed forms (`NUL_`, `CDS_`)
+  are code *notation* used only in `provenance` display, never for comparison.
 - `sub_code_points: dict[str, float]` — coded sub-code values, e.g. `{"PRD": 6.0, "FXN": 2.0,
   "INF": 1.0}`. A step that is un-scoreable / No-Data is **omitted** (not `0.0`), and noted in
   `provenance`.
@@ -63,10 +65,13 @@ Sum the non-`None` parts, then `cap`. If **all** parts are `None`, return `None`
 hold). Records nothing itself — the caller adds provenance.
 
 ### `informative_points(variants) -> float | None`
-The shared SM 19 tally over a list of `InformativeVariant` (each has a `classification`):
-- Pathogenic side: **+2.0** for the first P, **+1.0** for the first LP, **+1.0** for each
-  additional P or LP.
-- Benign side (symmetric): **−2.0** first B, **−1.0** first LB, **−1.0** each additional B/LB.
+The shared informative tally over a list of `InformativeVariant` (each has a `classification`):
+- Pathogenic side (SM 19 + SM 8): **+2.0** for the first P, **+1.0** for the first LP,
+  **+1.0** for each additional P or LP.
+- Benign side: **−2.0** first B, **−1.0** first LB, **−1.0** each additional B/LB. Note SM 19
+  does **not** spell out benign values — it only sets the ±8 cap; these mirror the pathogenic
+  side per **SM 8**'s "negative points are added for B and LB variants, using similar logic",
+  i.e. the symmetry is *inferred*, not stated verbatim.
 - `VUS` contributes `0.0`. A mix of P/LP and B/LB is summed.
 - Empty / all-`None`-classification list → `None` (`_INF_ND`).
 - Assumes the captured list is already the *eligible* set (per-branch position eligibility is
@@ -81,16 +86,22 @@ unchanged; `0.0` stays `0.0`):
   (documented project gate; provenance records it).
 - **Mechanism fraction:** Established → 1.0, Likely → 0.5, Suspected → 0.25, Uncertain →
   0.0. (`None` mechanism → 0.0, with a provenance note.)
-- **Exon-relevance fraction:** All → 1.0, Most → 0.5, Few → 0.0. (`None` → treated as All =
-  1.0, i.e. no exon reduction, with a provenance note — the conservative default when the
-  analyst did not assess exon relevance.)
+- **Exon-relevance fraction:** All → 1.0, Most → 0.5, Few → 0.0. (`None` → no exon reduction
+  (×1.0), with a provenance note. This is a **deliberate, generous** default and is
+  intentionally **asymmetric** with `None` mechanism → 0.0: SM 18 explicitly zeroes an
+  unassessed *mechanism* (L12) but is silent on an unassessed *exon relevance*, so the exon
+  axis only reduces when the analyst has positively assessed Most/Few. The asymmetry is a
+  project choice, flagged in provenance.)
 - **Combine:** `fraction = mechanism_fraction × exon_relevance_fraction` — **except** the one
   cell SM 18 special-cases: **Suspected × Most**, which SM 18 explicitly declined to compound
-  to 0.125 ("fractions this small were not useful"). **⚠️ OPEN INPUT:** the actual
-  Suspected×Most cell value comes from SM 18 Figure 1 (an image not in the repo). Until
-  confirmed, this increment assumes **0.0** (drop — consistent with "not useful") and records
-  the assumption in `provenance` with a flag. This is the one fidelity gap in Increment 0 and
-  is called out for WG confirmation; it affects only the single Suspected×Most combination.
+  ("we elected **not to multiply** the 25% [Suspected] by the 50% [Most]", the 0.125 product
+  being "not useful"). The most faithful reading of "do not multiply the Suspected reduction
+  *by* the Most reduction" is to keep the **Suspected fraction alone → 0.25** (apply the
+  mechanism reduction, drop the further exon halving), not to zero the cell. **⚠️ OPEN INPUT:**
+  the authoritative Suspected×Most value is in SM 18 Figure 1 (an image not in the repo); until
+  confirmed this increment assumes **0.25** and records the assumption in `provenance` with a
+  flag for WG confirmation. This is the one fidelity gap in Increment 0 and affects only the
+  single Suspected×Most combination.
 - Fractional results are allowed and carried forward (e.g. `+3.0 × 0.25 = 0.75`).
 
 ## `reference_score_nonsense(assessment, *, gene_disease_validity=None) -> ScoreResult`
@@ -101,7 +112,9 @@ unchanged; `0.0` stays `0.0`):
 1. **PRD.** Take `assessment.predictive.initial_points` as the pre-adjustment initial (the
    analyst-captured branch initial: yellow +6.0; orange/violet from the protein-fraction
    table). `prd = cap(apply_sm18_multiplier(initial, mechanism, exon_relevance, gdv), lo, hi)`
-   where `(mechanism, exon_relevance)` come from `assessment.mechanism_exon_relevance`, and the
+   where `mechanism = assessment.mechanism_exon_relevance.gencc_mechanism` and
+   `exon_relevance = assessment.mechanism_exon_relevance.exon_relevance` — **the field is
+   `gencc_mechanism`, not `mechanism`** (a wrong name here crashes) — and the
    PRD range is the branch's (`NUL_PRD_ 0.0..+6.0` yellow; `CDS_PRD_ −1.0..+6.0` orange;
    `CDS_PRD_ 0.0..+6.0` violet). If `predictive`/`initial_points` is absent → PRD omitted
    (`_PRD_ND`).
@@ -116,9 +129,11 @@ unchanged; `0.0` stays `0.0`):
    cap `NUL_/CDS_ −8.0..+10.0`.
 6. Return `ScoreResult(parent_code, sub_code_points, held_combined={"PRD+FXN": held},
    parent_total, provenance, authoritative=False)`. `parent_code` follows the branch
-   (`NUL_` yellow; `CDS_` orange/violet), consistent with `assessment.parent_code`; if the
-   captured `parent_code` disagrees, that contradiction is noted in `provenance` (the reference
-   scorer reports, it does not "fix" captured data).
+   (`PfdParentCode.NUL` = `"NUL"` yellow; `PfdParentCode.CDS` = `"CDS"` orange/violet). Compare
+   against the captured `assessment.parent_code` **by enum value** (both are `"NUL"`/`"CDS"`,
+   underscore-free — a naive `"NUL_"` compare would always mis-fire); only a genuine value
+   mismatch is noted in `provenance` (the reference scorer reports, it does not "fix" captured
+   data).
 
 Cross-check helpers (not enforcement): where the assessment ALSO carries analyst-coded
 `prd_points` / `parent_total`, the tests assert the reference computation matches — turning
@@ -130,7 +145,8 @@ the scorer into a validator of the documented rules against hand-worked values.
 - `cap` clamps low/high/inside/`None`.
 - `apply_sm18_multiplier`: Established×All = full; Likely×All = ½; Suspected×All = ¼ (0.75
   from +3.0); mechanism `Uncertain`/exon `Few` → 0.0; GDV below Moderate → 0.0; negatives and
-  `0.0` pass through unchanged; the flagged Suspected×Most → 0.0 (assumption) with provenance.
+  `0.0` pass through unchanged; the flagged Suspected×Most → **0.25** (assumption) with a
+  provenance flag.
 - `hold_combined`: sums + caps; all-`None` → `None`.
 - `informative_points`: 1 P → +2.0; 1 P + 2 LP → +4.0; 1 LP → +1.0; 2 B → −3.0; P+B mix
   sums; all-VUS → 0.0; empty → `None`.
