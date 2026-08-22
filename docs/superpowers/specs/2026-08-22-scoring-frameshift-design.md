@@ -38,9 +38,11 @@ def score_nul_cds_workflow(
 ```
 
 - `branch_table` maps each workflow's `prediction_outcome` enum value → `(parent_code,
-  prd_lo, prd_hi, held_hi)`. The parent cap is a shared constant (`−8.0 .. +10.0`), the FXN
-  cap is shared (`−8.0 .. +8.0`), and the INF cap is shared (`−8.0 .. +8.0`); only the PRD
-  range and the held-PRD+FXN ceiling vary per branch, so those live in the table.
+  prd_lo, prd_hi, held_hi)`. The parent cap is a shared constant (`−8.0 .. +10.0`) and the INF
+  cap is shared (`−8.0 .. +8.0`); **FXN is consumed raw** from `fxn_points` (already the
+  analyst's *coded* value — the helper does **not** re-cap it, matching the current Nonsense
+  behaviour). Only the PRD range and the held-PRD+FXN ceiling vary per branch, so those live
+  in the table.
 - The body is exactly today's `reference_score_nonsense` logic (PRD initial → SM 18 multiplier
   → cap to `[prd_lo, prd_hi]`; FXN consumed from `fxn_points`; held = `hold_combined(prd, fxn,
   lo=−8, hi=held_hi)`; INF = `cap(informative_points(...), −8, 8)`; parent = `hold_combined(
@@ -92,7 +94,8 @@ orange `CDS −1..+6 held+9`, violet `CDS 0..+6 held+9`.
   → held 9.0).
 - Green extension: `PROTEIN_EXTENSION`, `parent_code == "CDS"`, PRD capped to `[0, 4]`.
 - Orange held cap +9 (initial +6, fxn +8 → held 9.0).
-- Violet reduced mechanism (Likely×Most halving) + benign informative pulling parent negative.
+- Violet reduced mechanism (Likely×Most → 0.5×0.5 = 0.25) + benign informative pulling parent
+  negative.
 - Empty `FrameshiftAssessment()` → all `_ND`, `parent_total` None.
 
 No new primitive tests (primitives unchanged). The refactor is covered by the existing
