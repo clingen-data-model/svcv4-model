@@ -71,6 +71,7 @@ class BranchSpec:
     inf_lo: float = _INF_LO
     inf_hi: float = _INF_HI
     sm18_mechanism_only: bool = False
+    fxn_na: bool = False
 
 
 def score_nul_cds_workflow(
@@ -117,20 +118,22 @@ def score_nul_cds_workflow(
             f"[{branch.prd_lo}, {branch.prd_hi}] -> {prd}"
         )
 
-    # FXN (consumed raw, not recomputed and not re-capped)
-    fxn = assessment.fxn_points
-    if fxn is None:
-        prov.append("FXN: _ND (no coded fxn_points captured; OddsPath not recomputed)")
+    # FXN (consumed raw on non-NA branches; skipped as NA on the gain paths)
+    if branch is not None and branch.fxn_na:
+        prov.append("FXN: NA (functional not considered on this gain path)")
+        held_val = prd  # no PRD+FXN combine when FXN is NA
     else:
-        sub["FXN"] = fxn
-        prov.append(f"FXN: consumed coded value {fxn}")
-
-    # held PRD+FXN
-    held_hi = branch.held_hi if branch else _DEFAULT_HELD_HI
-    held_val = hold_combined(prd, fxn, lo=_HELD_LO, hi=held_hi)
-    if held_val is not None:
-        held["PRD+FXN"] = held_val
-        prov.append(f"held PRD+FXN: {held_val} (cap [{_HELD_LO}, {held_hi}])")
+        fxn = assessment.fxn_points
+        if fxn is None:
+            prov.append("FXN: _ND (no coded fxn_points captured; OddsPath not recomputed)")
+        else:
+            sub["FXN"] = fxn
+            prov.append(f"FXN: consumed coded value {fxn}")
+        held_hi = branch.held_hi if branch else _DEFAULT_HELD_HI
+        held_val = hold_combined(prd, fxn, lo=_HELD_LO, hi=held_hi)
+        if held_val is not None:
+            held["PRD+FXN"] = held_val
+            prov.append(f"held PRD+FXN: {held_val} (cap [{_HELD_LO}, {held_hi}])")
 
     # INF
     inf: float | None = None

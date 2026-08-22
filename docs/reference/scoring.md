@@ -34,6 +34,9 @@ result.provenance        # the audit trail, step by step
 - **Stop-Lost** (SM 16) — `reference_score_stop_lost`, two branches.
 - **Exon Deletion** (SM 13) — `reference_score_exon_deletion`, six branches (the whole-gene
   branch applies SM 18 mechanism-only; the grey functional-alt-start branch is benignity-only).
+- **Exon Duplication** (SM 14) — `reference_score_exon_duplication`, six scored branches + a
+  whole-gene-NA outcome (the gain paths code functional data as NA; the shared helper skips
+  FXN on those branches via `BranchSpec.fxn_na`). **All six NUL_/CDS_ scorers are now modeled.**
 
 The shared `score_nul_cds_workflow` now carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table.
