@@ -81,6 +81,27 @@ def test_violet_inf_benignity_only() -> None:
     assert r.sub_code_points["INF"] == 0.0
 
 
+def test_orange_prd_floor_and_held_cap() -> None:
+    # upper-orange populated: prd_lo=-1 floor; held PRD+SPA 0..+6 cap
+    a = MissenseSpliceAssessment(
+        prediction_outcome=SplicePredictionOutcome.FRAMESHIFT_NO_NMD,
+        predictive=SplicePredictiveEvidence(initial_points=-5.0),  # SM18 no-op on negatives
+        spa_points=0.0,
+    )
+    r = reference_score_missense_splice(a, gene_disease_validity=MOD)
+    assert r.sub_code_points["PRD"] == -1.0  # cap(-5, [-1, 3])
+    assert r.held_combined["PRD+SPA"] == 0.0  # cap(-1+0, [0, 6]) -> 0 (floored at 0)
+
+
+def test_oddity_note_is_flagged_in_provenance() -> None:
+    # the headline behaviour: the suspected SM 6 blue/violet inconsistency is flagged
+    r = reference_score_missense_splice(
+        MissenseSpliceAssessment(prediction_outcome=SplicePredictionOutcome.UNCERTAIN),
+        gene_disease_validity=MOD,
+    )
+    assert any("suspected SM 6 inconsistency" in p for p in r.provenance)
+
+
 def test_all_five_outcomes() -> None:
     for outcome in SplicePredictionOutcome:
         r = reference_score_missense_splice(
