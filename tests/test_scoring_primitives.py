@@ -7,12 +7,15 @@ import pytest
 from svcv4_model.case import GeneDiseaseValidity
 from svcv4_model.informative import InformativeVariant, VariantClassification
 from svcv4_model.mechanism import ExonRelevance, GenccMechanism
+from svcv4_model.missense import MissenseInfCategory, MissenseInformativeVariant
 from svcv4_model.scoring import ScoreResult
 from svcv4_model.scoring.primitives import (
     apply_sm18_multiplier,
     cap,
     hold_combined,
     informative_points,
+    missense_informative_points,
+    transcript_relevance_points,
 )
 
 MOD = GeneDiseaseValidity.MODERATE
@@ -82,3 +85,75 @@ def test_score_result_rejects_authoritative_true() -> None:
     ScoreResult()  # default authoritative=False is fine
     with pytest.raises(ValueError):
         ScoreResult(authoritative=True)
+
+
+def test_transcript_relevance_positive_scaled_by_exon() -> None:
+    assert transcript_relevance_points(4.0, ExonRelevance.ALL) == 4.0
+    assert transcript_relevance_points(4.0, ExonRelevance.MOST) == 2.0
+    assert transcript_relevance_points(4.0, ExonRelevance.FEW) == 0.0
+
+
+def test_transcript_relevance_nonpositive_passthrough() -> None:
+    assert transcript_relevance_points(-3.0, ExonRelevance.FEW) == -3.0  # skips the step
+    assert transcript_relevance_points(0.0, ExonRelevance.ALL) == 0.0
+    assert transcript_relevance_points(None, ExonRelevance.ALL) is None
+
+
+def test_transcript_relevance_none_exon_is_full() -> None:
+    assert transcript_relevance_points(4.0, None) == 4.0  # generous default
+
+
+_MP = VariantClassification.PATHOGENIC
+_MLP = VariantClassification.LIKELY_PATHOGENIC
+_MB = VariantClassification.BENIGN
+_MLB = VariantClassification.LIKELY_BENIGN
+_MVUS = VariantClassification.VUS
+
+
+def _mv(cat: MissenseInfCategory, cls: VariantClassification) -> MissenseInformativeVariant:
+    return MissenseInformativeVariant(category=cat, classification=cls)
+
+
+def test_mis_inf_empty_is_none() -> None:
+    assert missense_informative_points([]) is None
+    # a VUS (and an off-polarity class) score nothing -> None
+    assert missense_informative_points([_mv(MissenseInfCategory.SAME_AA_PATHOGENIC, _MVUS)]) is None
+    assert missense_informative_points([_mv(MissenseInfCategory.SAME_AA_PATHOGENIC, _MB)]) is None
+
+
+def test_mis_inf_cat1_same_aa_pathogenic_doubled() -> None:
+    c = MissenseInfCategory.SAME_AA_PATHOGENIC
+    assert missense_informative_points([_mv(c, _MP)]) == 4.0
+    assert missense_informative_points([_mv(c, _MP), _mv(c, _MP)]) == 6.0
+    assert missense_informative_points([_mv(c, _MLP)]) == 2.0
+    assert missense_informative_points([_mv(c, _MLP), _mv(c, _MLP)]) == 4.0
+    assert missense_informative_points([_mv(c, _MP), _mv(c, _MLP)]) == 6.0
+
+
+def test_mis_inf_cat2_distinct_aa_pathogenic_standard() -> None:
+    c = MissenseInfCategory.DISTINCT_AA_PATHOGENIC
+    assert missense_informative_points([_mv(c, _MP)]) == 2.0
+    assert missense_informative_points([_mv(c, _MP), _mv(c, _MLP)]) == 3.0
+
+
+def test_mis_inf_cat3_distinct_aa_benign_standard_negative() -> None:
+    c = MissenseInfCategory.DISTINCT_AA_BENIGN
+    assert missense_informative_points([_mv(c, _MB)]) == -2.0
+    assert missense_informative_points([_mv(c, _MB), _mv(c, _MLB)]) == -3.0
+
+
+def test_mis_inf_cat4_same_aa_benign_doubled_negative() -> None:
+    c = MissenseInfCategory.SAME_AA_BENIGN
+    assert missense_informative_points([_mv(c, _MB)]) == -4.0
+    assert missense_informative_points([_mv(c, _MLB)]) == -2.0
+    assert missense_informative_points([_mv(c, _MLB), _mv(c, _MLB)]) == -4.0
+    assert missense_informative_points([_mv(c, _MB), _mv(c, _MLB)]) == -6.0
+
+
+def test_mis_inf_sums_all_categories_uncapped() -> None:
+    # cat1 +4, cat3 -2 -> +2 (uncapped; the caller applies the -8..+8 cap)
+    variants = [
+        _mv(MissenseInfCategory.SAME_AA_PATHOGENIC, _MP),
+        _mv(MissenseInfCategory.DISTINCT_AA_BENIGN, _MB),
+    ]
+    assert missense_informative_points(variants) == 2.0

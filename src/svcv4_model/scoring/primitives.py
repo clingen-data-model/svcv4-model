@@ -12,6 +12,7 @@ from collections.abc import Iterable
 from svcv4_model.case import GeneDiseaseValidity
 from svcv4_model.informative import InformativeVariant, VariantClassification
 from svcv4_model.mechanism import ExonRelevance, GenccMechanism
+from svcv4_model.missense import MissenseInfCategory, MissenseInformativeVariant
 
 _MECHANISM_FRACTION: dict[GenccMechanism, float] = {
     GenccMechanism.ESTABLISHED: 1.0,
@@ -104,3 +105,71 @@ def apply_sm18_multiplier(
     else:
         fraction = mech * exon
     return points * fraction
+
+
+def transcript_relevance_points(
+    points: float | None, exon_relevance: ExonRelevance | None
+) -> float | None:
+    """Missense MIS_PRD transcript-relevance reduction (SM 6 L21), positive points only.
+
+    None/<=0 pass through (a zero/negative in-silico score skips this step; the caller floors
+    at -4). Positive points are scaled by the exon fraction (All 1.0 / Most 0.5 / Few 0.0);
+    None exon -> x1.0 (the generous default). No molecular mechanism and no GDV gate apply on
+    the missense amino-acid path, so this is deliberately simpler than ``apply_sm18_multiplier``.
+    """
+    if points is None or points <= 0:
+        return points
+    frac = 1.0 if exon_relevance is None else _EXON_FRACTION.get(exon_relevance, 1.0)
+    return points * frac
+
+
+def _doubled_tally(n_strong: int, n_weak: int) -> float:
+    """Cat 1/4 magnitude: 4 for the first strong (else 2 for the first weak), +2 each more."""
+    n = n_strong + n_weak
+    if n == 0:
+        return 0.0
+    first = 4.0 if n_strong else 2.0
+    return first + 2.0 * (n - 1)
+
+
+def _standard_tally(n_strong: int, n_weak: int) -> float:
+    """Cat 2/3 magnitude: the standard +2 first strong / +1 first weak / +1 each additional."""
+    if n_strong + n_weak == 0:
+        return 0.0
+    pts = (2.0 if n_strong else 0.0) + (1.0 if n_weak else 0.0)
+    return pts + max(n_strong - 1, 0) + max(n_weak - 1, 0)
+
+
+def missense_informative_points(
+    variants: Iterable[MissenseInformativeVariant],
+) -> float | None:
+    """SM 6 (L32-35) four-category MIS_INF tally. Returns None when nothing scores (MIS_INF_ND).
+
+    Each variant's analyst-assigned ``category`` selects the rule; only the matching polarity
+    counts (cats 1-2 tally P/LP, cats 3-4 tally B/LB). A VUS or off-polarity class scores
+    nothing. UNCAPPED -- the caller applies the -8..+8 cap. The SM 7 motif-variant special
+    case (cat 2, +2 once) is deferred with the critical-amino-acids increment.
+    """
+    per_cat: dict[MissenseInfCategory, Counter[VariantClassification]] = {
+        c: Counter() for c in MissenseInfCategory
+    }
+    for v in variants:
+        if v.category is not None and v.classification is not None:
+            per_cat[v.category][v.classification] += 1
+
+    c1 = per_cat[MissenseInfCategory.SAME_AA_PATHOGENIC]
+    c2 = per_cat[MissenseInfCategory.DISTINCT_AA_PATHOGENIC]
+    c3 = per_cat[MissenseInfCategory.DISTINCT_AA_BENIGN]
+    c4 = per_cat[MissenseInfCategory.SAME_AA_BENIGN]
+    p, lp = VariantClassification.PATHOGENIC, VariantClassification.LIKELY_PATHOGENIC
+    b, lb = VariantClassification.BENIGN, VariantClassification.LIKELY_BENIGN
+
+    scored = c1[p] + c1[lp] + c2[p] + c2[lp] + c3[b] + c3[lb] + c4[b] + c4[lb]
+    if scored == 0:
+        return None
+    return (
+        _doubled_tally(c1[p], c1[lp])
+        + _standard_tally(c2[p], c2[lp])
+        - _standard_tally(c3[b], c3[lb])
+        - _doubled_tally(c4[b], c4[lb])
+    )
