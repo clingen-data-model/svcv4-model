@@ -77,6 +77,16 @@ def test_uaf_recessive_het_no_trans_plp_is_zero() -> None:
     assert reference_score_cln_uaf(c, moi=MOI.AR).sub_code_points["CLN_UAF"] == 0.0
 
 
+def test_uaf_recessive_het_trans_vus_is_zero() -> None:
+    # a confirmed-trans VUS is not a Table 5 column -> no_trans_plp -> 0.0 (pins _classify)
+    c = Case(
+        age_matched_penetrance=NEAR,
+        vbc_zygosity=Zygosity.HET,
+        compound_het_variant=CompoundHetVariant(classification="VUS"),
+    )
+    assert reference_score_cln_uaf(c, moi=MOI.AR).sub_code_points["CLN_UAF"] == 0.0
+
+
 def test_uaf_penetrance_none_is_zero() -> None:
     c = Case(vbc_zygosity=Zygosity.HOM)  # penetrance None
     assert reference_score_cln_uaf(c, moi=MOI.AR).sub_code_points["CLN_UAF"] == 0.0
