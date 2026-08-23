@@ -82,7 +82,16 @@ result.provenance        # the audit trail, step by step
   case-variant obs, `≥100` cases, matched controls) → `+4.0`; a CI including 1.0 vetoes it; a
   failing gate → `_ND`; a low OR indicates benignity but SM 4 assigns no CLN_CCS benign value
   (see known-gaps); the exclusivity rule (other CLN NA except CLN_DNV) is deferred to aggregation.
-  **This completes the CLN codes** (UAF, ALT, AFF, DNV, CCS). The LOC codes follow.
+  **This completes the CLN codes** (UAF, ALT, AFF, DNV, CCS).
+- **Locus specificity — phenotype** (SM 5) — `reference_score_loc_phe`, the first **LOC** code.
+  `parent_code="LOC"` is a grouping label; the single sub-code **LOC_PHE** bands
+  `testing.diagnostic_yield_for_phenotypes` (`<33→0 / 33-50→+1 / 51-67→+2 / 68-81→+3 / ≥82→+4`; the
+  `+2` band and the `(81,82)` boundary are inferred — see known-gaps). An observed
+  **non-segregation** zeroes the points (the two-case rule: an affected VBC-absent relative, or —
+  except under AR — an unaffected VBC-carrier at near-100% penetrance); under AR a rule-(a)
+  non-segregation zeroes with a caveat. Absent/unparseable yield → `_ND`. **LOC_SEG**
+  (co-segregation) and the combined **LOC** `+4.0` cap are deferred to LOC-2 / case aggregation
+  (LOC_SEG's per-MOI segregant point values live only in the SM 5 Figure 2 image).
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
