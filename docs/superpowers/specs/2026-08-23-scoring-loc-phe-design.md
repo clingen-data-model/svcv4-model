@@ -56,6 +56,22 @@ _loc_phe_band(pct) ─► initial points ∈ {0.0, +1.0, +2.0, +3.0, +4.0}
                          └─ no  ─► keep points
 ```
 
+## Imports (module top)
+
+```python
+from __future__ import annotations
+
+import re
+
+from svcv4_model.case import MOI, AgeMatchedPenetrance, Case, TriState
+from svcv4_model.scoring.result import ScoreResult
+```
+
+`re` is a stdlib group above the first-party imports. Within `svcv4_model.case`, isort's
+`order-by-type` sorts the all-caps `MOI` first, then `AgeMatchedPenetrance`, `Case`, `TriState`
+(matching `clinical.py`). Export `reference_score_loc_phe` from `scoring/__init__.py` (add to both
+the import and `__all__`, alphabetically among the `reference_score_*` names).
+
 ## Component 1 — diagnostic-yield parse (`_parse_percent`)
 
 `gene_specificity_for_phenotypes` is **unscored context** (settled decision 1); the band is driven
@@ -69,18 +85,29 @@ def _parse_percent(raw: str | None) -> float | None:
     """First numeric token of a yield string as a percent, or None if none found.
 
     Handles clean point estimates ('90%', '2.6%') and takes the LOWER bound of a written
-    range ('91-93%' -> 91.0, the conservative/least-pathogenic end). A leading inequality
-    ('<33%', '>82%') is NOT interpreted -- the first number is used -- so curators should
-    record a point estimate; the raw string is always echoed in provenance for transparency.
+    range ('91-93%' -> 91.0, the conservative/least-pathogenic end). A leading '<' is honored
+    as "just below" (so SM 5's idiomatic '<33%' -> 32.999... -> band 0.0, NOT +1.0); a leading
+    '>' keeps the number as a conservative floor ('>82%' -> 82.0 -> +4.0). The raw string is
+    always echoed in provenance for transparency.
     """
     if raw is None:
         return None
     m = _NUM.search(raw)
-    return float(m.group()) if m else None
+    if m is None:
+        return None
+    pct = float(m.group())
+    # A leading '<' before the number means the true yield is below it -> nudge into the band
+    # just below the boundary (SM 5 writes '<33%' for the 0.0 case).
+    if raw.lstrip().startswith("<"):
+        pct -= 1e-9
+    return pct
 ```
 
 - `case.testing is None` OR parse returns `None` → `LOC_PHE_ND`, provenance notes why (no testing,
   no yield, or unparseable — echoing the raw string when present).
+- **Documented parse limitations** (raw always echoed in provenance; see `known-gaps.md`): a
+  leading `>` is treated as a floor, not an interval; a ratio like `"1 in 2"` misparses to its
+  first token (`1.0` → band `0.0`) — curators should record a percent, not a ratio.
 
 ## Component 2 — the band (`_loc_phe_band`)
 
@@ -156,16 +183,24 @@ def _non_segregation(case: Case, *, moi: MOI | None) -> list[str]:
     rule_b_ok = moi is not None and moi not in _RULE_B_SUPPRESSED
     near_100 = case.age_matched_penetrance == AgeMatchedPenetrance.NEAR_100
     for i, r in enumerate(case.relatives):
-        if r.affected_w_mde is TriState.TRUE and r.vbc_exists is TriState.FALSE:
+        if r.affected_w_mde == TriState.TRUE and r.vbc_exists == TriState.FALSE:
             reasons.append(f"relative[{i}] affected but VBC-absent (rule a)")
         elif (
             rule_b_ok
             and near_100
-            and r.affected_w_mde is TriState.FALSE
-            and r.vbc_exists is TriState.TRUE
+            and r.affected_w_mde == TriState.FALSE
+            and r.vbc_exists == TriState.TRUE
         ):
             reasons.append(f"relative[{i}] unaffected VBC-carrier at ~100% penetrance (rule b)")
     return reasons
+```
+
+> **Comparison idiom:** use `==` / `!=` for `TriState` (matching `clinical.py` / `population.py`),
+> **not** `is`. `UNKNOWN` / `None` are non-`TRUE` and non-`FALSE`, so neither rule triggers on
+> them (the None-guard is preserved). `==` is deliberate — an `is`-identity check would silently
+> stop firing (never zeroing LOC_PHE → over-scoring) if a model ever adopted `use_enum_values`.
+
+```python  # (block continues in the assembly section below)
 ```
 
 > **Known-gap (WG follow-up):** the exact MOI × zygosity semantics of a non-segregation are
@@ -220,22 +255,28 @@ def reference_score_loc_phe(case, *, moi):
 
 1. Bands: `"90%"→+4.0`, `"45%"→+1.0`, `"60%"→+2.0`, `"75%"→+3.0`, `"20%"→0.0`, `"2.6%"→0.0`;
    `parent_code=="LOC"`, `parent_total==pts`.
-2. Boundaries: `"33%"→+1.0`, `"50%"→+1.0`, `"68%"→+3.0`, `"81%"→+3.0`, `"82%"→+4.0`.
-3. Range: `"91-93%"→+4.0` (lower bound).
-4. `_ND`: `testing=None`; `diagnostic_yield_for_phenotypes=None`; `"not available"` — each yields
-   empty `sub_code_points` + `parent_total is None`.
+2. Boundaries: `"33%"→+1.0`, `"50%"→+1.0`, `"68%"→+3.0`, `"81%"→+3.0`, `"81.5%"→+3.0` (sliver
+   folds down), `"82%"→+4.0`.
+3. Range: `"91-93%"→+4.0` (lower bound). Leading `<`: `"<33%"→0.0` (documents the fixed footgun).
+4. `_ND`: `testing=None`; `diagnostic_yield_for_phenotypes=None`; `""` (empty); `"not available"`
+   — each yields empty `sub_code_points` + `parent_total is None`.
 5. Non-seg rule (a): `"90%"`, moi AD, relative affected+VBC-absent → `0.0`, provenance says
    "non-segregation".
 6. Non-seg rule (b): `"90%"`, moi AD, `age_matched_penetrance=NEAR_100`, relative
    unaffected+VBC-present → `0.0`.
-7. Rule (b) needs NEAR_100: `"90%"`, moi AD, penetrance `PCT_80_100`, unaffected carrier → stays
-   `+4.0`.
+7. Rule (b) needs NEAR_100: `"90%"`, moi AD, penetrance `PCT_80_100` (and separately `None`),
+   unaffected carrier → stays `+4.0`.
 8. Rule (b) suppressed for AR: `"90%"`, moi AR, NEAR_100, unaffected carrier → stays `+4.0`.
 9. Rule (a) under AR zeroes + AR caveat: `"90%"`, moi AR, affected+VBC-absent → `0.0`, provenance
    has the AR caveat.
 10. `moi=None`: rule (a) still zeroes; a lone unaffected carrier (rule b) does not.
 11. Already-zero + non-seg: `"20%"` + affected-VBC-absent relative → stays `0.0`.
 12. `gene_specificity_for_phenotypes` is ignored: setting it without a yield → `_ND`.
+13. **UNKNOWN/None non-trigger** (guards the `==` idiom): `"90%"`, moi AD, and a relative with
+    (i) all fields `UNKNOWN`/`None`, (ii) `affected_w_mde=TRUE` + `vbc_exists=UNKNOWN`/`None` (no
+    rule a), (iii) `affected_w_mde=FALSE` + `vbc_exists=TRUE` + penetrance `NEAR_100` but that's
+    rule (b) — so instead test `affected_w_mde=UNKNOWN` + `vbc_exists=TRUE` (no rule b) → each stays
+    `+4.0`.
 
 ## Docs
 
@@ -243,10 +284,24 @@ def reference_score_loc_phe(case, *, moi):
   `testing.diagnostic_yield_for_phenotypes` (`<33→0 / 33-50→+1 / 51-67→+2 / 68-81→+3 / ≥82→+4`),
   non-segregation zeroing (two-case rule, MOI-gated, AR suppresses rule b); LOC_SEG and the LOC
   combined +4.0 cap are deferred (LOC-2 / aggregation).
-- `docs/reference/known-gaps.md`: add rows — (i) LOC_PHE `+2.0` band + (81,82) boundary are
-  inferred (SM 5 gives no anchor); (ii) semantic-similarity `+2.0` alt-path not capturable; (iii)
-  non-segregation MOI × zygosity semantics under-specified (rule (b) not yet zygosity-gated for
-  recessive carriers).
+- `docs/reference/known-gaps.md`: add rows —
+    - (i) LOC_PHE `+2.0` band + the (81,82) boundary are **inferred** (SM 5 gives no anchor); the
+      `≥82` +4.0 threshold slightly over-awards on `[82,83)` vs SM 5's "83%" examples.
+    - (ii) the ultra-rare **semantic-similarity `+2.0`** alt-path is not capturable (no field).
+    - (iii) non-segregation **MOI × zygosity** semantics are under-specified in SM 5; rule (b) is
+      not yet zygosity-gated, so an unaffected **XLR** het carrier can trip it. Note: the needed
+      fields (`relative.sex`, `relative.vbc_zygosity`) **are** captured — this is "data available,
+      not yet gated" (a deliberate LOC-1 deferral), not a source limitation. Suppression stays
+      `{AR}` per the settled decision (widening it to XLR is a decision change, deferred).
+    - (iv) under **AR**, SM 5's "Note Regarding Non-segregation in AR" argues a non-segregation may
+      reflect *another causative locus*, not benignity — so whether LOC_PHE rule-(a) zeroing should
+      apply under AR **at all** is under-specified. The reference scorer zeroes conservatively and
+      flags the caveat in provenance; this may over-negate. (SM 5's only worked LOC_PHE
+      non-seg example, TSC2, is dominant.)
+    - (v) SM 5 says phenotype specificity uses "the single proband with the **most specific**
+      phenotypic information"; selecting that proband is a **curator** responsibility — the scorer
+      bands whatever single value sits in `diagnostic_yield_for_phenotypes`. Flagged in provenance.
+    - (vi) parse limitations: a leading `>` is a floor not an interval; `"1 in N"` ratios misparse.
 - `docs/workflows/hod/loc/loc-phe.md`: no change needed (it already documents capture; scoring is
   cross-linked via scoring.md).
 
