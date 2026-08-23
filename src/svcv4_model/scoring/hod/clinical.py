@@ -23,6 +23,8 @@ def _classify_plp(classification: str | None) -> str | None:
     """
     if classification is None:
         return None
+    # The expected coded forms mirror VariantClassification.PATHOGENIC / LIKELY_PATHOGENIC
+    # (kept as literals here since the field is a free str; keep in sync if that enum changes).
     c = classification.strip().upper()
     if c in {"P", "PATHOGENIC"}:
         return "P"

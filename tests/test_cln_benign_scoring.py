@@ -38,6 +38,18 @@ def test_uaf_xlinked_hemizygous() -> None:
     assert reference_score_cln_uaf(c, moi=MOI.XLR).sub_code_points["CLN_UAF"] == -4.0
 
 
+def test_uaf_semidominant_uses_dominant_column() -> None:
+    # SD shares the "Dominantly Inherited Or Semidominant" column (SM 4 Table 5)
+    c = Case(age_matched_penetrance=NEAR)
+    assert reference_score_cln_uaf(c, moi=MOI.SD).sub_code_points["CLN_UAF"] == -4.0
+
+
+def test_uaf_xld_counts_as_recessive_xlinked() -> None:
+    # XLD (like XLR/AR) uses the recessive/X-linked columns
+    c = Case(age_matched_penetrance=NEAR, vbc_zygosity=Zygosity.HEMI)
+    assert reference_score_cln_uaf(c, moi=MOI.XLD).sub_code_points["CLN_UAF"] == -4.0
+
+
 def test_uaf_recessive_het_trans_p_vs_lp() -> None:
     # trans-P uses the -4/-2/0 column; trans-LP uses the reduced -2/-1/0 column
     p = Case(
