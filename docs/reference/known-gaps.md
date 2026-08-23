@@ -17,6 +17,7 @@ roadmap with dates.
 | Rule enforcement (`validate_case`) | Case model | Applicability-matrix rules are stored/documented, not enforced at validation time. Deferred since the Case model's initial design (PR #17). |
 | Case aggregation & counting | Case model | Aggregating/counting multiple proband observations within a workflow. Deferred since PR #17. |
 | SVCv4 point-mapping | Case model / Statement | Mapping aggregated case evidence to the SVCv4 point system, one workflow at a time. Deferred since PR #17. |
+| No VBC region / molecular-consequence annotation | Case model | The `Vbc` entity carries only an id + gene, with no coding/intronic-region or consequence field. So the SM 4 CLN_DNV `+7.0` reduction (recommended when the VBC is *outside* coding/adjacent-intronic regions, where de novos are more frequent) cannot be computed — the reference scorer awards the faithful `+7.0` and flags the caveat in provenance. |
 | Variant `classification` is a placeholder `str` | Case model | `AdditionalVariant.classification` and `CompoundHetVariant.classification` are free-text `str` (e.g. `"P"`/`"LP"`), not the `VariantClassification` enum. The CLN scorers normalize via `_classify`; typing these fields as `VariantClassification` would remove the string handling. |
 
 ## Documentation / content gaps
