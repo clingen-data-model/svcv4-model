@@ -61,6 +61,12 @@ result.provenance        # the audit trail, step by step
   splice blue/violet parent caps are inverted vs SM 11/12 (blue `−8..0`, violet `−8..+8`) —
   encoded faithfully and flagged as a suspected SM 6 inconsistency. This completes the splice
   family (Canonical, Intronic, Missense).
+- **Population** (SM 3) — `reference_score_population`, the first **HOD** scorer (lives in
+  `scoring/hod/`). Two benignity-only codes: **POP_FRQ** (FAF/DAFT fold bands `<1.5×`/`5×`/`15×`
+  → `0/−1/−3/−6`, each band's lower edge inclusive — a flagged SM 3 boundary gap) and **POP_HMZ**
+  (`−0.5`/observation from the 2nd, **`−1.0` for AD** per SM 3 Table 7; X-linked counts
+  hemizygotes — needs the `moi`). `parent_code="POP"` is a grouping label (not an SVCv4 parent
+  code); `parent_total` sums the two.
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the

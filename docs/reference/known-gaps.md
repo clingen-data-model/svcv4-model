@@ -38,6 +38,7 @@ these are candidates to raise with the SVCv4 Working Group for confirmation.
 |---|---|---|
 | SM 18 Figure-1 `Suspected × Most` matrix cell | SM 18 | The `Suspected × Most` mechanism/exon cell lives in SM 18 Figure 1 (an image, absent from the text extracts). The reference scorer **assumes `0.25`** (keep the Suspected fraction; do not further halve). This is a good candidate to raise with the working group. |
 | SM 6 missense-splice blue/violet parent caps | SM 6 | SM 6's missense-splice **blue (`UNCERTAIN`) → `−8..0`** and **violet (`UNLIKELY`) → `−8..+8`** parent caps are inverted vs Canonical (SM 11) / Intronic (SM 12), and read backwards (uncertain capped at 0; unlikely allowed positive). Encoded faithfully to SM 6 + `missense.md`. This is a good candidate to raise with the working group — same category as the SM 18 Figure-1 open item. |
+| SM 3 POP_HMZ Autosomal Dominant weight | SM 3 | Prose (L93) says −0.5 pts per homozygous occurrence for AD *or* AR, but **Table 7** assigns Autosomal Dominant **−1.0** (AR/semidominant/X-linked −0.5). The reference scorer follows Table 7 (the explicit point-value table). A good candidate to raise with the working group — same category as the SM 18 Figure-1 open item. |
 
 ## How to use this page
 

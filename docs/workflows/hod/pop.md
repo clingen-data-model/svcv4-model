@@ -71,12 +71,21 @@ These inequalities are reproduced from SM 3, which does not crisply assign the
 exact boundary values; its worked example (FBN1-related Marfan, DAFT 0.000118)
 treats the top band as inclusive (FAF ≥ 0.001770 → −6.0).
 
-`POP_HMZ` awards **−0.5 points per eligible occurrence, counted only from the
-2nd** eligible occurrence — homozygous occurrences for AD/AR MDEs, homozygous
-*or* hemizygous for X-linked — and only when `hmz_eligible` holds. Example:
-three homozygous occurrences for an AR MDE → `POP_HMZ_-1.0` (1st free; 2nd and
-3rd −0.5 each). This is distinct from `CLN_UAF`, which requires explicit
-clinical details.
+`POP_HMZ` awards benignity **per eligible occurrence, counted only from the
+2nd** — homozygous occurrences for AD/AR/semidominant MDEs, homozygous *or*
+hemizygous for X-linked — and only when `hmz_eligible` holds. The weight per
+observation is **−1.0 for Autosomal Dominant** and **−0.5 for AR / semidominant
+/ X-linked** (SM 3 Table 7). Example: three homozygous occurrences for an **AR**
+MDE → `POP_HMZ_-1.0` (1st free; 2nd and 3rd −0.5 each); for an **AD** MDE →
+`POP_HMZ_-2.0` (−1.0 each). This is distinct from `CLN_UAF`, which requires
+explicit clinical details.
+
+!!! note "SM 3 prose vs Table 7"
+
+    SM 3's prose text lumps AD with AR at −0.5, but **Table 7** (the explicit
+    point-value table) assigns Autosomal Dominant −1.0. This project follows
+    Table 7; the conflict is logged under
+    [Known gaps](../../reference/known-gaps.md).
 
 ## See also
 
