@@ -43,7 +43,11 @@ def test_biallelic_disorder_folds_specific_to_consistent() -> None:
     conf = Case(pheno_specificity_for_mde=SPEC, confirmed_parental_relationship=TriState.TRUE)
     assert _dnv(conf, moi=MOI.AR) == 4.0
     assert _dnv(conf, moi=MOI.XLR) == 4.0
-    assert _dnv(conf, moi=MOI.AD) == 7.0  # mono keeps SPECIFIC
+    # non-recessive / unknown MOIs are mono -> keep the SPECIFIC +7 row
+    assert _dnv(conf, moi=MOI.AD) == 7.0
+    assert _dnv(conf, moi=MOI.XLD) == 7.0
+    assert _dnv(conf, moi=MOI.SD) == 7.0
+    assert reference_score_cln_dnv(conf, moi=None).sub_code_points["CLN_DNV"] == 7.0
 
 
 def test_unconfirmed_when_parental_none_or_unknown() -> None:
