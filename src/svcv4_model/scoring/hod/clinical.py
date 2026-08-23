@@ -11,6 +11,8 @@ from svcv4_model.case import (
     MOI,
     AgeMatchedPenetrance,
     Case,
+    CoOccurrenceLikelihood,
+    PhaseConfidence,
     PhenoSeverity,
     PhenoSpecificity,
     TriState,
@@ -179,6 +181,91 @@ def reference_score_cln_aff_mono(case: Case, *, moi: MOI | None) -> ScoreResult:
         pts = _CLN_AFF_POINTS[pheno][tier]
         prov.append(f"CLN_AFF: {pts} (phenotype={pheno}, tier={tier})")
 
+    return ScoreResult(
+        parent_code="CLN",
+        sub_code_points={"CLN_AFF": pts},
+        parent_total=pts,
+        provenance=prov,
+        authoritative=False,
+    )
+
+
+_TABLE2 = {
+    "A1": {"conf_plp": 3.0, "assumed_plp": 1.5, "conf_vus": 1.5, "hom": 1.0, "none": 0.0},
+    "A2": {"conf_plp": 2.0, "assumed_plp": 1.0, "conf_vus": 1.0, "hom": 1.0, "none": 0.0},
+    "B": {"conf_plp": 1.0, "assumed_plp": 0.75, "conf_vus": 0.5, "hom": 0.5, "none": 0.0},
+    "zero": {"conf_plp": 0.0, "assumed_plp": 0.0, "conf_vus": 0.0, "hom": 0.0, "none": 0.0},
+}
+
+
+def _biallelic_column(case: Case) -> str | None:
+    """SM 4 Table 2 column from the 2nd-variant status. None -> _ND (indeterminate zygosity)."""
+    z = case.vbc_zygosity
+    if z == Zygosity.HOM:
+        return "hom"
+    if z != Zygosity.HET:
+        return None  # None or HEMI (hemizygous is Table 1, not biallelic) -> _ND
+    ch = case.compound_het_variant
+    if ch is None:
+        return "none"  # no in-trans 2nd variant
+    cls = _classify(ch.classification)
+    if cls in {"P", "LP"}:
+        # CompoundHetVariant asserts in-trans by construction; HIGH = confirmed, else assumed
+        return "conf_plp" if ch.phase_confidence == PhaseConfidence.HIGH else "assumed_plp"
+    if cls == "VUS":
+        # only a confirmed-trans VUS scores; assumed-trans VUS = no points (SM 4 L75)
+        return "conf_vus" if ch.phase_confidence == PhaseConfidence.HIGH else "none"
+    return "none"
+
+
+def reference_score_cln_aff_biallelic(case: Case, *, moi: MOI | None) -> ScoreResult:
+    """Compute the reference (NON-AUTHORITATIVE) CLN_AFF pathogenic points for one affected
+    biallelic proband (SM 4 Table 2). CSpec is authoritative. ``moi`` accepted for signature
+    parity (Table 2 has no MOI axis; table selection/routing is deferred to aggregation).
+    """
+    prov: list[str] = [
+        'CLN: "CLN" is the HOD grouping label; scored per Case (table selection + cross-proband '
+        "sum + the AD ceiling-on-sum deferred to case aggregation)."
+    ]
+    pheno = case.pheno_specificity_for_mde
+    if pheno is None:
+        prov.append("CLN_AFF: _ND (no pheno_specificity_for_mde)")
+        return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
+
+    col = _biallelic_column(case)
+    if col is None:
+        prov.append("CLN_AFF: _ND (VBC zygosity absent or hemizygous -- not a Table 2 column)")
+        return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
+
+    cats = {_classify(v.classification) for v in case.additional_variants}
+    if pheno == PhenoSpecificity.INCONSISTENT:
+        row = "zero"
+    elif cats & {"P", "LP"}:
+        row = "zero"  # a P/LP alt cause -> CLN_ALT (SM 4 Table 2 row C)
+    else:
+        t = case.testing
+        thorough = (
+            t is not None
+            and t.covers_all_genes_relevant_to_mde == TriState.TRUE
+            and t.non_genetic_etiology_excluded == TriState.TRUE
+            and "VUS" not in cats
+        )
+        if not thorough:
+            row = "B"
+        elif col == "hom":
+            row = "A1"  # co-occurrence N/A for a homozygous variant (A1.hom == A2.hom)
+        else:
+            ch = case.compound_het_variant
+            co = ch.co_occurrence_likelihood if ch else None
+            if co == CoOccurrenceLikelihood.LT_0_0001:
+                row = "A1"
+            elif co == CoOccurrenceLikelihood.BETWEEN_0_0001_0_01:
+                row = "A2"
+            else:
+                row = "B"  # rarity unestablished -> incomplete row
+
+    pts = _TABLE2[row][col]
+    prov.append(f"CLN_AFF: {pts} (biallelic Table 2, column={col}, row={row})")
     return ScoreResult(
         parent_code="CLN",
         sub_code_points={"CLN_AFF": pts},

@@ -6,6 +6,7 @@ re-exported from the top-level ``svcv4_model`` package (so schema generation ign
 """
 
 from svcv4_model.scoring.hod.clinical import (
+    reference_score_cln_aff_biallelic,
     reference_score_cln_aff_mono,
     reference_score_cln_alt,
     reference_score_cln_uaf,
@@ -28,6 +29,7 @@ __all__ = [
     "MissenseScoreResult",
     "ScoreResult",
     "reference_score_canonical_splice",
+    "reference_score_cln_aff_biallelic",
     "reference_score_cln_aff_mono",
     "reference_score_cln_alt",
     "reference_score_cln_uaf",
