@@ -22,7 +22,10 @@ def _parse_percent(raw: str | None) -> float | None:
 
     Clean point estimates ('90%', '2.6%') and the LOWER bound of a range ('91-93%' -> 91.0). A
     leading '<' is honored as "just below" (SM 5's idiomatic '<33%' -> band 0.0, not +1.0); a
-    leading '>' keeps the number as a conservative floor. The raw string is echoed in provenance.
+    leading '>' keeps the number as a conservative floor. A bare proportion with no '%' and a
+    value below 1.0 ('0.9' -> 90.0) is scaled to a percent -- but '0.5%' (an explicit sub-1
+    percent) and '1 in 500' (a ratio parsing to 1.0, not < 1) are left as-is. The raw string is
+    echoed in provenance.
     """
     if raw is None:
         return None
@@ -30,6 +33,8 @@ def _parse_percent(raw: str | None) -> float | None:
     if m is None:
         return None
     pct = float(m.group())
+    if "%" not in raw and pct < 1.0:
+        pct *= 100.0
     if raw.lstrip().startswith("<"):
         pct -= 1e-9
     return pct

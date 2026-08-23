@@ -67,6 +67,13 @@ def test_leading_lt_is_below() -> None:
     assert _phe(_case("<33%")) == 0.0  # NOT +1.0
 
 
+def test_bare_proportion_scaled_but_ratio_and_subpercent_are_not() -> None:
+    assert _phe(_case("0.9")) == 4.0  # proportion -> 90%
+    assert _phe(_case("0.45")) == 1.0  # proportion -> 45%
+    assert _phe(_case("0.5%")) == 0.0  # explicit sub-1 percent, left as 0.5
+    assert _phe(_case("1 in 500")) == 0.0  # ratio parses to 1.0 (not < 1), unchanged
+
+
 # --- No Data -------------------------------------------------------------
 def test_nd_no_testing() -> None:
     r = reference_score_loc_phe(_case(no_testing=True), moi=MOI.AD)
