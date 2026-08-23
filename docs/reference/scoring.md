@@ -67,6 +67,12 @@ result.provenance        # the audit trail, step by step
   (`−0.5`/observation from the 2nd, **`−1.0` for AD** per SM 3 Table 7; X-linked counts
   hemizygotes — needs the `moi`). `parent_code="POP"` is a grouping label (not an SVCv4 parent
   code); `parent_total` sums the two.
+- **Clinical Observations — benign codes** (SM 4) — `reference_score_cln_uaf` (Table 5) and
+  `reference_score_cln_alt` (Table 4), the two benign per-`Case` CLN codes. Scored per proband
+  (`parent_code="CLN"`); the cross-proband sum, the CLN_CCS exclusivity rule, and the CLN_AFF
+  `+1.0`/proband ceiling are deferred to case aggregation. `moi` is required (picks the CLN_UAF
+  column). Both normalize the placeholder variant `classification` via `_classify_plp` (see
+  known-gaps). CLN_AFF / CLN_DNV / CLN_CCS and the LOC codes follow.
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the

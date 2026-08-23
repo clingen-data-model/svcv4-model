@@ -5,6 +5,7 @@ point rules for tests, worked examples, and the practice-variant-set. It is inte
 re-exported from the top-level ``svcv4_model`` package (so schema generation ignores it).
 """
 
+from svcv4_model.scoring.hod.clinical import reference_score_cln_alt, reference_score_cln_uaf
 from svcv4_model.scoring.hod.population import reference_score_population
 from svcv4_model.scoring.pfd.canonical_splice import reference_score_canonical_splice
 from svcv4_model.scoring.pfd.exon_deletion import reference_score_exon_deletion
@@ -23,6 +24,8 @@ __all__ = [
     "MissenseScoreResult",
     "ScoreResult",
     "reference_score_canonical_splice",
+    "reference_score_cln_alt",
+    "reference_score_cln_uaf",
     "reference_score_exon_deletion",
     "reference_score_exon_duplication",
     "reference_score_frameshift",
