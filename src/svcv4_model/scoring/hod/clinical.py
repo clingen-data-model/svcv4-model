@@ -19,6 +19,7 @@ from svcv4_model.case import (
     TriState,
     Zygosity,
 )
+from svcv4_model.case_control import CaseControlStudyEvidence
 from svcv4_model.scoring.result import ScoreResult
 
 _RECESSIVE_XL = frozenset({MOI.AR, MOI.XLD, MOI.XLR})
@@ -319,6 +320,68 @@ def reference_score_cln_dnv(case: Case, *, moi: MOI | None) -> ScoreResult:
     return ScoreResult(
         parent_code="CLN",
         sub_code_points={"CLN_DNV": pts},
+        parent_total=pts,
+        provenance=prov,
+        authoritative=False,
+    )
+
+
+def reference_score_cln_ccs(evidence: CaseControlStudyEvidence) -> ScoreResult:
+    """Compute the reference (NON-AUTHORITATIVE) CLN_CCS case-control points (SM 4). CSpec is
+    authoritative. Operates on the standalone ``CaseControlStudyEvidence`` (like POP), not a
+    per-proband Case. When CLN_CCS is applied, SM 4 marks all other CLN codes NA except CLN_DNV
+    -- that exclusivity is an aggregation-layer rule, deferred here.
+    """
+    prov: list[str] = [
+        'CLN: "CLN" is the HOD grouping label. When CLN_CCS is applied, SM 4 marks all other '
+        "CLN codes NA except CLN_DNV -- exclusivity deferred to case aggregation."
+    ]
+    or_ = evidence.odds_ratio
+    if or_ is None:
+        prov.append("CLN_CCS: _ND (no odds_ratio)")
+        return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
+
+    robust = (
+        evidence.case_variant_count is not None
+        and evidence.case_variant_count >= 5
+        and evidence.case_cohort_size is not None
+        and evidence.case_cohort_size >= 100
+        and evidence.controls_matched is True
+    )
+    if not robust:
+        prov.append(
+            "CLN_CCS: _ND (study not robust -- SM 4 requires >=5 case-variant observations, "
+            ">=100 unrelated cases, and matched controls)."
+        )
+        return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
+    if not evidence.ascertainment_bias_considered:
+        prov.append("CLN_CCS: note -- ascertainment_bias_considered is not TRUE (SM 4 caution).")
+
+    ci_includes_1 = (
+        evidence.ci_lower is not None
+        and evidence.ci_upper is not None
+        and evidence.ci_lower <= 1.0 <= evidence.ci_upper
+    )
+    if or_ > 5.0 and not ci_includes_1:
+        pts = 4.0
+        prov.append(f"CLN_CCS: +4.0 (OR {or_} > 5.0, CI excludes 1.0)")
+    else:
+        pts = 0.0
+        if or_ <= 1.0:
+            prov.append(
+                f"CLN_CCS: 0.0 (OR {or_} <= 1.0 -- benignity indicated, but SM 4 assigns no "
+                "CLN_CCS benign point value; see known-gaps)."
+            )
+        elif ci_includes_1:
+            prov.append(
+                f"CLN_CCS: 0.0 (OR {or_} > 5.0 but CI includes 1.0 -- not significant)"
+            )
+        else:
+            prov.append(f"CLN_CCS: 0.0 (OR {or_} <= 5.0 -- insufficient enrichment)")
+
+    return ScoreResult(
+        parent_code="CLN",
+        sub_code_points={"CLN_CCS": pts},
         parent_total=pts,
         provenance=prov,
         authoritative=False,
