@@ -77,7 +77,12 @@ result.provenance        # the audit trail, step by step
   known-gaps). **CLN_DNV** (`reference_score_cln_dnv`, Table 3) is the de-novo code — additive on
   CLN_AFF, by phenotype consistency × parental confirmation; biallelic disorders (`moi ∈ {AR, XLR}`)
   fold `SPECIFIC`→`CONSISTENT`, and the `+7.0` region caveat is un-applied (no VBC-region field,
-  see known-gaps). CLN_CCS and the LOC codes follow.
+  see known-gaps). **CLN_CCS** (`reference_score_cln_ccs`) is the case-control code — a standalone
+  `CaseControlStudyEvidence` (like POP, not a `Case`): `OR>5.0` + a robust study (`≥5`
+  case-variant obs, `≥100` cases, matched controls) → `+4.0`; a CI including 1.0 vetoes it; a
+  failing gate → `_ND`; a low OR indicates benignity but SM 4 assigns no CLN_CCS benign value
+  (see known-gaps); the exclusivity rule (other CLN NA except CLN_DNV) is deferred to aggregation.
+  **This completes the CLN codes** (UAF, ALT, AFF, DNV, CCS). The LOC codes follow.
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
