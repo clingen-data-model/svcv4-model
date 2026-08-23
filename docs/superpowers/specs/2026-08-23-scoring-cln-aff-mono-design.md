@@ -42,7 +42,8 @@ Table 1 (the cross-proband sum + the ceiling-on-sum are aggregation-layer concer
 **DD1 — TriState thoroughness → tier.** "best" requires both `covers_all_genes_relevant_to_mde`
 **and** `non_genetic_etiology_excluded` to be `TriState.TRUE`. `None`/`FALSE`/`UNKNOWN` on either
 → **not** best → middle (the conservative reading; SM 4's best tier requires the affirmative
-"tested AND excluded").
+"tested AND excluded"). **`case.testing` itself defaults to `None`** — guard it: `case.testing is
+None` → treat both TriState inputs as unsatisfied → middle (never dereference a `None` testing).
 
 **DD2 — `_ND` vs computed `0.0`.** `_ND` only when `pheno_specificity_for_mde is None` (cannot
 place the proband). `INCONSISTENT` → a computed `+0.0` **is** recorded (a real "no CLN_AFF
@@ -50,9 +51,18 @@ weight" assessment; the SM 4 redirect to CLN_UAF is the applicability layer's co
 
 **DD3 — generalize the classifier.** `_classify_plp(s) → "P"/"LP"/None` becomes
 `_classify(s) → "P"/"LP"/"VUS"/"B"/"LB"/None` (case-insensitive; accepts the `VariantClassification`
-enum values + shorthands). The two merged benign callers switch to `_classify(...) in {"P","LP"}`
-(behaviour-preserving — their tests guard it). A B/LB additional variant is **not** "of interest"
-(does not block the best tier).
+enum values `PATHOGENIC/LIKELY_PATHOGENIC/VUS/BENIGN/LIKELY_BENIGN` + the `P/LP/VUS/B/LB`
+shorthands). The two merged benign callers are updated **differently** (behaviour-preserving —
+their tests guard it):
+- `reference_score_cln_uaf` — **rename only** (`_classify_plp` → `_classify`). It feeds the result
+  into `{"P":"rec_trans_p","LP":"rec_trans_lp"}.get(trans, "no_trans_plp")`, which needs the
+  **string**; VUS/B/LB (and None) already fall through to `no_trans_plp` (correct per Table 5).
+- `reference_score_cln_alt` — its P/LP **gate must change** from the truthy filter
+  `if _classify(v.classification)` to `if _classify(v.classification) in {"P","LP"}`, because
+  `_classify` now also returns truthy `VUS`/`B`/`LB`; the truthy filter would wrongly admit
+  non-P/LP alternates. (This is the one real regression risk the generalization introduces.)
+
+A B/LB additional variant is **not** "of interest" (does not block the best tier).
 
 **DD4 — per-`Case`, table pre-selected.** The scorer trusts the caller to invoke the *mono*
 scorer on a monoallelic proband (het/hemi VBC, monoallelic MDE). The table-selection logic
