@@ -17,7 +17,7 @@ roadmap with dates.
 | Rule enforcement (`validate_case`) | Case model | Applicability-matrix rules are stored/documented, not enforced at validation time. Deferred since the Case model's initial design (PR #17). |
 | Case aggregation & counting | Case model | Aggregating/counting multiple proband observations within a workflow. Deferred since PR #17. |
 | SVCv4 point-mapping | Case model / Statement | Mapping aggregated case evidence to the SVCv4 point system, one workflow at a time. Deferred since PR #17. |
-| Variant `classification` is a placeholder `str` | Case model | `AdditionalVariant.classification` and `CompoundHetVariant.classification` are free-text `str` (e.g. `"P"`/`"LP"`), not the `VariantClassification` enum. The CLN scorers normalize via `_classify_plp`; typing these fields as `VariantClassification` would remove the string handling. |
+| Variant `classification` is a placeholder `str` | Case model | `AdditionalVariant.classification` and `CompoundHetVariant.classification` are free-text `str` (e.g. `"P"`/`"LP"`), not the `VariantClassification` enum. The CLN scorers normalize via `_classify`; typing these fields as `VariantClassification` would remove the string handling. |
 
 ## Documentation / content gaps
 

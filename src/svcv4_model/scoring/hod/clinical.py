@@ -7,29 +7,43 @@ rule, and the CLN_AFF +1.0/proband ceiling live in the later case-aggregation in
 
 from __future__ import annotations
 
-from svcv4_model.case import MOI, AgeMatchedPenetrance, Case, PhenoSeverity, Zygosity
+from svcv4_model.case import (
+    MOI,
+    AgeMatchedPenetrance,
+    Case,
+    PhenoSeverity,
+    PhenoSpecificity,
+    TriState,
+    Zygosity,
+)
 from svcv4_model.scoring.result import ScoreResult
 
 _RECESSIVE_XL = frozenset({MOI.AR, MOI.XLD, MOI.XLR})
 _PEN_GT_80 = frozenset({AgeMatchedPenetrance.PCT_80_100, AgeMatchedPenetrance.NEAR_100})
 
 
-def _classify_plp(classification: str | None) -> str | None:
-    """Normalize the placeholder ``classification`` string to 'P' / 'LP' / None (else).
+def _classify(classification: str | None) -> str | None:
+    """Normalize the placeholder ``classification`` string to a category, or None.
 
-    ``AdditionalVariant``/``CompoundHetVariant`` carry ``classification`` as a placeholder str
-    (not the ``VariantClassification`` enum -- a flagged model gap). Accepts the enum values
-    (PATHOGENIC / LIKELY_PATHOGENIC) and the P / LP shorthands, case-insensitively.
+    Returns 'P' / 'LP' / 'VUS' / 'B' / 'LB' (or None). ``AdditionalVariant`` /
+    ``CompoundHetVariant`` carry ``classification`` as a placeholder str (not the
+    ``VariantClassification`` enum -- a flagged model gap). Accepts the enum values
+    (PATHOGENIC / LIKELY_PATHOGENIC / VUS / BENIGN / LIKELY_BENIGN) and the P / LP / VUS / B / LB
+    shorthands, case-insensitively. (Keep in sync with VariantClassification if that enum changes.)
     """
     if classification is None:
         return None
-    # The expected coded forms mirror VariantClassification.PATHOGENIC / LIKELY_PATHOGENIC
-    # (kept as literals here since the field is a free str; keep in sync if that enum changes).
     c = classification.strip().upper()
     if c in {"P", "PATHOGENIC"}:
         return "P"
     if c in {"LP", "LIKELY_PATHOGENIC"}:
         return "LP"
+    if c == "VUS":
+        return "VUS"
+    if c in {"B", "BENIGN"}:
+        return "B"
+    if c in {"LB", "LIKELY_BENIGN"}:
+        return "LB"
     return None
 
 
@@ -51,7 +65,7 @@ def reference_score_cln_uaf(case: Case, *, moi: MOI | None) -> ScoreResult:
         if z in {Zygosity.HOM, Zygosity.HEMI}:
             col = "rec_homo_hemi"
         elif z == Zygosity.HET:
-            trans = _classify_plp(
+            trans = _classify(
                 case.compound_het_variant.classification if case.compound_het_variant else None
             )
             col = {"P": "rec_trans_p", "LP": "rec_trans_lp"}.get(trans, "no_trans_plp")
@@ -91,8 +105,8 @@ def reference_score_cln_alt(case: Case, *, moi: MOI | None) -> ScoreResult:
     prov: list[str] = [
         'CLN: "CLN" is the HOD grouping label; scored per Case (cross-proband sum deferred).'
     ]
-    # _classify_plp returns truthy "P"/"LP" (or falsy None), so this keeps only P/LP alternates
-    plp_alts = [v for v in case.additional_variants if _classify_plp(v.classification)]
+    # _classify now also returns truthy VUS/B/LB, so gate explicitly on P/LP (not truthiness)
+    plp_alts = [v for v in case.additional_variants if _classify(v.classification) in {"P", "LP"}]
     if not plp_alts:
         prov.append("CLN_ALT: _ND (no P/LP alternate-cause variant -- Table 4 gate)")
         return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
@@ -119,6 +133,55 @@ def reference_score_cln_alt(case: Case, *, moi: MOI | None) -> ScoreResult:
     return ScoreResult(
         parent_code="CLN",
         sub_code_points={"CLN_ALT": pts},
+        parent_total=pts,
+        provenance=prov,
+        authoritative=False,
+    )
+
+
+_CLN_AFF_POINTS = {
+    PhenoSpecificity.SPECIFIC: {"best": 1.0, "middle": 0.5, "plp_alt": 0.0},
+    PhenoSpecificity.CONSISTENT: {"best": 0.5, "middle": 0.25, "plp_alt": 0.0},
+}
+
+
+def reference_score_cln_aff_mono(case: Case, *, moi: MOI | None) -> ScoreResult:
+    """Compute the reference (NON-AUTHORITATIVE) CLN_AFF pathogenic points for one affected
+    monoallelic proband (SM 4 Table 1). CSpec is authoritative. ``moi`` accepted for signature
+    parity (Table 1 has no MOI axis; table selection/routing is deferred to aggregation).
+    """
+    prov: list[str] = [
+        'CLN: "CLN" is the HOD grouping label; scored per Case (table selection + cross-proband '
+        "sum + the AD +1.0/proband ceiling-on-sum deferred to case aggregation)."
+    ]
+    pheno = case.pheno_specificity_for_mde
+    if pheno is None:
+        prov.append("CLN_AFF: _ND (no pheno_specificity_for_mde)")
+        return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
+
+    if pheno == PhenoSpecificity.INCONSISTENT:
+        pts = 0.0
+        prov.append("CLN_AFF: 0.0 (phenotype INCONSISTENT -- SM 4 Table 1; -> CLN_UAF)")
+    else:  # SPECIFIC or CONSISTENT
+        cats = {_classify(v.classification) for v in case.additional_variants}
+        t = case.testing
+        thorough = (
+            t is not None
+            and t.covers_all_genes_relevant_to_mde == TriState.TRUE
+            and t.non_genetic_etiology_excluded == TriState.TRUE
+        )
+        if cats & {"P", "LP"}:
+            tier = "plp_alt"
+        elif thorough and "VUS" not in cats:
+            tier = "best"
+        else:
+            tier = "middle"
+        pts = _CLN_AFF_POINTS[pheno][tier]
+        prov.append(f"CLN_AFF: {pts} (phenotype={pheno}, tier={tier})")
+
+    return ScoreResult(
+        parent_code="CLN",
+        sub_code_points={"CLN_AFF": pts},
         parent_total=pts,
         provenance=prov,
         authoritative=False,
