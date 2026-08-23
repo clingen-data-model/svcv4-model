@@ -9,6 +9,7 @@ from svcv4_model.scoring.hod.clinical import (
     reference_score_cln_aff_biallelic,
     reference_score_cln_aff_mono,
     reference_score_cln_alt,
+    reference_score_cln_dnv,
     reference_score_cln_uaf,
 )
 from svcv4_model.scoring.hod.population import reference_score_population
@@ -32,6 +33,7 @@ __all__ = [
     "reference_score_cln_aff_biallelic",
     "reference_score_cln_aff_mono",
     "reference_score_cln_alt",
+    "reference_score_cln_dnv",
     "reference_score_cln_uaf",
     "reference_score_exon_deletion",
     "reference_score_exon_duplication",

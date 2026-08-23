@@ -1,8 +1,9 @@
 """Reference (non-authoritative) scorers for Clinical Observations (SM 4, CLN codes).
 
-The two benign per-Case codes: CLN_UAF (unaffected carrier, Table 5) and CLN_ALT (alternative
-cause, Table 4). Scored per Case (one proband); the cross-proband sum, the CLN_CCS exclusivity
-rule, and the CLN_AFF +1.0/proband ceiling live in the later case-aggregation increment.
+Per-Case codes: benign CLN_UAF (Table 5) and CLN_ALT (Table 4); pathogenic CLN_AFF (mono Table 1
++ biallelic Table 2) and CLN_DNV (Table 3, de-novo). Scored per Case (one proband); the
+cross-proband sum, summing CLN_AFF + CLN_DNV per proband, the CLN_CCS exclusivity rule, and the
+AD ceiling-on-sum live in the later case-aggregation increment.
 """
 
 from __future__ import annotations
@@ -269,6 +270,55 @@ def reference_score_cln_aff_biallelic(case: Case, *, moi: MOI | None) -> ScoreRe
     return ScoreResult(
         parent_code="CLN",
         sub_code_points={"CLN_AFF": pts},
+        parent_total=pts,
+        provenance=prov,
+        authoritative=False,
+    )
+
+
+_CLN_DNV_POINTS = {
+    PhenoSpecificity.SPECIFIC: (7.0, 2.0),  # (confirmed, unconfirmed)
+    PhenoSpecificity.CONSISTENT: (4.0, 1.0),
+    PhenoSpecificity.INCONSISTENT: (0.0, 0.0),
+}
+_BIALLELIC_MOI = frozenset({MOI.AR, MOI.XLR})
+
+
+def reference_score_cln_dnv(case: Case, *, moi: MOI | None) -> ScoreResult:
+    """Compute the reference (NON-AUTHORITATIVE) CLN_DNV de-novo points for one affected proband
+    (SM 4 Table 3), additive on CLN_AFF. CSpec is authoritative. ``moi`` selects the mono-vs-
+    biallelic phenotype-consistency fold (AR/XLR disorders use the CONSISTENT row; SPECIFIC is
+    mono-only). The +7.0 region caveat is not applied (no VBC-region annotation).
+    """
+    prov: list[str] = [
+        'CLN: "CLN" is the HOD grouping label; scored per Case (cross-proband sum + summing '
+        "CLN_AFF + CLN_DNV per proband deferred to case aggregation)."
+    ]
+    pheno = case.pheno_specificity_for_mde
+    if pheno is None:
+        prov.append("CLN_DNV: _ND (no pheno_specificity_for_mde)")
+        return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
+
+    row = pheno
+    if moi in _BIALLELIC_MOI and pheno == PhenoSpecificity.SPECIFIC:
+        row = PhenoSpecificity.CONSISTENT
+        prov.append(
+            "CLN_DNV: biallelic disorder (AR/XLR) -> SPECIFIC folds to CONSISTENT "
+            "(XLR-by-sex + SD summing deferred to aggregation)."
+        )
+
+    confirmed = case.confirmed_parental_relationship == TriState.TRUE
+    pts = _CLN_DNV_POINTS[row][0 if confirmed else 1]
+    if row == PhenoSpecificity.SPECIFIC and confirmed:
+        prov.append(
+            "CLN_DNV: +7.0 ** -- SM 4 recommends reducing this if the VBC is outside "
+            "coding/adjacent-intronic regions; not applied (no VBC-region annotation)."
+        )
+    prov.append(f"CLN_DNV: {pts} (row={row.value}, confirmed_parental={confirmed})")
+
+    return ScoreResult(
+        parent_code="CLN",
+        sub_code_points={"CLN_DNV": pts},
         parent_total=pts,
         provenance=prov,
         authoritative=False,
