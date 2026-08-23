@@ -74,7 +74,10 @@ result.provenance        # the audit trail, step by step
   (`parent_code="CLN"`); the cross-proband sum, the CLN_CCS exclusivity rule, the AD `+1.0`/proband
   ceiling-on-sum, table selection / X-linked routing, and semidominant summing are deferred to case
   aggregation. Shared `_classify` normalizes the placeholder variant `classification` (see
-  known-gaps). CLN_DNV, CLN_CCS and the LOC codes follow.
+  known-gaps). **CLN_DNV** (`reference_score_cln_dnv`, Table 3) is the de-novo code — additive on
+  CLN_AFF, by phenotype consistency × parental confirmation; biallelic disorders (`moi ∈ {AR, XLR}`)
+  fold `SPECIFIC`→`CONSISTENT`, and the `+7.0` region caveat is un-applied (no VBC-region field,
+  see known-gaps). CLN_CCS and the LOC codes follow.
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
