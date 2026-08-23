@@ -13,6 +13,7 @@ from svcv4_model.scoring.hod.clinical import (
     reference_score_cln_dnv,
     reference_score_cln_uaf,
 )
+from svcv4_model.scoring.hod.locus import reference_score_loc_phe
 from svcv4_model.scoring.hod.population import reference_score_population
 from svcv4_model.scoring.pfd.canonical_splice import reference_score_canonical_splice
 from svcv4_model.scoring.pfd.exon_deletion import reference_score_exon_deletion
@@ -41,6 +42,7 @@ __all__ = [
     "reference_score_exon_duplication",
     "reference_score_frameshift",
     "reference_score_intronic_synonymous",
+    "reference_score_loc_phe",
     "reference_score_missense",
     "reference_score_missense_amino_acid",
     "reference_score_missense_splice",
