@@ -67,6 +67,17 @@ def test_a2_row_between_cooccurrence() -> None:
     assert _score(_het(_ch("VUS", PhaseConfidence.HIGH, BETWEEN))) == 1.0  # conf_vus
 
 
+def test_assumed_plp_when_phase_confidence_none() -> None:
+    # DD2: a P/LP compound-het with no phase confidence is 'assumed in trans' (not confirmed)
+    assert _score(_het(_ch("P", None, LT))) == 1.5  # assumed_plp, A1
+
+
+def test_hom_not_thorough_uses_b_row() -> None:
+    incomplete = CaseTesting(covers_all_genes_relevant_to_mde=TriState.FALSE)
+    hom = Case(pheno_specificity_for_mde=CONS, vbc_zygosity=Zygosity.HOM, testing=incomplete)
+    assert reference_score_cln_aff_biallelic(hom, moi=MOI.AR).sub_code_points["CLN_AFF"] == 0.5
+
+
 def test_b_row_incomplete_testing() -> None:
     incomplete = CaseTesting(covers_all_genes_relevant_to_mde=TriState.FALSE)
     assert _score(_het(_ch("P", PhaseConfidence.HIGH, LT), testing=incomplete)) == 1.0
