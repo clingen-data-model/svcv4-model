@@ -25,15 +25,21 @@ confirmation:
 
 ## Design decisions (flagged)
 
-- **DD1 — biallelic folds `SPECIFIC` → `CONSISTENT`.** The `SPECIFIC` `+7.0/+2.0` row is
-  **mono-allelic only** (SM 4). A biallelic proband uses the CONSISTENT row (Table 2's singular
-  category). The scorer infers biallelic from the Case: `vbc_zygosity == HOM`, or
-  `vbc_zygosity == HET and compound_het_variant is not None` (mirrors the AFF split). For a
-  biallelic proband with `pheno_specificity_for_mde == SPECIFIC`, score the CONSISTENT row.
-- **DD2 — confirmed vs unconfirmed via `confirmed_parental_relationship`.** `TriState.TRUE` →
-  confirmed column; `FALSE`/`UNKNOWN`/`None` → unconfirmed (the conservative reading — only an
-  affirmative identity/parentage confirmation earns the higher weight; SM 4: "confirmed" requires
-  identity/genomic testing, "unconfirmed" is when it "was not performed").
+- **DD1 — biallelic folds `SPECIFIC` → `CONSISTENT`, keyed on the MOI (disorder-level).** The
+  `SPECIFIC` `+7.0/+2.0` row is **mono-allelic only** (SM 4 L142). SM 4 frames this at the
+  **disorder** level ("monoallelic disorders" vs "biallelic disorders"), so the scorer keys off
+  `moi`: a **biallelic disorder** = `moi in {MOI.AR, MOI.XLR}` (recessive) → for
+  `pheno_specificity_for_mde == SPECIFIC`, score the CONSISTENT row; a mono disorder
+  (`AD`/`XLD`/`SD`/`None`) keeps the SPECIFIC row. `moi` **is consumed** here (unlike the other CLN
+  scorers). The sex-dependent XLR routing (SM 4 L77: XY under Table 1, XX under Table 2) and the SD
+  sum-both rule are **deferred** to the aggregation layer (consistent with the AFF scorers' deferred
+  X-linked routing) — the reference scorer treats XLR uniformly as biallelic and SD as mono, flagged
+  in provenance.
+- **DD2 — confirmed vs unconfirmed via `confirmed_parental_relationship`.** The field is "whether
+  the parental relationship was confirmed": `TriState.TRUE` → confirmed column; `FALSE` (not
+  confirmed) / `UNKNOWN` / `None` → unconfirmed (SM 4: "confirmed" requires identity/genomic
+  testing; "unconfirmed" is when it "was not performed"). Only an affirmative `TRUE` earns the
+  higher weight.
 - **DD3 — the `+7.0` `**` caveat is NOT applied.** SM 4 recommends decreasing the `+7.0` if the
   VBC falls outside coding/adjacent-intronic regions (where de novos are more frequent). The
   model has **no VBC-region annotation**, so the scorer awards the faithful `+7.0` and records the
@@ -42,15 +48,16 @@ confirmation:
   row). `INCONSISTENT` → a recorded `+0.0`. (De-novo status itself is the workflow's precondition
   — the caller invokes CLN_DNV on a de-novo proband; there is no separate `de_novo` flag.)
 - **DD5 — per-`Case`, additive on CLN_AFF.** CLN_DNV and CLN_AFF both apply to the same de-novo
-  proband; the cross-proband sum is aggregation-layer. `moi` accepted for parity (Table 3 has no
-  MOI axis).
+  proband; the cross-proband sum (and summing CLN_AFF + CLN_DNV per proband) is aggregation-layer.
+  `moi` **is consumed** (DD1's disorder-level biallelic fold) — the first CLN scorer to use it for
+  scoring rather than signature parity.
 
 ## `reference_score_cln_dnv(case, *, moi)` — `scoring/hod/clinical.py`
 
-```
+```python
 pheno = case.pheno_specificity_for_mde
 if pheno is None: -> _ND
-biallelic = vbc_zygosity == HOM or (vbc_zygosity == HET and compound_het_variant is not None)
+biallelic = moi in {MOI.AR, MOI.XLR}  # disorder-level; XLR-by-sex + SD summing deferred
 row = CONSISTENT if (biallelic and pheno == SPECIFIC) else pheno
 confirmed = case.confirmed_parental_relationship == TriState.TRUE
 pts = {
@@ -65,13 +72,14 @@ provenance records the row, confirmed flag, the biallelic-fold + the `+7.0` `**`
 
 ## Tests (TDD) — `tests/test_cln_dnv_scoring.py`
 
-- SPECIFIC (mono, het no compound-het) + confirmed → `+7.0`; + unconfirmed (FALSE) → `+2.0`.
+- SPECIFIC (`moi=AD`, mono disorder) + confirmed → `+7.0`; + unconfirmed (FALSE) → `+2.0`.
 - CONSISTENT + confirmed → `+4.0`; + unconfirmed → `+1.0`.
 - INCONSISTENT → `+0.0` (recorded).
-- **biallelic fold**: HOM + SPECIFIC + confirmed → `+4.0` (SPECIFIC row is mono-only → CONSISTENT);
-  HET + compound-het + SPECIFIC + confirmed → `+4.0`.
+- **biallelic fold (moi-keyed)**: `moi=AR` + SPECIFIC + confirmed → `+4.0` (SPECIFIC row is
+  mono-only → CONSISTENT); `moi=XLR` + SPECIFIC + confirmed → `+4.0`; `moi=AD` + SPECIFIC +
+  confirmed → `+7.0` (mono keeps SPECIFIC).
 - DD2 edges: `confirmed_parental_relationship` `None`/`UNKNOWN` → unconfirmed column
-  (SPECIFIC/None → `+2.0`).
+  (SPECIFIC/None/`moi=AD` → `+2.0`).
 - `_ND`: `pheno_specificity_for_mde is None` → `{}`, `parent_total None`.
 - provenance carries the `+7.0` `**` caveat note on the SPECIFIC-confirmed mono case.
 
