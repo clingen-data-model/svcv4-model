@@ -68,12 +68,13 @@ result.provenance        # the audit trail, step by step
   hemizygotes — needs the `moi`). `parent_code="POP"` is a grouping label (not an SVCv4 parent
   code); `parent_total` sums the two.
 - **Clinical Observations** (SM 4) — `reference_score_cln_uaf` (Table 5) + `reference_score_cln_alt`
-  (Table 4) benign codes, and `reference_score_cln_aff_mono` (Table 1) the pathogenic monoallelic
-  CLN_AFF (phenotype consistency × testing-thoroughness tier). Per-`Case` (`parent_code="CLN"`); the
-  cross-proband sum, the CLN_CCS exclusivity rule, the AD `+1.0`/proband ceiling-on-sum, table
-  selection / X-linked routing, and semidominant summing are deferred to case aggregation. Shared
-  `_classify` normalizes the placeholder variant `classification` (see known-gaps). CLN_AFF
-  biallelic (Table 2), CLN_DNV, CLN_CCS and the LOC codes follow.
+  (Table 4) benign codes, and the pathogenic **CLN_AFF**: `reference_score_cln_aff_mono` (Table 1,
+  monoallelic — phenotype consistency × testing-thoroughness tier) + `reference_score_cln_aff_biallelic`
+  (Table 2, biallelic — the 5-column 2nd-variant-status × co-occurrence-likelihood matrix). Per-`Case`
+  (`parent_code="CLN"`); the cross-proband sum, the CLN_CCS exclusivity rule, the AD `+1.0`/proband
+  ceiling-on-sum, table selection / X-linked routing, and semidominant summing are deferred to case
+  aggregation. Shared `_classify` normalizes the placeholder variant `classification` (see
+  known-gaps). CLN_DNV, CLN_CCS and the LOC codes follow.
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
