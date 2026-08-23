@@ -33,22 +33,42 @@ consistent with the golden fixture's inclusive top. Recorded in `provenance`.
 
 `_ND` when `faf is None` or `daft is None` or `daft <= 0` (no fold computable). A computed `0.0`
 (fold < 1.5) **is** recorded — SM 3 L5: "nearly every variant … should have a score of 0, −1.0,
-−3.0, or −6.0", so `POP_FRQ_0.0` is a real coded value, not an absence.
+−3.0, or −6.0", so `POP_FRQ_0.0` is a real coded value, not an absence. (SM 3 L5: a variant
+**absent** from all databases is still assessable → enter `faf = 0.0` (→ `POP_FRQ_0.0`); a `None`
+`faf` means "not evaluated" → `_ND`. Noted in provenance.)
 
-### POP_HMZ — eligible occurrences from the 2nd (SM 3 L93)
+### POP_HMZ — eligible occurrences from the 2nd (SM 3 Table 7)
 
-`−0.5` per **eligible** occurrence, counted **only from the 2nd** (the 1st is free), and only when
-`hmz_eligible == TriState.TRUE` (the MDE's penetrance + severity make affected individuals
-implausible in the database). Eligible occurrences depend on the **MOI**:
+A per-observation benignity weight per **eligible** occurrence, counted **only from the 2nd** (the
+1st is free), and only when `hmz_eligible == TriState.TRUE` (the MDE's penetrance + severity make
+affected individuals implausible in the database).
+
+**Eligible-occurrence count** depends on the **MOI**:
 
 - **AD / AR / SD** (and `None`): homozygotes only → `homozygote_count`.
 - **X-linked (XLD / XLR)**: homozygotes **or** hemizygotes → `homozygote_count + hemizygote_count`.
 
-`points = −0.5 × max(eligible_count − 1, 0)`. Example (SM 3): AR, 3 homozygous → `−1.0` (1st
-free; 2nd + 3rd = −0.5 each). `_ND` when `hmz_eligible != TRUE` (criterion not applicable) or when
-no relevant count is captured. A computed `0.0` (eligible, ≤ 1 occurrence) **is** recorded.
+**Per-observation weight** also depends on the MOI (SM 3 **Table 7**, L105–122):
 
-No SM 3 floor/cap on POP_HMZ (unbounded −0.5 steps).
+| MOI | weight / eligible observation |
+|---|---|
+| **AD** (Autosomal Dominant, homozygous) | **`−1.0`** |
+| **AR / SD / XLD / XLR** | `−0.5` |
+
+`points = weight × max(eligible_count − 1, 0)`, `weight = −1.0 if moi == MOI.AD else −0.5`.
+
+**⚠️ Source contradiction (flagged, encoded to Table 7):** SM 3 **prose L93** says "for an
+autosomal dominant **or** autosomal recessive pattern … **−0.5 pts** per homozygous occurrence",
+but **Table 7** (the explicit "Evidence Point Values" table) assigns **AD → −1.0** (AR/SD/X-linked
+−0.5). The reference scorer follows **Table 7** (the point-value authority) and flags this in
+`provenance`. The already-merged `docs/workflows/hod/pop.md` currently follows the (incorrect)
+prose reading — this increment **corrects it** — and the contradiction is logged as a WG
+follow-up. The SM 3 worked example (AR, 3 homozygous → `−1.0` = −0.5 × 2) is consistent with
+Table 7's AR row.
+
+`_ND` when `hmz_eligible != TRUE` (criterion not applicable) or when no relevant count is
+captured. A computed `0.0` (eligible, ≤ 1 occurrence) **is** recorded. No SM 3 floor/cap on
+POP_HMZ (unbounded steps).
 
 ## `reference_score_population` — `scoring/hod/population.py`
 
@@ -83,8 +103,9 @@ Exported from `svcv4_model.scoring` (sorted `__all__`; `reference_score_populati
 - `daft` None / `faf` None / `daft` 0 → `POP_FRQ` omitted (`_ND`)
 
 **POP_HMZ:**
-- AR, `hmz_eligible=TRUE`, `homozygote_count=3` → `POP_HMZ −1.0` (SM 3 example)
-- XLR, `hmz_eligible=TRUE`, `homozygote_count=1`, `hemizygote_count=2` → `−1.0` (hemi counts)
+- AR, `hmz_eligible=TRUE`, `homozygote_count=3` → `POP_HMZ −1.0` (SM 3 example: −0.5 × 2)
+- **AD**, `hmz_eligible=TRUE`, `homozygote_count=3` → `POP_HMZ −2.0` (Table 7 AD weight −1.0 × 2)
+- XLR, `hmz_eligible=TRUE`, `homozygote_count=1`, `hemizygote_count=2` → `−1.0` (hemi counts; −0.5 × 2)
 - AD, `hmz_eligible=TRUE`, `homozygote_count=1`, `hemizygote_count=5` → `0.0` (hemi ignored; 1 free)
 - `hmz_eligible=FALSE` → `POP_HMZ` omitted; `hmz_eligible=TRUE` no counts → omitted
 
@@ -93,9 +114,16 @@ Exported from `svcv4_model.scoring` (sorted `__all__`; `reference_score_populati
 
 ## Docs
 
-`docs/reference/scoring.md`: add a Population (SM 3) line — the first HOD scorer, the two
-benignity codes, the FAF/DAFT fold bands (flag the boundary assumption), POP_HMZ 2nd-occurrence
-counting (MOI-dependent), and the `parent_code="POP"` grouping-label convention.
+- `docs/reference/scoring.md`: add a Population (SM 3) line — the first HOD scorer, the two
+  benignity codes, the FAF/DAFT fold bands (flag the boundary assumption), POP_HMZ 2nd-occurrence
+  counting (MOI-dependent, AD −1.0 / else −0.5), and the `parent_code="POP"` grouping-label
+  convention.
+- **Correct `docs/workflows/hod/pop.md`**: its POP_HMZ paragraph currently says a uniform "−0.5
+  points per eligible occurrence" (the SM 3 prose reading) — fix it to the Table 7 reading (AD
+  −1.0 / AR/SD/X-linked −0.5) and note the prose-vs-Table-7 conflict.
+- **Add a `known-gaps.md` "Working Group follow-ups" row** for the SM 3 prose-L93-vs-Table-7
+  POP_HMZ contradiction (encoded to Table 7, flagged) — same treatment as the SM 18 Figure-1 and
+  SM 6 blue/violet items.
 
 ## Quality gates
 
