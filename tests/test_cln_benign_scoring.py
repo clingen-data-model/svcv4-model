@@ -155,12 +155,16 @@ def test_alt_nd_without_pheno_severity() -> None:
     assert r.parent_total is None
 
 
-def test_classify_plp_normalization() -> None:
-    from svcv4_model.scoring.hod.clinical import _classify_plp
+def test_classify_normalization() -> None:
+    from svcv4_model.scoring.hod.clinical import _classify
 
-    assert _classify_plp("P") == "P"
-    assert _classify_plp("pathogenic") == "P"
-    assert _classify_plp("LP") == "LP"
-    assert _classify_plp("Likely_Pathogenic") == "LP"
-    assert _classify_plp("VUS") is None
-    assert _classify_plp(None) is None
+    assert _classify("P") == "P"
+    assert _classify("pathogenic") == "P"
+    assert _classify("LP") == "LP"
+    assert _classify("Likely_Pathogenic") == "LP"
+    assert _classify("VUS") == "VUS"
+    assert _classify("B") == "B"
+    assert _classify("benign") == "B"
+    assert _classify("LB") == "LB"
+    assert _classify("unclassified") is None
+    assert _classify(None) is None
