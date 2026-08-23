@@ -373,9 +373,7 @@ def reference_score_cln_ccs(evidence: CaseControlStudyEvidence) -> ScoreResult:
                 "CLN_CCS benign point value; see known-gaps)."
             )
         elif ci_includes_1:
-            prov.append(
-                f"CLN_CCS: 0.0 (OR {or_} > 5.0 but CI includes 1.0 -- not significant)"
-            )
+            prov.append(f"CLN_CCS: 0.0 (OR {or_}, CI includes 1.0 -- association not significant)")
         else:
             prov.append(f"CLN_CCS: 0.0 (OR {or_} <= 5.0 -- insufficient enrichment)")
 

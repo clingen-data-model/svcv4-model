@@ -41,6 +41,13 @@ def test_or_between_one_and_five_is_zero() -> None:
     assert _ccs(_cc(odds_ratio=3.0)) == 0.0
 
 
+def test_mid_or_with_ci_including_one_provenance_is_accurate() -> None:
+    # OR 3.0 (<= 5) + CI including 1.0 -> 0.0; provenance must not falsely claim OR > 5.0
+    r = reference_score_cln_ccs(_cc(odds_ratio=3.0, ci_lower=0.5, ci_upper=8.0))
+    assert r.sub_code_points["CLN_CCS"] == 0.0
+    assert not any("> 5.0" in p for p in r.provenance)
+
+
 def test_or_le_one_is_zero_benign_flagged() -> None:
     r = reference_score_cln_ccs(_cc(odds_ratio=0.5))
     assert r.sub_code_points["CLN_CCS"] == 0.0
