@@ -43,6 +43,8 @@ def test_pop_hmz_ar_minus_half_per_occurrence() -> None:
     ev = PopulationEvidence(homozygote_count=3, hmz_eligible=TriState.TRUE)
     r = reference_score_population(ev, moi=MOI.AR)
     assert r.sub_code_points["POP_HMZ"] == -1.0  # -0.5 x (3 - 1)
+    assert "POP_FRQ" not in r.sub_code_points
+    assert r.parent_total == -1.0  # single recorded code -> parent_total is that code
 
 
 def test_pop_hmz_ad_minus_one_per_occurrence() -> None:

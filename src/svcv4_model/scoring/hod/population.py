@@ -23,6 +23,11 @@ def _pop_frq_points(faf: float | None, daft: float | None) -> float | None:
     return -6.0
 
 
+def _pop_hmz_weight(moi: MOI | None) -> float:
+    """Per-observation POP_HMZ weight (SM 3 Table 7): AD is -1.0, everything else -0.5."""
+    return -1.0 if moi == MOI.AD else -0.5
+
+
 def _pop_hmz_points(evidence: PopulationEvidence, moi: MOI | None) -> float | None:
     """POP_HMZ benignity from eligible occurrences (SM 3 Table 7). None when not applicable."""
     if evidence.hmz_eligible != TriState.TRUE:
@@ -32,8 +37,7 @@ def _pop_hmz_points(evidence: PopulationEvidence, moi: MOI | None) -> float | No
     if homo is None and hemi is None:
         return None
     count = (homo or 0) + (hemi or 0)
-    weight = -1.0 if moi == MOI.AD else -0.5
-    return weight * max(count - 1, 0)
+    return _pop_hmz_weight(moi) * max(count - 1, 0)
 
 
 def reference_score_population(
@@ -70,7 +74,7 @@ def reference_score_population(
         prov.append("POP_HMZ: _ND (not hmz_eligible, or no homozygote/hemizygote count)")
     else:
         sub["POP_HMZ"] = hmz
-        weight = -1.0 if moi == MOI.AD else -0.5
+        weight = _pop_hmz_weight(moi)
         prov.append(
             f"POP_HMZ: {hmz} (weight {weight}/obs from the 2nd -- SM 3 Table 7; "
             "AD -1.0 vs prose -0.5 conflict, encoded to Table 7)"
