@@ -154,8 +154,17 @@ ceiling). Unlike the POP/LOC family subtotals (which raise on a repeated code), 
 sub-code across probands is the intended axis here, so semidominant mono+biallelic summing falls
 out. CLN_CCS exclusivity + POP_FRQ gating (Inc 3c) apply on top.
 
-The remaining PFD workflows, the CLN CCS/POP gating, and the cross-code combine follow in later
-increments (see the scoping doc).
+Finally, `reference_finalize_cln` applies the two CLN cross-code overrides to that subtotal:
+**CLN_CCS exclusivity** (when a CLN_CCS sub-code is present, NA CLN_AFF/CLN_ALT/CLN_UAF and keep
+CLN_CCS + CLN_DNV — SM 4 L25) and the **POP_FRQ gate** (award the pathogenic counting codes
+CLN_AFF/CLN_DNV only when `pop_frq_points ∈ {0.0, −1.0}`, else NA them — SM 4 L27; the DNV branch
+is a flagged faithful default behind the image-only SM 4 Figure 1). Both are removals, unioned and
+applied once, yielding the CLN family's contribution to the cross-code combine. **The CLN family
+is now complete through aggregation** (per-code → per-proband combine → cross-proband sum →
+finalize).
+
+The remaining PFD workflows and the cross-code combine (Inc 4) follow in later increments (see the
+scoping doc).
 
 ## Known assumption (flagged for WG confirmation)
 

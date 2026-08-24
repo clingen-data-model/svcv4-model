@@ -9,6 +9,7 @@ from svcv4_model.scoring.aggregate import (
     reference_aggregate_cln_cases,
     reference_aggregate_loc,
     reference_aggregate_pop,
+    reference_finalize_cln,
 )
 from svcv4_model.scoring.classification import (
     Classification,
@@ -48,6 +49,7 @@ __all__ = [
     "reference_aggregate_loc",
     "reference_aggregate_pop",
     "reference_classify",
+    "reference_finalize_cln",
     "reference_score_canonical_splice",
     "reference_score_cln_aff_biallelic",
     "reference_score_cln_aff_mono",

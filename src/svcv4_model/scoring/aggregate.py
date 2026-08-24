@@ -108,3 +108,55 @@ def reference_aggregate_cln_cases(results: Iterable[ScoreResult]) -> ScoreResult
         provenance=prov,
         authoritative=False,
     )
+
+
+def reference_finalize_cln(
+    cln_subtotal: ScoreResult,
+    ccs: ScoreResult | None = None,
+    *,
+    pop_frq_points: float | None,
+) -> ScoreResult:
+    """Apply the two CLN cross-code override rules to the cross-proband CLN subtotal (Inc 3c),
+    completing the CLN family. CSpec is authoritative.
+
+    - **CLN_CCS exclusivity** (SM 4 L25): when a ``CLN_CCS`` sub-code is present (scored, incl.
+      0.0 -- "regardless of the point value"), NA ``CLN_AFF`` / ``CLN_ALT`` / ``CLN_UAF``; keep
+      ``CLN_CCS`` + ``CLN_DNV``. A non-robust study returns ``_ND`` (no ``CLN_CCS``) so it does
+      not fire.
+    - **POP_FRQ gate** (SM 4 L27/L10): award the pathogenic *counting* codes only when the VBC is
+      rare (``pop_frq_points in {0.0, -1.0}``); otherwise NA ``CLN_AFF`` and ``CLN_DNV`` (DNV is
+      the faithful default -- the exact branch is in the image-only SM 4 Figure 1). Benign codes
+      are not POP-gated.
+
+    ``ccs`` is the standalone ``reference_score_cln_ccs`` result (or None). Both rules are
+    removals, so their NA-sets are unioned and applied once (order-independent).
+    """
+    sub: dict[str, float] = dict(cln_subtotal.sub_code_points)
+    if ccs is not None:
+        sub.update(ccs.sub_code_points)  # add CLN_CCS if the study scored (else nothing)
+    prov = ["CLN: finalize (reference) -- CLN_CCS exclusivity + POP_FRQ gate (SM 4)."]
+
+    na: set[str] = set()
+    if "CLN_CCS" in sub:
+        na |= {"CLN_AFF", "CLN_ALT", "CLN_UAF"}  # SM 4 L25: keep CLN_CCS + CLN_DNV
+        prov.append("CLN: CLN_CCS applied -> NA CLN_AFF/CLN_ALT/CLN_UAF (keep CLN_CCS + CLN_DNV).")
+    if pop_frq_points not in (0.0, -1.0):
+        na |= {"CLN_AFF", "CLN_DNV"}  # SM 4 L27 (DNV = flagged faithful default)
+        prov.append(
+            f"CLN: POP_FRQ gate -- pop_frq_points={pop_frq_points} not in {{0.0, -1.0}} -> "
+            "NA CLN_AFF + CLN_DNV (SM 4 L27; DNV-gating is the faithful default, Fig 1 image-gap)."
+        )
+
+    kept = {c: p for c, p in sub.items() if c not in na}
+    if not kept:
+        prov.append("CLN: _ND (all CLN codes NA / none scored after finalize).")
+        return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
+    total = sum(kept.values())
+    prov.append(f"CLN: final {', '.join(f'{c}={p}' for c, p in kept.items())} -> {total}.")
+    return ScoreResult(
+        parent_code="CLN",
+        sub_code_points=kept,
+        parent_total=total,
+        provenance=prov,
+        authoritative=False,
+    )
