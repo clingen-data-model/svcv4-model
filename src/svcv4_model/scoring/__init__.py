@@ -6,6 +6,7 @@ re-exported from the top-level ``svcv4_model`` package (so schema generation ign
 """
 
 from svcv4_model.scoring.aggregate import (
+    reference_aggregate_cln_cases,
     reference_aggregate_loc,
     reference_aggregate_pop,
 )
@@ -43,6 +44,7 @@ __all__ = [
     "MissenseScoreResult",
     "ScoreResult",
     "VusSubclass",
+    "reference_aggregate_cln_cases",
     "reference_aggregate_loc",
     "reference_aggregate_pop",
     "reference_classify",

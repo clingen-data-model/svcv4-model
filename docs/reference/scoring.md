@@ -147,7 +147,14 @@ for XLR-by-sex and semidominant). AFF + DNV are additive per proband (SM 4 L147;
 already in Table 1 — no extra ceiling). The scored CLN_* sub-codes merge into one per-proband
 `ScoreResult`. Cross-proband summation (3b) and CLN_CCS exclusivity + POP_FRQ gating (3c) follow.
 
-The remaining PFD workflows, the cross-proband CLN sum, and the cross-code combine follow in later
+`reference_aggregate_cln_cases` then **sums** each CLN sub-code across the per-proband results —
+one *unrelated* index proband per family (SM 4 L27; related individuals are LOC segregation, not
+CLN counts) — into one CLN subtotal, with **no cross-proband cap** (the SM 1 band is the only
+ceiling). Unlike the POP/LOC family subtotals (which raise on a repeated code), summing a repeated
+sub-code across probands is the intended axis here, so semidominant mono+biallelic summing falls
+out. CLN_CCS exclusivity + POP_FRQ gating (Inc 3c) apply on top.
+
+The remaining PFD workflows, the CLN CCS/POP gating, and the cross-code combine follow in later
 increments (see the scoping doc).
 
 ## Known assumption (flagged for WG confirmation)

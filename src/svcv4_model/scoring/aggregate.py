@@ -71,3 +71,40 @@ def reference_aggregate_loc(results: Iterable[ScoreResult]) -> ScoreResult:
     """LOC family subtotal: the positive LOC_PHE + LOC_SEG combine, capped at +4.0 (SM 5 L38).
     The -4.0 non-segregation benign flip is a separate LOC-2 concern, not summed here."""
     return _aggregate_family(results, family="LOC", cap=4.0)
+
+
+def reference_aggregate_cln_cases(results: Iterable[ScoreResult]) -> ScoreResult:
+    """Sum each CLN sub-code across the per-proband ``ScoreResult``s (from
+    ``reference_score_cln_proband``) into one CLN subtotal for a (VBC, MDE) (aggregation Inc 3b).
+
+    SM 4: point values for all *unrelated* probands are assessed individually then summed (L29;
+    CLN_AFF L80, CLN_DNV L147); there is **no cross-proband cap** (the SM 1 band is the only
+    ceiling, downstream). Unlike the family-subtotal aggregators, a repeated sub-code is **summed**
+    (cross-proband is the summing axis) -- so SD mono+biallelic summing falls out (both routed
+    probands emit CLN_AFF). The caller must pass one *unrelated* index proband per family (SM 4
+    L27 -- related individuals are LOC segregation, not CLN counts); that precondition is enforced
+    at the case-orchestration layer, not here. CSpec is authoritative.
+    """
+    merged: dict[str, float] = {}
+    n = 0
+    for r in results:
+        n += 1
+        for code, pts in r.sub_code_points.items():
+            merged[code] = merged.get(code, 0.0) + pts
+    prov = [
+        f"CLN: cross-proband subtotal over {n} proband(s) (reference); assumes unrelated index "
+        "probands -- one per family (SM 4 L27); related individuals are LOC segregation, not CLN."
+    ]
+    if not merged:
+        prov.append("CLN: _ND (no CLN sub-code scored across probands)")
+        return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
+    total = sum(merged.values())
+    detail = ", ".join(f"{c}={p}" for c, p in merged.items())
+    prov.append(f"CLN: summed {detail} -> {total} (no cross-proband cap, SM 4).")
+    return ScoreResult(
+        parent_code="CLN",
+        sub_code_points=merged,
+        parent_total=total,
+        provenance=prov,
+        authoritative=False,
+    )
