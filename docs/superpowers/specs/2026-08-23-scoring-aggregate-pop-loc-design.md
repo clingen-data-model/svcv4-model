@@ -47,6 +47,15 @@ explicitly — and is deferred to Inc 4 where PFD and HOD totals actually mix.
 > with a synthetic second LOC sub-code. POP aggregation is a pass-through today (its scorer already
 > subtotals) — included for a uniform family-subtotal layer that Inc 4 consumes.
 
+> **LOC negative / non-segregation semantics are OUT OF SCOPE here.** SM 5 codes the combined
+> LOC as **`LOC_0.0 to LOC_+4.0`** (L38) — a positive combine of two `0..+4` codes. The `−4.0`
+> non-segregation is a **separate benign signal** that SM 5 (L37) applies by *zeroing the positive
+> points and assigning `−4.0`* — a **replacement, not a summand**. This family aggregator computes
+> only the **positive combine** (`min(LOC_PHE + LOC_SEG, +4.0)`); the `−4.0` non-seg flip is
+> computed elsewhere in LOC-2 and is **not** fed through this sum. Inputs are therefore assumed
+> within each code's documented non-negative range; this function does not define negative-LOC
+> semantics.
+
 ## API
 
 ```python
@@ -71,8 +80,17 @@ from collections.abc import Iterable
 def _aggregate_family(results: Iterable[ScoreResult], *, family: str, cap: float | None) -> ScoreResult:
     merged: dict[str, float] = {}
     for r in results:
+        # Input invariant (holds for POP/LOC): parent_total == sum(sub_code_points). Guard so a
+        # future sub-capping scorer (parent_total != sum) fails loudly rather than drifting.
+        if r.parent_total is not None and abs(r.parent_total - sum(r.sub_code_points.values())) > 1e-9:
+            raise ValueError(
+                f"{family}: input parent_total {r.parent_total} != sum(sub_code_points) "
+                f"{sum(r.sub_code_points.values())} -- this family aggregator assumes they match."
+            )
         for code, pts in r.sub_code_points.items():
-            merged[code] = merged.get(code, 0.0) + pts     # sum on collision (documented)
+            if code in merged:                              # singleton families -> a dup is a caller bug
+                raise ValueError(f"{family}: duplicate sub-code {code!r} across inputs.")
+            merged[code] = pts
     prov = [f'{family}: "{family}" is the HOD grouping label; family subtotal (reference).']
     if not merged:
         prov.append(f"{family}: _ND (no scored sub-codes)")
@@ -80,13 +98,16 @@ def _aggregate_family(results: Iterable[ScoreResult], *, family: str, cap: float
     raw = sum(merged.values())
     total = raw if cap is None else min(raw, cap)
     detail = ", ".join(f"{c}={p}" for c, p in merged.items())
+    held: dict[str, float] = {}
     if cap is not None and raw > cap:
+        held = {f"{family}_raw": raw}                       # keep the uncapped sum machine-readable
         prov.append(f"{family}: subtotal capped {raw} -> {total} (+{cap} cap): {detail}")
     else:
         prov.append(f"{family}: subtotal {total} ({detail}; cap {cap})")
     return ScoreResult(
         parent_code=family,
         sub_code_points=dict(merged),
+        held_combined=held,
         parent_total=total,
         provenance=prov,
         authoritative=False,
@@ -97,6 +118,20 @@ def reference_aggregate_pop(results): return _aggregate_family(results, family="
 def reference_aggregate_loc(results): return _aggregate_family(results, family="LOC", cap=4.0)
 ```
 
+Design notes from spec-review:
+- **Duplicate sub-code raises** (POP_FRQ/POP_HMZ/LOC_PHE/LOC_SEG are locus-/case-level singletons
+  within one (VBC,MDE) — a repeat is a caller error, e.g. Inc 4 passing a result twice, not a
+  legitimate sum). CLN cross-*proband* summing (same code, many probands) is a different axis, in
+  Inc 3.
+- **Input invariant asserted** (`parent_total == sum(sub_code_points)`), true for POP/LOC today;
+  the aggregator re-derives the total from the merged sub-codes, so this guard makes any future
+  sub-capping scorer fail loudly instead of silently diverging.
+- **The uncapped sum is preserved** in `held_combined[f"{family}_raw"]` when the cap binds
+  (machine-readable for Inc 4 / audit), not only in prose. Inputs' own `held_combined` is **not**
+  merged forward (POP/LOC scorers leave it empty); the subtotal starts fresh.
+- Relies on the `ScoreResult` **input contract** (a No-Data sub-code is omitted, never recorded as
+  `0.0`), so `if not merged` correctly distinguishes `_ND` from a recorded `0.0`.
+
 ## Semantics / edge cases
 
 - **`_ND` propagation:** if every input is `_ND` (empty `sub_code_points`) — or the iterable is
@@ -106,12 +141,13 @@ def reference_aggregate_loc(results): return _aggregate_family(results, family="
   keys); the subtotal reflects the scored ones.
 - **Recorded `0.0` sub-codes** (e.g. `LOC_PHE=0.0`, `POP_HMZ=0.0`) ARE included — they are scored,
   not `_ND` — so the subtotal is scored (`parent_total` a real `0.0`, not `None`).
-- **Cap is an upper bound** (`min`): LOC `+4.0` clamps the pathogenic side; a negative LOC family
-  (future `LOC_SEG=-4.0` non-seg flip) is below `+4.0` and passes through unclamped. POP is
-  benignity-only (negative) with no cap.
-- **Same sub-code in two inputs** is summed (documented). Not expected within a family for one
-  (VBC,MDE) — LOC/POP codes are locus-/case-level singletons — but summing is the safe default;
-  CLN cross-*proband* summing (same code, many probands) is a different axis handled in Inc 3.
+- **Cap is an upper bound** (`min`): LOC `+4.0` clamps the pathogenic side. POP is benignity-only
+  (negative) with no cap. The LOC aggregator computes only the **positive combine**; the `−4.0`
+  non-seg benign flip is a separate LOC-2 signal (not a summand here — see the LOC note above).
+- **Same sub-code in two inputs raises** `ValueError` (singleton families; a repeat is a caller
+  bug). CLN cross-*proband* summing (same code, many probands) is a different axis, in Inc 3.
+- **Input invariant** `parent_total == sum(sub_code_points)` is asserted per input (raises on
+  violation) so a future sub-capping scorer cannot drift silently.
 
 ## Testing (TDD)
 
@@ -120,19 +156,25 @@ consume ScoreResults, so no scorer calls needed):
 
 1. **POP pass-through:** `ScoreResult(parent_code="POP", sub_code_points={"POP_FRQ": -3.0,
    "POP_HMZ": -0.5}, parent_total=-3.5)` → aggregate → `parent_total == -3.5`, both sub-codes
-   present, `parent_code=="POP"`.
-2. **POP single-code / real-0.0:** `{"POP_FRQ": 0.0}` → `parent_total == 0.0` (scored, not `_ND`).
-3. **LOC pass-through (cap doesn't bind):** one `ScoreResult(parent_code="LOC",
-   sub_code_points={"LOC_PHE": 4.0}, parent_total=4.0)` → `parent_total == 4.0`.
-4. **LOC cap binds (synthetic LOC_SEG):** two results `{"LOC_PHE": 4.0}` + `{"LOC_SEG": 3.0}` →
+   present, `parent_code=="POP"`, `held_combined == {}` (no cap).
+2. **POP single-code / real-0.0:** `{"POP_FRQ": 0.0}` (parent_total 0.0) → `parent_total == 0.0`
+   (scored, not `_ND`).
+3. **POP recorded `POP_HMZ=0.0` only:** `{"POP_HMZ": 0.0}` (parent_total 0.0) → `parent_total ==
+   0.0`, `sub_code_points == {"POP_HMZ": 0.0}` (a recorded 0.0 stays scored, not `_ND`).
+4. **LOC pass-through (cap doesn't bind):** one `ScoreResult(parent_code="LOC",
+   sub_code_points={"LOC_PHE": 4.0}, parent_total=4.0)` → `parent_total == 4.0`,
+   `held_combined == {}`.
+5. **LOC cap binds (synthetic LOC_SEG):** two results `{"LOC_PHE": 4.0}` + `{"LOC_SEG": 3.0}` →
    raw 7.0 → `parent_total == 4.0` (capped); both sub-codes preserved in `sub_code_points`;
-   provenance says "capped".
-5. **LOC negative below cap (future non-seg):** `{"LOC_PHE": 0.0}` + `{"LOC_SEG": -4.0}` → raw
-   −4.0 → `parent_total == -4.0` (cap does not bind).
+   `held_combined == {"LOC_raw": 7.0}`; provenance says "capped".
 6. **`_ND` propagation:** empty iterable → `parent_total is None`, `sub_code_points == {}`; also a
    single `_ND` `ScoreResult` (no sub-codes) → `_ND`.
 7. **`_ND` + scored mix:** an `_ND` LOC result + a `{"LOC_PHE": 2.0}` result → `parent_total ==
    2.0`.
+8. **Duplicate sub-code raises:** two results each `{"LOC_PHE": 2.0}` →
+   `pytest.raises(ValueError)`.
+9. **Input-invariant guard raises:** a malformed `ScoreResult(sub_code_points={"POP_FRQ": -3.0},
+   parent_total=-1.0)` (total ≠ sum) → `pytest.raises(ValueError)`.
 
 ## Docs
 
