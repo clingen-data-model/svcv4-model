@@ -97,8 +97,30 @@ The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
 `SPL_` workflows use the parallel `score_spl_workflow` / `SplBranchSpec` pair.
 
-The remaining PFD workflows, POP/LOC/CLN, case aggregation, the classification band, and
-`validate_case` follow in later increments (see the scoping doc).
+## Classification band
+
+`reference_classify(points)` maps a **summed** Bayesian point total to the SM 1 pathogenicity
+descriptor plus the VUS subclass — the capstone the aggregation increments feed:
+
+| Points | Category |
+|---|---|
+| `≤ −4.0` | Benign |
+| `> −4.0` and `≤ −1.0` | Likely Benign |
+| `> −1.0` and `< +2.0` | VUS-low |
+| `≥ +2.0` and `< +4.0` | VUS-mid |
+| `≥ +4.0` and `< +6.0` | VUS-high |
+| `≥ +6.0` and `< +10.0` | Likely Pathogenic |
+| `≥ +10.0` | Pathogenic |
+
+It returns a `Classification` NamedTuple (`category` + `vus_subclass`, the latter set only for
+VUS). The band is **not clamped** (SM 1 makes Pathogenic open-ended `≥ +10.0`); whether the summed
+total is globally clamped is a separate open question deferred to the cross-code-combination
+increment (see [known gaps](known-gaps.md)). The summing that produces `points` — POP/LOC
+subtotals, CLN cross-proband aggregation, and cross-code combination — and `validate_case`
+applicability enforcement follow in later increments (see the scoping doc).
+
+The remaining PFD workflows, POP/LOC/CLN scoring, and the rest of case aggregation follow in later
+increments (see the scoping doc).
 
 ## Known assumption (flagged for WG confirmation)
 

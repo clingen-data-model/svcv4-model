@@ -5,6 +5,11 @@ point rules for tests, worked examples, and the practice-variant-set. It is inte
 re-exported from the top-level ``svcv4_model`` package (so schema generation ignores it).
 """
 
+from svcv4_model.scoring.classification import (
+    Classification,
+    VusSubclass,
+    reference_classify,
+)
 from svcv4_model.scoring.hod.clinical import (
     reference_score_cln_aff_biallelic,
     reference_score_cln_aff_mono,
@@ -29,8 +34,11 @@ from svcv4_model.scoring.pfd.stop_lost import reference_score_stop_lost
 from svcv4_model.scoring.result import MissenseScoreResult, ScoreResult
 
 __all__ = [
+    "Classification",
     "MissenseScoreResult",
     "ScoreResult",
+    "VusSubclass",
+    "reference_classify",
     "reference_score_canonical_splice",
     "reference_score_cln_aff_biallelic",
     "reference_score_cln_aff_mono",
