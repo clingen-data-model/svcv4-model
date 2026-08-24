@@ -56,25 +56,67 @@ def _route_cln_aff(case: Case, moi: MOI | None) -> Callable[..., ScoreResult] | 
 - Semidominant "sum mono + biallelic" (SM 4 L80) is a **cross-proband** effect (some probands are
   het→mono, others biallelic→biallelic; both feed the CLN_AFF sub-code and sum in 3b). A single SD
   proband is either het or biallelic, so it routes to exactly one table here.
-- Unroutable (`XLR` without sex, `moi is None`) → the AFF code is simply not scored (a provenance
-  note); DNV/ALT/UAF are still attempted.
+- Unroutable (`XLR` without sex, `moi is None`, or SD `HEMI`/`None` zygosity → defaults to mono
+  with a note) → the AFF code is simply not scored (a provenance note).
+
+## Proband category — an explicit gate (spec-review: the scorers do NOT self-gate)
+
+The per-code scorers key on *different* fields, so calling all four blindly double-scores: SM 4
+review found `reference_score_cln_uaf` scores on `moi`/`zygosity`/`penetrance` (no affected check)
+so it co-fires with CLN_AFF on an affected proband; `reference_score_cln_dnv` scores on
+`pheno_specificity` alone (no de-novo check). 3a therefore imposes the SM 4 L17/L29/L76
+affected-vs-unaffected split itself:
+
+- **Affected** = `pheno_specificity_for_mde ∈ {SPECIFIC, CONSISTENT}` → the **affected path**: AFF
+  (routed) + ALT (unless `moi == AR`, SM 4 L186) + DNV (only if de-novo inferred *and* AFF scored).
+  UAF is **not** called.
+- **Unaffected / inconsistent** = `pheno_specificity_for_mde` is `INCONSISTENT` or `None` → the
+  **unaffected path**: UAF only. AFF/ALT/DNV are **not** called.
+
+**De-novo inference** (settled: infer from relatives; no model change — the `Case` has no `de_novo`
+field, a flagged model gap): the proband is de-novo when both parents are present as relatives and
+both lack the VBC, with confirmed parentage:
+
+```python
+def _is_de_novo(case: Case) -> bool:
+    parents = [r for r in case.relatives if r.parent_of_proband == TriState.TRUE]
+    return (
+        len(parents) >= 2
+        and all(r.vbc_exists == TriState.FALSE for r in parents)
+        and case.confirmed_parental_relationship == TriState.TRUE
+    )
+```
+
+CLN_DNV is scored only when the proband is affected, `_is_de_novo(case)` is true, **and** CLN_AFF
+was scored for this proband (SM 4 L143: DNV rides on AFF-counted probands).
 
 ## Per-proband combine
 
 ```python
+_AFFECTED = frozenset({PhenoSpecificity.SPECIFIC, PhenoSpecificity.CONSISTENT})
+
 def reference_score_cln_proband(case: Case, *, moi: MOI | None) -> ScoreResult:
     prov = ['CLN: per-proband combine (reference); cross-proband sum + CLN_CCS exclusivity + '
             "POP_FRQ gating deferred to Inc 3b/3c."]
     merged: dict[str, float] = {}
+    affected = case.pheno_specificity_for_mde in _AFFECTED
 
-    aff_scorer = _route_cln_aff(case, moi)
-    if aff_scorer is None:
-        prov.append("CLN_AFF: _ND (unroutable -- moi None, or XLR without a known sex)")
+    if affected:
+        aff_scorer = _route_cln_aff(case, moi)
+        if aff_scorer is None:
+            prov.append("CLN_AFF: _ND (unroutable -- moi None, or XLR without a known sex)")
+        else:
+            is_biallelic = aff_scorer is reference_score_cln_aff_biallelic
+            _merge(merged, aff_scorer(case, moi=moi), prov)
+            if moi != MOI.AR:                                   # SM 4 L186: no CLN_ALT for AR
+                _merge(merged, reference_score_cln_alt(case, moi=moi), prov)
+            if "CLN_AFF" in merged and _is_de_novo(case):       # DNV rides on an AFF-counted proband
+                _merge(merged, reference_score_cln_dnv(case, moi=moi, is_biallelic=is_biallelic), prov)
+            elif "CLN_AFF" in merged:
+                prov.append("CLN_DNV: not scored (proband not inferred de-novo)")
     else:
-        _merge(merged, aff_scorer(case, moi=moi), prov)
-
-    for scorer in (reference_score_cln_dnv, reference_score_cln_alt, reference_score_cln_uaf):
-        _merge(merged, scorer(case, moi=moi), prov)
+        prov.append("CLN: unaffected/inconsistent path (pheno not SPECIFIC/CONSISTENT) -> CLN_UAF")
+        _merge(merged, reference_score_cln_uaf(case, moi=moi), prov)
 
     if not merged:
         prov.append("CLN: _ND (no CLN sub-code scored for this proband)")
@@ -88,15 +130,23 @@ def reference_score_cln_proband(case: Case, *, moi: MOI | None) -> ScoreResult:
     )
 ```
 
-`_merge` copies each scored sub-code (there is exactly one per CLN per-code scorer) into `merged`
-and appends that scorer's provenance:
+`_merge` copies each scored sub-code (exactly one per CLN per-code scorer) into `merged` and
+appends that scorer's real provenance (asserting the skippable preamble to stay robust):
 
 ```python
 def _merge(merged: dict[str, float], result: ScoreResult, prov: list[str]) -> None:
     for code, pts in result.sub_code_points.items():
         merged[code] = pts               # distinct CLN_* codes; no collision within one proband
-    prov.extend(result.provenance[1:])   # skip each scorer's own "CLN grouping label" preamble
+    if result.provenance:
+        assert result.provenance[0].startswith("CLN:")   # the grouping-label preamble
+        prov.extend(result.provenance[1:])
 ```
+
+**DNV scorer change (drive the fold from routing):** `reference_score_cln_dnv` gains an
+`is_biallelic: bool | None = None` kwarg. When `None` it keeps the legacy `moi in {AR, XLR}` fold
+(so existing standalone callers/tests are unchanged); 3a passes the **explicit** routing decision
+(`aff_scorer is reference_score_cln_aff_biallelic`), which fixes the XLR-male (mono → SPECIFIC
+stays `+7.0`) and SD-biallelic (→ CONSISTENT `+4.0`) mis-scores.
 
 ## Semantics / edge cases
 
@@ -106,14 +156,14 @@ def _merge(merged: dict[str, float], result: ScoreResult, prov: list[str]) -> No
   on top, uncapped here.
 - **No per-proband ceiling** beyond what the per-code scorers already return (SM 4/SM 5
   investigation, decision B). `parent_total` is a plain sum of the scored sub-codes.
-- **Self-gating trust** (SM 4 investigation, decision 3): all four scorers are called; each returns
-  `_ND` (or `0.0`) when its own preconditions aren't met (UAF only for unaffected; ALT only with a
-  P/LP alternate cause; AFF `0.0`/`_ND` for inconsistent/explained). Calling all and merging the
-  scored ones cannot double-count — an affected-but-explained proband legitimately yields
-  `CLN_AFF=0.0` **and** `CLN_ALT=-0.5`. **Assumes the `Case`'s fields are internally consistent**
-  (an unaffected proband should not carry affected-phenotype fields); that is the curator's
-  responsibility.
-- **Distinct sub-codes:** the four CLN per-code scorers each emit at most one distinct sub-code
+- **Explicit category gate (not self-gating):** the affected path (AFF/ALT/DNV) and the unaffected
+  path (UAF) are mutually exclusive per proband, so CLN_UAF can no longer co-fire with CLN_AFF.
+  On the affected path, `CLN_AFF=0.0` and `CLN_ALT=-0.5` may legitimately co-occur (an affected
+  proband explained by a P/LP alternate cause) — both are recorded.
+- **CLN_ALT excluded for AR** (SM 4 L186 — "should not be used for a MDE with autosomal recessive
+  inheritance"). The "multiple genetic contributions" MDE exclusion (also L186) is not modeled →
+  known-gaps.
+- **Distinct sub-codes:** each CLN per-code scorer emits at most one distinct sub-code
   (`CLN_AFF` / `CLN_DNV` / `CLN_ALT` / `CLN_UAF`), so `_merge` never collides within one proband.
   (Cross-*proband* summing of the SAME code is 3b's separate axis.)
 - **`_ND` proband:** if no scorer produced a sub-code, return an `_ND` `ScoreResult`
@@ -127,23 +177,32 @@ def _merge(merged: dict[str, float], result: ScoreResult, prov: list[str]) -> No
 
 `tests/test_cln_proband.py` — build `Case`/`WorkflowParameters` fixtures:
 
-1. **AD routes to mono:** an AD affected proband with a SPECIFIC/thorough Case → `CLN_AFF` present
-   (from Table 1), `parent_code=="CLN"`.
-2. **AR routes to biallelic:** an AR proband (HOM or HET+compound_het) → `CLN_AFF` from Table 2.
-3. **XLR by sex:** same XLR proband with `sex=M` → mono; `sex=F` → biallelic; `sex=None` →
-   `CLN_AFF` not scored (unroutable note in provenance), other codes still attempted.
-4. **SD by zygosity:** SD `HET` (no compound_het) → mono; SD `HOM` → biallelic.
-5. **AFF + DNV additivity:** a de-novo affected proband (confirmed parental, SPECIFIC) →
-   `sub_code_points` has BOTH `CLN_AFF` and `CLN_DNV`; `parent_total == CLN_AFF + CLN_DNV`.
-6. **ALT alongside AFF=0.0:** affected proband explained by a P/LP alternate cause →
-   `CLN_AFF == 0.0` and `CLN_ALT` present (both recorded).
-7. **UAF only (unaffected):** an unaffected carrier proband → `CLN_UAF` present; AFF/DNV/ALT not
-   scored (or `_ND`).
-8. **moi None → AFF unroutable:** `moi=None` → no `CLN_AFF`; provenance notes unroutable; if no
-   other code scores → `_ND` (`parent_total is None`).
-9. **`_ND` proband:** a Case with nothing scoreable → `parent_total is None`,
-   `sub_code_points == {}`.
-10. **parent_total == sum invariant** holds on a multi-code result.
+1. **AD / XLD route to mono:** an AD (and an XLD) affected SPECIFIC/thorough Case → `CLN_AFF`
+   present (Table 1), `parent_code=="CLN"`.
+2. **AR routes to biallelic:** an AR affected proband (HOM or HET+compound_het) → `CLN_AFF` from
+   Table 2; and **no `CLN_ALT`** even with a P/LP alternate cause (SM 4 L186).
+3. **XLR by sex:** same XLR affected proband with `sex=M` → mono; `sex=F` → biallelic; `sex=None`
+   → `CLN_AFF` not scored (unroutable note).
+4. **SD by zygosity:** SD `HET` (no compound_het) → mono; SD `HOM` → biallelic; SD `HEMI`/`None`
+   → mono (default note).
+5. **AFF + DNV additivity (de-novo inferred):** an affected SPECIFIC proband with two parent
+   relatives both VBC-absent + `confirmed_parental_relationship=TRUE` → BOTH `CLN_AFF` and
+   `CLN_DNV`; `parent_total == CLN_AFF + CLN_DNV`.
+6. **DNV gated off when NOT de-novo:** the same affected SPECIFIC proband but WITHOUT the
+   VBC-absent-parents evidence → `CLN_DNV` absent; provenance "not scored (not inferred de-novo)".
+7. **DNV fold from routing (the mis-score fix):** XLR-male SPECIFIC de-novo → `CLN_DNV == +7.0`
+   (mono, SPECIFIC stays); SD-biallelic SPECIFIC de-novo → `CLN_DNV == +4.0` (folded to CONSISTENT).
+8. **UAF gate — no co-fire with AFF:** an **affected** (`SPECIFIC`) proband that also has
+   `age_matched_penetrance=NEAR_100` set → `CLN_UAF` **absent** (affected path); `CLN_AFF` present.
+9. **UAF only (unaffected/inconsistent):** a `pheno=None` (or `INCONSISTENT`) unaffected carrier →
+   `CLN_UAF` present; AFF/DNV/ALT absent.
+10. **moi None → AFF unroutable:** affected proband with `moi=None` → no `CLN_AFF` (unroutable
+    note); no DNV (rides on AFF); if nothing scores → `_ND` (`parent_total is None`).
+11. **`_ND` proband:** a Case with nothing scoreable → `parent_total is None`, `sub_code_points ==
+    {}`.
+12. **parent_total == sum invariant** holds on a multi-code result.
+13. **DNV legacy fallback unchanged:** `reference_score_cln_dnv(case, moi=AR)` (no `is_biallelic`)
+    still folds via `moi` (existing tests unaffected).
 
 ## Docs
 
@@ -152,10 +211,18 @@ def _merge(merged: dict[str, float], result: ScoreResult, prov: list[str]) -> No
   and merges the scored CLN_* sub-codes into one per-proband `ScoreResult`; AFF+DNV are additive;
   the AD `+1.0` is already in Table 1 (no extra ceiling); cross-proband sum + CCS exclusivity +
   POP_FRQ gating follow in 3b/3c.
-- `docs/reference/known-gaps.md`: add a Working-Group-follow-up row — **SM 4 Figure 1 is
-  image-only**; it authoritatively encodes the CCS-vs-counting branch, the exact POP_FRQ gate, and
-  the CLN_DNV exception. Routing (this increment) is fully in SM 4 *text*; only the 3c gate/branch
-  depends on the figure.
+- `docs/reference/known-gaps.md`: add rows —
+    - (Model gap) **No `de_novo` field on `Case`** — CLN_DNV's de-novo trigger is *inferred* (both
+      parents present as relatives + both VBC-absent + confirmed parentage). Curators who don't
+      capture the parents-are-VBC-negative relatives will under-score CLN_DNV.
+    - (Model gap) **No explicit affected-status field** — 3a infers affected from
+      `pheno_specificity_for_mde ∈ {SPECIFIC, CONSISTENT}` (else the unaffected/UAF path); a truly
+      affected proband with only `INCONSISTENT`/absent phenotype specificity is routed to UAF.
+    - (WG follow-up) **SM 4 Figure 1 is image-only** — it authoritatively encodes the
+      CCS-vs-counting branch, the exact POP_FRQ gate, and the CLN_DNV exception (all 3c concerns).
+      Routing (this increment) is fully in SM 4 *text*.
+    - (Not modeled) SM 4 L186 CLN_ALT "multiple genetic contributions" MDE exclusion — only the AR
+      exclusion is enforced.
 
 ## Quality gates
 
