@@ -110,7 +110,7 @@ Boundary trace (proves the cascade matches the table): `−1.0` fails `> −1.0`
 1. **Mid-band representatives** — `+12 → P`; `+8 → LP`; `+5 → (VUS, HIGH)`; `+3 → (VUS, MID)`;
    `0 → (VUS, LOW)`; `−2 → LB`; `−6 → B`.
 2. **Every boundary (the core of the increment)** — `−4.0 → B`, `−1.0 → LB`, `+2.0 → (VUS,MID)`,
-   `+4.0 → (VUS,HIGH)`, `+6.0 → LP`, `+10.0 → P`; and the just-below neighbours `−4.0+ε → LB`,
+   `+4.0 → (VUS,HIGH)`, `+6.0 → LP`, `+10.0 → P`; and the across-boundary neighbours `−4.0+ε → LB`,
    `−1.0+ε → (VUS,LOW)`, `+1.99 → (VUS,LOW)`, `+3.99 → (VUS,MID)`, `+5.99 → (VUS,HIGH)`,
    `+9.99 → LP` (use `9.999` etc.).
 3. **VUS subclass discipline** — every VUS result has a non-None subclass; every non-VUS result
