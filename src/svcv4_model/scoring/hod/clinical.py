@@ -431,9 +431,12 @@ def _merge(merged: dict[str, float], result: ScoreResult, prov: list[str]) -> No
     """Copy a per-code scorer's (single) sub-code into ``merged`` and append its real provenance."""
     for code, pts in result.sub_code_points.items():
         merged[code] = pts  # distinct CLN_* codes; no collision within one proband
-    if result.provenance:
-        assert result.provenance[0].startswith("CLN:")  # the grouping-label preamble
-        prov.extend(result.provenance[1:])
+    # Skip the per-code scorer's grouping-label preamble; keep every real line (robust to a
+    # future scorer that does not lead with the preamble).
+    lines = result.provenance
+    if lines and lines[0].startswith("CLN:"):
+        lines = lines[1:]
+    prov.extend(lines)
 
 
 def reference_score_cln_proband(case: Case, *, moi: MOI | None) -> ScoreResult:
@@ -461,14 +464,24 @@ def reference_score_cln_proband(case: Case, *, moi: MOI | None) -> ScoreResult:
             _merge(merged, aff_scorer(case, moi=moi), prov)
             if moi != MOI.AR:  # SM 4 L186: no CLN_ALT for AR
                 _merge(merged, reference_score_cln_alt(case, moi=moi), prov)
-            if "CLN_AFF" in merged and _is_de_novo(case):
-                _merge(
-                    merged,
-                    reference_score_cln_dnv(case, moi=moi, is_biallelic=is_biallelic),
-                    prov,
+            # DNV rides on an AFF-counted proband (SM 4 L143). AFF==0.0 on the affected path means
+            # the phenotype is explained by a P/LP alternate cause (plp_alt tier) -> not counted,
+            # so DNV does not apply.
+            aff_pts = merged.get("CLN_AFF")
+            if aff_pts is not None and aff_pts > 0.0:
+                if _is_de_novo(case):
+                    _merge(
+                        merged,
+                        reference_score_cln_dnv(case, moi=moi, is_biallelic=is_biallelic),
+                        prov,
+                    )
+                else:
+                    prov.append("CLN_DNV: not scored (proband not inferred de-novo)")
+            elif aff_pts == 0.0:
+                prov.append(
+                    "CLN_DNV: not scored (CLN_AFF 0.0 -- phenotype explained by alternate cause; "
+                    "proband not counted under CLN_AFF)."
                 )
-            elif "CLN_AFF" in merged:
-                prov.append("CLN_DNV: not scored (proband not inferred de-novo)")
     else:
         prov.append("CLN: unaffected/inconsistent path (pheno not SPECIFIC/CONSISTENT) -> CLN_UAF")
         _merge(merged, reference_score_cln_uaf(case, moi=moi), prov)

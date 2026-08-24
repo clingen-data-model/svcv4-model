@@ -123,6 +123,21 @@ def test_dnv_fold_driven_by_routing() -> None:
     assert sd_biallelic.sub_code_points["CLN_DNV"] == 4.0
 
 
+def test_dnv_not_scored_when_aff_zero_alt_explained() -> None:
+    # Affected + de-novo, but explained by a P/LP alternate cause -> CLN_AFF=0.0 -> no DNV.
+    r = reference_score_cln_proband(
+        _affected(
+            additional_variants=[AdditionalVariant(classification="P")],
+            relatives=_DENOVO_PARENTS,
+            confirmed_parental_relationship=TriState.TRUE,
+        ),
+        moi=MOI.AD,
+    )
+    assert r.sub_code_points["CLN_AFF"] == 0.0
+    assert "CLN_DNV" not in r.sub_code_points
+    assert any("explained by alternate cause" in p for p in r.provenance)
+
+
 def test_uaf_does_not_cofire_with_aff() -> None:
     # Affected proband that ALSO has age_matched_penetrance set: UAF must NOT fire.
     r = reference_score_cln_proband(
