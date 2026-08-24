@@ -181,6 +181,12 @@ def reference_combine_case(
     the GA4GH JSON ``scale`` cap of [-8, +10] is a display concern (flagged, see known-gaps). The
     per-family breakdown is keyed on each input's ``parent_code`` (real PFD code vs the POP/CLN/LOC
     display labels are distinct); a duplicate family key raises (caller bug).
+
+    If NO family scored (empty input or all ``_ND``), the result is ``_ND`` (``parent_total`` is
+    None) -- a variant with zero evidence is not classifiable and is distinct from a scored 0.0.
+    Callers MUST guard for None before ``reference_classify`` (which requires a scored total):
+    ``t = reference_combine_case(...).parent_total`` then ``reference_classify(t)`` only if
+    ``t is not None``.
     """
     breakdown: dict[str, float] = {}
     prov = [
