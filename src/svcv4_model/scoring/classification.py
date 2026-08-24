@@ -35,7 +35,8 @@ def reference_classify(points: float) -> Classification:
 
     ``>=+10`` P; ``[+6,+10)`` LP; ``[+4,+6)`` VUS-high; ``[+2,+4)`` VUS-mid; ``(-1,+2)`` VUS-low;
     ``(-4,-1]`` LB; ``<=-4`` B. Not clamped (SM 1 P is open-ended ``>=+10``); the global-sum-clamp
-    question is deferred to the cross-code-combination increment.
+    question is deferred to the cross-code-combination increment. ``points`` is assumed finite --
+    ``float('nan')`` (which no scorer produces) would fall through to ``BENIGN``.
     """
     if points >= 10.0:
         return Classification(VariantClassification.PATHOGENIC, None)
