@@ -163,7 +163,19 @@ applied once, yielding the CLN family's contribution to the cross-code combine. 
 is now complete through aggregation** (per-code → per-proband combine → cross-proband sum →
 finalize).
 
-The remaining PFD workflows and the cross-code combine (Inc 4) follow in later increments (see the
+## Cross-code combine
+
+`reference_combine_case` is where all evidence families meet: it sums the one PFD parent-code total
+(`NUL`/`CDS`/`SPL`/`MIS` — missense uses its take-higher `applied_total`) with the POP, CLN, and
+LOC subtotals into one **(VBC, MDE) total**. An `_ND` family contributes `0`; the per-family
+breakdown is kept in `sub_code_points`. The sum is **unclamped** — faithful to SM 1's open-ended
+Pathogenic (`≥ +10`) / Benign (`≤ −4`); the GA4GH JSON `scale` cap of `[−8, +10]` is a display
+concern (flagged in [known gaps](known-gaps.md)). `reference_classify` then bands that total — but
+an all-`_ND` case (no evidence in any family) yields `parent_total=None` (not classifiable, and
+distinct from a scored `0.0`), so guard first: `t = reference_combine_case([...]).parent_total`;
+`reference_classify(t)` only when `t is not None`.
+
+The remaining PFD workflow scoring and `validate_case` (Inc 5) follow in later increments (see the
 scoping doc).
 
 ## Known assumption (flagged for WG confirmation)

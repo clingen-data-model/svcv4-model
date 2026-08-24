@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from svcv4_model.scoring.result import ScoreResult
+from svcv4_model.scoring.result import MissenseScoreResult, ScoreResult
 
 
 def _aggregate_family(
@@ -157,6 +157,60 @@ def reference_finalize_cln(
         parent_code="CLN",
         sub_code_points=kept,
         parent_total=total,
+        provenance=prov,
+        authoritative=False,
+    )
+
+
+def _family_total(r: ScoreResult | MissenseScoreResult) -> tuple[str | None, float | None]:
+    """The (parent_code, total) a family contributes: a missense result uses its take-higher
+    ``applied_parent_code`` / ``applied_total``; any other ScoreResult its ``parent_total``."""
+    if isinstance(r, MissenseScoreResult):
+        return r.applied_parent_code, r.applied_total
+    return r.parent_code, r.parent_total
+
+
+def reference_combine_case(
+    subtotals: Iterable[ScoreResult | MissenseScoreResult],
+) -> ScoreResult:
+    """Sum the family subtotals (one PFD parent code + POP + CLN + LOC) into one (VBC, MDE) total
+    that ``reference_classify`` then bands (aggregation Inc 4). CSpec is authoritative.
+
+    An ``_ND`` family (``parent_total`` None, or a missense ``applied_total`` None) contributes 0.
+    The sum is **UNCLAMPED** -- faithful to SM 1's open-ended Pathogenic (>=+10) / Benign (<=-4);
+    the GA4GH JSON ``scale`` cap of [-8, +10] is a display concern (flagged, see known-gaps). The
+    per-family breakdown is keyed on each input's ``parent_code`` (real PFD code vs the POP/CLN/LOC
+    display labels are distinct); a duplicate family key raises (caller bug).
+
+    If NO family scored (empty input or all ``_ND``), the result is ``_ND`` (``parent_total`` is
+    None) -- a variant with zero evidence is not classifiable and is distinct from a scored 0.0.
+    Callers MUST guard for None before ``reference_classify`` (which requires a scored total):
+    ``t = reference_combine_case(...).parent_total`` then ``reference_classify(t)`` only if
+    ``t is not None``.
+    """
+    breakdown: dict[str, float] = {}
+    prov = [
+        "CASE: cross-code combine (reference) -- PFD parent + POP + CLN + LOC summed; UNCLAMPED "
+        "(SM 1 Pathogenic is open-ended >=+10; the GA4GH scale 10/-8 is a display concern -- "
+        "see known-gaps)."
+    ]
+    for r in subtotals:
+        code, total = _family_total(r)
+        if total is None:
+            continue  # _ND family -> contributes 0
+        key = code if code is not None else "?"
+        if key in breakdown:
+            raise ValueError(f"CASE: duplicate family code {key!r} across subtotals.")
+        breakdown[key] = total
+    if not breakdown:
+        prov.append("CASE: _ND (no family scored).")
+        return ScoreResult(provenance=prov, authoritative=False)
+    grand = sum(breakdown.values())
+    detail = ", ".join(f"{c}={p}" for c, p in breakdown.items())
+    prov.append(f"CASE: final total {grand} ({detail}).")
+    return ScoreResult(
+        sub_code_points=breakdown,
+        parent_total=grand,
         provenance=prov,
         authoritative=False,
     )
