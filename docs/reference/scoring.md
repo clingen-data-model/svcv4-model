@@ -119,8 +119,21 @@ increment (see [known gaps](known-gaps.md)). The summing that produces `points` 
 subtotals, CLN cross-proband aggregation, and cross-code combination — and `validate_case`
 applicability enforcement follow in later increments (see the scoping doc).
 
-The remaining PFD workflows, POP/LOC/CLN scoring, and the rest of case aggregation follow in later
-increments (see the scoping doc).
+## Family subtotals (aggregation)
+
+`reference_aggregate_pop` and `reference_aggregate_loc` collapse a family's per-code
+`ScoreResult`(s) into one subtotal `ScoreResult` (consuming and producing `ScoreResult`s keeps the
+pipeline uniform). **POP** (`reference_aggregate_pop`) sums POP_FRQ + POP_HMZ with **no cap** (SM 3
+— independent case-level codes); it is a pass-through today since the POP scorer already subtotals.
+**LOC** (`reference_aggregate_loc`) is the positive LOC_PHE + LOC_SEG combine **capped at `+4.0`**
+(SM 5); the uncapped sum is preserved in `held_combined` when the cap binds. The LOC cap is inert
+until `LOC_SEG` lands (LOC_PHE alone is `0..+4`), and the `−4.0` non-segregation benign flip is a
+separate LOC-2 signal, not summed here. A duplicate sub-code across inputs raises (these codes are
+singletons per (VBC, MDE)); CLN cross-proband aggregation (same code, many probands) and the
+cross-code combination into one final total follow in later increments.
+
+The remaining PFD workflows, CLN aggregation, and the cross-code combine follow in later increments
+(see the scoping doc).
 
 ## Known assumption (flagged for WG confirmation)
 
