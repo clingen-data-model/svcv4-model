@@ -8,6 +8,8 @@ AD ceiling-on-sum live in the later case-aggregation increment.
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from svcv4_model.case import (
     MOI,
     AgeMatchedPenetrance,
@@ -16,6 +18,7 @@ from svcv4_model.case import (
     PhaseConfidence,
     PhenoSeverity,
     PhenoSpecificity,
+    Sex,
     TriState,
     Zygosity,
 )
@@ -285,11 +288,16 @@ _CLN_DNV_POINTS = {
 _BIALLELIC_MOI = frozenset({MOI.AR, MOI.XLR})
 
 
-def reference_score_cln_dnv(case: Case, *, moi: MOI | None) -> ScoreResult:
+def reference_score_cln_dnv(
+    case: Case, *, moi: MOI | None, is_biallelic: bool | None = None
+) -> ScoreResult:
     """Compute the reference (NON-AUTHORITATIVE) CLN_DNV de-novo points for one affected proband
-    (SM 4 Table 3), additive on CLN_AFF. CSpec is authoritative. ``moi`` selects the mono-vs-
-    biallelic phenotype-consistency fold (AR/XLR disorders use the CONSISTENT row; SPECIFIC is
-    mono-only). The +7.0 region caveat is not applied (no VBC-region annotation).
+    (SM 4 Table 3), additive on CLN_AFF. CSpec is authoritative. The mono-vs-biallelic
+    phenotype-consistency fold (biallelic disorders use the CONSISTENT row; SPECIFIC is mono-only)
+    is driven by ``is_biallelic`` when given -- the per-proband combiner passes its routing
+    decision, which correctly handles XLR-by-sex and SD-by-zygosity. When ``is_biallelic`` is None
+    (standalone callers) it falls back to the sex-agnostic ``moi in {AR, XLR}`` heuristic. The +7.0
+    region caveat is not applied (no VBC-region annotation).
     """
     prov: list[str] = [
         'CLN: "CLN" is the HOD grouping label; scored per Case (cross-proband sum + summing '
@@ -300,13 +308,11 @@ def reference_score_cln_dnv(case: Case, *, moi: MOI | None) -> ScoreResult:
         prov.append("CLN_DNV: _ND (no pheno_specificity_for_mde)")
         return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
 
+    biallelic = moi in _BIALLELIC_MOI if is_biallelic is None else is_biallelic
     row = pheno
-    if moi in _BIALLELIC_MOI and pheno == PhenoSpecificity.SPECIFIC:
+    if biallelic and pheno == PhenoSpecificity.SPECIFIC:
         row = PhenoSpecificity.CONSISTENT
-        prov.append(
-            "CLN_DNV: biallelic disorder (AR/XLR) -> SPECIFIC folds to CONSISTENT "
-            "(XLR-by-sex + SD summing deferred to aggregation)."
-        )
+        prov.append("CLN_DNV: biallelic disorder -> SPECIFIC folds to CONSISTENT.")
 
     confirmed = case.confirmed_parental_relationship == TriState.TRUE
     pts = _CLN_DNV_POINTS[row][0 if confirmed else 1]
@@ -381,6 +387,112 @@ def reference_score_cln_ccs(evidence: CaseControlStudyEvidence) -> ScoreResult:
         parent_code="CLN",
         sub_code_points={"CLN_CCS": pts},
         parent_total=pts,
+        provenance=prov,
+        authoritative=False,
+    )
+
+
+_AFFECTED = frozenset({PhenoSpecificity.SPECIFIC, PhenoSpecificity.CONSISTENT})
+
+
+def _route_cln_aff(case: Case, moi: MOI | None) -> Callable[..., ScoreResult] | None:
+    """The affected-counting scorer (mono Table 1 vs biallelic Table 2) for this proband, or None
+    if unroutable (SM 4 L28/L77/L80). Routes on MOI, then sex (X-linked), then zygosity (SD)."""
+    if moi in (MOI.AD, MOI.XLD):
+        return reference_score_cln_aff_mono
+    if moi == MOI.AR:
+        return reference_score_cln_aff_biallelic
+    if moi == MOI.XLR:
+        if case.sex == Sex.M:  # XY / hemizygous -> Table 1
+            return reference_score_cln_aff_mono
+        if case.sex == Sex.F:  # XX -> Table 2
+            return reference_score_cln_aff_biallelic
+        return None  # XLR needs a known sex (SM 4 L77)
+    if moi == MOI.SD:
+        biallelic = case.vbc_zygosity == Zygosity.HOM or (
+            case.vbc_zygosity == Zygosity.HET and case.compound_het_variant is not None
+        )
+        return reference_score_cln_aff_biallelic if biallelic else reference_score_cln_aff_mono
+    return None  # moi None -> unroutable
+
+
+def _is_de_novo(case: Case) -> bool:
+    """Infer de-novo occurrence (no ``de_novo`` field on Case -- a flagged model gap): both parents
+    present as relatives and both lacking the VBC, with confirmed parentage."""
+    parents = [r for r in case.relatives if r.parent_of_proband == TriState.TRUE]
+    return (
+        len(parents) >= 2
+        and all(r.vbc_exists == TriState.FALSE for r in parents)
+        and case.confirmed_parental_relationship == TriState.TRUE
+    )
+
+
+def _merge(merged: dict[str, float], result: ScoreResult, prov: list[str]) -> None:
+    """Copy a per-code scorer's (single) sub-code into ``merged`` and append its real provenance."""
+    for code, pts in result.sub_code_points.items():
+        merged[code] = pts  # distinct CLN_* codes; no collision within one proband
+    # Skip the per-code scorer's grouping-label preamble; keep every real line (robust to a
+    # future scorer that does not lead with the preamble).
+    lines = result.provenance
+    if lines and lines[0].startswith("CLN:"):
+        lines = lines[1:]
+    prov.extend(lines)
+
+
+def reference_score_cln_proband(case: Case, *, moi: MOI | None) -> ScoreResult:
+    """Compute the reference (NON-AUTHORITATIVE) per-proband CLN combine (aggregation Inc 3a).
+
+    Routes the affected-counting table (mono/biallelic by MOI/sex/zygosity), then imposes the SM 4
+    affected-vs-unaffected split (the per-code scorers do NOT self-gate on category): affected
+    (``pheno_specificity_for_mde in {SPECIFIC, CONSISTENT}``) -> CLN_AFF (routed) + CLN_ALT (unless
+    AR, SM 4 L186) + CLN_DNV (only if de-novo inferred and CLN_AFF scored); else -> CLN_UAF. Merges
+    the scored CLN_* sub-codes into one per-proband ScoreResult. Cross-proband summation (3b) and
+    CLN_CCS exclusivity + POP_FRQ gating (3c) follow. CSpec is authoritative.
+    """
+    prov: list[str] = [
+        "CLN: per-proband combine (reference); cross-proband sum + CLN_CCS exclusivity + "
+        "POP_FRQ gating deferred to Inc 3b/3c."
+    ]
+    merged: dict[str, float] = {}
+
+    if case.pheno_specificity_for_mde in _AFFECTED:
+        aff_scorer = _route_cln_aff(case, moi)
+        if aff_scorer is None:
+            prov.append("CLN_AFF: _ND (unroutable -- moi None, or XLR without a known sex)")
+        else:
+            is_biallelic = aff_scorer is reference_score_cln_aff_biallelic
+            _merge(merged, aff_scorer(case, moi=moi), prov)
+            if moi != MOI.AR:  # SM 4 L186: no CLN_ALT for AR
+                _merge(merged, reference_score_cln_alt(case, moi=moi), prov)
+            # DNV rides on an AFF-counted proband (SM 4 L143). AFF==0.0 on the affected path means
+            # the phenotype is explained by a P/LP alternate cause (plp_alt tier) -> not counted,
+            # so DNV does not apply.
+            aff_pts = merged.get("CLN_AFF")
+            if aff_pts is not None and aff_pts > 0.0:
+                if _is_de_novo(case):
+                    _merge(
+                        merged,
+                        reference_score_cln_dnv(case, moi=moi, is_biallelic=is_biallelic),
+                        prov,
+                    )
+                else:
+                    prov.append("CLN_DNV: not scored (proband not inferred de-novo)")
+            elif aff_pts == 0.0:
+                prov.append(
+                    "CLN_DNV: not scored (CLN_AFF 0.0 -- phenotype explained by alternate cause; "
+                    "proband not counted under CLN_AFF)."
+                )
+    else:
+        prov.append("CLN: unaffected/inconsistent path (pheno not SPECIFIC/CONSISTENT) -> CLN_UAF")
+        _merge(merged, reference_score_cln_uaf(case, moi=moi), prov)
+
+    if not merged:
+        prov.append("CLN: _ND (no CLN sub-code scored for this proband)")
+        return ScoreResult(parent_code="CLN", provenance=prov, authoritative=False)
+    return ScoreResult(
+        parent_code="CLN",
+        sub_code_points=merged,
+        parent_total=sum(merged.values()),
         provenance=prov,
         authoritative=False,
     )

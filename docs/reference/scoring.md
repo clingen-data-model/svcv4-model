@@ -132,8 +132,23 @@ separate LOC-2 signal, not summed here. A duplicate sub-code across inputs raise
 singletons per (VBC, MDE)); CLN cross-proband aggregation (same code, many probands) and the
 cross-code combination into one final total follow in later increments.
 
-The remaining PFD workflows, CLN aggregation, and the cross-code combine follow in later increments
-(see the scoping doc).
+## Per-proband CLN combine (aggregation)
+
+`reference_score_cln_proband` is the per-proband CLN combiner (aggregation Inc 3a). It **routes**
+the affected-counting table — mono (Table 1) vs biallelic (Table 2) — by MOI, then sex (X-linked:
+XLR male→mono, female→biallelic) and zygosity (semidominant), then imposes the SM 4
+affected-vs-unaffected split the per-code scorers do **not** perform themselves: an affected
+proband (`pheno_specificity_for_mde ∈ {SPECIFIC, CONSISTENT}`) is scored under CLN_AFF (routed) +
+CLN_ALT (unless AR — SM 4 L186) + CLN_DNV (only when de-novo is *inferred* — both parents present
+as relatives and VBC-absent, with confirmed parentage — and CLN_AFF scored); otherwise the proband
+takes the CLN_UAF (unaffected) path. This fixes two latent issues: CLN_UAF could previously
+co-fire with CLN_AFF, and CLN_DNV's mono/biallelic fold now follows the routing decision (correct
+for XLR-by-sex and semidominant). AFF + DNV are additive per proband (SM 4 L147; the AD `+1.0` is
+already in Table 1 — no extra ceiling). The scored CLN_* sub-codes merge into one per-proband
+`ScoreResult`. Cross-proband summation (3b) and CLN_CCS exclusivity + POP_FRQ gating (3c) follow.
+
+The remaining PFD workflows, the cross-proband CLN sum, and the cross-code combine follow in later
+increments (see the scoping doc).
 
 ## Known assumption (flagged for WG confirmation)
 
