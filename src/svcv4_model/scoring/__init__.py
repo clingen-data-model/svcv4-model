@@ -5,6 +5,10 @@ point rules for tests, worked examples, and the practice-variant-set. It is inte
 re-exported from the top-level ``svcv4_model`` package (so schema generation ignores it).
 """
 
+from svcv4_model.scoring.aggregate import (
+    reference_aggregate_loc,
+    reference_aggregate_pop,
+)
 from svcv4_model.scoring.classification import (
     Classification,
     VusSubclass,
@@ -38,6 +42,8 @@ __all__ = [
     "MissenseScoreResult",
     "ScoreResult",
     "VusSubclass",
+    "reference_aggregate_loc",
+    "reference_aggregate_pop",
     "reference_classify",
     "reference_score_canonical_splice",
     "reference_score_cln_aff_biallelic",
