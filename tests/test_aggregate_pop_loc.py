@@ -45,7 +45,7 @@ def test_loc_cap_binds_with_synthetic_seg() -> None:
     r = reference_aggregate_loc([_sr("LOC", {"LOC_PHE": 4.0}), _sr("LOC", {"LOC_SEG": 3.0})])
     assert r.parent_total == 4.0
     assert r.sub_code_points == {"LOC_PHE": 4.0, "LOC_SEG": 3.0}
-    assert r.held_combined == {"LOC_raw": 7.0}
+    assert r.held_combined == {"raw_sum": 7.0}
     assert any("capped" in p for p in r.provenance)
 
 

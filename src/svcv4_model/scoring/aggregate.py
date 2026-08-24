@@ -47,7 +47,7 @@ def _aggregate_family(
     detail = ", ".join(f"{c}={p}" for c, p in merged.items())
     held: dict[str, float] = {}
     if cap is not None and raw > cap:
-        held = {f"{family}_raw": raw}
+        held = {"raw_sum": raw}  # uncapped sum; distinct from the sub-code namespace
         prov.append(f"{family}: subtotal capped {raw} -> {total} (+{cap} cap): {detail}")
     else:
         prov.append(f"{family}: subtotal {total} ({detail}; cap {cap})")
