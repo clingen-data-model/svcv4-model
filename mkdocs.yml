@@ -158,6 +158,7 @@ nav:
       - Spec coverage: reference/spec-alignment.md
       - Known gaps: reference/known-gaps.md
       - Reference scoring: reference/scoring.md
+      - Workflow scoring map: reference/scoring-map.md
       - JSON Schemas: reference/schemas.md
       - Summary Table: reference/summary-table.md
       - VA-Spec community profile: reference/va-spec-profile.md
