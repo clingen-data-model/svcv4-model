@@ -40,6 +40,12 @@ score**, its **aggregation** across cases, and the **rolled-up** code total.
 - [`LOC_PHE` — Phenotype specificity](locus.md#loc_phe-phenotype-specificity-worked-branch)
 - [`LOC_SEG` — Co-segregation](locus.md#loc_seg-co-segregation-worked-branch)
 
+**PFD — Predictive & Functional Data**
+
+- [PFD — the pipeline (overview)](pfd.md#pfd-the-pipeline-overview) · *`_PRD`/`_SPA`/`_FXN`/`_INF`, held values, take-higher*
+- [`NUL` / `CDS` — Loss of function](pfd.md#nul-cds-loss-of-function-worked-branch)
+- *`SPL`, `MIS` — in progress*
+
 **HOD & beyond**
 
 - [`HOD` — Human Observational Data (roll-up = POP + CLN + LOC)](#hod-human-observational-data-roll-up)
