@@ -66,6 +66,30 @@ reviewer follows `references` + `id` to the source, then re-derives the leaf cod
 
 ---
 
+## `POP` — Population evidence (category roll-up)
+
+**Where it sits:** HOD → **Population (POP)**. `POP` is a **grouping label** (⬦ not an official
+SVCv4 code), not a scored cell — it collects two independent, **benignity-only**, **per-variant**
+codes: **`POP_FRQ`** (allele frequency vs DAFT) and **`POP_HMZ`** (homozygous / hemizygous
+occurrences). The category total is their **sum**; SM 3 sets **no combined POP cap**.
+
+Both children are worked in full below (cells, data items, `EvidenceLine` tree). This roll-up only
+**references** their examples:
+
+> **Basis — Manufactured composite.** The two child scores are taken from the worked examples in the
+> sub-sections below — `POP_FRQ` from `example-fbn1`, `POP_HMZ` from `v13-aipl1`. They are *different*
+> practice variants, shown together only to illustrate the category sum; in a real classification
+> both codes apply to the **same** VBC.
+
+```text
+EvidenceLine  POP                         score -3.5   (Σ evidenceLines; benignity-only ≤ 0; no combined cap)
+└─ evidenceLines:
+   ├─ EvidenceLine  POP_FRQ               score -3.0 → see the POP_FRQ example below (FBN1 · FAF ≈ 6.1× DAFT → MOD band)
+   └─ EvidenceLine  POP_HMZ               score -0.5 → see the POP_HMZ example below (AIPL1 · 2 homozygotes · n−1 rule)
+```
+
+---
+
 ## `POP_FRQ` — Population frequency (worked branch)
 
 **Where it sits:** HOD → Population (POP) → `POP_FRQ` · Evidence Code range **0.0 to –6.0** (SM 3,
