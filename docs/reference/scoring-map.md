@@ -167,6 +167,92 @@ reviewer can reproduce the fold and the resulting band.
 
 ---
 
+## `POP_HMZ` — Homozygous / hemizygous population occurrences (worked branch)
+
+**Where it sits:** HOD → Population (POP) → `POP_HMZ` · **benignity-only (≤ 0)** (SM 3 Table 7).
+**Per-variant**, like `POP_FRQ` — read from an unselected population database, not per proband. The
+presence of **homozygous** (or, for X-linked, **hemizygous**) individuals in the database is benign
+evidence *when the MDE's penetrance and severity would preclude affected individuals from that
+database*.
+
+**Eligibility gate.** `hmz_eligible` must hold — the MDE is near-100% penetrant and affected
+individuals are not expected in population databases. If the phenotype is mild enough that carriers
+could appear (SM 3's F8 example: 89 hemizygotes but only mild factor-VIII reduction → **not**
+eligible), no points are awarded.
+
+**The `n − 1` rule.** Points count **only from the 2nd occurrence** — the first homozygote/hemizygote
+is free. `score = weight × max(count − 1, 0)`, where `count` = `homozygote_count`
+(+ `hemizygote_count` for X-linked).
+
+### The three levels
+
+1. **Cell** — the MDE's inheritance selects one per-occurrence **weight**.
+2. **Aggregation** — the **`n − 1` multiplier**: `weight × (count − 1)`; the first occurrence scores 0.
+3. **Roll-up** — `POP_HMZ` = the cell (≤ 0); feeds the **POP** category alongside `POP_FRQ`.
+
+### The cells
+
+| Proposed code | inheritance · genotype | per-occurrence (from the 2nd) |
+|---|---|---|
+| `POP_HMZ_DOM` | Autosomal Dominant · homozygous          | **−1.0** |
+| `POP_HMZ_OTH` | Semidominant / AR / X-linked · homo/hemi | **−0.5** |
+| `POP_HMZ`     | roll-up = `weight × (count − 1)`         | **≤ 0** |
+
+Only one cell applies per MDE (set by its MOI). SD, AR, and X-linked share the `−0.5` weight → one
+collapsed `OTH` cell (point-identical); only Autosomal Dominant homozygous is `−1.0`.
+
+### Evidence data items
+
+| Attribute (real name) | Feeds | Notes |
+|---|---|---|
+| `evidence.homozygote_count` | count | homozygous occurrences in the database |
+| `evidence.hemizygote_count` | count | added only for X-linked MOIs |
+| `evidence.hmz_eligible`     | gate  | near-100% penetrance; affecteds not expected in the DB |
+| `moi`                       | weight + hemizygote inclusion | AD → `−1.0`; SD/AR/XL → `−0.5` |
+
+### Code ← data-item cross-reference
+
+| Code | `moi` | count = |
+|---|---|---|
+| `POP_HMZ_DOM` | AD        | `homozygote_count` |
+| `POP_HMZ_OTH` | SD / AR   | `homozygote_count` |
+| `POP_HMZ_OTH` | XLD / XLR | `homozygote_count + hemizygote_count` |
+| *(no code → `_ND`)* | any | `hmz_eligible` not TRUE, or no count |
+
+### `POP_HMZ` as a GKS `EvidenceLine` tree (Approach 1)
+
+> **Basis — Grounded (practice `v13-aipl1`).** AIPL1 · AR retinopathy: a near-100%-penetrant,
+> early-onset recessive disease, so homozygotes are **not** expected in gnomAD → eligible. gnomAD
+> shows **2 homozygotes**.
+
+`POP_HMZ_OTH` (AR): `−0.5 × (2 − 1) = −0.5` — the first homozygote is free, the second scores −0.5.
+The count lives in one population observation; the multiplier is `count − 1`, not a per-item array.
+
+```text
+EvidenceLine  POP_HMZ                     score -0.5   (weight × (count − 1); benignity-only ≤ 0)
+└─ evidenceLines:
+   └─ EvidenceLine  POP_HMZ_OTH           score -0.5 → evidenceItems: [1 pop obs]  (2 homozygotes → 2−1 counted × −0.5)
+```
+
+```json
+{
+  "type": "EvidenceLine", "method": { "code": "POP_HMZ", "label": "Homozygous/hemizygous occurrences (benignity)" }, "score": -0.5,
+  "note": "weight × (count − 1); AR weight −0.5; 2 homozygotes → 1 counted",
+  "evidenceLines": [
+    { "type": "EvidenceLine", "method": { "code": "POP_HMZ_OTH", "label": "SD / AR / X-linked · −0.5 per occurrence" }, "score": -0.5,
+      "evidenceItems": [ { "id": "hmz-01", "type": "population_frequency", "references": ["practice-variant-set:v13-aipl1", "gnomAD:v4.1.0"],
+        "description": "Grounded — AIPL1 AR retinopathy; 2 homozygotes in gnomAD; near-100% penetrant early-onset → eligible.",
+        "data": { "hmz_eligible": "TRUE", "homozygote_count": 2, "hemizygote_count": 0 } } ] }
+  ]
+}
+```
+
+**Reconciliation note.** Practice `v13-aipl1`'s illustrative target is `POP_HMZ_−2`; the Table-7 model
+here gives `−0.5` (AR weight × (2 − 1)). The practice-set targets are placeholders and will be
+reconciled once the cell weights are finalized.
+
+---
+
 ## `CLN_AFF` — Affected observations (worked branch)
 
 **Where it sits:** HOD → Clinical Observations (CLN) → `CLN_AFF` · Evidence Code Cap **≥ 0** (SM 4
@@ -976,6 +1062,109 @@ parents VBC-negative); a proband whose parents were not genotyped never reaches 
 
 ---
 
+## `CLN_ALTV` / `CLN_ALTG` — Alternative causative variant (worked branch)
+
+**Where it sits:** HOD → Clinical Observations (CLN) → `CLN_ALTV` / `CLN_ALTG` · **benignity-only
+(≤ 0)** (SM 4 Table 4). The VBC is seen in an **affected** individual whose phenotype is already
+explained by a **P/LP alternate cause**. Scored **per individual**, summed. Two codes by *where* the
+alternate variant sits:
+
+- **`CLN_ALTV`** — the alternate P/LP is in the **same gene** as the VBC.
+- **`CLN_ALTG`** — the alternate P/LP is in a **different gene** associated with the phenotype.
+
+Not applicable to AR MDEs or MDEs with multiple genetic contributions — except the semidominant
+`_REC` case below (SM 4's BRCA2 / Fanconi example: a P variant confirmed in trans that would give a
+severe biallelic phenotype, which is *not* observed).
+
+### The three levels
+
+1. **Cell** — the phenotype-severity row selects a per-individual score.
+2. **Aggregation** — `n × per-case` summed across the individuals of that cell.
+3. **Roll-up** — `CLN_ALTV` / `CLN_ALTG` = Σ their cells, **benignity-only (≤ 0)**.
+
+### The cells
+
+| Proposed code | phenotype severity vs expectation | per-case |
+|---|---|---|
+| `CLN_ALTV_BOTH` / `CLN_ALTG_BOTH` | more severe than expected, **or** ≥ expected for >1 allele (both alleles contribute) | **0.0** |
+| `CLN_ALTV_ONE` / `CLN_ALTG_ONE`   | **not** more severe (only the alternate allele contributes) | **−0.5** |
+| `CLN_ALTV_REC`                    | recessive/biallelic phenotype **not** observed despite VBC + alt in trans, penetrance >80% (**same gene only**) | **−1.0** |
+
+`CLN_ALTG` has **no `_REC` cell** — the `−1.0` row is same-gene only (Table 4).
+
+### Evidence data items
+
+| Attribute (real name) | Feeds | Values |
+|---|---|---|
+| `case.additional_variants[].classification` | gate | at least one `P`/`LP` alternate cause |
+| `case.additional_variants[].phase_in_ref_to_vbc` | ALTV vs ALTG | not `None` → same gene → `ALTV`; `None` → different gene → `ALTG` |
+| `case.pheno_severity` | severity row | `MONO_GT_OR_BIALLELIC_EQ_EXPECTED` → `BOTH`; `MONO_EQ_EXPECTED` → `ONE`; `BIALLELIC_LT_EXPECTED` → `REC` |
+| `case.age_matched_penetrance` | `_REC` gate | must be >80% (`PCT_80_100` / `NEAR_100`) |
+
+### Code ← data-item cross-reference
+
+| Code | alt-variant location | `pheno_severity` | penetrance |
+|---|---|---|---|
+| `CLN_ALTV_BOTH` / `CLN_ALTG_BOTH` | same / different gene | `MONO_GT_OR_BIALLELIC_EQ_EXPECTED` | — |
+| `CLN_ALTV_ONE` / `CLN_ALTG_ONE`   | same / different gene | `MONO_EQ_EXPECTED`                  | — |
+| `CLN_ALTV_REC`                    | same gene             | `BIALLELIC_LT_EXPECTED`             | >80% |
+
+### `CLN_ALTV` / `CLN_ALTG` as GKS `EvidenceLine` trees (Approach 1)
+
+> **Basis — Grounded (practice `v11-acvrl1`).** ACVRL1 · hereditary hemorrhagic telangiectasia · AD.
+> One VBC, two alternate-cause scenarios: a P LoF in **ACVRL1** (same gene → `CLN_ALTV`) and a P LoF
+> in **ENG** (a different HHT gene → `CLN_ALTG`). Both present as **typical HHT** (not more severe →
+> the alternate allele explains the phenotype), so each lands in the `ONE` cell → **−0.5**.
+
+`CLN_ALTV` and `CLN_ALTG` are **separate codes** (not summed under one parent). Here each has one
+affected individual whose HHT is explained by the alternate P/LP cause:
+
+```text
+EvidenceLine  CLN_ALTV                    score -0.5   (Σ evidenceLines; benignity-only ≤ 0)
+└─ evidenceLines:
+   └─ EvidenceLine  CLN_ALTV_ONE          score -0.5 → evidenceItems: [1 case]  (same-gene ACVRL1 P LoF in trans · typical HHT)
+
+EvidenceLine  CLN_ALTG                    score -0.5   (Σ evidenceLines; benignity-only ≤ 0)
+└─ evidenceLines:
+   └─ EvidenceLine  CLN_ALTG_ONE          score -0.5 → evidenceItems: [1 case]  (different-gene ENG P LoF · typical HHT)
+```
+
+```json
+[
+  {
+    "type": "EvidenceLine", "method": { "code": "CLN_ALTV", "label": "Alternative cause · same gene" }, "score": -0.5,
+    "evidenceLines": [
+      { "type": "EvidenceLine", "method": { "code": "CLN_ALTV_ONE", "label": "alt explains phenotype · not more severe" }, "score": -0.5,
+        "evidenceItems": [ { "id": "altv-01", "type": "clinical_observation", "references": ["practice-variant-set:v11-acvrl1"],
+          "description": "Grounded — typical HHT; a Pathogenic LoF ACVRL1 variant confirmed in trans accounts for the phenotype.",
+          "data": { "id": "acvrl1-proband-a", "pheno_severity": "MONO_EQ_EXPECTED",
+            "additional_variants": [ { "id": "acvrl1-alt", "classification": "P", "phase_in_ref_to_vbc": "TRANS" } ] } } ] }
+    ]
+  },
+  {
+    "type": "EvidenceLine", "method": { "code": "CLN_ALTG", "label": "Alternative cause · different gene" }, "score": -0.5,
+    "evidenceLines": [
+      { "type": "EvidenceLine", "method": { "code": "CLN_ALTG_ONE", "label": "alt explains phenotype · not more severe" }, "score": -0.5,
+        "evidenceItems": [ { "id": "altg-01", "type": "clinical_observation", "references": ["practice-variant-set:v11-acvrl1"],
+          "description": "Grounded — typical HHT; a Pathogenic LoF in ENG (a different HHT gene) accounts for the phenotype.",
+          "data": { "id": "acvrl1-proband-b", "pheno_severity": "MONO_EQ_EXPECTED",
+            "additional_variants": [ { "id": "eng-alt", "classification": "P", "phase_in_ref_to_vbc": null } ] } } ] }
+    ]
+  }
+]
+```
+
+The `_REC` cell (`CLN_ALTV_REC`, −1.0) is not shown: it is the semidominant case where the VBC + a
+P/LP in trans would predict a **severe biallelic** phenotype that is **not** observed (SM 4's BRCA2 /
+Fanconi example), with penetrance >80%. Practice `v26-msh6` is another `CLN_ALTV` instance (a
+truncating MSH6 variant in trans accounts for the Lynch phenotype).
+
+**Reconciliation note.** Practice `v11-acvrl1` illustratively targets `−1.0` for each of `CLN_ALTV`
+and `CLN_ALTG`; the Table-4 cell model gives `−0.5` for `MONO_EQ_EXPECTED`. Reconcile once the cells
+are finalized.
+
+---
+
 ## `CLN_UAF` — Unaffected observations (worked branch)
 
 **Where it sits:** HOD → Clinical Observations (CLN) → `CLN_UAF` · **benignity-only (≤ 0)** (SM 4
@@ -1100,14 +1289,92 @@ individual scored zero.
 
 ---
 
+## `CLN_CCS` — Case-control (worked branch)
+
+**Where it sits:** HOD → Clinical Observations (CLN) → `CLN_CCS` · **pathogenic**, `0` or `+4.0`
+(SM 4). A robust **variant-specific case-control** study — the VBC's frequency in a cohort of
+affected cases vs unaffected controls. Operates on a standalone **case-control study**, not a
+per-proband Case (like `POP_FRQ`, one assessment per study).
+
+**Exclusivity.** When `CLN_CCS` is applied — *regardless of the point value* — **all other CLN codes
+are marked NA except `CLN_DNV`** (SM 4). That override is an aggregation-layer rule; this map records
+the code and applies the exclusivity when the CLN category is combined.
+
+**Robustness gate.** The study must have **≥ 5 case-variant observations**, **≥ 100 unrelated cases**,
+and **matched controls**. If not, or if no odds ratio is given → `CLN_CCS_ND` (no code).
+
+### The three levels
+
+1. **Outcome** — the odds ratio + confidence interval (past the robustness gate) select one cell.
+2. **No aggregation** — a single per-study assessment; no multiplier.
+3. **Roll-up** — `CLN_CCS` = the cell; when applied, it silences the other CLN codes (except
+   `CLN_DNV`).
+
+### The cells
+
+| Proposed code | condition | points |
+|---|---|---|
+| `CLN_CCS_ENR` | robust · **OR > 5.0** · CI **excludes** 1.0 | **+4.0** |
+| `CLN_CCS_NS`  | robust · OR ≤ 5.0, **or** CI includes 1.0, **or** OR ≤ 1.0 | **0.0** |
+| `CLN_CCS`     | roll-up | **0 or +4.0** |
+| *(no code → `_ND`)* | not robust, or no odds ratio | — |
+
+`OR > 5.0` is **strict**. A CI that includes 1.0 vetoes the award even when OR > 5 (SM 4's example:
+`OR = 5.5, CI = 0.9–7.4` → `0.0`). `OR ≤ 1.0` indicates *benignity*, but **SM 4 assigns no benign
+`CLN_CCS` value** — a documented gap, so it lands in `NS` (`0.0`) with a provenance flag.
+
+### Evidence data items
+
+| Attribute (real name) | Feeds | Threshold |
+|---|---|---|
+| `evidence.odds_ratio`                    | outcome    | `> 5.0` for `ENR` |
+| `evidence.ci_lower`, `evidence.ci_upper` | CI veto    | must **exclude** 1.0 for `ENR` |
+| `evidence.case_variant_count`            | robustness | `≥ 5` |
+| `evidence.case_cohort_size`              | robustness | `≥ 100` |
+| `evidence.controls_matched`              | robustness | `TRUE` |
+| `evidence.ascertainment_bias_considered` | caution    | provenance note if not `TRUE` (not gated) |
+
+### `CLN_CCS` as a GKS `EvidenceLine` tree (Approach 1)
+
+> **Basis — Manufactured (no practice `CLN_CCS` example).** Values follow SM 4's worked case-control
+> guidance: a robust study with `OR = 8.0`, `CI = 3.2–19.0` (excludes 1.0), 12 case-variant
+> observations across 400 matched cases → the `ENR` cell → **+4.0**. (SM 4's counter-example
+> `OR = 5.5, CI = 0.9–7.4` would instead be `CLN_CCS_NS` = 0.0 — the CI includes 1.0.)
+
+```text
+EvidenceLine  CLN_CCS                     score +4.0   (single per-study assessment; 0 or +4.0)
+└─ evidenceLines:
+   └─ EvidenceLine  CLN_CCS_ENR           score +4.0 → evidenceItems: [1 case-control study]  (OR 8.0 · CI 3.2–19.0 · robust)
+```
+
+```json
+{
+  "type": "EvidenceLine", "method": { "code": "CLN_CCS", "label": "Case-control (enrichment)" }, "score": 4.0,
+  "note": "single per-study assessment; when applied, other CLN codes NA except CLN_DNV",
+  "evidenceLines": [
+    { "type": "EvidenceLine", "method": { "code": "CLN_CCS_ENR", "label": "OR > 5.0 · CI excludes 1.0 · robust" }, "score": 4.0,
+      "evidenceItems": [ { "id": "ccs-01", "type": "case_control_study", "references": ["PMID:38054408"],
+        "description": "Manufactured — robust variant-specific case-control study per SM 4 guidance.",
+        "data": { "odds_ratio": 8.0, "ci_lower": 3.2, "ci_upper": 19.0,
+          "case_variant_count": 12, "case_cohort_size": 400, "controls_matched": true, "ascertainment_bias_considered": true } } ] }
+  ]
+}
+```
+
+The `ENR` leaf carries the full study for audit — the OR, its CI, the cohort sizes, and the
+robustness flags — so a reviewer can re-check the gate (≥ 5 / ≥ 100 / matched) and the CI veto.
+
+---
+
 ## Next: the rest of the tree
 
-`POP_FRQ`, `CLN_AFF`, `CLN_DNV`, and `CLN_UAF` are worked; the same pattern (cell → multiplier where
-applicable → roll-up) expands to every other branch:
+The full **POP** and **CLN** concepts are now worked (`POP_FRQ`, `POP_HMZ`; `CLN_AFF`, `CLN_DNV`,
+`CLN_ALTV`/`CLN_ALTG`, `CLN_UAF`, `CLN_CCS`). The same pattern (cell → multiplier where applicable →
+roll-up) expands to the remaining branches:
 
-- **CLN:** `CLN_ALTV`/`CLN_ALTG` (Table 4, the first *negative* clinical scores), `CLN_CCS`
-  (case-control), then the CLN cross-code overrides.
-- **POP:** `POP_HMZ` (per-occurrence homozygote/hemizygote benignity, `n−1` rule), POP combination.
+- **CLN:** the cross-code overrides (e.g. `CLN_CCS` exclusivity, `CLN_ALT` vs `CLN_AFF`) at the
+  category-combination layer.
+- **POP:** the POP category combination (`POP_FRQ` + `POP_HMZ`).
 - **LOC:** `LOC_PHE` (yield bands), `LOC_SEG`, the `LOC` combined code.
 - **PFD:** for each parent code (`NUL`/`CDS`/`SPL`/`MIS`) the `_PRD`/`_SPA`/`_FXN`/`_INF` codes,
   the held combinations, and the parent total.
