@@ -64,6 +64,22 @@ CURIEs / URLs — the source a reviewer reopens), and `data` (a `Case`, holding 
 the scoring attributes). `EvidenceItem.description` is available for a free-text source locator. A
 reviewer follows `references` + `id` to the source, then re-derives the leaf code from `data`.
 
+**6 — Scores are interdependent; edits ripple downstream.** A `score` is a **computed** value, not a
+fixed annotation. Cross-code rules make one `EvidenceLine`'s score depend on *other* lines' values:
+the **`POP_FRQ` gate** zeroes `CLN_AFF` / `CLN_DNV` unless the VBC's `pop_frq_vbc_score ∈ {0.0,
+−1.0}`; **`CLN_CCS` exclusivity** silences its siblings; **category caps** bound sums; the take-higher
+`MIS` vs `SPL` choice picks one path. So when a curator revises **previously collected evidence** —
+say a new gnomAD release lifts the VBC's FAF and flips `POP_FRQ` from `−1.0` to `−3.0` — the change
+**ripples**: `CLN_AFF` and `CLN_DNV` drop to NA, the `CLN` subtotal shifts, and the (VBC, MDE) total
+and classification band can move with it. This is *the* reason to structure evidence as a tree of
+typed, referenced `EvidenceLine`s rather than a flat list of points: the dependencies become
+**explicit, recomputable, and auditable**. A scoring engine must **re-evaluate every dependent code
+whenever any input changes**, and a reviewer can trace exactly *why* a code is NA back to the input
+that gated it. To make a dependency visible, the depended-on value travels **on the dependent code's
+own evidence items** — e.g. `pop_frq_vbc_score` sits in each `CLN_AFF` / `CLN_DNV` `evidenceItem`, so
+the gate's input is auditable right beside the observation it controls. (Worked end-to-end in the
+[`CLN` roll-up](#cln-clinical-observations-category-roll-up).)
+
 ---
 
 ## `POP` — Population evidence (category roll-up)
@@ -274,6 +290,107 @@ EvidenceLine  POP_HMZ                     score -0.5   (weight × (count − 1);
 **Reconciliation note.** Practice `v13-aipl1`'s illustrative target is `POP_HMZ_−2`; the Table-7 model
 here gives `−0.5` (AR weight × (2 − 1)). The practice-set targets are placeholders and will be
 reconciled once the cell weights are finalized.
+
+---
+
+## `CLN` — Clinical observations (category roll-up)
+
+**Where it sits:** HOD → **Clinical Observations (CLN)**. `CLN` is a **grouping label** (⬦ not an
+official SVCv4 code) collecting six codes — pathogenic **`CLN_AFF`**, **`CLN_DNV`**, **`CLN_CCS`**
+and benign **`CLN_ALTV`**, **`CLN_ALTG`**, **`CLN_UAF`**. The category total is the **sum of the
+sub-codes that survive two cross-code override rules**.
+
+### Two cross-code override rules
+
+Both are *removals*, applied to the summed CLN sub-codes (order-independent):
+
+**1 — `CLN_CCS` exclusivity** (SM 4). When a `CLN_CCS` code is present — *regardless of its value,
+even 0.0* — mark **`CLN_AFF`, `CLN_ALTV`/`CLN_ALTG`, `CLN_UAF` as NA**; keep only **`CLN_CCS` +
+`CLN_DNV`**. A robust case-control study supersedes individual proband counting.
+
+**2 — `POP_FRQ` gate** (SM 4 Fig 1 / L27). The pathogenic **counting** codes **`CLN_AFF` + `CLN_DNV`**
+are awarded **only when the VBC is rare** — `pop_frq_vbc_score ∈ {0.0, −1.0}`. If the VBC is common
+enough to earn `−3.0` or `−6.0` from `POP_FRQ`, **`CLN_AFF` and `CLN_DNV` are NA (zeroed)**: a common
+variant's presence in affected probands is not pathogenic evidence. **Benign codes (`CLN_UAF`,
+`CLN_ALTV`/`CLN_ALTG`) are *not* POP-gated.**
+
+> **Why `pop_frq_vbc_score` rides on the evidence item.** The gate needs the VBC's `POP_FRQ` outcome
+> at the moment it scores `CLN_AFF` / `CLN_DNV`, so those codes' `evidenceItems` carry a
+> **`pop_frq_vbc_score`** attribute — the VBC-level `POP_FRQ` score (`= POP_FRQ.score`, one of
+> `0.0 / −1.0 / −3.0 / −6.0`). Each proband's contribution is then self-auditable: a reviewer sees
+> the frequency that either admits or zeroes the count, right beside the observation. (The value is
+> per-VBC, so it is identical across that code's items.)
+
+```json
+{ "type": "EvidenceLine", "method": { "code": "CLN_AFF", "label": "Affected observations" }, "score": 5.5,
+  "note": "POP_FRQ-gated: if pop_frq_vbc_score is not 0.0 or -1.0, this whole code is NA (score → 0, dropped)",
+  "evidenceLines": [
+    { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_CTP", "label": "rare · confirmed-trans P/LP" }, "score": 3.0,
+      "evidenceItems": [ { "id": "ush2a-proband-3", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
+        "data": { "id": "ush2a-proband-3", "pop_frq_vbc_score": 0.0, "vbc_zygosity": "HET",
+          "compound_het_variant": { "classification": "P", "phase_confidence": "HIGH", "co_occurrence_likelihood": "LT_0_0001" } } } ] }
+  ]
+}
+```
+
+Flip that `pop_frq_vbc_score` to `−3.0` and the entire `CLN_AFF` `EvidenceLine` is dropped from the
+CLN roll-up — no matter how many strong probands it holds.
+
+**This is the ripple effect (principle 6) made concrete.** `pop_frq_vbc_score` is *collected
+evidence* — it is the `POP_FRQ` code's own outcome. If a curator later revises the `POP_FRQ` inputs
+(a new gnomAD release raises the VBC's FAF, moving `POP_FRQ` from `−1.0` to `−3.0`), that single edit
+**cascades**: every `CLN_AFF` / `CLN_DNV` evidence item's `pop_frq_vbc_score` updates → the gate now
+fails → both codes flip to NA → the `CLN` subtotal changes → the (VBC, MDE) total and its
+classification band can change. A scoring engine must **re-run the gate on every edit**; the tree
+records the dependency so nothing silently goes stale. The three roll-ups below show the same cases
+landing at `+6.5`, `−11.0`, or `+16.0` depending only on *other* evidence lines.
+
+### Condensed roll-up (references the sub-section examples)
+
+> **Basis — Manufactured composite.** Sub-code scores are the worked examples below (each a
+> *different* practice variant), shown together to illustrate the roll-up and the two override rules;
+> `pop_frq_vbc_score` is set on the gated codes to make the gate visible.
+
+**(a) VBC rare — `pop_frq_vbc_score = 0.0` — every code kept:**
+
+```text
+EvidenceLine  CLN                         score +6.5   (Σ kept sub-codes)
+└─ evidenceLines:
+   ├─ EvidenceLine  CLN_AFF   score +5.5   [pop_frq_vbc_score 0.0 → kept]   → CLN_AFF example (USH2A biallelic)
+   ├─ EvidenceLine  CLN_DNV   score +12.0  [pop_frq_vbc_score 0.0 → kept]   → CLN_DNV example (PTPN11, capped)
+   ├─ EvidenceLine  CLN_ALTV  score -0.5   (benign · not POP-gated)         → CLN_ALTV example (ACVRL1)
+   ├─ EvidenceLine  CLN_ALTG  score -0.5   (benign · not POP-gated)         → CLN_ALTG example (ACVRL1)
+   └─ EvidenceLine  CLN_UAF   score -10.0  (benign · not POP-gated)         → CLN_UAF example
+```
+
+**(b) `POP_FRQ` gate — same probands, but `pop_frq_vbc_score = −3.0` (VBC too common):**
+
+```text
+EvidenceLine  CLN                         score -11.0   (Σ kept sub-codes)
+└─ evidenceLines:
+   ├─ (CLN_AFF   NA)   pop_frq_vbc_score −3.0 → too common → zeroed
+   ├─ (CLN_DNV   NA)   pop_frq_vbc_score −3.0 → too common → zeroed
+   ├─ EvidenceLine  CLN_ALTV  score -0.5    (benign · not gated)
+   ├─ EvidenceLine  CLN_ALTG  score -0.5    (benign · not gated)
+   └─ EvidenceLine  CLN_UAF   score -10.0   (benign · not gated)
+```
+
+The pathogenic proband counting vanished the moment the VBC became too common; only the benign
+observations survive.
+
+**(c) `CLN_CCS` exclusivity — a robust case-control study is present:**
+
+```text
+EvidenceLine  CLN                         score +16.0   (Σ kept sub-codes)
+└─ evidenceLines:
+   ├─ EvidenceLine  CLN_CCS   score +4.0    (applied → silences the others)  → CLN_CCS example
+   ├─ EvidenceLine  CLN_DNV   score +12.0   (the sole CLN exception, kept)
+   ├─ (CLN_AFF            NA)   CLN_CCS exclusivity
+   ├─ (CLN_ALTV/CLN_ALTG  NA)  CLN_CCS exclusivity
+   └─ (CLN_UAF            NA)   CLN_CCS exclusivity
+```
+
+Each child is worked in full (cells, data items, `EvidenceLine` tree) in its section below.
 
 ---
 
@@ -905,18 +1022,18 @@ EvidenceLine  CLN_AFF                          score +5.5   (Σ evidenceLines; c
         { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_THOR_HOM", "label": "homozygous · thorough" }, "score": 1.0,
           "evidenceItems": [ { "id": "ush2a-proband-1", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
             "description": "Illustrative — proband 1 homozygous for the VBC; classic Usher type 2.",
-            "data": { "id": "ush2a-proband-1", "family_id": "ush-fam-1", "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HOM",
+            "data": { "id": "ush2a-proband-1", "family_id": "ush-fam-1", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HOM",
               "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" } } } ] },
         { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_CTV", "label": "rare · confirmed-trans VUS" }, "score": 1.5,
           "evidenceItems": [ { "id": "ush2a-proband-2", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
             "description": "Illustrative — proband 2 second allele a VUS confirmed in trans.",
-            "data": { "id": "ush2a-proband-2", "family_id": "ush-fam-2", "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HET",
+            "data": { "id": "ush2a-proband-2", "family_id": "ush-fam-2", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HET",
               "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
               "compound_het_variant": { "classification": "VUS", "phase_confidence": "HIGH", "co_occurrence_likelihood": "LT_0_0001" } } } ] },
         { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_CTP", "label": "rare · confirmed-trans P/LP" }, "score": 3.0,
           "evidenceItems": [ { "id": "ush2a-proband-3", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
             "description": "Illustrative — proband 3 second allele a known Pathogenic LoF confirmed in trans.",
-            "data": { "id": "ush2a-proband-3", "family_id": "ush-fam-3", "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HET",
+            "data": { "id": "ush2a-proband-3", "family_id": "ush-fam-3", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HET",
               "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
               "compound_het_variant": { "classification": "P", "phase_confidence": "HIGH", "co_occurrence_likelihood": "LT_0_0001" } } } ] }
       ] }
@@ -1044,25 +1161,25 @@ EvidenceLine  CLN_DNV                        score +12.0  (Σ evidenceLines capp
   "evidenceLines": [
     { "type": "EvidenceLine", "method": { "code": "CLN_DNV_SPEC_CONF", "label": "specific · confirmed parentage" }, "score": 7.0,
       "evidenceItems": [ { "id": "dnv-01", "type": "clinical_observation", "references": ["PMID:16358218"],
-        "data": { "id": "proband-A", "family_id": "fam-A", "pheno_specificity_for_mde": "SPECIFIC",
+        "data": { "id": "proband-A", "family_id": "fam-A", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC",
           "confirmed_parental_relationship": "TRUE",
           "relatives": [ { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" },
                          { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" } ] } } ] },
     { "type": "EvidenceLine", "method": { "code": "CLN_DNV_SPEC_UNCONF", "label": "specific · unconfirmed parentage" }, "score": 2.0,
       "evidenceItems": [ { "id": "dnv-02", "type": "clinical_observation", "references": ["PMID:16358218"],
-        "data": { "id": "proband-B", "family_id": "fam-B", "pheno_specificity_for_mde": "SPECIFIC",
+        "data": { "id": "proband-B", "family_id": "fam-B", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC",
           "confirmed_parental_relationship": "FALSE",
           "relatives": [ { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" },
                          { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" } ] } } ] },
     { "type": "EvidenceLine", "method": { "code": "CLN_DNV_CONS_CONF", "label": "consistent · confirmed parentage" }, "score": 8.0,
       "evidenceItems": [
         { "id": "dnv-03a", "type": "clinical_observation", "references": ["PMID:19077116"],
-          "data": { "id": "proband-C", "family_id": "fam-C", "pheno_specificity_for_mde": "CONSISTENT",
+          "data": { "id": "proband-C", "family_id": "fam-C", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "CONSISTENT",
             "confirmed_parental_relationship": "TRUE",
             "relatives": [ { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" },
                            { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" } ] } },
         { "id": "dnv-03b", "type": "clinical_observation", "references": ["PMID:22585553"],
-          "data": { "id": "proband-D", "family_id": "fam-D", "pheno_specificity_for_mde": "CONSISTENT",
+          "data": { "id": "proband-D", "family_id": "fam-D", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "CONSISTENT",
             "confirmed_parental_relationship": "TRUE",
             "relatives": [ { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" },
                            { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" } ] } }
