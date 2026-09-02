@@ -465,6 +465,25 @@ under a cell-code **aggregate** `EvidenceLine` (`score` = their sum) beneath `CL
 case gets its own score node **and** the per-cell subtotal is preserved — deepest tree, and the
 cell code appears at two levels.
 
+```text
+EvidenceLine  CLN_AFF                          score +2.5   (Σ evidenceLines; cap floor 0)
+└─ evidenceLines:
+   └─ EvidenceLine  CLN_AFF_MONO               score +2.5   (Σ evidenceLines)
+      └─ evidenceLines:
+         ├─ EvidenceLine  CLN_AFF_MONO_SPEC_LIM    score +1.5   (Σ evidenceLines)  ← cell aggregate
+         │  └─ evidenceLines:
+         │     ├─ EvidenceLine  CLN_AFF_MONO_SPEC_LIM   score +0.5 → evidenceItems: [1 case]
+         │     ├─ EvidenceLine  CLN_AFF_MONO_SPEC_LIM   score +0.5 → evidenceItems: [1 case]
+         │     └─ EvidenceLine  CLN_AFF_MONO_SPEC_LIM   score +0.5 → evidenceItems: [1 case]
+         ├─ EvidenceLine  CLN_AFF_MONO_CONS_THOR   score +1.0   (Σ evidenceLines)  ← cell aggregate
+         │  └─ evidenceLines:
+         │     ├─ EvidenceLine  CLN_AFF_MONO_CONS_THOR  score +0.5 → evidenceItems: [1 case]
+         │     └─ EvidenceLine  CLN_AFF_MONO_CONS_THOR  score +0.5 → evidenceItems: [1 case]
+         └─ EvidenceLine  CLN_AFF_MONO_UAF         score +0.0   (Σ evidenceLines)  ← cell aggregate
+            └─ evidenceLines:
+               └─ EvidenceLine  CLN_AFF_MONO_UAF      score +0.0 → evidenceItems: [1 case]
+```
+
 ```json
 {
   "type": "EvidenceLine", "method": { "code": "CLN_AFF", "label": "Affected observations" }, "score": 2.5,
@@ -501,6 +520,19 @@ cell code appears at two levels.
 `EvidenceLine` (`score` = per-case, one `evidenceItems`); **all** are siblings directly under
 `CLN_AFF_MONO`, which sums them. Every case gets its own score node; flatter than Approach 2, but
 there is **no per-cell subtotal node** — a cell's total is the sum of the siblings sharing its code.
+
+```text
+EvidenceLine  CLN_AFF                          score +2.5   (Σ evidenceLines; cap floor 0)
+└─ evidenceLines:
+   └─ EvidenceLine  CLN_AFF_MONO               score +2.5   (Σ evidenceLines)
+      └─ evidenceLines:            (no per-cell subtotal node — cell total = Σ siblings sharing the code)
+         ├─ EvidenceLine  CLN_AFF_MONO_SPEC_LIM    score +0.5 → evidenceItems: [1 case]
+         ├─ EvidenceLine  CLN_AFF_MONO_SPEC_LIM    score +0.5 → evidenceItems: [1 case]
+         ├─ EvidenceLine  CLN_AFF_MONO_SPEC_LIM    score +0.5 → evidenceItems: [1 case]
+         ├─ EvidenceLine  CLN_AFF_MONO_CONS_THOR   score +0.5 → evidenceItems: [1 case]
+         ├─ EvidenceLine  CLN_AFF_MONO_CONS_THOR   score +0.5 → evidenceItems: [1 case]
+         └─ EvidenceLine  CLN_AFF_MONO_UAF         score +0.0 → evidenceItems: [1 case]
+```
 
 ```json
 {
