@@ -17,6 +17,7 @@ score**, its **aggregation** across cases, and the **rolled-up** code total.
 
 - [How to read this](#how-to-read-this)
 - [Evidence-line & item structure (GKS VA-Spec)](#evidence-line-item-structure-gks-va-spec)
+- [Structuring case-count evidence — 3 approaches](structuring-case-evidence.md) · *Approach 1 = default*
 
 **POP — Population evidence**
 
@@ -27,7 +28,7 @@ score**, its **aggregation** across cases, and the **rolled-up** code total.
 **CLN — Clinical observations**
 
 - [CLN — category roll-up](clinical.md#cln-clinical-observations-category-roll-up) · *POP_FRQ gate · CLN_CCS exclusivity · the ripple effect*
-- [`CLN_AFF` — Affected observations](clinical.md#cln_aff-affected-observations-worked-branch) — [data items](clinical.md#cln_aff-evidence-data-items) · [EvidenceLine tree](clinical.md#cln_aff-gks-va-spec-evidenceline-tree-auditable-array-approach) · [biallelic example](clinical.md#cln_aff-biallelic-bial-worked-example)
+- [`CLN_AFF` — Affected observations](clinical.md#cln_aff-affected-observations-worked-branch) — [data items](clinical.md#cln_aff-evidence-data-items) · [biallelic example](clinical.md#cln_aff-biallelic-bial-worked-example)
 - [`CLN_DNV` — De novo observations](clinical.md#cln_dnv-de-novo-observations-worked-branch)
 - [`CLN_ALTV` / `CLN_ALTG` — Alternative causative variant](clinical.md#cln_altv-cln_altg-alternative-causative-variant-worked-branch)
 - [`CLN_UAF` — Unaffected observations](clinical.md#cln_uaf-unaffected-observations-worked-branch)

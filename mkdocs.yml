@@ -160,6 +160,7 @@ nav:
       - Reference scoring: reference/scoring.md
       - Workflow scoring map:
           - reference/scoring-map/index.md
+          - "Structuring case evidence": reference/scoring-map/structuring-case-evidence.md
           - "Population (POP)": reference/scoring-map/population.md
           - "Clinical (CLN)": reference/scoring-map/clinical.md
           - "Locus (LOC)": reference/scoring-map/locus.md
