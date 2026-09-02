@@ -181,13 +181,201 @@ cap.
 
 ---
 
-## Next: `SPL` and `MIS`
+## `SPL` — Splice (worked branch)
 
-- **`SPL`** (splice) adds the `_SPA` assay step and a second held value (`PRD+SPA`, then
-  `PRD+SPA+FXN`); Canonical-Splice (SM 11) and Intronic-Synonymous (SM 12) share it. Grounded in
-  `v12-ada` (`SPL_+6`), `v17-ldlr` (`SPL_+5`), `v6-nf1` (`SPL_+4`), `v28-pten` (`SPL_−3`).
-- **`MIS`** (missense) — the amino-acid pipeline (`MIS_PRD` transcript-relevance only, the
-  four-category `MIS_INF` tally) **plus** the `SPL_` splice path and the **take-higher** decision.
-  Grounded in `v22-f8` (`MIS_+5`), `v10-scn2a` / `v7-pah` (`MIS_+4`), `v13-aipl1` (`MIS_−2`).
+**Where it sits:** PFD → `SPL`. **Canonical-Splice** (SM 11) and **Intronic / Synonymous** (SM 12)
+share this pipeline (the missense splice path reuses it too). Unlike LoF, it inserts a **splice-assay
+(`_SPA`)** step, so it holds **two** intermediate values.
 
-Then the PFD parent joins `HOD` at the **(VBC, MDE) total → classification band**.
+### The pipeline
+
+`PRD → SPA → [held PRD+SPA] → FXN → [held PRD+SPA+FXN] → INF → parent`
+
+1. **`SPL_PRD`** — initial points (from the splice prediction) **× SM 18**, capped to the branch.
+2. **`SPL_SPA`** — RNA splice-assay result, coded to points (raw); `_ND` if none. *(On canonical
+   splice the assay usually **reduces** the PRD; on the missense splice path it scales it up.)*
+3. **held `PRD+SPA`** — `cap(PRD + SPA, branch)`; recorded, no code.
+4. **`SPL_FXN`** — protein/functional assay (SM 20), raw.
+5. **held `PRD+SPA+FXN`** — `cap(…, [−8, +9])`; recorded, no code.
+6. **`SPL_INF`** — informative splice variants (SM 19), capped `[−8, +8]`.
+7. **parent** — `cap(held + INF, [−8, +10])`.
+
+### The branches (Canonical splice, SM 11)
+
+The splice **prediction outcome** sets the caps:
+
+| Prediction outcome | `_PRD` cap | notes |
+|---|---|---|
+| NMD predicted | `[0, +6]` | strongest LoF splice |
+| Frameshift, no NMD | `[−1, +6]` | |
+| Splice change, no frameshift (in-frame) | `[−1, +6]` | |
+| Uncertain | `[0, 0]` | PRD 0; parent capped `+8` |
+| Unlikely *(violet)* | `[−1, 0]` | **benignity-only** — every cap `≤ 0` |
+
+*(Intronic/Synonymous, SM 12, runs the same pipeline with its own path set. The missense splice path,
+SM 6, inverts the blue/violet parent caps — a suspected SM 6 inconsistency, reproduced and flagged.)*
+
+### Evidence data items
+
+| Attribute (real name) | Feeds |
+|---|---|
+| `assessment.prediction_outcome` | branch caps |
+| `predictive.initial_points` | `_PRD` |
+| `mechanism_exon_relevance.*` + `gene_disease_validity` | `_PRD` (SM 18) |
+| `spa_points` | `_SPA` (raw) |
+| `fxn_points` | `_FXN` (raw) |
+| `informative.variants[].classification` | `_INF` |
+
+### `SPL` as a GKS `EvidenceLine` tree (Approach 1)
+
+> **Basis — Manufactured (breakdown).** Real `SPL` totals are grounded — `v12-ada` (`SPL_+6`,
+> in-frame exon skip of a critical region), `v17-ldlr` (`SPL_+5`), `v6-nf1` (`SPL_+4`), `v28-pten`
+> (`SPL_−3`) — but the per-step decomposition is illustrative. In-frame exon skip, no frameshift.
+
+```text
+EvidenceLine  SPL                          score +7.0   (= cap(held[PRD+SPA+FXN] + INF, [-8,+10]))
+└─ evidenceLines:
+   ├─ (held) PRD+SPA+FXN                    score +6.0   (cap(held[PRD+SPA] + FXN, [-8,+9]); recorded · no code)
+   │  ├─ (held) PRD+SPA                     score +5.0   (cap(PRD + SPA, [-8,+10]); recorded · no code)
+   │  │  ├─ EvidenceLine  SPL_PRD           score +3.0 → evidenceItems:[1]  (initial +6.0 × SM18 0.5 [Likely×All]; cap [-1,+6])
+   │  │  └─ EvidenceLine  SPL_SPA           score +2.0 → evidenceItems:[1]  (RNA splice assay confirms; raw)
+   │  └─ EvidenceLine  SPL_FXN              score +1.0 → evidenceItems:[1]  (protein assay · SM20 · raw)
+   └─ EvidenceLine  SPL_INF                 score +1.0 → evidenceItems:[1]  (1 LP informative splice variant; cap [-8,+8])
+```
+
+```json
+{
+  "type": "EvidenceLine", "method": { "code": "SPL", "label": "Splice · in-frame exon skip" }, "score": 7.0,
+  "note": "two held values; parent = cap(held[PRD+SPA+FXN] + INF, [-8,+10])",
+  "evidenceLines": [
+    { "held": true, "label": "PRD + SPA + FXN (held — recorded, no method.code)", "score": 6.0,
+      "note": "cap(held[PRD+SPA] + FXN, [-8,+9])",
+      "evidenceLines": [
+        { "held": true, "label": "PRD + SPA (held — recorded, no method.code)", "score": 5.0,
+          "note": "cap(PRD + SPA, [-8,+10])",
+          "evidenceLines": [
+            { "type": "EvidenceLine", "method": { "code": "SPL_PRD", "label": "splice prediction × SM 18" }, "score": 3.0,
+              "evidenceItems": [ { "id": "spl-prd-01", "type": "computational_prediction", "references": ["practice-variant-set:v12-ada"],
+                "description": "Manufactured — in-frame exon skip (+6.0 initial) × SM 18 (Likely × All = 0.5).",
+                "data": { "prediction_outcome": "SPLICE_NO_FRAMESHIFT", "initial_points": 6.0,
+                  "gencc_mechanism": "LIKELY", "exon_relevance": "ALL", "gene_disease_validity": "STRONG", "sm18_fraction": 0.5 } } ] },
+            { "type": "EvidenceLine", "method": { "code": "SPL_SPA", "label": "RNA splice assay" }, "score": 2.0,
+              "evidenceItems": [ { "id": "spl-spa-01", "type": "splice_assay", "references": [],
+                "description": "Manufactured — minigene/RNA assay confirms aberrant splicing.",
+                "data": { "spa_points": 2.0, "assay": "minigene / RNA-seq" } } ] }
+          ] },
+        { "type": "EvidenceLine", "method": { "code": "SPL_FXN", "label": "functional assay (SM 20)" }, "score": 1.0,
+          "evidenceItems": [ { "id": "spl-fxn-01", "type": "functional_assay", "references": [],
+            "description": "Manufactured — protein-level assay.", "data": { "fxn_points": 1.0 } } ] }
+      ] },
+    { "type": "EvidenceLine", "method": { "code": "SPL_INF", "label": "informative variants (SM 19)" }, "score": 1.0,
+      "evidenceItems": [ { "id": "spl-inf-01", "type": "informative_variant", "references": [],
+        "description": "Manufactured — one LP splice variant at the locus.",
+        "data": { "variants": [ { "classification": "LP", "same_splice_consequence": true } ] } } ] }
+  ]
+}
+```
+
+held `PRD+SPA` = `cap(3.0 + 2.0, [−8,+10]) = +5.0`; held `PRD+SPA+FXN` = `cap(5.0 + 1.0, [−8,+9]) =
++6.0`; parent `SPL` = `cap(6.0 + 1.0, [−8,+10]) = +7.0`. **Both** held values are recorded, neither has
+a `method.code`.
+
+---
+
+## `MIS` — Missense (worked branch · dual-path take-higher)
+
+**Where it sits:** PFD → `MIS` (SM 6). A missense VBC is scored on **two paths** and the **higher
+applies**: an **amino-acid** path (`MIS_`) and a **splice** path (`SPL_`, the pipeline above). SM 6
+L157: a negative/absent splice total → amino-acid; a positive splice total → the higher; a **positive
+tie → amino-acid** (the amino-acid effect has the higher prior). Editing splice inputs can therefore
+flip *which parent code the variant reports* — another ripple (principle 6).
+
+### The amino-acid pipeline (`MIS_`)
+
+`MIS_PRD → [held PRD+FXN] → MIS_INF → mis_total`
+
+- **`MIS_PRD`** — one **pre-selected calibrated predictor** (AlphaMissense / BayesDel / ESM1b /
+  MutPred2 / REVEL / VARITY_R / VEST4), initial **+4** (pathogenic) down to **−3…−4** (benign),
+  **× transcript relevance** (exon fraction only — **no** mechanism axis and **no** GDV gate, since
+  predictors already capture LoF + GoF). Cap **[−4, +4]**.
+- **`MIS_FXN`** — functional assay (SM 20), raw. held `PRD+FXN` cap **[−8, +6]**.
+- **`MIS_INF`** — the **four-category** tally (below), cap **[−8, +8]**.
+- **mis_total** — `cap(held + INF, [−8, +9])`.
+
+### `MIS_INF` — four categories (SM 6)
+
+| Category | meaning | tally |
+|---|---|---|
+| `SAME_AA_PATHOGENIC` | different variant, **same** amino-acid change, P/LP | **doubled**: +4 first P / +2 first LP, +2 each more |
+| `DISTINCT_AA_PATHOGENIC` | **different** AA change at the residue, P/LP | standard: +2 / +1 / +1 |
+| `DISTINCT_AA_BENIGN` | different AA change, B/LB | standard *(negative)* |
+| `SAME_AA_BENIGN` | same AA change, B/LB | **doubled** *(negative)* |
+
+A VUS or off-polarity class scores 0. (The SM 7 motif-variant special case is deferred.)
+
+### Take-higher
+
+| splice total `SPL_` | result |
+|---|---|
+| negative or absent | amino-acid `MIS_` applies |
+| positive, `> MIS_` | splice `SPL_` applies (parent code becomes `SPL`) |
+| positive, `≤ MIS_` (incl. tie) | amino-acid `MIS_` applies |
+
+### `MIS` as a GKS `EvidenceLine` tree (Approach 1)
+
+> **Basis — Manufactured (breakdown).** Real `MIS` totals are grounded — `v22-f8` (`MIS_+5`),
+> `v10-scn2a` / `v7-pah` (`MIS_+4`), `v19-tp53` (`MIS_+1`), `v3-foxg1` (`MIS_−1`), `v13-aipl1`
+> (`MIS_−2`) — but the per-step decomposition is illustrative. Here the amino-acid path wins.
+
+```text
+take-higher:  MIS_ +7.0   vs   SPL_ +2.0   →   MIS_   (applied parent = MIS, score +7.0)
+EvidenceLine  MIS                          score +7.0   (amino-acid path — SELECTED)
+└─ evidenceLines:
+   ├─ (held) PRD+FXN                        score +5.0   (cap(PRD + FXN, [-8,+6]); recorded · no code)
+   │  ├─ EvidenceLine  MIS_PRD              score +4.0 → evidenceItems:[1]  (REVEL 0.92 → +4.0 × transcript All; cap [-4,+4])
+   │  └─ EvidenceLine  MIS_FXN              score +1.0 → evidenceItems:[1]  (functional assay · SM20 · raw)
+   └─ EvidenceLine  MIS_INF                 score +2.0 → evidenceItems:[1]  (1 distinct-AA P; four-category tally; cap [-8,+8])
+   ·  (SPL_ path scored separately = +2.0 — not selected; shown for the comparison)
+```
+
+```json
+{
+  "type": "EvidenceLine", "method": { "code": "MIS", "label": "Missense · amino-acid (selected by take-higher)" }, "score": 7.0,
+  "note": "take-higher: MIS_ +7.0 vs SPL_ +2.0 -> MIS_ applies; mis_total = cap(held[PRD+FXN] + INF, [-8,+9])",
+  "evidenceLines": [
+    { "held": true, "label": "PRD + FXN (held — recorded, no method.code)", "score": 5.0,
+      "note": "cap(PRD + FXN, [-8,+6])",
+      "evidenceLines": [
+        { "type": "EvidenceLine", "method": { "code": "MIS_PRD", "label": "in-silico (calibrated) × transcript relevance" }, "score": 4.0,
+          "evidenceItems": [ { "id": "mis-prd-01", "type": "computational_prediction", "references": ["practice-variant-set:v10-scn2a"],
+            "description": "Manufactured — REVEL 0.92 -> +4.0, transcript relevance All (x1.0); no mechanism/GDV axis.",
+            "data": { "predictor": "REVEL", "raw_score": 0.92, "initial_points": 4.0, "transcript_relevance": "ALL" } } ] },
+        { "type": "EvidenceLine", "method": { "code": "MIS_FXN", "label": "functional assay (SM 20)" }, "score": 1.0,
+          "evidenceItems": [ { "id": "mis-fxn-01", "type": "functional_assay", "references": [],
+            "description": "Manufactured — calibrated missense functional assay.", "data": { "fxn_points": 1.0 } } ] }
+      ] },
+    { "type": "EvidenceLine", "method": { "code": "MIS_INF", "label": "informative variants · four-category (SM 6)" }, "score": 2.0,
+      "evidenceItems": [ { "id": "mis-inf-01", "type": "informative_variant", "references": [],
+        "description": "Manufactured — one Pathogenic variant, distinct amino-acid change at the residue (category 2).",
+        "data": { "variants": [ { "category": "DISTINCT_AA_PATHOGENIC", "classification": "P" } ] } } ] }
+  ]
+}
+```
+
+`MIS_PRD` = `cap(4.0 × 1.0, [−4,+4]) = +4.0`; held `PRD+FXN` = `cap(4.0 + 1.0, [−8,+6]) = +5.0`;
+`MIS_INF` = `+2.0` (category 2, first P); mis_total = `cap(5.0 + 2.0, [−8,+9]) = +7.0`. The splice
+path scores `SPL_ +2.0` on its own pipeline, so the take-higher keeps **`MIS_` (+7.0)**. Had the
+splice path exceeded `+7.0`, the variant would report parent code **`SPL`** instead.
+
+---
+
+## Next: the (VBC, MDE) total → classification
+
+Every PFD parent code and the `HOD` total now feed the top of the tree:
+
+- **(VBC, MDE) total** = `HOD` + the applied `PFD` parent total (the take-higher result for missense).
+- **Classification band** (SM 1): `≥ +10` P · `+6 … <+10` LP · VUS bands · `≤ −7` / `≤ −1` benign
+  tiers — the final `EvidenceLine` roll-up.
+
+This is the last roll-up; with it the scoring map spans every scored node from the leaf cases to the
+classification band.

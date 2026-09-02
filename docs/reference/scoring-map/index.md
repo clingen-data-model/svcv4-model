@@ -44,7 +44,8 @@ score**, its **aggregation** across cases, and the **rolled-up** code total.
 
 - [PFD — the pipeline (overview)](pfd.md#pfd-the-pipeline-overview) · *`_PRD`/`_SPA`/`_FXN`/`_INF`, held values, take-higher*
 - [`NUL` / `CDS` — Loss of function](pfd.md#nul-cds-loss-of-function-worked-branch)
-- *`SPL`, `MIS` — in progress*
+- [`SPL` — Splice](pfd.md#spl-splice-worked-branch)
+- [`MIS` — Missense (dual-path take-higher)](pfd.md#mis-missense-worked-branch-dual-path-take-higher)
 
 **HOD & beyond**
 
