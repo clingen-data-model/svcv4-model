@@ -66,6 +66,107 @@ reviewer follows `references` + `id` to the source, then re-derives the leaf cod
 
 ---
 
+## `POP_FRQ` — Population frequency (worked branch)
+
+**Where it sits:** HOD → Population (POP) → `POP_FRQ` · Evidence Code range **0.0 to –6.0** (SM 3,
+Figure 1). **Benignity-only** and **per-variant** — computed once for the VBC from an unselected
+population database, *not* per proband. There is **no multiplier and no cross-proband summation**:
+exactly one band applies to the variant. (This is the first structural contrast with the per-proband
+CLN codes — worth seeing early, because most POP/PFD codes score this way.)
+
+**How the band is chosen.** `POP_FRQ` compares the VBC's **FAF** (filtering allele frequency,
+gnomAD) to the MDE's **DAFT** (disease allele frequency threshold — computed per gene/MDE by the
+calculator / binning / pathogenic-variants methods, SM 3). The **fold** = FAF ÷ DAFT selects the
+band.
+
+### The three levels
+
+1. **Band** — the FAF/DAFT fold selects exactly **one** of four bands; each band is a distinct
+   scoring opportunity → its own proposed code.
+2. **No aggregation** — a single per-variant assessment: no `n × per-case` multiplier, no summation
+   across probands.
+3. **Roll-up** — `POP_FRQ` = the selected band (0.0 … –6.0); it feeds the **POP** category subtotal
+   alongside `POP_HMZ` (SM 3 sets no combined POP cap).
+
+### The bands
+
+Proposed code `POP_FRQ_<STRENGTH>` — **only `POP_FRQ` is an official SVCv4 code**; SVCv4 writes the
+band as a point value (`POP_FRQ_-3.0`), which this map avoids (no code ends in a number). The
+strength labels are proposed descriptors. Bands are **lower-edge-inclusive** here (SM 3 prose uses
+strict `>`/`<` at the exact multiples — a documented boundary assumption).
+
+| Proposed code | FAF vs DAFT (fold) | Points | Official? | SM 3 (Figure 1) |
+|---|---|---|---|---|
+| `POP_FRQ_NONE` | FAF < 1.5× DAFT       | **0.0**  | ⬦ | below threshold — no benign evidence |
+| `POP_FRQ_SUPP` | 1.5× ≤ FAF < 5× DAFT  | **–1.0** | ⬦ | supporting benign |
+| `POP_FRQ_MOD`  | 5× ≤ FAF < 15× DAFT   | **–3.0** | ⬦ | moderate benign (SVCv4 chose –3, not BS1's –4) |
+| `POP_FRQ_STRG` | FAF ≥ 15× DAFT        | **–6.0** | ⬦ | strong benign |
+| `POP_FRQ`      | the selected band     | **0.0 … –6.0** | ✅ | Figure 1 |
+
+Every variant is assessable — **absent-in-database is `faf = 0.0` → `POP_FRQ_NONE` (+0.0)**, not "no
+data". `_ND` (no code) is reserved for when FAF or DAFT cannot be computed: a non-robust AF from a
+low allele number, or FAF undefined at allele count 1 (SM 3 caveats), or `daft ≤ 0`.
+
+### Evidence data items
+
+| Attribute (real name) | Feeds | Notes |
+|---|---|---|
+| `evidence.faf`                    | fold numerator   | gnomAD filtering allele frequency; undefined at allele count 1 |
+| `evidence.faf_source`             | provenance       | database + version (e.g. gnomAD v4.1.0) |
+| `evidence.daft`                   | fold denominator | computed threshold; must be `> 0` |
+| `evidence.daft_method`            | provenance       | `calculator` / `binning` / `pathogenic-variants` |
+| `evidence.daft_calculator_inputs` | provenance       | prevalence, penetrance, locus/allelic heterogeneity, inheritance |
+| *(derived)* `faf / daft`          | band selection   | not stored — computed at scoring time |
+
+### Code ← data-item cross-reference
+
+| Code | fold = `faf / daft` |
+|---|---|
+| `POP_FRQ_NONE` | < 1.5 |
+| `POP_FRQ_SUPP` | 1.5 – < 5 |
+| `POP_FRQ_MOD`  | 5 – < 15 |
+| `POP_FRQ_STRG` | ≥ 15 |
+| *(no code → `_ND`)* | `faf` or `daft` missing, or `daft ≤ 0` |
+
+### `POP_FRQ` as a GKS `EvidenceLine` tree (Approach 1)
+
+> **Basis — Grounded DAFT inputs + manufactured FAF.** The DAFT inputs (prevalence 1/5000,
+> penetrance 0.85, heterogeneity) match SM 3's worked FBN1 example and practice `example-fbn1`
+> (DAFT ≈ 0.000118). The VBC's FAF here (0.00072 → `MOD`, −3.0) is invented to illustrate a non-zero
+> band; the real `example-fbn1` VBC is below threshold (`POP_FRQ` +0.0).
+
+An FBN1 · Marfan example (SM 3's worked DAFT = 0.000118). The VBC's FAF is 0.00072, so
+fold ≈ 6.1 → the `MOD` band → **–3.0**. The tree is shallow — one band, one population-frequency
+observation, no multiplier:
+
+```text
+EvidenceLine  POP_FRQ                     score -3.0   (single per-variant assessment; range 0.0…-6.0)
+└─ evidenceLines:
+   └─ EvidenceLine  POP_FRQ_MOD           score -3.0 → evidenceItems: [1 pop-frequency obs]  (FAF ≈ 6.1× DAFT)
+```
+
+```json
+{
+  "type": "EvidenceLine", "method": { "code": "POP_FRQ", "label": "Population frequency (benignity)" }, "score": -3.0,
+  "note": "single per-variant assessment; exactly one band applies; range 0.0 to -6.0",
+  "evidenceLines": [
+    { "type": "EvidenceLine", "method": { "code": "POP_FRQ_MOD", "label": "FAF 5-15x DAFT · moderate benign" }, "score": -3.0,
+      "evidenceItems": [ { "id": "pop-01", "type": "population_frequency", "references": ["gnomAD:v4.1.0"],
+        "data": { "faf": 0.00072, "faf_source": "gnomAD v4.1.0",
+          "daft": 0.000118, "daft_method": "calculator",
+          "daft_calculator_inputs": { "prevalence_denominator": 5000, "penetrance": 0.85,
+            "locus_heterogeneity": 1.0, "allelic_heterogeneity": 0.10, "inheritance": "monoallelic" } } } ] }
+  ]
+}
+```
+
+fold = `0.00072 / 0.000118 ≈ 6.1` → `5× ≤ FAF < 15×` → `POP_FRQ_MOD` = **–3.0**. Because only one
+band applies, `POP_FRQ` reports that band directly — no summation node. The single leaf still carries
+a full audit trail (the FAF and its source, the DAFT and the method + inputs used to derive it), so a
+reviewer can reproduce the fold and the resulting band.
+
+---
+
 ## `CLN_AFF` — Affected observations (worked branch)
 
 **Where it sits:** HOD → Clinical Observations (CLN) → `CLN_AFF` · Evidence Code Cap **≥ 0** (SM 4
@@ -354,6 +455,11 @@ F3, individual II-1" — if you want it on each item.)*
 
 ### `CLN_AFF` as an `EvidenceLine` tree — multiple probands per code
 
+> **Basis — Manufactured.** Gene/MDE (MYH7 · HCM · AD) matches practice `v5-myh7`, but the
+> multi-proband distribution here (3 × `SPEC_LIM`, 2 × `CONS_THOR`, 1 × `UAF`) is invented to
+> demonstrate the `n × per-case` multiplier. Practice `v5-myh7`'s real cohort is 3 probands —
+> SPECIFIC / CONSISTENT / INCONSISTENT — targeting `CLN_AFF_+1`.
+
 MYH7 · HCM · **AD** with several probands per cell (`AD` ⇒ monoallelic only, so `CLN_AFF_BIAL` is
 absent). Each **leaf** `evidenceItems` array holds **every** case that maps to that leaf's code:
 
@@ -463,7 +569,8 @@ nodes; explicit per-cell subtotal; individual cases are **data**, not scored lin
 `EvidenceLine` (`score` = per-case, one `evidenceItems`); siblings of the same cell are grouped
 under a cell-code **aggregate** `EvidenceLine` (`score` = their sum) beneath `CLN_AFF_MONO`. Every
 case gets its own score node **and** the per-cell subtotal is preserved — deepest tree, and the
-cell code appears at two levels.
+cell code appears at two levels. *(Basis — Manufactured: the same invented MYH7 cohort as Approach 1,
+restructured to show the shape.)*
 
 ```text
 EvidenceLine  CLN_AFF                          score +2.5   (Σ evidenceLines; cap floor 0)
@@ -520,6 +627,7 @@ EvidenceLine  CLN_AFF                          score +2.5   (Σ evidenceLines; c
 `EvidenceLine` (`score` = per-case, one `evidenceItems`); **all** are siblings directly under
 `CLN_AFF_MONO`, which sums them. Every case gets its own score node; flatter than Approach 2, but
 there is **no per-cell subtotal node** — a cell's total is the sum of the siblings sharing its code.
+*(Basis — Manufactured: the same invented MYH7 cohort as Approach 1, restructured to show the shape.)*
 
 ```text
 EvidenceLine  CLN_AFF                          score +2.5   (Σ evidenceLines; cap floor 0)
@@ -574,10 +682,12 @@ grouping doesn't need to be a first-class node.
 
 ## `CLN_AFF` — biallelic (`BIAL`) worked example
 
-For a **biallelic** MDE (e.g. ATM · ataxia-telangiectasia · **AR**), `CLN_AFF_MONO` is absent, so
+For a **biallelic** MDE (e.g. USH2A · Usher syndrome · **AR**), `CLN_AFF_MONO` is absent, so
 `CLN_AFF = CLN_AFF_BIAL`. The biallelic cells fan across the **second-variant status** (columns:
 `CTP`/`ATP`/`CTV`/`HOM`/`NON`) and **co-occurrence × thoroughness** (rows: `RARE`/`UNCM`/`INCP`,
-plus the two override rows).
+plus the two override rows). This section has two parts: first the **code catalog** — every cell of
+Table 2 and the code it mints — then a **realistic worked example** showing how one real variant +
+MDE populates only a *few* of those cells.
 
 ### Every cell of Table 2 → a code
 
@@ -648,124 +758,79 @@ noted.
 | `CLN_AFF_BIAL_ALT` | — | — | — | — | — | +0.0 → `CLN_ALT` *(≥1 P/LP additional variant, different gene)* |
 | `CLN_AFF_BIAL_UAF` | — | — | — | — | — | +0.0 → `CLN_UAF` *(`pheno_specificity_for_mde`=INCONSISTENT)* |
 
-### `EvidenceLine` tree — every `BIAL` code (one proband each)
+### `EvidenceLine` tree — a realistic biallelic classification (USH2A · Usher syndrome type 2 · AR)
 
-A demonstration case (not a realistic single classification) with one representative proband per
-`BIAL` leaf — **except `CLN_AFF_BIAL_RARE_CTP`, which carries two probands** to show that
-matching-signature cases **multiply** the leaf score (`n × per-case` = `2 × +3.0 = +6.0`). `Σ =
-+16.75` → `CLN_AFF (score: +16.75)`. `data` is abbreviated to discriminators.
+> **Basis — Grounded (practice variant `v20-ush2a`).** The gene, MDE, and the three-proband
+> second-allele pattern are drawn from a practice variant. Contrast the *catalog* grid above, which
+> is **manufactured** to display all 14 codes at once and is not a real classification.
+
+The catalog lists *all 14* codes, but **no single variant + MDE realistically fills every cell** —
+cells like `ALT` (an alternate P/LP cause in another gene) or `UAF` (an inconsistent phenotype)
+rarely co-occur with strong pathogenic cells for the *same* variant. A real classification populates
+only a **few** cells. Here, **three unrelated affected biallelic probands** share one VBC but land in
+**three different cells**, because each proband's **second allele differs**:
+
+- **Proband 1** — **homozygous** for the VBC → `CLN_AFF_BIAL_THOR_HOM` (**+1.0**)
+- **Proband 2** — heterozygous, second allele a **confirmed-in-trans VUS** → `CLN_AFF_BIAL_RARE_CTV` (**+1.5**)
+- **Proband 3** — heterozygous, second allele a **confirmed-in-trans known Pathogenic LoF** → `CLN_AFF_BIAL_RARE_CTP` (**+3.0**)
+
+`Σ = +5.5` → `CLN_AFF (score: +5.5)`. `data` is abbreviated to discriminators.
 
 ```text
-EvidenceLine  CLN_AFF                             score +16.75  (Σ evidenceLines; cap floor 0)
+EvidenceLine  CLN_AFF                          score +5.5   (Σ evidenceLines; cap floor 0)
 └─ evidenceLines:
-   └─ EvidenceLine  CLN_AFF_BIAL                  score +16.75  (Σ evidenceLines)
+   └─ EvidenceLine  CLN_AFF_BIAL               score +5.5   (Σ evidenceLines)
       └─ evidenceLines:
-         ├─ EvidenceLine  CLN_AFF_BIAL_RARE_CTP    score +6.0  → evidenceItems: [2 cases]  (2 × +3.0)
-         ├─ EvidenceLine  CLN_AFF_BIAL_RARE_ATP    score +1.5  → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_RARE_CTV    score +1.5  → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_UNCM_CTP    score +2.0  → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_UNCM_ATP    score +1.0  → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_UNCM_CTV    score +1.0  → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_INCP_CTP    score +1.0  → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_INCP_ATP    score +0.75 → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_INCP_CTV    score +0.5  → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_THOR_HOM    score +1.0  → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_INCP_HOM    score +0.5  → evidenceItems: [1 case]
-         ├─ EvidenceLine  CLN_AFF_BIAL_NON         score +0.0  → evidenceItems: [1 case]  (no valid in-trans 2nd)
-         ├─ EvidenceLine  CLN_AFF_BIAL_ALT         score +0.0  → evidenceItems: [1 case]  (→ CLN_ALT)
-         └─ EvidenceLine  CLN_AFF_BIAL_UAF         score +0.0  → evidenceItems: [1 case]  (→ CLN_UAF)
+         ├─ EvidenceLine  CLN_AFF_BIAL_THOR_HOM    score +1.0 → evidenceItems: [1 case]  (proband 1 · homozygous VBC)
+         ├─ EvidenceLine  CLN_AFF_BIAL_RARE_CTV    score +1.5 → evidenceItems: [1 case]  (proband 2 · in-trans VUS)
+         └─ EvidenceLine  CLN_AFF_BIAL_RARE_CTP    score +3.0 → evidenceItems: [1 case]  (proband 3 · in-trans P)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "CLN_AFF", "label": "Affected observations" }, "score": 16.75,
+  "type": "EvidenceLine", "method": { "code": "CLN_AFF", "label": "Affected observations" }, "score": 5.5,
   "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL", "label": "Biallelic (Table 2) subtotal" }, "score": 16.75,
+    { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL", "label": "Biallelic (Table 2) subtotal" }, "score": 5.5,
       "evidenceLines": [
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_CTP", "label": "rare · confirmed-trans P/LP" }, "score": 6.0,
-          "evidenceItems": [
-            { "id": "cln-01a", "type": "clinical_observation", "references": ["PMID:15241795"],
-              "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
-                "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
-                "compound_het_variant": { "classification": "P", "phase_confidence": "HIGH", "co_occurrence_likelihood": "LT_0_0001" } } },
-            { "id": "cln-01b", "type": "clinical_observation", "references": ["PMID:19546288"],
-              "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
-                "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
-                "compound_het_variant": { "classification": "LP", "phase_confidence": "HIGH", "co_occurrence_likelihood": "LT_0_0001" } } }
-          ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_ATP", "label": "rare · assumed-trans P/LP" }, "score": 1.5,
-          "evidenceItems": [ { "id": "cln-02", "type": "clinical_observation", "references": ["PMID:21542060"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
-              "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
-              "compound_het_variant": { "classification": "LP", "phase_confidence": "LOW", "co_occurrence_likelihood": "LT_0_0001" } } } ] },
+        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_THOR_HOM", "label": "homozygous · thorough" }, "score": 1.0,
+          "evidenceItems": [ { "id": "ush2a-proband-1", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
+            "description": "Illustrative — proband 1 homozygous for the VBC; classic Usher type 2.",
+            "data": { "id": "ush2a-proband-1", "family_id": "ush-fam-1", "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HOM",
+              "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" } } } ] },
         { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_CTV", "label": "rare · confirmed-trans VUS" }, "score": 1.5,
-          "evidenceItems": [ { "id": "cln-03", "type": "clinical_observation", "references": ["PMID:30093976"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
+          "evidenceItems": [ { "id": "ush2a-proband-2", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
+            "description": "Illustrative — proband 2 second allele a VUS confirmed in trans.",
+            "data": { "id": "ush2a-proband-2", "family_id": "ush-fam-2", "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HET",
               "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
               "compound_het_variant": { "classification": "VUS", "phase_confidence": "HIGH", "co_occurrence_likelihood": "LT_0_0001" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_UNCM_CTP", "label": "uncommon · confirmed-trans P/LP" }, "score": 2.0,
-          "evidenceItems": [ { "id": "cln-04", "type": "clinical_observation", "references": ["PMID:26896183"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
+        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_CTP", "label": "rare · confirmed-trans P/LP" }, "score": 3.0,
+          "evidenceItems": [ { "id": "ush2a-proband-3", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
+            "description": "Illustrative — proband 3 second allele a known Pathogenic LoF confirmed in trans.",
+            "data": { "id": "ush2a-proband-3", "family_id": "ush-fam-3", "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HET",
               "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
-              "compound_het_variant": { "classification": "P", "phase_confidence": "HIGH", "co_occurrence_likelihood": "BETWEEN_0_0001_0_01" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_UNCM_ATP", "label": "uncommon · assumed-trans P/LP" }, "score": 1.0,
-          "evidenceItems": [ { "id": "cln-05", "type": "clinical_observation", "references": ["PMID:27884173"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
-              "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
-              "compound_het_variant": { "classification": "P", "phase_confidence": "MED", "co_occurrence_likelihood": "BETWEEN_0_0001_0_01" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_UNCM_CTV", "label": "uncommon · confirmed-trans VUS" }, "score": 1.0,
-          "evidenceItems": [ { "id": "cln-06", "type": "clinical_observation", "references": ["PMID:28492532"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
-              "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
-              "compound_het_variant": { "classification": "VUS", "phase_confidence": "HIGH", "co_occurrence_likelihood": "BETWEEN_0_0001_0_01" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_INCP_CTP", "label": "incomplete · confirmed-trans P/LP" }, "score": 1.0,
-          "evidenceItems": [ { "id": "cln-07", "type": "clinical_observation", "references": ["PMID:29625052"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
-              "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
-              "compound_het_variant": { "classification": "P", "phase_confidence": "HIGH", "co_occurrence_likelihood": "NOT_ASSESSED" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_INCP_ATP", "label": "incomplete · assumed-trans P/LP" }, "score": 0.75,
-          "evidenceItems": [ { "id": "cln-08", "type": "clinical_observation", "references": ["PMID:30675029"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
-              "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
-              "compound_het_variant": { "classification": "P", "phase_confidence": "LOW", "co_occurrence_likelihood": "NOT_ASSESSED" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_INCP_CTV", "label": "incomplete · confirmed-trans VUS" }, "score": 0.5,
-          "evidenceItems": [ { "id": "cln-09", "type": "clinical_observation", "references": ["PMID:31447099"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET",
-              "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
-              "compound_het_variant": { "classification": "VUS", "phase_confidence": "HIGH", "co_occurrence_likelihood": "NOT_ASSESSED" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_THOR_HOM", "label": "homozygous · thorough" }, "score": 1.0,
-          "evidenceItems": [ { "id": "cln-10", "type": "clinical_observation", "references": ["PMID:32341571"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HOM",
-              "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_INCP_HOM", "label": "homozygous · incomplete" }, "score": 0.5,
-          "evidenceItems": [ { "id": "cln-11", "type": "clinical_observation", "references": ["PMID:33083013"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HOM",
-              "testing": { "covers_all_genes_relevant_to_mde": "TRUE" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_NON", "label": "het · no valid in-trans 2nd variant" }, "score": 0.0,
-          "evidenceItems": [ { "id": "cln-12", "type": "clinical_observation", "references": ["PMID:34426522"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET", "additional_variant_exists": "FALSE",
-              "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_ALT", "label": "P/LP alt (different gene) → CLN_ALT" }, "score": 0.0,
-          "evidenceItems": [ { "id": "cln-13", "type": "clinical_observation", "references": ["PMID:35529060"],
-            "data": { "pheno_specificity_for_mde": "CONSISTENT", "vbc_zygosity": "HET", "additional_variant_exists": "TRUE",
-              "additional_variants": [ { "id": "alt-1", "classification": "P" } ] } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_UAF", "label": "inconsistent phenotype → CLN_UAF" }, "score": 0.0,
-          "evidenceItems": [ { "id": "cln-14", "type": "clinical_observation", "references": ["PMID:36646002"],
-            "data": { "pheno_specificity_for_mde": "INCONSISTENT", "vbc_zygosity": "HET" } } ] }
+              "compound_het_variant": { "classification": "P", "phase_confidence": "HIGH", "co_occurrence_likelihood": "LT_0_0001" } } } ] }
       ] }
   ]
 }
 ```
 
-**The multiplier is the point of the array.** `CLN_AFF_BIAL_RARE_CTP` holds two probands
-(`cln-01a`, `cln-01b`) that both match the same cell signature (HET · confirmed-trans P/LP · rare
-co-occurrence · thorough), so the leaf scores `2 × +3.0 = +6.0`; a third matching case would make
-it `+9.0`, and so on. Every leaf works this way — `evidenceItems` is where cases sharing a cell's
-signature accumulate as `n × per-case` into that leaf's score.
+**Why three cells, one variant.** The VBC is identical across all three probands; what places each
+in a different cell is the **second allele** (homozygous VBC vs in-trans VUS vs in-trans P) — exactly
+the axis Table 2's columns encode. This is the biologically natural way a biallelic classification
+spans cells: **different probands, different partner alleles**, not one proband in many cells.
 
-The `NON`, `ALT`, and `UAF` leaves score `+0.0` but are kept as nodes — each carries its own
-auditable cases and records *why* a proband contributed no points (no valid in-trans variant; an
+**The multiplier still applies.** Each cell here has one proband; had two probands shared the
+in-trans-P signature, `CLN_AFF_BIAL_RARE_CTP` would score `2 × +3.0 = +6.0` (the `n × per-case` rule,
+shown in the monoallelic tree above).
+
+**The exit cells** (`NON`, `ALT`, `UAF`, all `+0.0`) are omitted here because they rarely belong to
+the same strong classification — they live in the **code catalog** above, and each would carry its
+own auditable cases recording *why* a proband scored zero (no valid in-trans 2nd variant; an
 alternate P/LP cause; or an inconsistent phenotype).
+
+**Reconciliation note.** Practice `v20-ush2a`'s illustrative target is `CLN_AFF_+3`; the cell model
+here sums to `+5.5`. The practice-set targets are cross-proband placeholders and will be reconciled
+once the cell codes are finalized (see the practice-set caveat).
 
 ---
 
@@ -843,6 +908,11 @@ resolves to the same cells, not new codes.
 
 ### `CLN_DNV` as a GKS `EvidenceLine` tree (Approach 1)
 
+> **Basis — Manufactured (cap demonstration).** PTPN11 · Noonan is SM 4's worked de-novo example;
+> the multi-proband set here is invented so the raw Σ (`+17.0`) overflows the `+12` code cap. A
+> **real** de-novo instance lives in the practice set — `example-fbn1` proband 2 (ectopia lentis,
+> confirmed de novo, SPECIFIC → `CLN_DNV_SPEC_CONF` +7.0).
+
 A demonstration proband set for a monoallelic MDE (e.g. PTPN11 · Noonan · AD). `CONS_CONF` carries
 two probands to show the `n × per-case` multiplier; the raw child sum (`+17.0`) exceeds the code cap,
 so the roll-up is **capped to +12.0** — the "non-leaf = capped Σ children" rule in action. `data` is
@@ -906,110 +976,138 @@ parents VBC-negative); a proband whose parents were not genotyped never reaches 
 
 ---
 
-## `POP_FRQ` — Population frequency (worked branch)
+## `CLN_UAF` — Unaffected observations (worked branch)
 
-**Where it sits:** HOD → Population (POP) → `POP_FRQ` · Evidence Code range **0.0 to –6.0** (SM 3,
-Figure 1). **Benignity-only** and **per-variant** — computed once for the VBC from an unselected
-population database, *not* per proband. There is **no multiplier and no cross-proband summation**:
-exactly one band applies to the variant. (This is the first structural contrast with the per-proband
-CLN codes — worth seeing early, because most POP/PFD codes score this way.)
+**Where it sits:** HOD → Clinical Observations (CLN) → `CLN_UAF` · **benignity-only (≤ 0)** (SM 4
+Table 5). Scored **per well-phenotyped unaffected individual**, then **summed** across individuals.
+An unaffected individual only counts if they are **within the age range of the penetrance estimate**
+(age-matched); if penetrance is unknown, or the individual is younger than the penetrance window, no
+points are awarded.
 
-**How the band is chosen.** `POP_FRQ` compares the VBC's **FAF** (filtering allele frequency,
-gnomAD) to the MDE's **DAFT** (disease allele frequency threshold — computed per gene/MDE by the
-calculator / binning / pathogenic-variants methods, SM 3). The **fold** = FAF ÷ DAFT selects the
-band.
+**Age-matched penetrance gate.** SM 4: *"the unaffected individual needs to be in the age range of
+the penetrance estimate to be considered … If the penetrance estimates are unknown for the MDE, then
+no points should be applied."* So an unaffected carrier who is too young (or an MDE with unknown
+penetrance) lands in the zero cell, not a negative one.
 
 ### The three levels
 
-1. **Band** — the FAF/DAFT fold selects exactly **one** of four bands; each band is a distinct
-   scoring opportunity → its own proposed code.
-2. **No aggregation** — a single per-variant assessment: no `n × per-case` multiplier, no summation
-   across probands.
-3. **Roll-up** — `POP_FRQ` = the selected band (0.0 … –6.0); it feeds the **POP** category subtotal
-   alongside `POP_HMZ` (SM 3 sets no combined POP cap).
+1. **Cell** — each (penetrance-band × signature-strength) is a distinct scoring opportunity → its
+   own proposed code.
+2. **Aggregation** — for each cell, `n × per-case` summed across that cell's well-phenotyped
+   unaffected individuals.
+3. **Roll-up** — `CLN_UAF` = Σ of the cells, **benignity-only (≤ 0)**; feeds the **CLN** category
+   (cross-proband sum; `CLN_CCS` exclusivity is handled at aggregation).
 
-### The bands
+### The cells
 
-Proposed code `POP_FRQ_<STRENGTH>` — **only `POP_FRQ` is an official SVCv4 code**; SVCv4 writes the
-band as a point value (`POP_FRQ_-3.0`), which this map avoids (no code ends in a number). The
-strength labels are proposed descriptors. Bands are **lower-edge-inclusive** here (SM 3 prose uses
-strict `>`/`<` at the exact multiples — a documented boundary assumption).
+Table 5 lists **four columns** — *dominant/SD*, *rec/XL homozygous-or-hemizygous*, *rec/XL
+confirmed-trans P*, *rec/XL confirmed-trans LP* — but the **first three are point-identical across
+every penetrance row** (`−4 / −2 / 0`), so they collapse to one **`FULL`** signature; only
+**confirmed-trans LP** is reduced (`−2 / −1 / 0`) → **`RED`**. Penetrance `<80%` (or unknown) is `0`
+for every column → one `LOW` cell; a rec/XL het with **no** confirmed-trans P/LP (or unknown phase)
+is `0` → `NON`.
 
-| Proposed code | FAF vs DAFT (fold) | Points | Official? | SM 3 (Figure 1) |
-|---|---|---|---|---|
-| `POP_FRQ_NONE` | FAF < 1.5× DAFT       | **0.0**  | ⬦ | below threshold — no benign evidence |
-| `POP_FRQ_SUPP` | 1.5× ≤ FAF < 5× DAFT  | **–1.0** | ⬦ | supporting benign |
-| `POP_FRQ_MOD`  | 5× ≤ FAF < 15× DAFT   | **–3.0** | ⬦ | moderate benign (SVCv4 chose –3, not BS1's –4) |
-| `POP_FRQ_STRG` | FAF ≥ 15× DAFT        | **–6.0** | ⬦ | strong benign |
-| `POP_FRQ`      | the selected band     | **0.0 … –6.0** | ✅ | Figure 1 |
+| Proposed code | penetrance (age-matched) | signature | per-case |
+|---|---|---|---|
+| `CLN_UAF_FULL_NEAR` | near 100%      | dom/SD · **or** rec/XL homo/hemi · **or** rec/XL confirmed-trans P | **−4.0** |
+| `CLN_UAF_FULL_HIGH` | 80–100%        | *(same as above)*                                                 | **−2.0** |
+| `CLN_UAF_RED_NEAR`  | near 100%      | rec/XL confirmed-trans **LP**                                     | **−2.0** |
+| `CLN_UAF_RED_HIGH`  | 80–100%        | rec/XL confirmed-trans **LP**                                     | **−1.0** |
+| `CLN_UAF_LOW`       | <80% / unknown | *(any signature)* — column-invariant                             | **0.0** |
+| `CLN_UAF_NON`       | *(any)*        | rec/XL het · no confirmed-trans P/LP (or unknown phase)           | **0.0** |
+| `CLN_UAF`           | roll-up        | Σ cells                                                           | **≤ 0** |
 
-Every variant is assessable — **absent-in-database is `faf = 0.0` → `POP_FRQ_NONE` (+0.0)**, not "no
-data". `_ND` (no code) is reserved for when FAF or DAFT cannot be computed: a non-robust AF from a
-low allele number, or FAF undefined at allele count 1 (SM 3 caveats), or `daft ≤ 0`.
+The `FULL` collapse follows the code-minting rule: dominant carrier, recessive homozygote, and
+recessive confirmed-trans-P **never diverge** in score across the penetrance rows, so they are the
+*same* scoring opportunity → one code. `RED` (trans-LP) diverges → its own code. (Contrast `CLN_AFF`,
+where `RARE_ATP` and `RARE_CTV` share `+1.5` at one row but diverge at another, so they stay
+separate.)
 
 ### Evidence data items
 
-| Attribute (real name) | Feeds | Notes |
+| Attribute (real name) | Feeds | Values |
 |---|---|---|
-| `evidence.faf`                    | fold numerator   | gnomAD filtering allele frequency; undefined at allele count 1 |
-| `evidence.faf_source`             | provenance       | database + version (e.g. gnomAD v4.1.0) |
-| `evidence.daft`                   | fold denominator | computed threshold; must be `> 0` |
-| `evidence.daft_method`            | provenance       | `calculator` / `binning` / `pathogenic-variants` |
-| `evidence.daft_calculator_inputs` | provenance       | prevalence, penetrance, locus/allelic heterogeneity, inheritance |
-| *(derived)* `faf / daft`          | band selection   | not stored — computed at scoring time |
+| `moi` | signature family | dom/SD → `FULL`; rec/XL → by zygosity / trans classification |
+| `case.age_matched_penetrance` | penetrance row + age gate | `NEAR_100` / `PCT_80_100` / `LT_80` (or `None` → `LOW`) |
+| `case.vbc_zygosity` | rec/XL signature | `HOM`/`HEMI` → `FULL`; `HET` → check the in-trans variant |
+| `case.compound_het_variant.classification` | rec/XL het trans | `P` → `FULL`; `LP` → `RED`; none/other → `NON` |
+| `case.affected_w_mde` | eligibility | must be `FALSE` (well-phenotyped, unaffected, age-matched) |
 
 ### Code ← data-item cross-reference
 
-| Code | fold = `faf / daft` |
-|---|---|
-| `POP_FRQ_NONE` | < 1.5 |
-| `POP_FRQ_SUPP` | 1.5 – < 5 |
-| `POP_FRQ_MOD`  | 5 – < 15 |
-| `POP_FRQ_STRG` | ≥ 15 |
-| *(no code → `_ND`)* | `faf` or `daft` missing, or `daft ≤ 0` |
+| Code | `age_matched_penetrance` | signature attributes |
+|---|---|---|
+| `CLN_UAF_FULL_NEAR` | `NEAR_100`    | dom/SD; **or** `vbc_zygosity` HOM/HEMI; **or** HET + trans `P` |
+| `CLN_UAF_FULL_HIGH` | `PCT_80_100`  | *(same as above)* |
+| `CLN_UAF_RED_NEAR`  | `NEAR_100`    | `vbc_zygosity` HET + `compound_het_variant.classification` `LP` |
+| `CLN_UAF_RED_HIGH`  | `PCT_80_100`  | HET + trans `LP` |
+| `CLN_UAF_LOW`       | `LT_80` / `None` | *(any)* |
+| `CLN_UAF_NON`       | *(any)*       | rec/XL, HET, no confirmed-trans P/LP (or unknown phase) |
 
-### `POP_FRQ` as a GKS `EvidenceLine` tree (Approach 1)
+### `CLN_UAF` as a GKS `EvidenceLine` tree (Approach 1)
 
-An FBN1 · Marfan example (SM 3's worked DAFT = 0.000118). The VBC's FAF is 0.00072, so
-fold ≈ 6.1 → the `MOD` band → **–3.0**. The tree is shallow — one band, one population-frequency
-observation, no multiplier:
+> **Basis — Manufactured (negative cells) + grounded zero cells.** No practice variant scores
+> `CLN_UAF` negative, so the `−4.0` / `−2.0` cells are invented — a dominant MDE with well-phenotyped
+> unaffected adult carriers, which is strong benign evidence. The **zero** cells are grounded:
+> `v1-actc1` (unaffected carrier not age-matched → `LOW`) and `v8-trdn` (unaffected het, no
+> confirmed-trans P/LP → `NON`).
+
+A dominant MDE with **four well-phenotyped unaffected carriers**. They land in different cells by
+their **age-matched penetrance** — an older carrier past the near-100% penetrance age is stronger
+benign evidence than a young one below the penetrance window. This is the same *"different
+individuals, different cells"* logic as the USH2A biallelic example, here driven by **age-matched
+penetrance** rather than the second allele. `Σ = −10.0`.
 
 ```text
-EvidenceLine  POP_FRQ                     score -3.0   (single per-variant assessment; range 0.0…-6.0)
+EvidenceLine  CLN_UAF                       score -10.0  (Σ evidenceLines; benignity-only ≤ 0)
 └─ evidenceLines:
-   └─ EvidenceLine  POP_FRQ_MOD           score -3.0 → evidenceItems: [1 pop-frequency obs]  (FAF ≈ 6.1× DAFT)
+   ├─ EvidenceLine  CLN_UAF_FULL_NEAR         score -8.0 → evidenceItems: [2 cases]  (2 × -4.0 · near-100% penetrance)
+   ├─ EvidenceLine  CLN_UAF_FULL_HIGH         score -2.0 → evidenceItems: [1 case]   (80-100% penetrance)
+   └─ EvidenceLine  CLN_UAF_LOW               score  0.0 → evidenceItems: [1 case]   (young carrier · below penetrance age → 0)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "POP_FRQ", "label": "Population frequency (benignity)" }, "score": -3.0,
-  "note": "single per-variant assessment; exactly one band applies; range 0.0 to -6.0",
+  "type": "EvidenceLine", "method": { "code": "CLN_UAF", "label": "Unaffected observations (benignity)" }, "score": -10.0,
+  "note": "benignity-only; per well-phenotyped unaffected individual; cross-proband sum",
   "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "POP_FRQ_MOD", "label": "FAF 5-15x DAFT · moderate benign" }, "score": -3.0,
-      "evidenceItems": [ { "id": "pop-01", "type": "population_frequency", "references": ["gnomAD:v4.1.0"],
-        "data": { "faf": 0.00072, "faf_source": "gnomAD v4.1.0",
-          "daft": 0.000118, "daft_method": "calculator",
-          "daft_calculator_inputs": { "prevalence_denominator": 5000, "penetrance": 0.85,
-            "locus_heterogeneity": 1.0, "allelic_heterogeneity": 0.10, "inheritance": "monoallelic" } } } ] }
+    { "type": "EvidenceLine", "method": { "code": "CLN_UAF_FULL_NEAR", "label": "full-strength · near-100% penetrance" }, "score": -8.0,
+      "evidenceItems": [
+        { "id": "uaf-01", "type": "clinical_observation", "references": [],
+          "description": "Manufactured — well-phenotyped unaffected adult carrier past the near-100% penetrance age.",
+          "data": { "id": "unaff-1", "family_id": "uaf-fam-1", "affected_w_mde": "FALSE", "vbc_zygosity": "HET", "age_matched_penetrance": "NEAR_100" } },
+        { "id": "uaf-02", "type": "clinical_observation", "references": [],
+          "description": "Manufactured — second unaffected adult carrier, same signature (multiplier).",
+          "data": { "id": "unaff-2", "family_id": "uaf-fam-2", "affected_w_mde": "FALSE", "vbc_zygosity": "HET", "age_matched_penetrance": "NEAR_100" } }
+      ] },
+    { "type": "EvidenceLine", "method": { "code": "CLN_UAF_FULL_HIGH", "label": "full-strength · 80-100% penetrance" }, "score": -2.0,
+      "evidenceItems": [ { "id": "uaf-03", "type": "clinical_observation", "references": [],
+        "description": "Manufactured — unaffected carrier in the 80-100% age-matched penetrance band.",
+        "data": { "id": "unaff-3", "family_id": "uaf-fam-3", "affected_w_mde": "FALSE", "vbc_zygosity": "HET", "age_matched_penetrance": "PCT_80_100" } } ] },
+    { "type": "EvidenceLine", "method": { "code": "CLN_UAF_LOW", "label": "age-matched penetrance <80% -> no points" }, "score": 0.0,
+      "evidenceItems": [ { "id": "uaf-04", "type": "clinical_observation", "references": ["practice-variant-set:v1-actc1"],
+        "description": "Grounded — young unaffected carrier below the penetrance age window (cf. practice v1-actc1 proband 2).",
+        "data": { "id": "unaff-4", "family_id": "uaf-fam-4", "affected_w_mde": "FALSE", "vbc_zygosity": "HET", "age_matched_penetrance": "LT_80" } } ] }
   ]
 }
 ```
 
-fold = `0.00072 / 0.000118 ≈ 6.1` → `5× ≤ FAF < 15×` → `POP_FRQ_MOD` = **–3.0**. Because only one
-band applies, `POP_FRQ` reports that band directly — no summation node. The single leaf still carries
-a full audit trail (the FAF and its source, the DAFT and the method + inputs used to derive it), so a
-reviewer can reproduce the fold and the resulting band.
+`CLN_UAF_FULL_NEAR` scores `2 × −4.0 = −8.0` (multiplier). The `LOW` leaf is kept even at `0.0`: it
+records an unaffected carrier who is real evidence but below the penetrance age window — exactly the
+`v1-actc1` situation. The `NON` cell (not shown) is the `v8-trdn` situation — an unaffected het with
+no confirmed-trans P/LP. Both zero cells stay as auditable nodes so a reviewer sees *why* the
+individual scored zero.
 
 ---
 
 ## Next: the rest of the tree
 
-`CLN_AFF`, `CLN_DNV`, and `POP_FRQ` are worked; the same pattern (cell → multiplier where
+`POP_FRQ`, `CLN_AFF`, `CLN_DNV`, and `CLN_UAF` are worked; the same pattern (cell → multiplier where
 applicable → roll-up) expands to every other branch:
 
-- **CLN:** `CLN_DNV` (Table 3 × parental confirmation, additive on AFF), `CLN_ALTV`/`CLN_ALTG`
-  (Table 4), `CLN_UAF` (Table 5), `CLN_CCS` (case-control), then the CLN cross-code overrides.
-- **POP:** `POP_FRQ` (FAF/DAFT bands), `POP_HMZ` (per-occurrence), POP combination.
+- **CLN:** `CLN_ALTV`/`CLN_ALTG` (Table 4, the first *negative* clinical scores), `CLN_CCS`
+  (case-control), then the CLN cross-code overrides.
+- **POP:** `POP_HMZ` (per-occurrence homozygote/hemizygote benignity, `n−1` rule), POP combination.
 - **LOC:** `LOC_PHE` (yield bands), `LOC_SEG`, the `LOC` combined code.
 - **PFD:** for each parent code (`NUL`/`CDS`/`SPL`/`MIS`) the `_PRD`/`_SPA`/`_FXN`/`_INF` codes,
   the held combinations, and the parent total.
