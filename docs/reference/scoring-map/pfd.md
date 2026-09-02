@@ -371,11 +371,7 @@ splice path exceeded `+7.0`, the variant would report parent code **`SPL`** inst
 
 ## Next: the (VBC, MDE) total → classification
 
-Every PFD parent code and the `HOD` total now feed the top of the tree:
-
-- **(VBC, MDE) total** = `HOD` + the applied `PFD` parent total (the take-higher result for missense).
-- **Classification band** (SM 1): `≥ +10` P · `+6 … <+10` LP · VUS bands · `≤ −7` / `≤ −1` benign
-  tiers — the final `EvidenceLine` roll-up.
-
-This is the last roll-up; with it the scoring map spans every scored node from the leaf cases to the
-classification band.
+Every PFD parent code and the `HOD` total feed the top of the tree — the applied `PFD` parent (the
+take-higher result for missense) plus `HOD` sum to the **(VBC, MDE) total**, banded into the class.
+That final roll-up is worked on the index:
+**[The (VBC, MDE) total → classification](index.md#the-vbc-mde-total-classification)**.

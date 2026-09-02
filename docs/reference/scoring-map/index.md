@@ -50,7 +50,8 @@ score**, its **aggregation** across cases, and the **rolled-up** code total.
 **HOD & beyond**
 
 - [`HOD` — Human Observational Data (roll-up = POP + CLN + LOC)](#hod-human-observational-data-roll-up)
-- [Next: the rest of the tree](#next-the-rest-of-the-tree)
+- [The (VBC, MDE) total → classification](#the-vbc-mde-total-classification) · *the final band*
+- [Next: extending the map](#next-extending-the-map)
 
 ## How to read this
 
@@ -145,20 +146,66 @@ EvidenceLine  HOD                         score +7.0   (= POP + CLN + LOC)
 `HOD = −3.5 + 6.5 + 4.0 = +7.0`. Two ripples already live inside this number: the **`POP_FRQ` gate**
 (which admitted `CLN`'s counting codes) and the potential **non-segregation** zeroing (which `LOC`
 survived). Change either input and `HOD` — and the classification band — move with it. The remaining
-contribution to the (VBC, MDE) total is **PFD** (predictive & functional), worked separately.
+contribution to the (VBC, MDE) total is **[PFD](pfd.md)** (predictive & functional).
 
 ---
 
-## Next: the rest of the tree
+## The (VBC, MDE) total → classification
 
-The entire **HOD** side is worked — **POP** (`POP_FRQ`, `POP_HMZ`), **CLN** (`CLN_AFF`, `CLN_DNV`,
-`CLN_ALTV`/`CLN_ALTG`, `CLN_UAF`, `CLN_CCS`), and **LOC** (`LOC_PHE`, `LOC_SEG`), each with a category
-roll-up, assembled under the `HOD` roll-up. The same pattern (cell → multiplier where applicable →
-roll-up, with cross-code ripples) expands to what remains:
+The top of the tree. The observational **`HOD`** roll-up and the applied **`PFD`** parent total (the
+[take-higher](pfd.md#mis-missense-worked-branch-dual-path-take-higher) result for missense) sum to the
+**(VBC, MDE) total**, which a final `EvidenceLine` **bands** into the classification:
 
-- **PFD:** for each parent code (`NUL`/`CDS`/`SPL`/`MIS`) the `_PRD`/`_SPA`/`_FXN`/`_INF` codes, the
-  held combinations, and the parent total (with the `MIS` vs `SPL` take-higher ripple).
-- **The (VBC, MDE) total** → `HOD + PFD` → the **classification band**.
+**(VBC, MDE) total = `POP + CLN + LOC`  (= `HOD`)  +  applied-`PFD` parent.**
+
+> **Basis — Manufactured composite.** `HOD` from the roll-up above (`+7.0`), `PFD` from the missense
+> [take-higher example](pfd.md#mis-missense-worked-branch-dual-path-take-higher) (`MIS +7.0`) — two
+> different variants, shown together to illustrate the top-level sum and the banding.
+
+```text
+EvidenceLine  (VBC, MDE) total             score +14.0   →  Pathogenic (P)
+└─ evidenceLines:
+   ├─ EvidenceLine  HOD   score +7.0   → HOD roll-up (POP + CLN + LOC)
+   └─ EvidenceLine  PFD   score +7.0   → applied parent (MIS, via take-higher)
+```
+
+**The bands** (SM 1 / glossary). One threshold table turns the total into the class; the posterior is
+the Bayesian probability of pathogenicity:
+
+| (VBC, MDE) total | posterior | Classification |
+|---|---|---|
+| **≥ +10.0** | > 99% | **Pathogenic (P)** |
+| **+6.0 … < +10.0** | 90–99% | **Likely Pathogenic (LP)** |
+| ≥ +4.0 … < +6.0 | 66–90% | VUS-high |
+| ≥ +2.0 … < +4.0 | 34–66% | VUS-mid |
+| > −1.0 … < +2.0 | 10–34% | VUS-low |
+| > −4.0 … ≤ −1.0 | 1–10% | **Likely Benign (LB)** |
+| **≤ −4.0** | < 1% | **Benign (B)** |
+
+`+14.0 ≥ +10.0` → **Pathogenic**. This is where the ripples cash out: the `POP_FRQ` gate, `CLN_CCS`
+exclusivity, a non-segregation, or the `MIS`/`SPL` take-higher can each move the total across a band
+boundary. It is also why the `LOC` cap (`+4.0`) sits **below** the LP threshold (`+6.0`): locus
+evidence alone can never reach LP — some variant-specific (`PFD` or `CLN`) evidence is always required
+(SM 5).
+
+With this final roll-up the scoring map spans **every scored node** — from the leaf cases and the
+in-silico prediction, through each code's cells / pipeline and the category roll-ups, to the
+classification band.
+
+---
+
+## Next: extending the map
+
+The map now spans **every scored node** end to end — the observational side (**POP**, **CLN**, **LOC**
+→ `HOD`), the variant side (**PFD**: `NUL`/`CDS`/`SPL`/`MIS`), and the **(VBC, MDE) total →
+classification** roll-up above.
+
+Refinements still open (tracked in each section and in `known-gaps`):
+
+- **`NCG` / `REG`** PFD parent codes (non-coding / regulatory) — not yet modeled.
+- Image-only spec details reproduced as flagged assumptions: `LOC_SEG` Figure-2 per-affected tiers,
+  the `LOC_PHE` `+2.0` band, the SM 18 `Suspected × Most` cell, the SM 6 blue/violet cap inversion.
+- Reconciling the **practice-set illustrative targets** with the finalized cell/pipeline values.
 
 See the [Summary Table](../summary-table.md) for the code / combination / category caps that bound each
 branch.
