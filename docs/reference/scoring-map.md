@@ -1314,7 +1314,7 @@ and **matched controls**. If not, or if no odds ratio is given → `CLN_CCS_ND` 
 
 | Proposed code | condition | points |
 |---|---|---|
-| `CLN_CCS_ENR` | robust · **OR > 5.0** · CI **excludes** 1.0 | **+4.0** |
+| `CLN_CCS_SIG` | robust · **OR > 5.0** · CI **excludes** 1.0 | **+4.0** |
 | `CLN_CCS_NS`  | robust · OR ≤ 5.0, **or** CI includes 1.0, **or** OR ≤ 1.0 | **0.0** |
 | `CLN_CCS`     | roll-up | **0 or +4.0** |
 | *(no code → `_ND`)* | not robust, or no odds ratio | — |
@@ -1327,8 +1327,8 @@ and **matched controls**. If not, or if no odds ratio is given → `CLN_CCS_ND` 
 
 | Attribute (real name) | Feeds | Threshold |
 |---|---|---|
-| `evidence.odds_ratio`                    | outcome    | `> 5.0` for `ENR` |
-| `evidence.ci_lower`, `evidence.ci_upper` | CI veto    | must **exclude** 1.0 for `ENR` |
+| `evidence.odds_ratio`                    | outcome    | `> 5.0` for `SIG` |
+| `evidence.ci_lower`, `evidence.ci_upper` | CI veto    | must **exclude** 1.0 for `SIG` |
 | `evidence.case_variant_count`            | robustness | `≥ 5` |
 | `evidence.case_cohort_size`              | robustness | `≥ 100` |
 | `evidence.controls_matched`              | robustness | `TRUE` |
@@ -1338,13 +1338,13 @@ and **matched controls**. If not, or if no odds ratio is given → `CLN_CCS_ND` 
 
 > **Basis — Manufactured (no practice `CLN_CCS` example).** Values follow SM 4's worked case-control
 > guidance: a robust study with `OR = 8.0`, `CI = 3.2–19.0` (excludes 1.0), 12 case-variant
-> observations across 400 matched cases → the `ENR` cell → **+4.0**. (SM 4's counter-example
+> observations across 400 matched cases → the `SIG` cell → **+4.0**. (SM 4's counter-example
 > `OR = 5.5, CI = 0.9–7.4` would instead be `CLN_CCS_NS` = 0.0 — the CI includes 1.0.)
 
 ```text
 EvidenceLine  CLN_CCS                     score +4.0   (single per-study assessment; 0 or +4.0)
 └─ evidenceLines:
-   └─ EvidenceLine  CLN_CCS_ENR           score +4.0 → evidenceItems: [1 case-control study]  (OR 8.0 · CI 3.2–19.0 · robust)
+   └─ EvidenceLine  CLN_CCS_SIG           score +4.0 → evidenceItems: [1 case-control study]  (OR 8.0 · CI 3.2–19.0 · robust)
 ```
 
 ```json
@@ -1352,7 +1352,7 @@ EvidenceLine  CLN_CCS                     score +4.0   (single per-study assessm
   "type": "EvidenceLine", "method": { "code": "CLN_CCS", "label": "Case-control (enrichment)" }, "score": 4.0,
   "note": "single per-study assessment; when applied, other CLN codes NA except CLN_DNV",
   "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "CLN_CCS_ENR", "label": "OR > 5.0 · CI excludes 1.0 · robust" }, "score": 4.0,
+    { "type": "EvidenceLine", "method": { "code": "CLN_CCS_SIG", "label": "OR > 5.0 · CI excludes 1.0 · robust" }, "score": 4.0,
       "evidenceItems": [ { "id": "ccs-01", "type": "case_control_study", "references": ["PMID:38054408"],
         "description": "Manufactured — robust variant-specific case-control study per SM 4 guidance.",
         "data": { "odds_ratio": 8.0, "ci_lower": 3.2, "ci_upper": 19.0,
@@ -1361,7 +1361,7 @@ EvidenceLine  CLN_CCS                     score +4.0   (single per-study assessm
 }
 ```
 
-The `ENR` leaf carries the full study for audit — the OR, its CI, the cohort sizes, and the
+The `SIG` leaf carries the full study for audit — the OR, its CI, the cohort sizes, and the
 robustness flags — so a reviewer can re-check the gate (≥ 5 / ≥ 100 / matched) and the CI veto.
 
 ---
