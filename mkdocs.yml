@@ -155,6 +155,7 @@ nav:
       - FBN1 · Marfan syndrome: examples/practice-variant-set/example-fbn1.md
   - Reference:
       - Model reference: reference/model.md
+      - Evidence data structures: reference/evidence-structures.md
       - Spec coverage: reference/spec-alignment.md
       - Known gaps: reference/known-gaps.md
       - Reference scoring: reference/scoring.md
