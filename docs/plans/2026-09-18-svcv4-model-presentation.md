@@ -25,10 +25,13 @@ just topics):
    into a domain-specialized version by changing the **configuration behind
    workflow decision points** — re-weighting points, adding/limiting in-silico
    tools, and shifting the ranges for categorical (nominal) and ranked (ordinal)
-   spectrums — never by rewriting the workflow or the record shape. (Slides 8–9.)
-3. **Bind every result to the version that made it.** General vs specialized:
-   the record names the exact version and the per-line rules, so community data
-   stays comparable, reproducible, and auditable — no chaos. (Slides 10–11.)
+   spectrums — never by rewriting the workflow or the record shape, and only
+   **within limits that keep it SVCv4-compliant.** (Slides 8–9.)
+3. **Every assessment travels with the identity of the ruleset that made it.**
+   General vs specialized: the record names the exact version and the per-line
+   rules, so community data stays comparable, reproducible, and auditable — no
+   chaos. The *method/ruleset model* those codes resolve into is a **separate
+   model, not yet built**; the classification links to it. (Slides 10–11.)
 
 ## Coverage & depth guidance (per Larry — build it to see how far it can go)
 
@@ -134,18 +137,24 @@ points portable. *(Keep it v4-only — no "v3 vs v4," no old criteria codes.)*
 |---|---|---|
 | The **framework** | ACMG/AMP/CAP/ClinGen SVCv4 WG | Summary Table, codes, workflows, scoring approach |
 | The **data model** | *This project* (ClinGen Data Platform WG offshoot) | The **shape** of a classification — for interoperability |
-| The **methods/rules** | ClinGen **CSpec** | **Evaluates** evidence, produces the scores |
+| The **methods/rules** | A **method/ruleset model** (not yet built) + registries/tools | **Evaluate** evidence and produce the scores |
 
-- They meet through **codes**: our record *names* a rule/evidence code; CSpec
-  *defines* what it does.
+- They meet through **codes**: our record *names* a rule/version code; the
+  method/ruleset side *defines* what it does.
+- **ClinGen CSpec is one early implementer** of such a registry — not the
+  standard, and not the only possible tool.
 
 **Speaker notes (~1m):** The most important framing slide — what our artifact is
 authoritative for and what it isn't. We do **not** author the Standard and we do
-**not** own the scoring rules. We model *what a classification is* so the framework
-and CSpec's methods share one carrier. The last bullet — the code seam — is the
-hinge for the whole talk: it's what lets the same record work under the baseline
-today and a specialized rule later (slides 8–11). Everything downstream lives in the
-middle row.
+**not** own the scoring rules. Be precise about the third row: the "methods/rules"
+side is itself a **model that doesn't exist yet** — how a workflow's configuration
+and rulesets are structured so experts can build specialized versions and register
+them for tools that curators use. **CSpec is one early implementer** of such a
+registry; it is *not* a de-facto standard and *not* the only tool. We model *what a
+classification is* so it can link, by code, to whichever method/ruleset
+implementation produced it. That code seam is the hinge for the whole talk: it lets
+the same record work under the baseline today and a specialized rule later (slides
+8–11).
 
 ---
 
@@ -264,6 +273,9 @@ evidence items under an evidence line; fall back to hod-workflows.png.*
   code* changes.
 - Baseline is the **operative default** wherever no specialization yet applies —
   works on day one, sharpens over time.
+- **Within limits:** a specialization can tune only so far — re-weight, restrict
+  tools, shift thresholds — and still be **SVCv4-compliant**. The bounds keep
+  "specialized" from meaning "a different standard."
 - Why it matters: expert knowledge **without a hundred private forks.**
 
 **Speaker notes (~1.5m — Principle 2, part 1):** The headline: SVCv4 is designed to
@@ -273,9 +285,13 @@ configuration at particular decision points, and neither the workflow structure 
 the record shape changes. For a developer that's the load-bearing guarantee: you
 build one capture-and-consume pipeline and it keeps working whether a classification
 came from the baseline or a specialization — the only difference is which rule a
-code resolves to. Those rules live in CSpec, which is why the model stays stable
-while the science evolves. And the baseline is always the fallback, so labs aren't
-blocked waiting for a specialization to exist.
+code resolves to. Crucially there are **reasonable limits** to how far a
+specialization can alter the rulesets and still *claim to be SVCv4* — that
+compliance boundary is what keeps the ecosystem coherent. Those rulesets live in a
+method/ruleset layer that is still to be built (CSpec is an early implementer of a
+registry for them), which is why our model stays stable while the science evolves.
+And the baseline is always the fallback, so labs aren't blocked waiting for a
+specialization to exist.
 
 ---
 
@@ -318,8 +334,9 @@ threshold band) — or a simple "3 dials" graphic.*
   version — so a bare number is not enough.
 - Every classification record **names the exact version** it was produced under.
 - Every scored line of evidence **names the specific rule** that generated it.
-- Those names are **pointers into CSpec**, where the rules are defined — this repo
-  *names* them; CSpec *defines* them.
+- Those names are **pointers into the method/ruleset registry**, where the rules are
+  defined — this repo *names* them; the registry *defines* them (CSpec is an early
+  implementer, not the standard).
 
 **Speaker notes (~1.5m — Principle 3, part 1):** The framework is deliberately
 layered — one baseline, plus specialized versions on top for particular gene/disease
@@ -328,9 +345,10 @@ you also know which version produced it. So version identity is a first-class pa
 of the record: the classification as a whole points at the applied version, and each
 scored line points at the specific rule invoked. *For the technically curious (off
 the slide):* both pointers are carried by a small method-reference object
-(`code`/`label`/`version`) on the record and on each line. In plain terms: **the
-number never travels alone — it travels with the identity of the rulebook that made
-it.**
+(`code`/`label`/`version`) on the record and on each line — and the *model* those
+codes resolve into (the method/ruleset structure) is a **separate model not yet
+built**; the classification links to it. In plain terms: **every assessment travels
+with the identity of the ruleset that made it.**
 
 ---
 
@@ -343,19 +361,21 @@ it.**
 - **Auditable** — the record shows not just the score, but the exact rule behind
   each piece of evidence.
 - **Honest status:** the fields to carry version + rule identity exist **today**;
-  stamping isn't yet mandatory, the code scheme and the public CSpec registry are
-  still being finalized, and there's no "who/when" stamp on the shared record yet.
+  stamping isn't yet mandatory, and the **method/ruleset model and its registry are
+  still to be built** (CSpec an early implementer) — plus no "who/when" stamp on the
+  shared record yet.
 
 **Speaker notes (~1m — Principle 3, part 2):** This is the payoff for a developer
 producing or consuming records — decide whether two classifications are even
 comparable, recompute from the same named rules, audit how each point was earned.
-The resolution target is a forthcoming public CSpec registry that turns a code into
-a concrete, versioned rule. Be straight about the current state: the slots are in
-the model, but recording the version is optional rather than enforced, the code
-scheme is deliberately opaque until CSpec issues it, and the registry is a near-term
-deliverable — plus there's no who-ran-it/when stamp on the shared record yet, a
-natural next addition. The principle is settled; tightening enforcement and
-resolution is the work ahead. This candor is what a technical audience trusts.
+The resolution target is a forthcoming method/ruleset registry that turns a code
+into a concrete, versioned rule — CSpec is one early implementer of that, not the
+standard itself. Be straight about the current state: the slots are in the model,
+but recording the version is optional rather than enforced, the code scheme is
+deliberately opaque until the registry issues it, and the method/ruleset model
+itself isn't built yet — plus there's no who-ran-it/when stamp on the shared record.
+The principle is settled; building the method side and tightening enforcement is the
+work ahead. This candor is what a technical audience trusts.
 
 ---
 
@@ -365,14 +385,17 @@ resolution is the work ahead. This candor is what a technical audience trusts.
 - We built a **reference, non-authoritative scorer** in the repo.
 - Purpose: **tests, worked examples, and the practice variant set** — proving the
   captured data is sufficient to compute the documented points.
-- **CSpec remains authoritative.** Every result is marked non-authoritative by
-  construction; any divergence from CSpec is a bug *here*.
+- **We are not the authority.** Every result is marked non-authoritative by
+  construction; the official registered ruleset implementation is what governs.
 
-**Speaker notes (~1m):** We're *not* competing with CSpec. We wrote a mirror of the
-documented point rules so we can prove — mechanically — that the data model captures
-everything a scorer needs. It's the first layer in the repo that *computes*
-anything; everything before it was capture + documentation. It's also a handy
-**oracle**: build your own scorer, diff against ours (CSpec is still the authority).
+**Speaker notes (~1m):** We're *not* competing to be the scorer of record. We wrote a
+mirror of the documented point rules so we can prove — mechanically — that the data
+model captures everything a scorer needs. It's the first layer in the repo that
+*computes* anything; everything before it was capture + documentation. It's also a
+handy **oracle**: build your own scorer, diff against ours. Be careful not to call
+CSpec "the authority" from the podium — it's one early implementer of the
+method/ruleset registry; the authority is the registered SVCv4 ruleset, whoever
+implements it.
 
 ---
 
@@ -380,8 +403,8 @@ anything; everything before it was capture + documentation. It's also a handy
 
 **On slide:**
 - Scoring is a **side-effect-free layer bolted *on top of* the data model** — never
-  woven in — so the published schemas stay clean and CSpec-authority is protected by
-  the code's structure, not just by documentation.
+  woven in — so the published schemas stay clean and the non-authoritative boundary
+  is protected by the code's structure, not just by documentation.
 - **One shared pipeline, parameterized per workflow** — a new workflow scorer is
   often *a small table of caps + one line of delegation*, not a rewrite.
 - Every result carries a **step-by-step audit trail** (what rule/cap was applied).
@@ -490,7 +513,8 @@ than hide them.
   release aligns to it.
 - Draft access before publication: the **data model** (JSON Schema + docs) and
   learning examples/use cases.
-- Specialized methods via the forthcoming **CSpec registry** (public API + docs).
+- Specialized methods via a forthcoming **method/ruleset registry** (public API +
+  docs) — CSpec is one early implementer.
 
 **Speaker notes (~30s):** Set the clock. We're building toward the GIM publication;
 draft artifacts are available ahead of it for developers who want to start.
@@ -500,9 +524,10 @@ draft artifacts are available ahead of it for developers who want to start.
 ## Slide 19 — Close: one sentence to remember
 
 **On slide:**
-- **The Standard defines the framework; CSpec defines the methods; we define the
-  shape — built on a shared GA4GH standard so SVCv4 classifications, and the
-  evidence behind them, are computable, exchangeable, and auditable.**
+- **The Standard defines the framework; a method/ruleset layer (yet to be built)
+  defines the methods; we define the shape — built on a shared GA4GH standard so
+  SVCv4 classifications, and the evidence behind them, are computable, exchangeable,
+  and auditable.**
 
 **Speaker notes (~30s):** Land the takeaway. Invite engagement: here's the repo,
 here's the docs, here's how to give feedback.
@@ -518,14 +543,16 @@ here's the docs, here's how to give feedback.
 - **Questions**
 
 **Speaker notes:** Keep 2 min for Q&A. Pre-load likely questions:
-*"Is this the scorer of record?"* (No — CSpec is; ours is a reference oracle.)
-*"How do expert-panel specializations fit?"* (Same record shape; the code resolves
-to a different rule/version in CSpec — slides 8–11.) *"How do I know which version
-produced a result?"* (It's named on the record; resolution via the forthcoming CSpec
-registry.) *"Can ClinVar consume this today?"* (It's the motivating use-case, not a
-shipped integration; the shared shape is what makes it possible.) *"Why build on an
-outside standard?"* (Interoperability + inherited tooling.) *"When can I depend on
-it?"* (Draft now, aligned to the ~Oct 2026 GIM publication.)
+*"Is this the scorer of record?"* (No — the registered ruleset implementation is;
+ours is a reference oracle. CSpec is one early implementer, not the standard.)
+*"How do expert-panel specializations fit?"* (Same record shape; the code resolves to
+a different rule/version in the method/ruleset registry — slides 8–11, within
+compliance limits.) *"How do I know which version produced a result?"* (It's named on
+the record; resolution via the forthcoming registry.) *"Can ClinVar consume this
+today?"* (It's the motivating use-case, not a shipped integration; the shared shape
+is what makes it possible.) *"Why build on an outside standard?"* (Interoperability +
+inherited tooling.) *"When can I depend on it?"* (Draft now, aligned to the ~Oct 2026
+GIM publication.)
 
 ---
 
