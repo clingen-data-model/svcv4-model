@@ -33,7 +33,7 @@ compress-if-short.
    assessments — it stays comparable, reproducible, and auditable.
 
 **Five supporting concepts that set up and deepen the spine** (new, per Larry
-2026-09-18): the **curator's real workflow** (slide 4); the **VA-Spec entities**
+2026-09-18): the **curator's real workflow** (slide 3); the **VA-Spec entities**
 that hold a classification together (slide 6); the **SVCv4 profile that validates**
 + the open-data payoff (slide 8); **applied evidence** (slide 10) and **granularity
 → verifiability** (slide 11).
@@ -75,6 +75,13 @@ close (slide 23) restates them:
 >    guidelines or old criteria codes (PVS1, PS/PM/PP/BA/BS/BP…). When motivating the
 >    need for clear rules, frame it as **opacity / hard-to-verify results** when
 >    evidence isn't clearly linked to the precise assessments — not "chaos."
+
+> **Terminology — "assessment" (declared up front, then used consistently):** a
+> **scored line of evidence is an assessment** — the evaluation a rule makes. Most
+> assessments determine **points**; some determine an **intermediate factor** instead
+> (e.g. the exon-relevance multiplier applied to positive initial predictive points).
+> We use *assessment* for any such rule-level evaluation — a scored line of evidence —
+> whether its output is points or a factor that feeds points.
 
 > **Author note — VA-Spec version (do not present as version chatter):** the model
 > shape tracks **GA4GH VA-Spec `1.1.0-ballot.2026-09`**
@@ -154,31 +161,10 @@ contrast.*
 
 ---
 
-## ★ Slide 3 — Three groups, three jobs (and the seam between them)
+## ★ Slide 3 — How a variant actually gets classified today *(the curator's workflow)*
 
-**On slide:** (table)
-
-| Owns | Who | What |
-|---|---|---|
-| The **framework** | ACMG/AMP/CAP/ClinGen SVCv4 WG | Summary Table, codes, workflows, scoring approach |
-| The **data model** | *This project* (ClinGen Data Platform WG offshoot) | The **shape** of a classification — for interoperability |
-| The **methods/rules** | A **method/ruleset model** (not yet built) + registries/tools | **Evaluate** evidence and produce the scores |
-
-- They meet through **codes**: our record *names* a rule/version code; the
-  method/ruleset side *defines* what it does. **ClinGen CSpec is one early
-  implementer** of such a registry — not the standard, not the only tool.
-
-**Speaker notes (~1m):** What our artifact is authoritative for and what it isn't.
-We don't author the Standard and don't own the scoring rules. The "methods/rules"
-side is itself a **model that doesn't exist yet** — how workflow configuration and
-rulesets are structured so experts can build specialized versions and register them.
-CSpec is one early implementer; not a de-facto standard. We model *what a
-classification is* so it can link, by code, to whichever implementation produced it.
-That code seam is the hinge for slides 12–15.
-
----
-
-## ★ Slide 4 — How a variant actually gets classified today *(the curator's workflow)*
+*Lead here to hook a developer audience: the real, manual work comes before any
+model or score.*
 
 **On slide:**
 - A variant (in a gene) needs a classification. In practice the curator:
@@ -193,19 +179,45 @@ That code seam is the hinge for slides 12–15.
   hand-curate from papers (open + paywalled), plus deidentified clinical cases where
   a site has them.
 
-**Speaker notes (~1.5m — grounds the whole talk):** Show classification is a real,
-manual, expert process before any model or score appears. Two things to land: (1)
-context is established up front and *revised along the way* — the disease/inheritance/
-transcript you assume can change as evidence comes in. (2) A lot of the work is
-deciding **relevance** — which observations actually bear on the assessment. And note
-the honest gap: curated case data in a structured, reusable form basically doesn't
-exist yet, so everyone re-does the reading. Also — curators often find data that's
-*interesting but out of scope* for the current assessment; today it's discarded, but
-captured well it could save others the same effort or resurface later if the scope
-shifts. That waste is exactly what structure + sharing can fix (slides 10–11).
+**Speaker notes (~1.5m — grounds the whole talk):** Open on the real, manual, expert
+process before any model or score appears — that's what hooks builders. Two things to
+land: (1) context is established up front and *revised along the way* — the disease/
+inheritance/transcript you assume can change as evidence comes in. (2) A lot of the
+work is deciding **relevance** — which observations actually bear on the assessment.
+Note the honest gap: curated case data in a structured, reusable form basically
+doesn't exist yet, so everyone re-does the reading. And curators often find data
+that's *interesting but out of scope* for the current assessment; today it's
+discarded, but captured well it could save others the same effort or resurface later
+if the scope shifts. That waste is exactly what structure + sharing can fix
+(slides 10–11).
 
 *Visual: a simple 3-step flow with the source logos/names (GenCC, gnomAD, ClinVar,
 VEP, PubMed) feeding "curated cases."*
+
+---
+
+## ★ Slide 4 — Three groups, three jobs (and the seam between them)
+
+**On slide:** (table)
+
+| Owns | Who | What |
+|---|---|---|
+| The **framework** | ACMG/AMP/CAP/ClinGen SVCv4 WG | Summary Table, codes, workflows, scoring approach |
+| The **data model** | *This project* (ClinGen Data Platform WG offshoot) | The **shape** of a classification — for interoperability |
+| The **methods/rules** | A **method/ruleset model** (not yet built) + registries/tools | **Evaluate** evidence and produce the scores |
+
+- They meet through **codes**: our record *names* a rule/version code; the
+  method/ruleset side *defines* what it does. **ClinGen CSpec is one early
+  implementer** of such a registry — not the standard, not the only tool.
+
+**Speaker notes (~1m):** Now that they've seen the real work, place the players:
+what our artifact is authoritative for and what it isn't. We don't author the
+Standard and don't own the scoring rules. The "methods/rules" side is itself a
+**model that doesn't exist yet** — how workflow configuration and rulesets are
+structured so experts can build specialized versions and register them. CSpec is one
+early implementer; not a de-facto standard. We model *what a classification is* so it
+can link, by code, to whichever implementation produced it. That code seam is the
+hinge for slides 12–15.
 
 ---
 
