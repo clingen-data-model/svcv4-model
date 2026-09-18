@@ -44,9 +44,10 @@ def test_sm18_multiplier_mechanism_and_exon() -> None:
     assert apply_sm18_multiplier(6.0, GenccMechanism.ESTABLISHED, ExonRelevance.MOST, MOD) == 3.0
 
 
-def test_sm18_special_case_suspected_most_is_quarter() -> None:
-    # Figure-1-pending assumption: keep the Suspected fraction (0.25), NOT 0.125 and NOT 0.0
-    assert apply_sm18_multiplier(4.0, GenccMechanism.SUSPECTED, ExonRelevance.MOST, MOD) == 1.0
+def test_sm18_special_case_suspected_most_is_zero() -> None:
+    # SM 18 Figure 1 (resolved 2026-09-18): the Suspected x Most cell is 0.0 -- not the 0.125
+    # product and not the 0.25 Suspected fraction.
+    assert apply_sm18_multiplier(4.0, GenccMechanism.SUSPECTED, ExonRelevance.MOST, MOD) == 0.0
 
 
 def test_sm18_only_positive_and_gdv_gate() -> None:

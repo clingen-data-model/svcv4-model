@@ -1,7 +1,7 @@
 """Shared, workflow-agnostic reference-scoring primitives (non-authoritative).
 
-CSpec is authoritative. The SM 18 multiplier here encodes one Figure-1-pending assumption
-(the Suspected x Most matrix cell = 0.25); see ``apply_sm18_multiplier``.
+CSpec is authoritative. The SM 18 multiplier's Suspected x Most matrix cell is 0.0 per
+SM 18 Figure 1 (resolved 2026-09-18); see ``apply_sm18_multiplier``.
 """
 
 from __future__ import annotations
@@ -87,10 +87,11 @@ def apply_sm18_multiplier(
     None/<=0 pass through. GDV below Moderate (incl. None) -> mechanism treated as Uncertain
     -> x0 (documented project gate, SM 18 L11). None mechanism -> 0.0; None exon -> no
     reduction (x1.0, the generous default, asymmetric with mechanism by project choice).
-    Suspected x Most is special-cased to 0.25 (Figure-1-pending assumption), not the 0.125
-    product SM 18 declined to use. ``mechanism_only`` removes the exon-relevance axis (SM 13
-    whole-gene deletion): the reduction is the mechanism fraction alone (exon and the
-    Suspected x Most special-case are not consulted).
+    Suspected x Most is special-cased to 0.0 per SM 18 Figure 1 (resolved 2026-09-18): the
+    matrix zeroes this cell rather than using either the 0.25 Suspected fraction or the 0.125
+    product. ``mechanism_only`` removes the exon-relevance axis (SM 13 whole-gene deletion):
+    the reduction is the mechanism fraction alone (exon and the Suspected x Most special-case
+    are not consulted).
     """
     if points is None or points <= 0:
         return points
@@ -101,7 +102,7 @@ def apply_sm18_multiplier(
         return points * mech
     exon = 1.0 if exon_relevance is None else _EXON_FRACTION.get(exon_relevance, 1.0)
     if gencc_mechanism == GenccMechanism.SUSPECTED and exon_relevance == ExonRelevance.MOST:
-        fraction = 0.25
+        fraction = 0.0  # SM 18 Figure 1: this cell is zeroed, not the 0.125 product
     else:
         fraction = mech * exon
     return points * fraction

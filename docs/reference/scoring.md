@@ -89,9 +89,18 @@ result.provenance        # the audit trail, step by step
   `+2` band and the `(81,82)` boundary are inferred — see known-gaps). An observed
   **non-segregation** zeroes the points (the two-case rule: an affected VBC-absent relative, or —
   except under AR — an unaffected VBC-carrier at near-100% penetrance); under AR a rule-(a)
-  non-segregation zeroes with a caveat. Absent/unparseable yield → `_ND`. **LOC_SEG**
-  (co-segregation) and the combined **LOC** `+4.0` cap are deferred to LOC-2 / case aggregation
-  (LOC_SEG's per-MOI segregant point values live only in the SM 5 Figure 2 image).
+  non-segregation zeroes with a caveat. Absent/unparseable yield → `_ND`.
+- **Locus specificity — co-segregation** (SM 5 Figure 2) — `reference_score_loc_seg` sums the
+  per-co-segregation points across `case.relatives` by MOI (AD affected-het / unaffected-WT
+  `+1.0`; AR affected hom-or-comp-het `+2.0`, unaffected `+0.4`; semidominant severe `+2.0` /
+  affected `+1.0` / unaffected `+1.0`; X-linked `+1.0`), capped `0.0..+4.0`. An observed
+  **non-segregation** is terminal — it zeroes LOC_SEG and, for **AD / AR-homozygous /
+  X-linked**, flips it to `−4.0` (a plain-AR / semidominant non-segregation may reflect another
+  causative locus, so it is not flipped). Unaffected non-AR co-segregants are counted only at
+  near-100% penetrance; the AR `+0.4` is not penetrance-gated. The SM 5 Figure 2 **entry gate**
+  (>1 locus and phenocopy rate very low/zero) is **not captured** in the model — assumed
+  satisfied (see known-gaps). The combined **LOC** `+4.0` cap with LOC_PHE is applied in
+  `reference_aggregate_loc`.
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
@@ -178,10 +187,11 @@ distinct from a scored `0.0`), so guard first: `t = reference_combine_case([...]
 The remaining PFD workflow scoring and `validate_case` (Inc 5) follow in later increments (see the
 scoping doc).
 
-## Known assumption (flagged for WG confirmation)
+## SM 18 Figure 1 (resolved 2026-09-18)
 
 The SM 18 matrix's **Suspected mechanism × Most exon-relevance** cell was deliberately not
-compounded to 12.5% by the Working Group; the authoritative value is in SM 18 Figure 1 (not
-in this repo's text extracts). The reference scorer assumes **0.25** (keep the Suspected
-fraction, drop the further Most halving) and records the assumption in `provenance`. This
-affects only that single matrix cell.
+compounded to 12.5% by the Working Group. SM 18 Figure 1 (added to the repo 2026-09-18)
+resolves the open question: the cell is **0.0** — the matrix **zeroes** this position rather
+than keeping the 0.25 Suspected fraction (the prior assumption) or using the 0.125 product.
+The reference scorer now applies **0.0** for this single cell; every other cell is the plain
+mechanism × exon product.

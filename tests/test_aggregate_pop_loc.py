@@ -49,6 +49,13 @@ def test_loc_cap_binds_with_synthetic_seg() -> None:
     assert any("capped" in p for p in r.provenance)
 
 
+def test_loc_nonsegregation_flip_flows_through() -> None:
+    # a non-segregation zeroes LOC_PHE and sets LOC_SEG to -4.0; the subtotal is -4.0
+    r = reference_aggregate_loc([_sr("LOC", {"LOC_PHE": 0.0}), _sr("LOC", {"LOC_SEG": -4.0})])
+    assert r.parent_total == -4.0
+    assert r.held_combined == {}  # only the upper +4.0 cap binds
+
+
 def test_nd_propagation() -> None:
     empty = reference_aggregate_loc([])
     assert empty.parent_total is None
