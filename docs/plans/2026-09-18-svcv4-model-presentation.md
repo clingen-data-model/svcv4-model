@@ -3,20 +3,31 @@
 **Date:** 2026-09-18
 **Audience:** Scientific & technical — **system developers and their curator
 users.** People who will *build software against* the model or *produce/consume*
-classifications with it.
+classifications with it. **They are NOT VA-Spec-literate** — assume no prior
+knowledge of GA4GH GKS, VA-Spec, VRS, or its class/property vocabulary.
 **Goal:** Convey the computational modeling and coding design we're crafting for
 release alongside the SVCv4 classification specification, and what a developer can
 build against today.
 **Length:** 20 minutes. ~19 slides. Budget ≈ 1 min/slide, with 3 min held for the
 worked example and 2 min for Q&A. Keep to **one idea per slide.**
 
-> **⚠️ VA-Spec dependency — updated this week.** This deck builds on **GA4GH
-> VA-Spec `1.1.0-ballot.2026-09`**
-> (<https://va-spec.ga4gh.org/en/1.1.0-ballot.2026-09/>). The ballot **removes the
-> separate `EvidenceLine` class**: an evidence line is now a **`Statement` nested
-> under another `Statement`** via `hasEvidenceLines`. Slides 5–7 and 12–13 reflect
-> the new Statement-centric shape. (Reconcile the repo's model wording to this
-> before presenting — see slide 6 notes.)
+> **Two hard constraints on every slide:**
+>
+> 1. **Plain language, not VA-Spec jargon.** The audience doesn't know VA-Spec.
+>    Keep class/property names (`Statement`, `hasEvidenceLines`, `Proposition`,
+>    SPOQ, VRS) **out of on-slide text** — say "the record," "a scored line of
+>    evidence," "the captured facts." Technical names live in speaker notes as
+>    *"for the technically curious,"* surfaced only if asked.
+> 2. **v4-only — no v3.** Do **not** reference the 2015/v3 guidelines or any old
+>    criteria codes (PVS1, PS/PM/PP/BA/BS/BP…). SVCv4 stands on its own. (Same
+>    scrub is being applied to the docsite — see the simplification plan.)
+
+> **Author note — VA-Spec version (do not present):** the deck's model shape tracks
+> **GA4GH VA-Spec `1.1.0-ballot.2026-09`**
+> (<https://va-spec.ga4gh.org/en/1.1.0-ballot.2026-09/>), which folds the old
+> separate "EvidenceLine" class into a single recursive `Statement`. Slides 5–7 and
+> 12–13 already use the plain-language nested-claim framing this implies; reconcile
+> the repo model/docs wording before presenting.
 
 **Reusable visuals already in the repo** (don't rebuild — pull these):
 - Points bands — `docs/assets/images/points-bands.png`
@@ -73,11 +84,13 @@ code*, not the Standard itself and not the scoring authority.
 - Goal: **standard semantic interoperability** for producing, exchanging, and
   consuming SVCv4-compliant classifications across labs and systems.
 
-**Speaker notes (~1m):** The v3→v4 shift: strength categories + combining rules →
-granular points that can mix positive and negative evidence. That granularity is
+**Speaker notes (~1m):** SVCv4 scores evidence as **points** that combine — and
+can mix positive and negative evidence — into a final call. That granularity is
 powerful but fragile without a shared data structure. If every lab records the
 underlying evidence differently, the points aren't comparable and can't be
 recomputed or audited. The model is the substrate that makes points portable.
+*(Do not frame this as "v3 vs v4" or cite old criteria codes — SVCv4 stands on its
+own; keep the talk v4-only.)*
 
 *Visual: points-bands.png.*
 
@@ -104,104 +117,102 @@ row.
 ## Slide 4 — Classification Model vs Method Model
 
 **On slide:**
-- **Classification Model** *(this repo)* — Statements, Propositions, Evidence
-  Lines, Evidence Items. *What a classification is.*
-- **Method Model** *(CSpec, outside this repo & outside VA-Spec)* — the
-  methods/rules that evaluate evidence and produce workflow scores.
-- They meet through **method codes & evidence codes** the Evidence Lines carry.
-- **Baseline vs specializations:** the SVCv4 Standard is a baseline; VCEP
-  specializations live in CSpec. We publish only the baseline profile.
+- **The classification** *(this project)* — the **shape** of a classification: the
+  claim, its evidence lines, and the captured facts. *What a classification is.*
+- **The methods/rules** *(ClinGen CSpec)* — the logic that **evaluates** the
+  evidence and produces the workflow scores.
+- They meet through **codes**: our record *names* a method/evidence code; CSpec
+  *defines* what it does.
+- **Baseline vs specializations:** SVCv4 ships a baseline; expert panels (VCEPs)
+  add specialized rules later — in CSpec. Same record shape either way.
 
-**Speaker notes (~1m):** The junction is the key engineering idea: our Evidence
-Lines *name* a method/evidence code; CSpec *defines* what that code does. That
-clean seam is what lets the same classification record survive baseline today and
-a VCEP-specialized method later without changing shape.
+**Speaker notes (~1m):** The junction is the key idea, in plain terms: we carry the
+**code**, CSpec carries the **rule behind the code**. That clean seam is what lets
+the very same classification record work with today's baseline and a
+panel-specialized rule later **without changing shape**. Keep "Statements /
+Evidence Lines" as internal vocabulary — say "the record" and "lines of evidence"
+out loud.
 
-*Visual: redraw the scope.md data-flow: curator captures Evidence Items → CSpec
-methods evaluate → Evidence Line (method code + items used + score).*
-
----
-
-## Slide 5 — Our foundation: GA4GH GKS / VA-Spec *(the high-level entry point)*
-
-**On slide:**
-- **VA-Spec (Variant Annotation Specification)** — the GKS standard for
-  computer-to-computer exchange of variant annotations. We build **on** it, not
-  beside it.
-- **Community Profiles** layer additional constraints on VA-Spec core classes to
-  align with a specific guideline's terminology.
-- **SVCv4 = a VA-Spec community profile** — the same pattern ACMG-2015 used. We
-  inherit VA-Spec's classes and *constrain* them; we don't invent a serialization.
-- Supported by **VRS 2.0 / Cat-VRS** for variant representation; lineage from
-  ClinGen ERepo's SEPIO/JSON-LD.
-- **Tracking `1.1.0-ballot.2026-09`** — the ballot that unifies the model around
-  `Statement` (next slide).
-
-**Speaker notes (~1m — this is the high-level "how we build on VA-Spec" beat):**
-Start here conceptually. The whole project is "take a released GA4GH interoperability
-standard and profile it for SVCv4." For developers that's the reassurance: if you
-already speak VA-Spec, SVCv4 is a *profile you validate against*, not a new world —
-and you inherit VRS for variant identity. Note that we track the spec closely: the
-1.1.0 ballot dropped last week and simplified the core model, which we've already
-absorbed. That responsiveness is part of the value — the profile moves with the
-base standard.
+*Visual: redraw the scope.md data-flow: curator captures facts → CSpec methods
+evaluate → a scored line of evidence (its code + the facts used + the score).*
 
 ---
 
-## Slide 6 — What a classification *is*: the core entities *(VA-Spec 1.1.0)*
+## Slide 5 — Why we build on a shared standard (GA4GH) *(plain-language foundation)*
+
+> **Audience is NOT VA-Spec-literate.** On-slide text stays plain; keep class
+> names and version numbers OUT of the bullets and in speaker notes only.
 
 **On slide:**
-- **`Statement`** — the one core class. A claim, made by an agent, about a
-  Proposition — with a **`direction`** (supports / disputes / neutral),
-  **`strength`**, and/or a numeric **`score`** (and an **`outcome`** summary).
-- **`Proposition`** — the possible fact being assessed, structured as **SPOQ**
-  (Subject, Predicate, Object, Qualifier(s)). e.g. *this variant is pathogenic
-  for this condition.*
-- **Evidence attaches two ways:**
-  - **`hasEvidenceItems`** → captured evidence: **Study Results, Data Items, or
-    other Statements.**
-  - **`hasEvidenceLines`** → **nested `Statement`s**, each a discrete, scored,
-    directional *argument* from evidence.
-- **`specifiedBy`** → the **Method** (the code that resolves into CSpec).
+- For classifications to be **shared and compared** across labs and software, they
+  need a **common, computer-readable shape** — not just a PDF or a spreadsheet.
+- **GA4GH** already publishes that shape for variant knowledge. We **build on it**
+  instead of inventing our own.
+- Our job: **add the SVCv4-specific rules on top** of that shared foundation, so
+  an SVCv4 classification is understood the same way everywhere.
+- Payoff: **produce once, consume anywhere** — and we inherit GA4GH's existing
+  tools for naming variants precisely.
 
-**Speaker notes (~1.5m — the conceptual keystone, and what changed this week):**
-Be explicit that VA-Spec `1.1.0-ballot` **removed the separate `EvidenceLine`
-class.** An "evidence line" is now simply a **Statement nested under another
-Statement** via `hasEvidenceLines` — with the child's proposition omittable when
-it's the same as the parent's. So the model is *recursive*: a Statement can both
-**aggregate** evidence lines and **be** an evidence line for a higher Statement.
-This is cleaner than the old two-class split and it maps beautifully onto SVCv4:
-the top Statement is the Variant Pathogenicity Classification; each scored node in
-the Summary Table is a nested Statement (evidence-line role) carrying its code,
-direction, and score. **Unifying rule (restated for 1.1.0): every scored node in
-SVCv4 is a Statement in an evidence-line role.**
+**Speaker notes (~1m — the high-level "how we build on GA4GH" beat):** Keep this
+conceptual. The one idea: interoperability needs a shared structure, and GA4GH's
+VA-Spec (Variant Annotation Specification) is that structure for variant knowledge
+— computer-to-computer exchange. We publish a **community profile**: SVCv4-specific
+constraints layered on the shared classes (the same pattern the 2015 guidelines
+used). *For the technically curious only (don't put on the slide):* we track VA-Spec
+closely — the base standard just simplified its model this month and we've already
+absorbed it; we lean on VRS for variant identity. Don't say "VA-Spec / VRS /
+community profile" from the podium unless someone asks — say "the GA4GH standard."
 
-> **Repo reconciliation note:** our current model/docs still use the older
-> distinct-`EvidenceLine` framing (Statement → EvidenceLine → EvidenceItem).
-> Update wording to the nested-Statement shape before presenting; the *concept*
-> (scored directional arguments rolling up) is unchanged, only the class structure.
+---
 
-*Visual: a small recursive diagram — Statement ▸ hasEvidenceLines ▸ Statement ▸ …
-▸ hasEvidenceItems ▸ Study Result / Data Item. Replace the old two-box entity
-slide from the deck.*
+## Slide 6 — What a classification *is*: evidence that nests *(plain language)*
+
+**On slide:**
+- A **classification** is a **claim about a variant and a condition** — e.g.
+  *"this variant is pathogenic for this condition"* — with a **direction**
+  (for / against) and a **score**.
+- That top claim is backed by **lines of evidence**.
+- Here's the key idea: **each line of evidence is itself a small scored claim**,
+  backed either by more evidence lines or by the **captured facts** underneath.
+- So the record **nests**: claim → evidence lines → the facts. Same shape at every
+  level. That uniformity is what makes it computable and auditable.
+
+**Speaker notes (~1.5m — the conceptual keystone):** Draw it as nesting boxes, no
+jargon. The whole model is one recursive shape: a scored, directional claim,
+supported by smaller scored, directional claims, all the way down to the raw
+captured data (a study result, a data point). Every scored box in SVCv4 is one of
+these. *For the technically curious only (keep off the slide):* GA4GH calls this
+box a **Statement**; an "evidence line" is just a Statement nested under another
+one. The base standard recently collapsed a separate "EvidenceLine" class into this
+single recursive Statement — which actually makes the plain-language story *truer*:
+it really is the same thing at every level. Don't lead with class names; lead with
+"scored claims that nest."
+
+> **Repo reconciliation note (for us, not the audience):** the site + model still
+> show the older three-box framing (Statement → EvidenceLine → EvidenceItem).
+> Update the wording/diagram to the single nested-claim shape before presenting.
+> The *concept* is unchanged; only the class structure simplified.
+
+*Visual: nesting boxes — "Classification (scored claim)" containing "Evidence line
+(scored claim)" containing "Captured facts." Reuse for the whole talk.*
 
 ---
 
 ## Slide 7 — The Summary Table is the map
 
 **On slide:**
-- Four levels: **Evidence Category → Evidence Concept → Evidence Code → Workflow.**
-- **Evidence Codes are the entry points** — each is where a workflow starts.
-- A workflow produces a score that **bubbles up** to its parent code (with
-  min/max caps).
-- WG rule: *"any process, rule, or method that produces a score maps to a VA-Spec
-  scored node"* — i.e. a **Statement in an evidence-line role** (1.1.0).
+- The SVCv4 **Summary Table** organizes all the evidence: **categories →
+  concepts → codes**, and each **code opens a workflow** (a guided set of steps).
+- Each workflow produces a **score**, which **rolls up** to its code — with
+  **caps** (a category can't exceed its ceiling).
+- Every one of those scored boxes becomes **one line of evidence** in the record
+  (the nesting from the previous slide).
 
-**Speaker notes (~1m):** This is how the Standard's picture becomes our object
-graph. Pink boxes = workflow entry points; green boxes = capped roll-ups. Every
-one of those maps 1:1 to a nested Statement (evidence-line role). So the Summary
-Table isn't decoration — it's the schema of the evidence hierarchy, and its
-nesting is literally the `hasEvidenceLines` recursion from the previous slide.
+**Speaker notes (~1m):** This is how the Standard's own picture becomes our data
+structure — nothing new to learn, it's the table they already use. Pink boxes =
+where a workflow starts; green boxes = capped roll-ups. The point for this
+audience: the Summary Table isn't a diagram off to the side — it *is* the shape of
+the evidence, and it lines up one-to-one with the nesting claims from slide 6.
 
 *Visual: summary-table.png.*
 
@@ -303,8 +314,8 @@ explainer graphics pairs naturally here: show the human decision tree, then land
 way: from a captured Case, through each evidence code, up through aggregation, to a
 banded classification. Call out that this end-to-end path is *real and tested* —
 it's the strongest evidence that the data model is sufficient. Remaining pieces:
-LOC_SEG (blocked on an image-only figure) and `validate_case` applicability
-enforcement.
+LOC_SEG (point values now in hand from SM5 Fig 2 — implementation pending) and
+`validate_case` applicability enforcement.
 
 *Visual: a clean left-to-right pipeline diagram.*
 
@@ -313,18 +324,17 @@ enforcement.
 ## Slide 13 — Worked example (the 3-minute payoff)
 
 **On slide:**
-- One practice-set variant, end to end: captured Case → evidence codes fired →
-  nested **Statements** (evidence-line role) carrying codes + scores → combined
-  total → band.
+- One practice-set variant, end to end: captured facts → evidence codes fired →
+  **scored lines of evidence** (each with its code + score) → combined total → band.
 - Show the **provenance trail** for one code.
 
 **Speaker notes (~3m — the anchor of the talk):** Pick one clean example from the
 practice variant set (32 encoded). Show the actual captured fields, then the scored
-nodes it produces — each a Statement with its method code, direction, and score —
-then the roll-up to a (VBC, MDE) total and the band. Emphasize: **code = identity,
-score = outcome, shown separately** (`CLN_AFF (score: +1.0)`, never `CLN_AFF_+1`) —
-and that the same nested-Statement structure is what another system would consume.
-This is where the abstract model becomes concrete for a developer.
+lines of evidence it produces — each with its code, direction, and score — then the
+roll-up to a total and the band. Emphasize: **code = identity, score = outcome,
+shown separately** (`CLN_AFF (score: +1.0)`, never `CLN_AFF_+1`) — and that the same
+nested structure is what another system would consume. This is where the abstract
+model becomes concrete for a developer.
 
 > Prep: choose the example before the talk; a monoallelic CLN_AFF or a Nonsense
 > PFD case reads most cleanly. Have the JSON on the slide, trimmed. If the chosen
@@ -336,10 +346,11 @@ This is where the abstract model becomes concrete for a developer.
 ## Slide 14 — Where the model meets CSpec
 
 **On slide:**
-- Evidence Lines carry **method codes + evidence codes** as references.
-- CSpec resolves those codes into **definitions** (baseline + VCEP specializations).
-- The same classification record is **version-aware**: baseline today, specialized
-  method later — **no shape change.**
+- Each scored **line of evidence** carries a **code** (a method/evidence reference).
+- CSpec resolves those codes into **definitions** (baseline + expert-panel
+  specializations).
+- The same classification record works with **today's baseline and a specialized
+  rule later — no shape change.**
 
 **Speaker notes (~45s):** Reinforce the seam from slide 4 now that they've seen a
 real record. For an implementer: you store the code; you resolve it against the
@@ -350,19 +361,20 @@ CSpec registry at evaluation time. The model doesn't hard-code any scoring rule.
 ## Slide 15 — Honest about the edges
 
 **On slide:**
-- **Stable:** scope boundary, VA-Spec profile framing, Case model, schemas,
-  capture across all categories.
-- **Draft / in-flight:** reconciling the repo model to **VA-Spec 1.1.0's
-  Statement-centric shape** (evidence lines as nested Statements); scoring map;
-  PFD workflow prose; reference-scorer aggregation.
-- **Open / flagged for the WG:** two image-only figures (SM18 Fig 1
-  mechanism×exon cell; SM5 Fig 2 LOC_SEG point values); a few SM boundary/typo
-  questions — all recorded in provenance and `known-gaps`.
+- **Solid:** the shared-standard foundation, the scope boundary, the Case model,
+  the schemas, evidence capture across all categories.
+- **In progress:** aligning our record wording to the base standard's latest
+  simplification; the scoring map; workflow write-ups; scorer aggregation.
+- **Open questions for the Working Group:** a few Supplementary-Material
+  boundary/typo points — all recorded in the code's audit trail and `known-gaps`.
 
-**Speaker notes (~45s):** Credibility with a technical audience comes from naming
-the gaps precisely. Every assumption we made where the source was an un-extractable
-figure is flagged in the code's provenance *and* in the docs. We're not hiding
-approximations; we're logging them for WG confirmation.
+**Speaker notes (~45s):** Credibility comes from naming the gaps precisely. Note
+the recent win: two figure-only rules we'd had to *assume* (the mechanism×exon
+multiplier's edge cell, and the co-segregation point values) are now resolved
+against the source figures — one of them corrected an assumption we'd made. Every
+place we still infer is flagged in the code's audit trail *and* the docs. We're not
+hiding approximations; we log them for WG confirmation. *(Keep "VA-Spec / Statement"
+off the slide — say "the shared GA4GH standard" and "our record.")*
 
 ---
 
@@ -378,8 +390,9 @@ approximations; we're logging them for WG confirmation.
 
 **Speaker notes (~45s):** Concrete takeaways. If you're building a capture tool,
 target the Case model + applicability matrix and validate against the schemas. If
-you're building a consumer, read Statements/Evidence Lines. If you're building a
-scorer, diff against our reference results (remembering CSpec is the authority).
+you're building a consumer, read the classification record and its lines of
+evidence. If you're building a scorer, diff against our reference results
+(remembering CSpec is the authority).
 
 ---
 
@@ -401,7 +414,7 @@ draft artifacts are available ahead of it for developers who want to start.
 
 **On slide:**
 - **The Standard defines the framework; CSpec defines the methods; we define the
-  shape — a VA-Spec profile that makes SVCv4 classifications computable,
+  shape — built on a shared GA4GH standard so SVCv4 classifications are computable,
   exchangeable, and auditable.**
 
 **Speaker notes (~30s):** Land the single-sentence takeaway. Invite engagement:
@@ -419,10 +432,10 @@ here's the repo, here's the docs, here's how to give feedback.
 
 **Speaker notes:** Keep 2 min for Q&A. Likely questions to pre-load:
 *"Is this the scorer of record?"* (No — CSpec is; ours is a reference oracle.)
-*"How do VCEP specializations fit?"* (Same record shape; method code resolves
-differently in CSpec.) *"Why VA-Spec and not a bespoke schema?"* (Interop +
-inherited tooling.) *"When can I depend on it?"* (Draft now, aligned to the ~Oct
-2026 GIM publication.)
+*"How do expert-panel specializations fit?"* (Same record shape; the code resolves
+to a different rule in CSpec.) *"Why build on an outside standard instead of your
+own format?"* (Interoperability + we inherit existing tooling.) *"When can I depend
+on it?"* (Draft now, aligned to the ~Oct 2026 GIM publication.)
 
 ---
 

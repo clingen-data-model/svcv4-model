@@ -65,17 +65,61 @@ Study Results / Data Items / other Statements). The site's entity framing
 `getting-started/evidence-lines-and-items.md`, `reference/va-spec-profile.md`,
 `reference/model.md`) reflects the **older two-class shape.**
 
-For a broad standards/informatics audience — many of whom track VA-Spec — shipping
-the outdated entity model is the one accuracy risk that could cost credibility.
+**The audience is NOT VA-Spec-literate.** So this isn't about impressing VA
+experts — it's that the site currently *teaches* a class (`EvidenceLine`) that no
+longer exists in the base standard, and does so in vocabulary a general
+scientific/informatics reader doesn't share. Two problems, one fix.
 
-- **[DECIDE]** Do a **light terminology pass now** (before the share) so the entity
-  story matches 1.1.0: "evidence lines are nested Statements," update the one or
-  two diagrams, and note the base-spec version. This is wording, not a remodel —
-  the *concept* (scored directional arguments rolling up under caps) is unchanged.
-- Full Pydantic/schema remodel to 1.1.0 can follow separately; the **docs** just
-  need to stop asserting a class that no longer exists.
-- Add a dated "Built on VA-Spec `1.1.0-ballot.2026-09`" line to
-  `reference/va-spec-profile.md` and the Home scope block.
+- **[DECIDE]** Do a **light terminology pass now** (before the share): (a) stop
+  asserting a distinct `EvidenceLine` class — frame it as "a classification is a
+  scored claim, backed by **lines of evidence**, backed by the **captured facts**;
+  the same shape nests at every level"; (b) keep **class/property names
+  (`Statement`, `hasEvidenceLines`, SPOQ, VRS) out of the narrative pages** — they
+  belong only in `reference/va-spec-profile.md` / `reference/model.md` for readers
+  who want them. This is wording, not a remodel — the *concept* (scored directional
+  arguments rolling up under caps) is unchanged.
+- Full Pydantic/schema remodel to the new base-standard shape can follow
+  separately; the **docs** just need to stop teaching the retired class.
+- Add a dated "Built on the GA4GH standard (VA-Spec `1.1.0-ballot.2026-09`)" line
+  to `reference/va-spec-profile.md` and the Home scope block — reference pages only.
+
+## 2b. Blocking content task: scrub all v3 / 2015 criteria-code references **[DECIDE: aggressiveness]**
+
+The v4 docs must **stand on their own** — no references to the 2015/v3 guidelines
+or their criteria codes (PVS1, PS/PM/PP/BA/BS/BP…). Sweep results (published pages
+only; `superpowers/` working notes excluded):
+
+**Scrub (real v3 references):**
+
+| Page | What | Fix |
+|---|---|---|
+| `overview/svcv4-in-brief.md` | "What changed from v3 to v4" section; `PS4`, `PS4_Moderate`; "succeeding the 2015 Richards et al." | Remove the v3→v4 section; restate points-based framing v4-only; drop code examples |
+| `reference/summary-table.md` | "v3 to v4 code shape" section; `PS4`, `PS4_Moderate` | Remove/rewrite as "SVCv4 code shape" — code names type, `_+N` is the point value |
+| `reference/glossary.md` | SVCv4 def "replaces v3's strength-categories… (SVCv3)" | Drop the v3 comparison clause; define SVCv4 on its own |
+| `workflows/pfd/index.md` | "already capture much of v3's PM1 'critical domain' evidence" | Remove the PM1 reference; state the v4 evidence directly |
+| `examples/v19-tp53.md` | "(PM5-type) evidence" | Drop "(PM5-type)" |
+| `examples/v22-f8.md` | "same-AA (PS1) + same-codon (PM5)" | Drop the `(PS1)`/`(PM5)` parentheticals |
+| `examples/v5-myh7.md` | "PM5-type support" | Reword to the v4 same-residue concept without the code |
+| `reference/scoring-map/population.md` | "SVCv4 chose –3, not BS1's –4" | Drop the `BS1` comparison |
+| `reference/scoring-map/locus.md` | "(BS4-equivalent)" | Drop the `BS4` parenthetical |
+
+**Preserve (false positives — do NOT scrub):**
+
+- `PVS-v3-FOXG1` / `v3-foxg1` everywhere — that "v3" = **practice variant #3**, not
+  ACMG v3 (all example IDs are `v1…v30`).
+- `Sue Richards (OHSU)` in `reference/credits.md` — a contributor's name.
+- `reference/va-spec-profile.md` line on the 2015 guidelines being an earlier
+  VA-Spec profile — factual lineage about VA-Spec, not a criteria-code mapping;
+  **[DECIDE]** keep (recommended) or drop for strict v4-only purity.
+
+> **[DECIDE] aggressiveness:** recommend removing the two dedicated "v3 → v4"
+> sections outright (a non-VA, v4-first audience doesn't need the contrast) and
+> reducing the inline code mentions to the underlying v4 concept. Confirm and I'll
+> execute in one pass with `mkdocs build --strict` as the gate.
+>
+> **Source material** (`source-material/svcv4-supplements/SM02-v3-to-v4-status.txt`,
+> and the figures) is *inputs*, not published — leave as-is unless a figure with a
+> visible v3 code gets embedded in the site.
 
 > Treat this as **Tier A, item 0** — it gates "shareable with a technical
 > audience" more than any nav change.
