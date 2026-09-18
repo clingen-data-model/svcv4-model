@@ -7,7 +7,7 @@
     the Standards authored by the SVCv4 Working Group and changes along with them
     — it is not itself the Standard. Treat it as advisory for now. New to SVCv4?
     Start with [Overview](../index.md) and
-    [Getting Started](../getting-started/show-your-work.md).
+    [Collecting the evidence](../collecting/index.md).
 
 Auto-generated from the [Pydantic data model][src]. Each class shows
 its fields with their types, defaults, and descriptions.

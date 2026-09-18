@@ -91,7 +91,7 @@ explicit clinical details.
 
 - [Core concepts](../../reference/concepts.md) — Cohort Allele Frequency and
   DAFT in more depth.
-- [Capturing basic evidence](../../getting-started/capturing-basic-evidence.md)
-  — a narrative walkthrough of `POP_FRQ` evidence.
+- [Population observations (POP)](../../collecting/population.md)
+  — the narrative walkthrough of `POP_FRQ`/`POP_HMZ` evidence collection.
 - [ClinGen CSpec](../../reference/cspec-interop.md) — where the scoring
   methods/rules that consume this evidence are defined.

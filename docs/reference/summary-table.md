@@ -34,5 +34,5 @@ Evidence Line (`code` slot). Strength labels travel separately in the
 
 ## See also
 
-- [Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md)
+- [Collecting the evidence](../collecting/index.md)
 - [ClinGen CSpec interop](cspec-interop.md) — where workflows live.

@@ -1,7 +1,7 @@
 # Core concepts
 
 This page is the complete reference companion to
-[The classification inputs](../getting-started/classification-inputs.md): one
+[Starting curation activities](../collecting/curation-activities.md): one
 full entry per cross-cutting concept used across the SVCv4 workflows — what it
 is, why it matters, which workflows use it, and how it's represented in the
 model today. For one-line definitions, see the [Glossary](glossary.md)
@@ -15,10 +15,10 @@ that aren't modeled yet).
 workflow gathers evidence *about*.
 
 **Why it matters.** The VBC is the Proposition's subject (`subjectVariant`)
-in the final Statement: every Evidence Line a workflow produces is, in the
+in the final Statement: every line of evidence a workflow produces is, in the
 end, evidence about this one variant. See
-[The assertion framework](../getting-started/assertion-framework.md) for how
-the VBC becomes the subject of a Proposition.
+[Collecting the evidence](../collecting/index.md#the-one-shape-everything-nests-into)
+for how the VBC becomes the subject of a Proposition.
 
 **Which workflows use it.** All of them — VBC is a `WorkflowParameters` value
 supplied alongside every `Case`, not a per-workflow field.
@@ -299,11 +299,11 @@ MOI); its effect lands in PFD scoring and final-tier gating.
 
 ## See also
 
-- [The classification inputs](../getting-started/classification-inputs.md) —
+- [Starting curation activities](../collecting/curation-activities.md) —
   the shorter narrative introduction to VBC/MDE/MOI/Gene.
 - [Glossary](glossary.md) — one-line definitions for these and other terms.
-- [The assertion framework](../getting-started/assertion-framework.md) — how
-  VBC/MDE become a Proposition and Statement.
+- [Collecting the evidence](../collecting/index.md) — how VBC/MDE become a
+  Proposition and a classification.
 - [Case model](../workflows/case-model.md) — the generated per-workflow
   applicability views for `Case` and `WorkflowParameters`.
 - [Spec coverage](../reference/spec-alignment.md) — full SVCv4 Standards

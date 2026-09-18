@@ -8,7 +8,7 @@ feel for real data — no separate or synthetic example set is needed.
 
 Each variant is one tab of the source spreadsheet, transcribed and mapped onto the
 [Case model](../../workflows/case-model.md) and the
-[classification structures](../../getting-started/evidence-lines-and-items.md),
+[classification structures](../../collecting/index.md),
 and given a stable `PVS-*` id that preserves the tab name. Everything stays
 **traceable** rather than invented:
 

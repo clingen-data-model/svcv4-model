@@ -7,7 +7,7 @@ SVCv4 Working Group defines and that this model mirrors:
 
 Scores roll up each level. A **workflow** is the procedure for evaluating the
 evidence captured under an Evidence Code; in the model, each workflow's result
-surfaces as an [Evidence Line](../getting-started/evidence-lines-and-items.md).
+surfaces as a [line of evidence](../collecting/index.md#the-one-shape-everything-nests-into).
 
 ![The SVCv4 Summary Table](../assets/images/summary-table.png){ loading=lazy }
 

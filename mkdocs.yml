@@ -83,14 +83,12 @@ nav:
       - SVCv4 Standards in brief: overview/svcv4-in-brief.md
       - How SVCv4 maps to the model: overview/alignment.md
       - What this project is — and isn't: overview/scope.md
-  - Getting Started:
-      - "Show your work: structured evidence": getting-started/show-your-work.md
-      - The classification inputs: getting-started/classification-inputs.md
-      - The assertion framework: getting-started/assertion-framework.md
-      - Capturing basic evidence: getting-started/capturing-basic-evidence.md
-      - Evidence Lines & Evidence Items: getting-started/evidence-lines-and-items.md
-      - Rolling up Evidence Line scores: getting-started/rolling-up-scores.md
-      - Capture your first case: getting-started/first-case.md
+  - Collecting the evidence:
+      - "Collecting the evidence: the shape it all rolls into": collecting/index.md
+      - 1 · Starting curation activities: collecting/curation-activities.md
+      - 2 · Population observations (POP): collecting/population.md
+      - 3 · Case & segregation data collection: collecting/case/index.md
+      - 4 · Variant Impact data collection: collecting/variant-impact.md
   - Workflows:
       - Workflows overview: workflows/index.md
       - Human Observational Data (HOD):

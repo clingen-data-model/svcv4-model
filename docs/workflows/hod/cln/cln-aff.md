@@ -44,5 +44,5 @@ The points for `CLN_AFF` are produced by its workflow in
 the workflow consumes — including the two SM 4 factors above (the
 co-occurrence bucket and the non-genetic-etiology flag), which are **captured,
 not computed** here. See [Case model & applicability](../../case-model.md) for the
-exact `CLN_AFF` field applicability and [Capture your first case](../../../getting-started/first-case.md)
+exact `CLN_AFF` field applicability and [Case & segregation data collection](../../../collecting/case/index.md)
 for a worked example.
