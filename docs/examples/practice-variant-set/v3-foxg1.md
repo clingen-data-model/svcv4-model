@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of FOXG1 c.234_236delGCC (p.Pro79del) against FOXG1-related disorder, drawn from the
 `PVS-v3-FOXG1` Practice Variant Set entry.
@@ -22,9 +22,10 @@ An SVCv4 classification of FOXG1 c.234_236delGCC (p.Pro79del) against FOXG1-rela
 
     The variant being classified (VBC) is FOXG1 c.234_236delGCC (p.Pro79del); the disease/condition (MDE) is FOXG1-related disorder. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF_+1`, score 1.0) — Affected proband (illustrative).
-    - **Single-amino-acid change (MIS)** (`MIS_-1`, score -1.0) — Polymorphic-repeat context (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF`, score 1.0) — Affected proband (illustrative).
+    - **Single-amino-acid change (MIS)** (`MIS`, score -1.0) — Polymorphic-repeat context (PFD, illustrative).
+      - `MIS_PRD` (score -1.0) — Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic — a benign-leaning caveat that makes this a genuine VUS.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 0.0 → *variant of uncertain significance*.
 
@@ -33,17 +34,18 @@ An SVCv4 classification of FOXG1 c.234_236delGCC (p.Pro79del) against FOXG1-rela
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): FOXG1 c.234_236delGCC (p.Pro79del)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0100040 (FOXG1-related disorder)
-        qualifiers:           moi=AD; note=Loss of function is an established disease mechanism.
+        subject (VBC): FOXG1 c.234_236delGCC (p.Pro79del)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0100040 (FOXG1-related disorder)
+        qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - CLN_AFF_+1   score  1.0
-        - MIS_-1       score -1.0
-      final_score:          0.0
-      score_classification: variant_of_uncertain_significance
+        - POP_FRQ                  score   0.0
+        - CLN_AFF                  score   1.0
+        - MIS                      score  -1.0
+          - MIS_PRD                  score  -1.0
+      score:         0.0
+      outcome:       variant_of_uncertain_significance
     ```
 
 === "JSON"

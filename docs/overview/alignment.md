@@ -31,8 +31,8 @@ roll their scores up into a single **Statement** about a Proposition:
 So: **Evidence Items** (captured data) feed **workflows**, which produce
 **Evidence Lines** (scores), which roll up the Category/Concept/Code hierarchy
 into the **Statement's** final score. The entity detail is in
-[The assertion framework](../getting-started/assertion-framework.md) and
-[Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md).
+[Collecting the evidence](../collecting/index.md) and its
+[nesting shape](../collecting/index.md#the-one-shape-everything-nests-into).
 
 ## Standard vs. specialized versions
 
@@ -41,7 +41,7 @@ configuration. **Specialized** versions (e.g. gene-disease-MoI scoping, workflow
 modifications, domain-specific thresholds) layer on top. The Summary Table's
 evidence definitions are fixed; **workflows** carry the customization. Method
 specifications — including specialized versions — are published through
-[ClinGen CSpec](../reference/cspec-interop.md); this model links to them rather
+ClinGen CSpec; this model links to them rather
 than implementing the scoring itself.
 
 ## Where to go next

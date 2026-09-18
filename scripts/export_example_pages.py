@@ -82,13 +82,40 @@ def _prose(clf: dict) -> str:
     concepts = ", ".join(
         line["method"]["label"].split(" (")[0].lower() for line in clf["evidence_lines"]
     )
-    cls = CLASS_LABEL.get(clf["score_classification"], clf["score_classification"])
+    cls = CLASS_LABEL.get(clf["outcome"], clf["outcome"])
     return (
         f"{subj} is assessed for whether it **is causal for** {obj['label']} "
         f"(`{obj['curie']}`){moi_phrase}, under the baseline SVCv4 specification. "
         f"{n} lines of evidence — {concepts} — compose to an illustrative "
         f"**{cls}**."
     )
+
+
+def _narr_line(line: dict, depth: int, lines: list[str]) -> None:
+    """Append a narrative bullet for an Evidence Line and recurse into children."""
+    indent = "    " + "  " * depth
+    prov = " · *provisional*" if line.get("provisional") else ""
+    if depth == 0:
+        label = line["method"]["label"].split(" — ")[0]
+        desc = line.get("description") or ""
+        tail = f" — {desc}" if desc else ""
+        lines.append(f"{indent}- **{label}** (`{line['code']}`, score {line['score']}){tail}")
+    else:
+        desc = line.get("description") or ""
+        tail = f" — {desc}" if desc else ""
+        lines.append(f"{indent}- `{line['code']}` (score {line['score']}){prov}{tail}")
+    for child in line.get("evidence_lines", []):
+        _narr_line(child, depth + 1, lines)
+
+
+def _semi_line(line: dict, depth: int, out: list[str]) -> None:
+    """Append a semi-structured row for an Evidence Line and recurse into children."""
+    indent = "        " + "  " * depth
+    prov = " (prov)" if line.get("provisional") else ""
+    label = f"{line['code']}{prov}"
+    out.append(f"{indent}- {label:<24} score {line['score']:>5}")
+    for child in line.get("evidence_lines", []):
+        _semi_line(child, depth + 1, out)
 
 
 def _narrative(clf: dict) -> str:
@@ -100,14 +127,12 @@ def _narrative(clf: dict) -> str:
         "",
     ]
     for line in clf["evidence_lines"]:
-        label = line["method"]["label"].split(" — ")[0]
-        desc = line.get("description") or ""
-        lines.append(f"    - **{label}** (`{line['code']}`, score {line['score']}) — {desc}")
-    cls = CLASS_LABEL.get(clf["score_classification"], clf["score_classification"])
+        _narr_line(line, 0, lines)
+    cls = CLASS_LABEL.get(clf["outcome"], clf["outcome"])
     lines += [
         "",
         f"    Each became an Evidence Line; their scores compose to a Statement final "
-        f"score of {clf['final_score']} → *{cls}*.",
+        f"score of {clf['score']} → *{cls}*.",
     ]
     return "\n".join(lines)
 
@@ -120,18 +145,18 @@ def _semi(clf: dict) -> list[str]:
         "    ```text",
         "    Statement",
         "      proposition:",
-        f"        subjectVariant (VBC): {prop['subject']['label'].split(' — ', 1)[0]}",
-        f"        predicate:            {prop['predicate']}",
-        f"        objectCondition (MDE): {prop['object']['curie']} ({prop['object']['label']})",
+        f"        subject (VBC): {prop['subject']['label'].split(' — ', 1)[0]}",
+        f"        predicate:     {prop['predicate']}",
+        f"        object (MDE):  {prop['object']['curie']} ({prop['object']['label']})",
     ]
     if qual_bits:
-        out.append(f"        qualifiers:           {qual_bits}")
+        out.append(f"        qualifiers:    {qual_bits}")
     out.append(f"      method:        {clf['method']['code']}")
     out.append("      evidence_lines:")
     for line in clf["evidence_lines"]:
-        out.append(f"        - {line['code']:<12} score {line['score']:>4}")
-    out.append(f"      final_score:          {clf['final_score']}")
-    out.append(f"      score_classification: {clf['score_classification']}")
+        _semi_line(line, 0, out)
+    out.append(f"      score:         {clf['score']}")
+    out.append(f"      outcome:       {clf['outcome']}")
     out.append("    ```")
     return out
 
@@ -161,7 +186,7 @@ def _page(slug: str, pvs_id: str) -> str:
         "",
         "    This example traces back to a [Practice Variant Set](index.md) entry; the",
         "    entry traces back to the source tab. Values are illustrative — scoring lives",
-        "    in [CSpec](../../reference/cspec-interop.md).",
+        "    in CSpec.",
         "",
         f"An SVCv4 classification of {gene_variant} against {condition}, drawn from the",
         f"`{pvs_id}` Practice Variant Set entry.",

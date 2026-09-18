@@ -84,5 +84,3 @@ version until — and wherever — no specialised version applies.
 
 - [VA-Spec community profile](../reference/va-spec-profile.md) — the
   interoperability layering between VA-Spec and SVCv4.
-- [ClinGen CSpec interop](../reference/cspec-interop.md) — how method codes
-  resolve into CSpec definitions.

@@ -24,7 +24,7 @@ How [`source.md`](source.md) maps onto the model. Illustrative; scoring is CSpec
 ## Why this entry is a deliberate VUS
 
 The clinical support is offset by the polymorphic-repeat context, so the rolled-up
-`score_classification` is `variant_of_uncertain_significance`. It's a useful
+`outcome` is `variant_of_uncertain_significance`. It's a useful
 counter-example to the "everything is pathogenic" pattern.
 
 ## Open questions

@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of ACTC1 c.488dup (p.His163GlnfsTer7) against hypertrophic cardiomyopathy, drawn from the
 `PVS-v1-ACTC1` Practice Variant Set entry.
@@ -22,10 +22,10 @@ An SVCv4 classification of ACTC1 c.488dup (p.His163GlnfsTer7) against hypertroph
 
     The variant being classified (VBC) is ACTC1 c.488dup (p.His163GlnfsTer7); the disease/condition (MDE) is hypertrophic cardiomyopathy. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF_+1`, score 1.0) — Affected proband (illustrative).
-    - **Clinical observation in unaffected individual(s) (CLN_UAF)** (`CLN_UAF_+0`, score 0.0) — Unaffected carrier (illustrative).
-    - **Locus specificity** (`LOC_PHE_+0`, score 0.0) — Locus specificity for phenotype (illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF`, score 1.0) — Affected proband (illustrative).
+    - **Clinical observation in unaffected individual(s) (CLN_UAF)** (`CLN_UAF`, score 0.0) — Unaffected carrier (illustrative).
+    - **Locus specificity** (`LOC_PHE`, score 0.0) — Locus specificity for phenotype (illustrative).
 
     Each became an Evidence Line; their scores compose to a Statement final score of 1.0 → *variant of uncertain significance*.
 
@@ -34,18 +34,18 @@ An SVCv4 classification of ACTC1 c.488dup (p.His163GlnfsTer7) against hypertroph
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): ACTC1 c.488dup (p.His163GlnfsTer7)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0005045 (hypertrophic cardiomyopathy)
-        qualifiers:           moi=AD; note=Loss of function is NOT an established mechanism for ACTC1-related HCM.
+        subject (VBC): ACTC1 c.488dup (p.His163GlnfsTer7)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0005045 (hypertrophic cardiomyopathy)
+        qualifiers:    moi=AD; note=Loss of function is NOT an established mechanism for ACTC1-related HCM.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - CLN_AFF_+1   score  1.0
-        - CLN_UAF_+0   score  0.0
-        - LOC_PHE_+0   score  0.0
-      final_score:          1.0
-      score_classification: variant_of_uncertain_significance
+        - POP_FRQ                  score   0.0
+        - CLN_AFF                  score   1.0
+        - CLN_UAF                  score   0.0
+        - LOC_PHE                  score   0.0
+      score:         1.0
+      outcome:       variant_of_uncertain_significance
     ```
 
 === "JSON"

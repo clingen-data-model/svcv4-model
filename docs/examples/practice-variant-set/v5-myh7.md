@@ -8,7 +8,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 A classification of MYH7 `c.4909G>A` (p.Ala1637Thr) against hypertrophic
 cardiomyopathy. It draws on four kinds of evidence — population frequency, three
@@ -52,18 +52,23 @@ illustrative **variant of uncertain significance**.
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): MYH7 c.4909G>A (p.Ala1637Thr) [CAID:CA015454]
+        subject (VBC): MYH7 c.4909G>A (p.Ala1637Thr) [CAID:CA015454]
         predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0005045 (hypertrophic cardiomyopathy)
+        object (MDE): MONDO:0005045 (hypertrophic cardiomyopathy)
         qualifiers:           MOI=AD; LoF not an established mechanism
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0  (prevalence 1/200; penetrance 0.40; pop_frq_points 0)  score  0
-        - CLN_AFF_+1  (3 probands: SPECIFIC / CONSISTENT / INCONSISTENT)     score +1
-        - MIS_+0      (REVEL 0.577; same-codon VUS ClinVar:525029)           score  0
-        - SPL_+0      (no predicted splicing impact)                         score  0
-      final_score:          1.0
-      score_classification: variant_of_uncertain_significance
+        - POP_FRQ  (prevalence 1/200; penetrance 0.40; pop_frq_points 0)  score  0
+        - CLN_AFF  (3 probands: SPECIFIC / CONSISTENT / INCONSISTENT)     score +1
+        - MIS      (REVEL 0.577; same-codon VUS ClinVar:525029)           score  0
+          - MIS_PRD                     score  0
+            - MIS_PRD_INIT_REVEL (prov) score  0
+          - MIS_INF                     score  0
+            - INF_SAMEAA (prov)         score  0
+        - SPL      (no predicted splicing impact)                         score  0
+          - SPL_PRD                     score  0
+      score:         1.0
+      outcome:       variant_of_uncertain_significance
     ```
 
 === "JSON"
@@ -116,7 +121,7 @@ the other two probands follow the same shape and are summarized inside the
   with the POP_FRQ method.
 - **LOC_PHE** is applicable (probands are counted) but is not scored here — the
   tab lacks the gene-specificity and diagnostic-yield inputs the method needs.
-- **PM5-type support** is not a clinical line: it is a single-amino-acid-change
+- **Same-residue support** is not a clinical line: it is a single-amino-acid-change
   (`MIS`) datum, and the non-VBC comparator allele rides along as one of that
   workflow's evidence items. Because the comparator is a VUS, it carries little
   or no positive weight.

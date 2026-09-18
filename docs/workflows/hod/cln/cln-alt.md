@@ -37,7 +37,7 @@ Required (see the full [applicability table](../../case-model.md)):
 
 The `CLN_ALTV` points (and how phase and the alternate variant's classification
 weigh in) are determined by its workflow in
-[ClinGen CSpec](../../../reference/cspec-interop.md). This model captures the evidence.
+ClinGen CSpec. This model captures the evidence.
 
 ## Alternative Cause-Gene (CLN_ALTG)
 
@@ -63,4 +63,4 @@ Required (see the full [applicability table](../../case-model.md)):
 
 `CLN_ALTG` points come from its CSpec workflow; phenotype severity and
 age-matched penetrance feed that scoring, but the **rules** live in
-[ClinGen CSpec](../../../reference/cspec-interop.md). This model captures the evidence.
+ClinGen CSpec. This model captures the evidence.

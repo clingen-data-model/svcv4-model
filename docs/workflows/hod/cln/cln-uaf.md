@@ -22,5 +22,5 @@ fields are **not applicable** to `CLN_UAF`.
 
 The weight of an unaffected observation depends heavily on age-matched
 penetrance, but the scoring **rules** are defined in
-[ClinGen CSpec](../../../reference/cspec-interop.md). This model captures the evidence;
+ClinGen CSpec. This model captures the evidence;
 see [Case model & applicability](../../case-model.md) for the exact `CLN_UAF` fields.

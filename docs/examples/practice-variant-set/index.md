@@ -8,7 +8,7 @@ feel for real data — no separate or synthetic example set is needed.
 
 Each variant is one tab of the source spreadsheet, transcribed and mapped onto the
 [Case model](../../workflows/case-model.md) and the
-[classification structures](../../getting-started/evidence-lines-and-items.md),
+[classification structures](../../collecting/index.md),
 and given a stable `PVS-*` id that preserves the tab name. Everything stays
 **traceable** rather than invented:
 
@@ -26,7 +26,7 @@ uv run python scripts/validate_examples.py
 
     The **shapes are real; the data is illustrative.** Scores and classifications
     shown here are not spec-locked — the scoring arithmetic lives in
-    [ClinGen CSpec](../../reference/cspec-interop.md), not in this model.
+    ClinGen CSpec, not in this model.
 
 ## Entries
 

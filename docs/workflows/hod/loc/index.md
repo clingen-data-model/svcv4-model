@@ -33,4 +33,4 @@ Each LOC workflow page describes **what evidence to capture** (the Evidence
 Items), links to the generated **applicability table** on the
 [Case model](../../case-model.md) page (which fields are required/optional/
 conditional/not-applicable for that workflow), and points to
-[CSpec](../../../reference/cspec-interop.md) for the scoring rules.
+CSpec for the scoring rules.

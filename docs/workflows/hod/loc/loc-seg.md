@@ -38,6 +38,6 @@ Optional: `sex`, `age`, `phenotypes`, `vbc_zygosity`, `age_matched_penetrance`,
 ## Scoring
 
 The points for `LOC_SEG` are produced by its workflow in
-[ClinGen CSpec](../../../reference/cspec-interop.md); this model captures the
+ClinGen CSpec; this model captures the
 evidence the workflow consumes. See [Case model & applicability](../../case-model.md)
 for the exact `LOC_SEG` field applicability.

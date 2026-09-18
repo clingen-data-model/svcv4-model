@@ -1,20 +1,27 @@
-"""Reference (non-authoritative) scorer for Locus specificity -- phenotype (SM 5, LOC_PHE).
+"""Reference (non-authoritative) scorers for Locus specificity (SM 5): LOC_PHE + LOC_SEG.
 
-Increment LOC-1: LOC_PHE only. LOC_SEG (co-segregation) and the combined LOC +4.0 cap are
-deferred (LOC_SEG's per-MOI affected-segregant point values are in the SM 5 Figure 2 image, not
-the text). CSpec is authoritative. ``parent_code="LOC"`` is a display/grouping label (not an
-SVCv4 parent code); ``parent_total`` is the recorded LOC_PHE value.
+LOC_PHE = phenotype specificity / diagnostic yield (SM 5 Figure 1). LOC_SEG = co-segregation
+(SM 5 Figure 2, resolved 2026-09-18 -- per-co-segregation point tiers by MOI). The combined
+LOC +4.0 cap is applied in case aggregation (``reference_aggregate_loc``). CSpec is
+authoritative. ``parent_code="LOC"`` is a display/grouping label (not an SVCv4 parent code);
+``parent_total`` is the recorded code value.
 """
 
 from __future__ import annotations
 
 import re
 
-from svcv4_model.case import MOI, AgeMatchedPenetrance, Case, TriState
+from svcv4_model.case import MOI, AgeMatchedPenetrance, Case, TriState, Zygosity
+from svcv4_model.scoring.primitives import cap
 from svcv4_model.scoring.result import ScoreResult
 
 _NUM = re.compile(r"[0-9]*\.?[0-9]+")
 _RULE_B_SUPPRESSED = frozenset({MOI.AR})  # None also suppresses rule (b)
+
+_SEG_CAP_HI = 4.0  # LOC_SEG summed co-segregations cap (SM 5 L38)
+_SEG_FLIP = -4.0  # non-segregation benign flip (SM 5 Figure 2)
+_X_LINKED = frozenset({MOI.XLD, MOI.XLR})
+_NONSEG_FLIP_MOI = frozenset({MOI.AD, MOI.XLD, MOI.XLR})  # + AR only when homozygous
 
 
 def _parse_percent(raw: str | None) -> float | None:
@@ -116,6 +123,123 @@ def reference_score_loc_phe(case: Case, *, moi: MOI | None) -> ScoreResult:
         parent_code="LOC",
         sub_code_points={"LOC_PHE": pts},
         parent_total=pts,
+        provenance=prov,
+        authoritative=False,
+    )
+
+
+def _seg_points(r, moi: MOI, *, near_100: bool) -> float | None:
+    """Points for one relative's co-segregation (SM 5 Figure 2), or None if not an informative
+    segregant. Non-segregation events (affected+VBC-absent; unaffected carrier at ~100%) are
+    detected separately and are NOT scored here.
+    """
+    aff = r.affected_w_mde
+    carrier = r.vbc_exists
+    zyg = r.vbc_zygosity
+    comphet = r.cmp_het_variant_exists == TriState.TRUE
+    severe = r.severe_phenotype == TriState.TRUE
+
+    if aff == TriState.TRUE and carrier == TriState.TRUE:  # affected, carrying the VBC
+        if moi == MOI.AD:
+            return 1.0 if zyg == Zygosity.HET else None
+        if moi == MOI.AR:
+            return 2.0 if (zyg == Zygosity.HOM or comphet) else None
+        if moi == MOI.SD:
+            if severe and (zyg == Zygosity.HOM or comphet):
+                return 2.0
+            return 1.0 if zyg == Zygosity.HET else None
+        if moi in _X_LINKED:  # hemizygous male / hom-or-comphet female / het female -> +1.0
+            return 1.0 if (zyg in (Zygosity.HEMI, Zygosity.HOM, Zygosity.HET) or comphet) else None
+        return None
+
+    if aff == TriState.FALSE:  # unaffected co-segregant
+        if moi == MOI.AR:  # het carrier OR wild type -> +0.4 (recessive; not penetrance-gated)
+            if carrier == TriState.FALSE:
+                return 0.4
+            if carrier == TriState.TRUE and zyg == Zygosity.HET:
+                return 0.4
+            return None
+        # AD / SD / X-linked: unaffected wild type at ~100% penetrance -> +1.0
+        if near_100 and carrier == TriState.FALSE:
+            return 1.0
+        return None
+
+    return None
+
+
+def reference_score_loc_seg(case: Case, *, moi: MOI | None) -> ScoreResult:
+    """Compute the reference (NON-AUTHORITATIVE) LOC_SEG co-segregation points (SM 5 Figure 2).
+
+    CSpec is authoritative. Sums per-co-segregation points across ``case.relatives`` (tiers by
+    ``moi`` per SM 5 Figure 2), capped 0.0..+4.0. An observed non-segregation is a terminal
+    branch: it zeroes LOC_SEG and, for AD / AR-homozygous / X-linked, flips it to -4.0 (a plain
+    AR / semidominant non-segregation may reflect another causative locus, not benignity, so it
+    is not flipped). ``moi`` is required to tier the segregations. The combined LOC +4.0 cap
+    with LOC_PHE is applied in ``reference_aggregate_loc``.
+    """
+    prov: list[str] = [
+        'LOC: "LOC" is the HOD grouping label; the combined LOC +4.0 cap (with LOC_PHE) is '
+        "applied in case aggregation."
+    ]
+    if moi is None:
+        prov.append("LOC_SEG: _ND (MOI is required to tier co-segregations, SM 5 Figure 2)")
+        return ScoreResult(parent_code="LOC", provenance=prov, authoritative=False)
+
+    prov.append(
+        "LOC_SEG: the SM 5 Figure 2 entry gate (>1 locus AND phenocopy rate very low/zero) is "
+        "not captured in the model -- assumed satisfied; reference-only (see known-gaps)."
+    )
+
+    reasons = _non_segregation(case, moi=moi)
+    if reasons:
+        joined = "; ".join(reasons)
+        flip = moi in _NONSEG_FLIP_MOI or (moi == MOI.AR and case.vbc_zygosity == Zygosity.HOM)
+        if flip:
+            prov.append(
+                f"LOC_SEG: {_SEG_FLIP} -- non-segregation observed ({joined}); AD / AR-homozygous "
+                "/ X-linked benign flip (SM 5 Figure 2). This also zeroes LOC_PHE."
+            )
+            return ScoreResult(
+                parent_code="LOC",
+                sub_code_points={"LOC_SEG": _SEG_FLIP},
+                parent_total=_SEG_FLIP,
+                provenance=prov,
+                authoritative=False,
+            )
+        prov.append(
+            f"LOC_SEG: 0.0 -- non-segregation observed ({joined}); the {_SEG_FLIP} flip is NOT "
+            f"applied for moi={moi.value} (a plain-AR / semidominant non-segregation may reflect "
+            "another causative locus, not benignity). This also zeroes LOC_PHE."
+        )
+        return ScoreResult(
+            parent_code="LOC",
+            sub_code_points={"LOC_SEG": 0.0},
+            parent_total=0.0,
+            provenance=prov,
+            authoritative=False,
+        )
+
+    near_100 = case.age_matched_penetrance == AgeMatchedPenetrance.NEAR_100
+    total = 0.0
+    counted = 0
+    for i, r in enumerate(case.relatives):
+        pts = _seg_points(r, moi, near_100=near_100)
+        if pts is not None:
+            total += pts
+            counted += 1
+            prov.append(f"LOC_SEG: relative[{i}] +{pts} co-segregation ({moi.value})")
+
+    if counted == 0:
+        prov.append("LOC_SEG: _ND (no informative co-segregations among captured relatives)")
+        return ScoreResult(parent_code="LOC", provenance=prov, authoritative=False)
+
+    capped = cap(total, 0.0, _SEG_CAP_HI)
+    if capped != total:
+        prov.append(f"LOC_SEG: raw sum {total} capped to {capped} (0.0..+4.0, SM 5 L38)")
+    return ScoreResult(
+        parent_code="LOC",
+        sub_code_points={"LOC_SEG": capped},
+        parent_total=capped,
         provenance=prov,
         authoritative=False,
     )

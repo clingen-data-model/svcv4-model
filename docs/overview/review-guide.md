@@ -18,17 +18,14 @@ piece by piece rather than dropping you into the middle of it:
 1. [Home](../index.md)
 2. [SVCv4 Standards in brief](svcv4-in-brief.md)
 3. [How SVCv4 maps to the model](alignment.md)
-4. [Show your work: structured evidence](../getting-started/show-your-work.md)
-5. [The classification inputs](../getting-started/classification-inputs.md)
-6. [The assertion framework](../getting-started/assertion-framework.md)
-7. [Capturing basic evidence](../getting-started/capturing-basic-evidence.md)
-8. [Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md)
-9. [Rolling up Evidence Line scores](../getting-started/rolling-up-scores.md)
-10. [Capture your first case](../getting-started/first-case.md)
-11. [Clinical Observations (CLN)](../workflows/hod/cln/index.md) and [Locus Specificity (LOC)](../workflows/hod/loc/index.md)
-12. [Spec coverage](../reference/spec-alignment.md)
-13. [Core concepts](../reference/concepts.md)
-14. [Known gaps](../reference/known-gaps.md)
+4. [Collecting the evidence: the shape it all rolls into](../collecting/index.md)
+5. [Starting curation activities](../collecting/curation-activities.md)
+6. [Population observations (POP)](../collecting/population.md)
+7. [Case & segregation data collection](../collecting/case/index.md)
+8. [Variant Impact data collection](../collecting/variant-impact.md)
+9. [Clinical Observations (CLN)](../workflows/hod/cln/index.md) and [Locus Specificity (LOC)](../workflows/hod/loc/index.md)
+10. [Spec coverage](../reference/spec-alignment.md)
+11. [Core concepts](../reference/concepts.md)
 
 ## What we'd like feedback on
 
@@ -55,9 +52,8 @@ piece by piece rather than dropping you into the middle of it:
   page (VBC, MDE, Gene, MOI, Zygosity & Phase, Case) match how you think
   about these day to day as a curator?
 - The items above, plus a few more (Gene-Disease Validity, DAFT, rule
-  enforcement, case aggregation), are tracked in one place on
-  [Known gaps](../reference/known-gaps.md) — does the way they're grouped
-  there make sense, or would you organize this differently?
+  enforcement, case aggregation), are tracked together as known gaps — does
+  the way they're grouped make sense, or would you organize this differently?
 
 ## What's not here
 

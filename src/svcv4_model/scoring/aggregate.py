@@ -2,10 +2,10 @@
 
 Collapse a family's per-code ``ScoreResult``(s) into one subtotal ``ScoreResult``, applying the
 family cap. POP (SM 3): POP_FRQ + POP_HMZ, no cap (independent case-level codes). LOC (SM 5 L38):
-LOC_PHE + LOC_SEG summed then capped at +4.0 -- this is the POSITIVE combine only; the -4.0
-non-segregation benign flip is a separate LOC-2 signal (a replacement, not a summand here). CSpec
-is authoritative. Aggregators consume and produce ``ScoreResult``s, keeping the pipeline uniform:
-per-code scorers -> family subtotals (here) -> cross-code combine (Inc 4) -> classification (Inc 1).
+LOC_PHE + LOC_SEG summed then capped at +4.0 (upper cap only). A non-segregation zeroes LOC_PHE
+and sets LOC_SEG to -4.0, so that benign flip flows through this sum as a summand (subtotal -4.0).
+CSpec is authoritative. Aggregators consume and produce ``ScoreResult``s, keeping the pipeline
+uniform: per-code scorers -> family subtotals (here) -> cross-code combine -> classification.
 """
 
 from __future__ import annotations
@@ -68,8 +68,8 @@ def reference_aggregate_pop(results: Iterable[ScoreResult]) -> ScoreResult:
 
 
 def reference_aggregate_loc(results: Iterable[ScoreResult]) -> ScoreResult:
-    """LOC family subtotal: the positive LOC_PHE + LOC_SEG combine, capped at +4.0 (SM 5 L38).
-    The -4.0 non-segregation benign flip is a separate LOC-2 concern, not summed here."""
+    """LOC family subtotal: LOC_PHE + LOC_SEG summed, capped at +4.0 upper only (SM 5 L38). A
+    non-segregation (LOC_SEG -4.0 with LOC_PHE zeroed) flows through as a -4.0 subtotal."""
     return _aggregate_family(results, family="LOC", cap=4.0)
 
 

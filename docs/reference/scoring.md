@@ -89,9 +89,18 @@ result.provenance        # the audit trail, step by step
   `+2` band and the `(81,82)` boundary are inferred — see known-gaps). An observed
   **non-segregation** zeroes the points (the two-case rule: an affected VBC-absent relative, or —
   except under AR — an unaffected VBC-carrier at near-100% penetrance); under AR a rule-(a)
-  non-segregation zeroes with a caveat. Absent/unparseable yield → `_ND`. **LOC_SEG**
-  (co-segregation) and the combined **LOC** `+4.0` cap are deferred to LOC-2 / case aggregation
-  (LOC_SEG's per-MOI segregant point values live only in the SM 5 Figure 2 image).
+  non-segregation zeroes with a caveat. Absent/unparseable yield → `_ND`.
+- **Locus specificity — co-segregation** (SM 5 Figure 2) — `reference_score_loc_seg` sums the
+  per-co-segregation points across `case.relatives` by MOI (AD affected-het / unaffected-WT
+  `+1.0`; AR affected hom-or-comp-het `+2.0`, unaffected `+0.4`; semidominant severe `+2.0` /
+  affected `+1.0` / unaffected `+1.0`; X-linked `+1.0`), capped `0.0..+4.0`. An observed
+  **non-segregation** is terminal — it zeroes LOC_SEG and, for **AD / AR-homozygous /
+  X-linked**, flips it to `−4.0` (a plain-AR / semidominant non-segregation may reflect another
+  causative locus, so it is not flipped). Unaffected non-AR co-segregants are counted only at
+  near-100% penetrance; the AR `+0.4` is not penetrance-gated. The SM 5 Figure 2 **entry gate**
+  (>1 locus and phenocopy rate very low/zero) is **not captured** in the model — assumed
+  satisfied (see known-gaps). The combined **LOC** `+4.0` cap with LOC_PHE is applied in
+  `reference_aggregate_loc`.
 
 The shared `score_nul_cds_workflow` carries per-branch caps via a `BranchSpec` (parent
 floor/ceiling, held ceiling, INF ceiling), so each LoF scorer is just its branch table; the
@@ -115,7 +124,7 @@ descriptor plus the VUS subclass — the capstone the aggregation increments fee
 It returns a `Classification` NamedTuple (`category` + `vus_subclass`, the latter set only for
 VUS). The band is **not clamped** (SM 1 makes Pathogenic open-ended `≥ +10.0`); whether the summed
 total is globally clamped is a separate open question deferred to the cross-code-combination
-increment (see [known gaps](known-gaps.md)). The summing that produces `points` — POP/LOC
+increment (see known gaps). The summing that produces `points` — POP/LOC
 subtotals, CLN cross-proband aggregation, and cross-code combination — and `validate_case`
 applicability enforcement follow in later increments (see the scoping doc).
 
@@ -170,7 +179,7 @@ finalize).
 LOC subtotals into one **(VBC, MDE) total**. An `_ND` family contributes `0`; the per-family
 breakdown is kept in `sub_code_points`. The sum is **unclamped** — faithful to SM 1's open-ended
 Pathogenic (`≥ +10`) / Benign (`≤ −4`); the GA4GH JSON `scale` cap of `[−8, +10]` is a display
-concern (flagged in [known gaps](known-gaps.md)). `reference_classify` then bands that total — but
+concern (flagged in known gaps). `reference_classify` then bands that total — but
 an all-`_ND` case (no evidence in any family) yields `parent_total=None` (not classifiable, and
 distinct from a scored `0.0`), so guard first: `t = reference_combine_case([...]).parent_total`;
 `reference_classify(t)` only when `t is not None`.
@@ -178,10 +187,11 @@ distinct from a scored `0.0`), so guard first: `t = reference_combine_case([...]
 The remaining PFD workflow scoring and `validate_case` (Inc 5) follow in later increments (see the
 scoping doc).
 
-## Known assumption (flagged for WG confirmation)
+## SM 18 Figure 1 (resolved 2026-09-18)
 
 The SM 18 matrix's **Suspected mechanism × Most exon-relevance** cell was deliberately not
-compounded to 12.5% by the Working Group; the authoritative value is in SM 18 Figure 1 (not
-in this repo's text extracts). The reference scorer assumes **0.25** (keep the Suspected
-fraction, drop the further Most halving) and records the assumption in `provenance`. This
-affects only that single matrix cell.
+compounded to 12.5% by the Working Group. SM 18 Figure 1 (added to the repo 2026-09-18)
+resolves the open question: the cell is **0.0** — the matrix **zeroes** this position rather
+than keeping the 0.25 Suspected fraction (the prior assumption) or using the 0.125 product.
+The reference scorer now applies **0.0** for this single cell; every other cell is the plain
+mechanism × exon product.

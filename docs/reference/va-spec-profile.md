@@ -45,6 +45,4 @@ authored on top of VA-Spec.
 
 ## See also
 
-- [The assertion framework](../getting-started/assertion-framework.md)
-- [Evidence Lines & Evidence Items](../getting-started/evidence-lines-and-items.md)
-- [GA4GH GKS interop](gks-interop.md)
+- [Collecting the evidence](../collecting/index.md) — the nesting shape in narrative form

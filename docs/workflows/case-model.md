@@ -17,7 +17,7 @@ Applicability and the conditional rules live in a single source of truth,
 under `schemas/json/case/` and the tables below are generated from it; this
 phase documents the conditional rules but does not enforce them.
 
-See the [`Case` model reference][svcv4_model.Case] for field types.
+See the `Case` model reference for field types.
 
 This is the **structured backbone** of the
 [Clinical Observations](hod/cln/index.md) workflows: each CLN workflow

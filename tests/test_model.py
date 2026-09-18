@@ -25,8 +25,8 @@ def _make_statement() -> Statement:
             object=MDE(curie="MONDO:0007254", label="Test disease"),
         ),
         method=Method(code="svcv4:baseline", version="test"),
-        final_score=4.0,
-        score_classification=VariantPathogenicityClassification.LIKELY_PATHOGENIC,
+        score=4.0,
+        outcome=VariantPathogenicityClassification.LIKELY_PATHOGENIC,
         evidence_lines=[
             EvidenceLine(
                 method=Method(code="svcv4:CLN_AFF"),
@@ -39,8 +39,8 @@ def _make_statement() -> Statement:
 
 def test_statement_instantiates() -> None:
     statement = _make_statement()
-    assert statement.final_score == 4.0
-    assert statement.score_classification is VariantPathogenicityClassification.LIKELY_PATHOGENIC
+    assert statement.score == 4.0
+    assert statement.outcome is VariantPathogenicityClassification.LIKELY_PATHOGENIC
     assert statement.proposition.predicate is Predicate.IS_CAUSAL_FOR
     assert len(statement.evidence_lines) == 1
     assert statement.evidence_lines[0].score == 2.0

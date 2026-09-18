@@ -4,9 +4,9 @@
       "variation": {
         "id": "CAID:CA015454",
         "type": "Allele",
-        "_note": "Placeholder VRS Variation payload — will be typed as ga4gh.vrs.models.Variation in a follow-up PR. Source: ClinGen Allele ID CA015454."
+        "_note": "Placeholder VRS Variation payload \u2014 will be typed as ga4gh.vrs.models.Variation in a follow-up PR. Source: ClinGen Allele ID CA015454."
       },
-      "label": "MYH7 c.4909G>A (p.Ala1637Thr) — PVS-v5-MYH7 VBC"
+      "label": "MYH7 c.4909G>A (p.Ala1637Thr) \u2014 PVS-v5-MYH7 VBC"
     },
     "predicate": "is_causal_for",
     "object": {
@@ -14,7 +14,10 @@
       "label": "hypertrophic cardiomyopathy"
     },
     "qualifiers": [
-      { "moi": "AD", "note": "Loss of function is NOT an established disease mechanism for this MDE." }
+      {
+        "moi": "AD",
+        "note": "Loss of function is NOT an established disease mechanism for this MDE."
+      }
     ]
   },
   "method": {
@@ -23,18 +26,19 @@
     "version": "draft-2026-pre-release",
     "description": "Placeholder reference to the baseline SVCv4 specification version in CSpec."
   },
-  "final_score": 1.0,
-  "score_classification": "variant_of_uncertain_significance",
-  "strength_direction": null,
+  "score": 1.0,
+  "outcome": "variant_of_uncertain_significance",
+  "strength": null,
+  "direction": null,
   "contribution": null,
   "evidence_lines": [
     {
       "method": {
         "code": "svcv4:POP_FRQ",
-        "label": "Population allele frequency (POP_FRQ) — placeholder",
+        "label": "Population allele frequency (POP_FRQ) \u2014 placeholder",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ_+0",
+      "code": "POP_FRQ",
       "evidence": [
         {
           "id": "PVS-v5-MYH7-pop-001",
@@ -42,8 +46,8 @@
           "data": {
             "prevalence_estimate": "1 in 200",
             "allelic_heterogeneity": 0.05,
-            "genetic_heterogeneity": 0.40,
-            "penetrance": 0.40,
+            "genetic_heterogeneity": 0.4,
+            "penetrance": 0.4,
             "pop_frq_points": 0
           },
           "references": [
@@ -54,18 +58,19 @@
         }
       ],
       "score": 0.0,
-      "strength_direction": null,
-      "score_classification": null,
+      "strength": null,
+      "direction": null,
+      "outcome": null,
       "contribution": 0.0,
       "description": "Population frequency contributes no points for this VBC (illustrative)."
     },
     {
       "method": {
         "code": "svcv4:CLN_AFF",
-        "label": "Clinical observation in affected individual(s) (CLN_AFF) — placeholder",
+        "label": "Clinical observation in affected individual(s) (CLN_AFF) \u2014 placeholder",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF_+1",
+      "code": "CLN_AFF",
       "evidence": [
         {
           "id": "PVS-v5-MYH7-cln-001",
@@ -73,9 +78,18 @@
           "data": {
             "individuals_observed": 3,
             "probands": [
-              { "phenotype": "hypertrophic cardiomyopathy", "pheno_specificity_for_mde": "SPECIFIC" },
-              { "phenotype": "unspecified cardiomyopathy", "pheno_specificity_for_mde": "CONSISTENT" },
-              { "phenotype": "dilated cardiomyopathy", "pheno_specificity_for_mde": "INCONSISTENT" }
+              {
+                "phenotype": "hypertrophic cardiomyopathy",
+                "pheno_specificity_for_mde": "SPECIFIC"
+              },
+              {
+                "phenotype": "unspecified cardiomyopathy",
+                "pheno_specificity_for_mde": "CONSISTENT"
+              },
+              {
+                "phenotype": "dilated cardiomyopathy",
+                "pheno_specificity_for_mde": "INCONSISTENT"
+              }
             ],
             "pop_frq_points": 0
           },
@@ -84,23 +98,27 @@
         }
       ],
       "score": 1.0,
-      "strength_direction": "pathogenic_supporting",
-      "score_classification": null,
+      "strength": "supporting",
+      "direction": "pathogenic",
+      "outcome": null,
       "contribution": 1.0,
       "description": "Affected-individual observations, weighted by phenotype specificity (illustrative)."
     },
     {
       "method": {
         "code": "svcv4:MIS",
-        "label": "Single-amino-acid change (MIS) — placeholder",
+        "label": "Single-amino-acid change (MIS) \u2014 placeholder",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS_+0",
+      "code": "MIS",
       "evidence": [
         {
           "id": "PVS-v5-MYH7-mis-001",
           "type": "computational_prediction",
-          "data": { "tool": "REVEL", "score": 0.577 },
+          "data": {
+            "tool": "REVEL",
+            "score": 0.577
+          },
           "references": [],
           "description": "Placeholder: REVEL 0.577 is intermediate; the threshold call is CSpec's."
         },
@@ -112,38 +130,170 @@
             "other_variant": "ClinVar:525029",
             "other_variant_classification": "VUS"
           },
-          "references": ["https://www.ncbi.nlm.nih.gov/clinvar/variation/525029/"],
+          "references": [
+            "https://www.ncbi.nlm.nih.gov/clinvar/variation/525029/"
+          ],
           "description": "Placeholder: another missense at the same codon, classified VUS. Classic PM5 needs a pathogenic comparator, so this likely carries little/no positive weight; captured as context."
         }
       ],
       "score": 0.0,
-      "strength_direction": null,
-      "score_classification": null,
+      "strength": null,
+      "direction": null,
+      "outcome": null,
       "contribution": 0.0,
-      "description": "Predictive missense evidence (PFD/MIS): REVEL plus a same-residue comparator (illustrative, uninformative)."
+      "description": "Predictive missense evidence (PFD/MIS): REVEL plus a same-residue comparator (illustrative, uninformative).",
+      "evidence_lines": [
+        {
+          "method": {
+            "code": "svcv4:MIS_PRD",
+            "label": "Predictive missense (MIS_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "code": "MIS_PRD",
+          "evidence": [],
+          "score": 0.0,
+          "strength": null,
+          "direction": null,
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "evidence_lines": [
+            {
+              "method": {
+                "code": "svcv4:MIS_PRD_INIT_REVEL",
+                "label": "Predictor initial points (REVEL)",
+                "version": "draft-2026-pre-release"
+              },
+              "code": "MIS_PRD_INIT_REVEL",
+              "evidence": [
+                {
+                  "id": "PVS-v5-MYH7-mis-001",
+                  "type": "computational_prediction",
+                  "data": {
+                    "tool": "REVEL",
+                    "score": 0.577
+                  },
+                  "references": [],
+                  "description": "Placeholder: REVEL 0.577 is intermediate; the threshold call is CSpec's."
+                }
+              ],
+              "score": 0.0,
+              "strength": null,
+              "direction": null,
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "evidence_lines": [],
+              "description": "Placeholder: REVEL 0.577 is intermediate; the threshold call is CSpec's."
+            }
+          ],
+          "description": "In-silico predictive missense assessment."
+        },
+        {
+          "method": {
+            "code": "svcv4:MIS_INF",
+            "label": "Missense inference (MIS_INF)",
+            "version": "draft-2026-pre-release"
+          },
+          "code": "MIS_INF",
+          "evidence": [],
+          "score": 0.0,
+          "strength": null,
+          "direction": null,
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "evidence_lines": [
+            {
+              "method": {
+                "code": "svcv4:INF_SAMEAA",
+                "label": "Same-amino-acid tally (INF_SAMEAA)",
+                "version": "draft-2026-pre-release"
+              },
+              "code": "INF_SAMEAA",
+              "evidence": [
+                {
+                  "id": "PVS-v5-MYH7-mis-002",
+                  "type": "same_residue_variant",
+                  "data": {
+                    "residue": "p.Ala1637",
+                    "other_variant": "ClinVar:525029",
+                    "other_variant_classification": "VUS"
+                  },
+                  "references": [
+                    "https://www.ncbi.nlm.nih.gov/clinvar/variation/525029/"
+                  ],
+                  "description": "Placeholder: another missense at the same codon, classified VUS. Classic PM5 needs a pathogenic comparator, so this likely carries little/no positive weight; captured as context."
+                }
+              ],
+              "score": 0.0,
+              "strength": null,
+              "direction": null,
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "evidence_lines": [],
+              "description": "Same-amino-acid change comparator (PS1-type; illustrative)."
+            }
+          ],
+          "description": "Same-residue comparator evidence."
+        }
+      ]
     },
     {
       "method": {
         "code": "svcv4:SPL",
-        "label": "Splicing (SPL) — placeholder",
+        "label": "Splicing (SPL) \u2014 placeholder",
         "version": "draft-2026-pre-release"
       },
-      "code": "SPL_+0",
+      "code": "SPL",
       "evidence": [
         {
           "id": "PVS-v5-MYH7-spl-001",
           "type": "computational_prediction",
-          "data": { "splice_impact": "none" },
+          "data": {
+            "splice_impact": "none"
+          },
           "references": [],
           "description": "Placeholder: no predicted splicing impact."
         }
       ],
       "score": 0.0,
-      "strength_direction": null,
-      "score_classification": null,
+      "strength": null,
+      "direction": null,
+      "outcome": null,
       "contribution": 0.0,
-      "description": "Splicing prediction (PFD/SPL): no predicted impact (illustrative)."
+      "description": "Splicing prediction (PFD/SPL): no predicted impact (illustrative).",
+      "evidence_lines": [
+        {
+          "method": {
+            "code": "svcv4:SPL_PRD",
+            "label": "Predictive splicing (SPL_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "code": "SPL_PRD",
+          "evidence": [
+            {
+              "id": "PVS-v5-MYH7-spl-001",
+              "type": "computational_prediction",
+              "data": {
+                "splice_impact": "none"
+              },
+              "references": [],
+              "description": "Placeholder: no predicted splicing impact."
+            }
+          ],
+          "score": 0.0,
+          "strength": null,
+          "direction": null,
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "evidence_lines": [],
+          "description": "In-silico splice prediction."
+        }
+      ]
     }
   ],
-  "description": "PVS-v5-MYH7 rolled-up SVCv4 classification. Values are illustrative — scoring lives in CSpec. Source tab: Practice Variant Set 'v5: MYH7' (gid 1923098172). LOC_PHE is applicable (probands are counted) but not scored here: the tab lacks the gene-specificity and diagnostic-yield inputs the LOC_PHE method needs."
+  "description": "PVS-v5-MYH7 rolled-up SVCv4 classification. Values are illustrative \u2014 scoring lives in CSpec. Source tab: Practice Variant Set 'v5: MYH7' (gid 1923098172). LOC_PHE is applicable (probands are counted) but not scored here: the tab lacks the gene-specificity and diagnostic-yield inputs the LOC_PHE method needs."
 }

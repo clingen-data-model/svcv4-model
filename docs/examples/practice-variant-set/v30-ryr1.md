@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of RYR1 c.12383C>T (p.Ala4128Val) against malignant hyperthermia, susceptibility to, 1, drawn from the
 `PVS-v30-RYR1` Practice Variant Set entry.
@@ -22,9 +22,11 @@ An SVCv4 classification of RYR1 c.12383C>T (p.Ala4128Val) against malignant hype
 
     The variant being classified (VBC) is RYR1 c.12383C>T (p.Ala4128Val); the disease/condition (MDE) is malignant hyperthermia, susceptibility to, 1. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF_+2`, score 2.0) — Affected proband (illustrative).
-    - **Single-amino-acid change (MIS)** (`MIS_+0`, score 0.0) — Predictive missense evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF`, score 2.0) — Affected proband (illustrative).
+    - **Single-amino-acid change (MIS)** (`MIS`, score 0.0) — Predictive missense evidence (PFD, illustrative).
+      - `MIS_PRD` (score 0.0) — In-silico predictive missense assessment.
+        - `MIS_PRD_INIT_REVEL` (score 0.0) · *provisional* — REVEL 0.248 is low; no same-codon informative variants.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 2.0 → *variant of uncertain significance*.
 
@@ -33,17 +35,19 @@ An SVCv4 classification of RYR1 c.12383C>T (p.Ala4128Val) against malignant hype
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): RYR1 c.12383C>T (p.Ala4128Val)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0007783 (malignant hyperthermia, susceptibility to, 1)
-        qualifiers:           moi=AD; note=Loss of function is NOT an established mechanism for RYR1-related malignant hyperthermia susceptibility.
+        subject (VBC): RYR1 c.12383C>T (p.Ala4128Val)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0007783 (malignant hyperthermia, susceptibility to, 1)
+        qualifiers:    moi=AD; note=Loss of function is NOT an established mechanism for RYR1-related malignant hyperthermia susceptibility.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - CLN_AFF_+2   score  2.0
-        - MIS_+0       score  0.0
-      final_score:          2.0
-      score_classification: variant_of_uncertain_significance
+        - POP_FRQ                  score   0.0
+        - CLN_AFF                  score   2.0
+        - MIS                      score   0.0
+          - MIS_PRD                  score   0.0
+            - MIS_PRD_INIT_REVEL (prov) score   0.0
+      score:         2.0
+      outcome:       variant_of_uncertain_significance
     ```
 
 === "JSON"

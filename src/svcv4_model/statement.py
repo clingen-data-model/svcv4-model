@@ -17,13 +17,13 @@ class Statement(BaseModel):
 
     - a `Proposition` (the SPOQ-structured assertion about a VBC and an
       MDE);
-    - the `final_score` and `score_classification` for the curation;
+    - the `score` and `outcome` for the curation;
     - a `method` reference identifying the **applied SVCv4
       specification version** — baseline SVCv4 or a VCEP-specialised
       version selected via gene-disease-MOI scoping (resolves into
       CSpec); and
     - the collection of `evidence_lines` whose scores compose into
-      `final_score`.
+      `score`.
 
     Worked examples in `examples/` validate against `Statement`.
     """
@@ -38,18 +38,22 @@ class Statement(BaseModel):
             "selected for this (VBC, MDE) curation. Resolves into CSpec."
         ),
     )
-    final_score: float = Field(
+    score: float = Field(
         description="The Statement's final composed score.",
     )
-    score_classification: VariantPathogenicityClassification = Field(
+    outcome: VariantPathogenicityClassification = Field(
         description=(
             "Categorical classification produced by mapping "
-            "`final_score` to the Benign ↔ Pathogenic spectrum."
+            "`score` to the Benign ↔ Pathogenic spectrum."
         ),
     )
-    strength_direction: str | None = Field(
+    strength: str | None = Field(
         default=None,
-        description="Optional strength-direction label for the final score.",
+        description="Optional strength label for the score (e.g. `strong`, `supporting`).",
+    )
+    direction: str | None = Field(
+        default=None,
+        description="Optional direction label for the score (e.g. `pathogenic`, `benign`).",
     )
     contribution: float | None = Field(
         default=None,
@@ -61,7 +65,7 @@ class Statement(BaseModel):
     evidence_lines: list[EvidenceLine] = Field(
         default_factory=list,
         description=(
-            "Evidence Lines whose scores compose into `final_score`. "
+            "Evidence Lines whose scores compose into `score`. "
             "Each Evidence Line is the artifact of one CSpec "
             "method/rule invocation."
         ),

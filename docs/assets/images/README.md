@@ -13,6 +13,6 @@ Graphics used by the docs site. To update a figure, replace the file in place
 Source graphics are authored by the SVCv4 Standards group and kept locally
 (under the git-ignored `tmp/`); only the published copies above are committed.
 
-The **data-model diagram** (Statement → Proposition / Final Score → Evidence
-Line(s) → Evidence Item(s)) on `getting-started/assertion-framework.md` is
+The **data-model diagram** (classification → Proposition / final score → lines
+of evidence → captured facts) on `collecting/index.md` is
 authored **in-repo as Mermaid**, so it stays editable and version-controlled.

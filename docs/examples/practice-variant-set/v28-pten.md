@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of PTEN c.802-3T>A (intronic, splice region) against PTEN hamartoma tumor syndrome, drawn from the
 `PVS-v28-PTEN` Practice Variant Set entry.
@@ -22,8 +22,9 @@ An SVCv4 classification of PTEN c.802-3T>A (intronic, splice region) against PTE
 
     The variant being classified (VBC) is PTEN c.802-3T>A (intronic, splice region); the disease/condition (MDE) is PTEN hamartoma tumor syndrome. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Splicing (SPL)** (`SPL_-3`, score -3.0) — Splicing assay, benign (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Splicing (SPL)** (`SPL`, score -3.0) — Splicing assay, benign (PFD, illustrative).
+      - `SPL_SPA` (score -3.0) — RNA / splicing functional assay.
 
     Each became an Evidence Line; their scores compose to a Statement final score of -3.0 → *likely benign*.
 
@@ -32,16 +33,17 @@ An SVCv4 classification of PTEN c.802-3T>A (intronic, splice region) against PTE
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): PTEN c.802-3T>A (intronic, splice region)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0017623 (PTEN hamartoma tumor syndrome)
-        qualifiers:           moi=AD; note=Loss of function is an established disease mechanism.
+        subject (VBC): PTEN c.802-3T>A (intronic, splice region)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0017623 (PTEN hamartoma tumor syndrome)
+        qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - SPL_-3       score -3.0
-      final_score:          -3.0
-      score_classification: likely_benign
+        - POP_FRQ                  score   0.0
+        - SPL                      score  -3.0
+          - SPL_SPA                  score  -3.0
+      score:         -3.0
+      outcome:       likely_benign
     ```
 
 === "JSON"

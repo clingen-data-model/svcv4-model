@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of HNF4A c.421del (p.Arg141AspfsTer29) against monogenic diabetes, drawn from the
 `PVS-v4-HNF4A` Practice Variant Set entry.
@@ -22,9 +22,10 @@ An SVCv4 classification of HNF4A c.421del (p.Arg141AspfsTer29) against monogenic
 
     The variant being classified (VBC) is HNF4A c.421del (p.Arg141AspfsTer29); the disease/condition (MDE) is monogenic diabetes. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF_+1`, score 1.0) — Affected proband (illustrative). Note: LOC_SEG also applicable — variant segregated with MODY in 3 affected relatives — but is captured separately.
-    - **Absent protein / loss of function (NUL)** (`NUL_+4`, score 4.0) — Predicted null / LoF evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF`, score 1.0) — Affected proband (illustrative). Note: LOC_SEG also applicable — variant segregated with MODY in 3 affected relatives — but is captured separately.
+    - **Absent protein / loss of function (NUL)** (`NUL`, score 4.0) — Predicted null / LoF evidence (PFD, illustrative).
+      - `NUL_PRD` (score 4.0) — Predicted-LoF / structural nonsense assessment.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 5.0 → *likely pathogenic*.
 
@@ -33,17 +34,18 @@ An SVCv4 classification of HNF4A c.421del (p.Arg141AspfsTer29) against monogenic
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): HNF4A c.421del (p.Arg141AspfsTer29)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0015967 (monogenic diabetes)
-        qualifiers:           moi=AD; note=Loss of function is an established disease mechanism.
+        subject (VBC): HNF4A c.421del (p.Arg141AspfsTer29)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0015967 (monogenic diabetes)
+        qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - CLN_AFF_+1   score  1.0
-        - NUL_+4       score  4.0
-      final_score:          5.0
-      score_classification: likely_pathogenic
+        - POP_FRQ                  score   0.0
+        - CLN_AFF                  score   1.0
+        - NUL                      score   4.0
+          - NUL_PRD                  score   4.0
+      score:         5.0
+      outcome:       likely_pathogenic
     ```
 
 === "JSON"

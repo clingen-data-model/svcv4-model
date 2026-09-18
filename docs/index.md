@@ -4,7 +4,7 @@
 
     The SVCv4 Standards have not yet been finalized and are still changing to
     varying degrees, and this model changes alongside them; the
-    [Reference](reference/model.md) material is provisional for now. The narrative
+    Reference material is provisional for now. The narrative
     pages here are the best place to start.
 
 > A **data model** for the **ACMG/AMP/CAP/ClinGen Sequence Variant
@@ -27,7 +27,7 @@ uses of the SVCv4 data — to provide **standard semantic interoperability** for
 producing, exchanging, and consuming evidence-based SVCv4-compliant
 classifications. We do **not** author the Standards, and the scoring
 **methods/rules** live in
-[ClinGen's Criteria Specification (CSpec)](reference/cspec-interop.md), not here. See
+ClinGen's Criteria Specification (CSpec), not here. See
 [What this project is — and isn't](overview/scope.md) and
 [Credits](reference/credits.md).
 
@@ -53,14 +53,14 @@ group.)*
 
 1. [**SVCv4 Standards in brief**](overview/svcv4-in-brief.md) — a high-level primer on the framework.
 2. [**How SVCv4 maps to the model**](overview/alignment.md) — the Summary Table ↔ data-model alignment.
-3. [**Show your work: structured evidence**](getting-started/show-your-work.md) — why and how to capture evidence.
-4. [**The assertion framework**](getting-started/assertion-framework.md) — Propositions → Variant Pathogenicity Statements.
-5. [**Capture your first case**](getting-started/first-case.md) — a minimal worked example.
+3. [**Collecting the evidence: the shape it all rolls into**](collecting/index.md) — why and how to capture structured evidence.
+4. [**Starting curation activities**](collecting/curation-activities.md) — the VBC/MDE/MOI inputs a classification is anchored by.
+5. [**Case & segregation data collection**](collecting/case/index.md) — the Case superset, with a minimal worked example.
 
 ## Already familiar?
 
 Jump to the [**Workflows**](workflows/index.md) (the SVCv4 Summary Table and the
-clinical-observation workflows) or the [**Reference**](reference/model.md)
+clinical-observation workflows) or the **Reference**
 (model classes, JSON Schemas, vocabulary) — both provisional while the model is in
 flux.
 

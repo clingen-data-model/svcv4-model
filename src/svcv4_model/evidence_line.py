@@ -17,10 +17,9 @@ class EvidenceLine(BaseModel):
     - The **method/rule code** (`method`) that was invoked.
     - The **evidence used** (`evidence`) — the Evidence Items that were
       provided as inputs.
-    - The **score** and optional **strength** that the CSpec method
-      produced.
-    - Optional `score_classification` if the line maps to a categorical
-      label.
+    - The **score** and optional **strength**/**direction** that the
+      CSpec method produced.
+    - Optional `outcome` if the line maps to a categorical label.
 
     Per VA-Spec, *any process, rule, or method that produces a score
     maps to an Evidence Line*. The method's *definition* lives in
@@ -51,14 +50,21 @@ class EvidenceLine(BaseModel):
     score: float = Field(
         description="Numeric score produced by the method/rule.",
     )
-    strength_direction: str | None = Field(
+    strength: str | None = Field(
         default=None,
         description=(
-            "Optional strength-direction label produced alongside the "
-            "score (e.g. `pathogenic_supporting`). Vocabulary TBD."
+            "Optional strength label produced alongside the score "
+            "(e.g. `supporting`, `moderate`, `strong`). Vocabulary TBD."
         ),
     )
-    score_classification: VariantPathogenicityClassification | None = Field(
+    direction: str | None = Field(
+        default=None,
+        description=(
+            "Optional direction label produced alongside the score "
+            "(e.g. `pathogenic`, `benign`). Vocabulary TBD."
+        ),
+    )
+    outcome: VariantPathogenicityClassification | None = Field(
         default=None,
         description=(
             "Optional categorical classification associated with this "
@@ -72,7 +78,31 @@ class EvidenceLine(BaseModel):
             "the Statement's final score."
         ),
     )
+    provisional: bool = Field(
+        default=False,
+        description=(
+            "True when this line's `code` is a **provisional** SVCv4 code or "
+            "subcode — one derived to fill a gap in the official Summary "
+            "Table (a combination-cap cell) or a deeper method-level "
+            "assessment (predictor initial points, exon relevance, "
+            "same-/distant-AA tally). Provisional codes follow the SVCv4 "
+            "nomenclature but are not yet part of the official code list."
+        ),
+    )
+    evidence_lines: list[EvidenceLine] = Field(
+        default_factory=list,
+        description=(
+            "Nested child Evidence Lines — the lower-level method/rule "
+            "assessments (concept → code → subcode) that compose into this "
+            "line's `score`. Per VA-Spec 1.1.0, an Evidence Line may nest "
+            "further Evidence Lines."
+        ),
+    )
     description: str | None = Field(
         default=None,
         description="Optional prose summary of the line for human readers.",
     )
+
+
+# Resolve the self-referential ``evidence_lines`` forward reference.
+EvidenceLine.model_rebuild()

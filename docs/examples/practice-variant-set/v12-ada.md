@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of ADA c.219-2A>G against severe combined immunodeficiency due to adenosine deaminase deficiency, drawn from the
 `PVS-v12-ADA` Practice Variant Set entry.
@@ -22,9 +22,10 @@ An SVCv4 classification of ADA c.219-2A>G against severe combined immunodeficien
 
     The variant being classified (VBC) is ADA c.219-2A>G; the disease/condition (MDE) is severe combined immunodeficiency due to adenosine deaminase deficiency. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF_+2`, score 2.0) — Affected homozygous proband (illustrative). No LOC_PHE points (only the subset profile was provided).
-    - **Splicing (SPL)** (`SPL_+6`, score 6.0) — Splicing + functional evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF`, score 2.0) — Affected homozygous proband (illustrative). No LOC_PHE points (only the subset profile was provided).
+    - **Splicing (SPL)** (`SPL`, score 6.0) — Splicing + functional evidence (PFD, illustrative).
+      - `SPL_SPA` (score 6.0) — RNA / splicing functional assay.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 8.0 → *pathogenic*.
 
@@ -33,17 +34,18 @@ An SVCv4 classification of ADA c.219-2A>G against severe combined immunodeficien
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): ADA c.219-2A>G
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0007064 (severe combined immunodeficiency due to adenosine deaminase deficiency)
-        qualifiers:           moi=AR; note=Loss of function is an established disease mechanism.
+        subject (VBC): ADA c.219-2A>G
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0007064 (severe combined immunodeficiency due to adenosine deaminase deficiency)
+        qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - CLN_AFF_+2   score  2.0
-        - SPL_+6       score  6.0
-      final_score:          8.0
-      score_classification: pathogenic
+        - POP_FRQ                  score   0.0
+        - CLN_AFF                  score   2.0
+        - SPL                      score   6.0
+          - SPL_SPA                  score   6.0
+      score:         8.0
+      outcome:       pathogenic
     ```
 
 === "JSON"

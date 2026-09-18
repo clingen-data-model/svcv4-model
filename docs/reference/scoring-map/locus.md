@@ -111,22 +111,23 @@ same ripple as the CLN gate, sourced from `case.relatives`.
 from **informative meiotic segregations** of the VBC through a family, **summed** across observations
 and capped at +4.0.
 
-> **Figure-2 gap.** The exact per-affected point tiers (`+1.0` to `+2.0`, by inheritance pattern) live
-> in the SM 5 **Figure 2 image**, not the text — so the affected-segregant cell is modeled as a
-> **range**, not a fixed per-observation value (see known-gaps).
+> **Figure 2 (resolved 2026-09-18).** The per-co-segregation tiers are now read from the SM 5
+> **Figure 2 image**: **AD** affected-het / unaffected-WT `+1.0`; **AR** affected hom-or-comp-het
+> `+2.0`, unaffected `+0.4`; **semidominant** severe `+2.0` / affected `+1.0` / unaffected `+1.0`;
+> **X-linked** `+1.0`. Implemented in `reference_score_loc_seg`.
 
 ### The cells
 
 | Proposed code | observation | Points |
 |---|---|---|
-| `LOC_SEG_AFF`     | per **affected** co-segregant (VBC present) | **+1.0 … +2.0** † (by MOI; Fig-2 image-only) |
+| `LOC_SEG_AFF`     | per **affected** co-segregant (VBC present) | **+1.0** (AD / SD-het / X-linked) · **+2.0** (AR hom-or-comp-het; SD severe) † |
 | `LOC_SEG_UAF`     | per **unaffected** co-segregant, near-100% penetrance, phase established | **+1.0** |
 | `LOC_SEG_UAF_AR`  | per **unaffected** VBC-carrier, **AR** | **+0.4** |
 | `LOC_SEG_NONSEG`  | a **non-segregation** is observed | **0.0 + flip −4.0** ‡ |
 | `LOC_SEG`         | roll-up = Σ observations | **0.0 … +4.0** |
 
 † summed across affected co-segregants (multiplier), then capped at +4.0.
-‡ a non-segregation **zeroes** any co-segregation points **and** assigns **−4.0** (BS4-equivalent) for
+‡ a non-segregation **zeroes** any co-segregation points **and** assigns **−4.0** for
 **AD / AR-homozygous / X-linked** — but **not plain AR** (an AR non-segregation may just mean another
 locus explains that family, not benignity of the VBC).
 
