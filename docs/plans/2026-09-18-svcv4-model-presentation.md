@@ -24,9 +24,9 @@ compress-if-short.
 2. **One baseline, tuned — not forked.** Expert panels turn a v4 general version
    into a domain-specialized version by changing the **configuration behind workflow
    decision points** — re-weighting points, adding/limiting in-silico tools, and
-   shifting the ranges for categorical (nominal) and ranked (ordinal) spectrums —
-   never by rewriting the workflow or the record shape, and only **within limits
-   that keep it SVCv4-compliant.**
+   shifting *or subdividing* the categorical (nominal) and ranked (ordinal) spectrums
+   into finer categories — never by rewriting the workflow or the record shape, and
+   only **within limits that keep it SVCv4-compliant.**
 3. **Every assessment travels with the identity of the ruleset that made it.**
    General vs specialized: the record names the exact version and per-line rules, so
    a result is never **opaque** about which rules linked its evidence to its
@@ -428,21 +428,25 @@ baseline is always the fallback, so labs aren't blocked waiting.
   loss-of-function counts, given the gene's mechanism and which exons matter.
 - **Add or limit predictive tools** — mandate a gene-calibrated in-silico predictor;
   add an in-house one; down-weight or disallow one that misbehaves.
-- **Shift thresholds/ranges** — categorical buckets *and* ranked bands — e.g. move a
-  frequency band edge, or set a disease-specific diagnostic-yield cutoff.
-- Same workflow, same codes, same record — **only the numbers and tool lists behind a
-  step change.**
+- **Refine the spectrums** — move a threshold edge, *and* **subdivide a baseline
+  category into finer levels** — e.g. `SPECIFIC` / `CONSISTENT` → *more/less specific*,
+  *more/less consistent* (nominal and ordinal scales alike).
+- Same workflow, same codes, same record — **only the numbers, tool lists, and
+  category granularity behind a step change.**
 
 **Speaker notes (~1m — Principle 2, part 2):** One real example per dial.
 **Weights:** the baseline scales predicted-impact points by mechanism and exon
 relevance; a panel can override per gene. **Tools:** the missense workflow lists
 several calibrated predictors and makes you pick one; a panel can require a gene-tuned
-one or down-weight an over-caller. **Thresholds:** frequency bands and yield cutoffs
-are exactly what a panel calibrates to its disease. In every case the decision point,
-code, and record shape are untouched — only the configuration moves. Keep it
-principle-level.
+one or down-weight an over-caller. **Spectrums:** a panel can move a threshold edge
+(frequency bands, yield cutoffs) *and* add **more granular categories** to a
+baseline's qualified spectrum — e.g. splitting phenotype specificity's `SPECIFIC` /
+`CONSISTENT` into *more/less specific* and *more/less consistent* for finer scoring.
+In every case the decision point, code, and record shape are untouched — only the
+configuration and its granularity move. Keep it principle-level.
 
-*Visual: the workflow with three callouts (a weight, a tool list, a threshold band).*
+*Visual: the workflow with three callouts — a weight, a tool list, and a spectrum
+being subdivided into finer categories.*
 
 ---
 
@@ -458,6 +462,9 @@ principle-level.
   panel's `HL.v1` (based on `SVC.v4`).
 - **Reference or replace:** use a baseline rule unchanged → **reference** it
   (`CLN_AFF.v4`); deviate → **define a replacement rule with its own id.**
+- Those new or modified codes follow a **shared nomenclature**, are **publicly
+  documented**, and ideally **registered** — so downstream users can re-assess or
+  validate them.
 
 **Speaker notes (~1.5m — Principle 3, part 1):** The mechanism that makes "bind the
 result to its version" real. Picture a namespaced, versioned registry. The baseline
