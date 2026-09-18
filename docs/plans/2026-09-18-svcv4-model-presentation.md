@@ -38,6 +38,22 @@ that hold a classification together (slide 6); the **SVCv4 profile that validate
 + the open-data payoff (slide 8); **applied evidence** (slide 10) and **granularity
 → verifiability** (slide 11).
 
+## Key takeaways (what the audience leaves with)
+
+The whole deck **builds toward these four** — each segment adds one piece, and the
+close (slide 23) restates them:
+
+1. **A v4 classification is a computable record, not just a verdict** — the call
+   *plus* the evidence and assessments behind it, in one shared, validatable shape.
+2. **Standardizing the structure early lets tool-builders (a) assess consistently to
+   the specification and (b) produce and consume results *with* their evidence** — so
+   no one is inventing a private format, and we can trust results are made the same way.
+3. **Granular applied evidence makes results verifiable and reusable** — precise
+   data-points-bound-to-rules beat "a few PMIDs and a description," and scale as
+   submissions grow.
+4. **Every result carries the identity of the ruleset — baseline or specialized —
+   that produced it** — comparable, reproducible, auditable across the community.
+
 ## Coverage & depth guidance
 
 - Land the three principles + the worked example. Those are the talk.
@@ -103,24 +119,38 @@ reference code* — not the Standard itself and not the scoring authority.
 
 ---
 
-## ★ Slide 2 — Why this exists
+## ★ Slide 2 — Why we're standardizing this *now*
 
 **On slide:**
-- SVCv4 scores variant classification as **points** — each line of evidence carries
-  a code and a point value; the points combine into a final call.
-- A score is only trustworthy if you can see **which evidence and which rule**
-  produced it — otherwise results are **opaque and hard to verify.**
-- Goal: **produce, exchange, and consume** classifications *and their evidence*
-  across labs, systems, and knowledgebases — with the same meaning everywhere.
+- Today a shared classification often doesn't show **how it was reached** — a few
+  PMIDs and a description, and you're left guessing at the author's reasoning.
+- SVCv4 is far more **granular** about *how each assessment is made* — but that only
+  helps if the evidence is **captured and shared** in a common structure.
+- Submissions to ClinVar and other tools are **growing fast**; visibility into the
+  evidence and assessments is what lets the community reuse them **at scale.**
+- So we're building the shared structure **early**, alongside the spec, so app
+  builders can **(A) assess consistently to the specification** and **(B) produce and
+  consume results *with* the evidence behind them.**
 
-**Speaker notes (~1m):** Points can mix positive and negative evidence and sum to a
-call. That granularity is powerful but fragile without clear rules and structure: if
-evidence and data points aren't clearly linked to the precise assessments made
-inside the methods, a shared result is hard to interpret, compare, or re-verify. The
-model exists to make those links explicit. *(v4-only; never say "chaos" — say
-opaque / hard to verify.)*
+**Speaker notes (~1.5m — the motivation for the whole talk):** Be concrete about the
+status quo: classifications get shared, but *how* the author got there is often
+opaque — a handful of PMIDs and, if you're lucky, a prose description, with no
+consistent, community-wide way to see which assessments were met or not and how the
+evidence was actually applied. The earlier generation of guidelines was also less
+granular about how the lower-level assessments in a workflow were performed, and it
+built default strengths into the criteria codes themselves, which quickly obscured
+how they were meant to be used. SVCv4 is much more granular and specific — but
+granularity only pays off if the structure to carry it exists and everyone uses it.
+Timing matters: variant-classification submissions to ClinVar and other resources are
+growing enormously, so visibility into the evidence and the assessments at each level
+is what will let others actually reuse shared data — for better care and faster
+discovery. That's why we standardize the structure and coding *early*, before tools
+proliferate: everyone assessing to the spec does it consistently (A), and results
+*and their evidence* can be produced and consumed across the community (B).
+*(Principled framing only — no old criteria codes, no "chaos.")*
 
-*Visual: points-bands.png.*
+*Visual: points-bands.png, or a "PMIDs + a shrug" vs "structured, applied evidence"
+contrast.*
 
 ---
 
@@ -583,15 +613,25 @@ GIM publication for developers who want to start.
 
 ---
 
-## ★ Slide 23 — Close: one sentence to remember
+## ★ Slide 23 — Key takeaways
 
 **On slide:**
-- **The Standard defines the framework; a method/ruleset layer (yet to be built)
-  defines the methods; we define the shape — built on a shared GA4GH standard so
-  SVCv4 classifications, and the evidence behind them, are computable, exchangeable,
-  and verifiable.**
+- **A v4 classification is a computable record, not just a verdict** — the call
+  *plus* the evidence and assessments behind it, in one shared, validatable shape.
+- **Standardizing early lets tool-builders (a) assess consistently to the spec and
+  (b) produce and consume results *with* their evidence** — no private formats.
+- **Granular applied evidence makes results verifiable and reusable** — precise
+  data-points-to-rules beat "a few PMIDs and a description," and scale as submissions grow.
+- **Every result carries the identity of the ruleset — baseline or specialized —
+  that produced it** — comparable, reproducible, auditable.
+- *One line:* **the Standard defines the framework; a method/ruleset layer (yet to
+  be built) defines the methods; we define the shape — so SVCv4 classifications and
+  their evidence are computable, shareable, and verifiable.**
 
-**Speaker notes (~30s):** Land the takeaway. Invite engagement: repo, docs, feedback.
+**Speaker notes (~45s):** The four things to leave with — recap each in a sentence,
+tying back to the worked example they just saw. Then the one-liner as the capstone.
+Invite engagement: repo, docs, feedback. *(These match the "Key takeaways" anchor at
+the top of this deck — the whole talk built toward them.)*
 
 ---
 
