@@ -327,55 +327,63 @@ threshold band) — or a simple "3 dials" graphic.*
 
 ---
 
-## Slide 10 — Principle 3: every score carries the rulebook that made it
+## Slide 10 — Principle 3: a namespaced, versioned identity for every ruleset
 
 **On slide:**
-- The same variant can score **differently** under the baseline vs a specialized
-  version — so a bare number is not enough.
-- Every classification record **names the exact version** it was produced under.
-- Every scored line of evidence **names the specific rule** that generated it.
-- Those names are **pointers into the method/ruleset registry**, where the rules are
-  defined — this repo *names* them; the registry *defines* them (CSpec is an early
-  implementer, not the standard).
+- Every classification and every scored line **names the exact rule + version** that
+  produced it — a stable id, not just a number.
+- The **baseline is a namespace** (e.g. `SVC.v4`), and its individual coded rulesets
+  are **versioned too** — e.g. `CLN_AFF.v4`, stamped to the baseline that defined or
+  last changed it.
+- A **specialization registers its own id** off the baseline — e.g. a Hearing Loss
+  panel's `HL.v1` (based on `SVC.v4`).
+- **Reference or replace:** use a baseline rule unchanged → just **reference** it
+  (`CLN_AFF.v4`); deviate → **define a replacement rule with its own id**, so a
+  consumer sees exactly which rule was used.
 
-**Speaker notes (~1.5m — Principle 3, part 1):** The framework is deliberately
-layered — one baseline, plus specialized versions on top for particular gene/disease
-scopes. That flexibility is the point, but it means a score is only interpretable if
-you also know which version produced it. So version identity is a first-class part
-of the record: the classification as a whole points at the applied version, and each
-scored line points at the specific rule invoked. *For the technically curious (off
-the slide):* both pointers are carried by a small method-reference object
-(`code`/`label`/`version`) on the record and on each line — and the *model* those
-codes resolve into (the method/ruleset structure) is a **separate model not yet
-built**; the classification links to it. In plain terms: **every assessment travels
-with the identity of the ruleset that made it.**
+**Speaker notes (~1.5m — Principle 3, part 1):** This is the mechanism that makes
+"bind the result to its version" real — worth being concrete. Picture a namespaced,
+versioned registry. The baseline is a namespace, `SVC.v4`, and even the individual
+coded rulesets inside it carry versions — `CLN_AFF.v4` — stamped to the baseline
+where that rule was first defined or last updated. A domain-expert panel, say Hearing
+Loss, registers its *own* identifier, `HL.v1`, declared as based on `SVC.v4`. The
+elegant part: if `HL.v1` uses a baseline rule exactly, it simply **references**
+`CLN_AFF.v4`; the moment it deviates, it **defines a replacement rule with its own
+id**, and assessments scored by it point at that id. So a consumer reading any
+assessment can trace the precise rule — baseline or specialized, referenced or
+replaced — that produced it. *(Syntax like `SVC.v4` / `HL.v1` / `CLN_AFF.v4` is
+illustrative of the scheme, not a finalized format.)* In plain terms: **every
+assessment travels with the identity of the ruleset that made it.**
 
 ---
 
 ## Slide 11 — Principle 3: comparable, reproducible, auditable (and where we honestly stand)
 
 **On slide:**
-- **Comparable** — two labs' scores mean the same thing only when they cite the
-  same version; the record lets you check.
-- **Reproducible** — re-resolve the named version and rules, recompute the result.
-- **Auditable** — the record shows not just the score, but the exact rule behind
-  each piece of evidence.
-- **Honest status:** the fields to carry version + rule identity exist **today**;
-  stamping isn't yet mandatory, and the **method/ruleset model and its registry are
-  still to be built** (CSpec an early implementer) — plus no "who/when" stamp on the
-  shared record yet.
+- **Comparable** — two scores mean the same thing only when they cite the same rule
+  ids; the record lets you check.
+- **Reproducible** — re-resolve the named versions and rules, recompute.
+- **Auditable** — the record shows the exact rule id behind each piece of evidence.
+- **Versions move independently:** a specialization can fix itself without a baseline
+  change; when the committee bumps the baseline (`SVC.v4` → `v4.1` / `v5`),
+  specializations revise and **re-register** off the new baseline.
+- **Honest status:** the fields exist **today**, but stamping isn't yet mandatory and
+  the method/ruleset model + registry are **still to be built** (CSpec an early
+  implementer); no "who/when" stamp yet.
 
 **Speaker notes (~1m — Principle 3, part 2):** This is the payoff for a developer
 producing or consuming records — decide whether two classifications are even
 comparable, recompute from the same named rules, audit how each point was earned.
-The resolution target is a forthcoming method/ruleset registry that turns a code
-into a concrete, versioned rule — CSpec is one early implementer of that, not the
-standard itself. Be straight about the current state: the slots are in the model,
-but recording the version is optional rather than enforced, the code scheme is
-deliberately opaque until the registry issues it, and the method/ruleset model
-itself isn't built yet — plus there's no who-ran-it/when stamp on the shared record.
-The principle is settled; building the method side and tightening enforcement is the
-work ahead. This candor is what a technical audience trusts.
+Stress the independence: a specialization like `HL.v1` can be corrected on its own
+schedule, and when the committee changes the baseline — `SVC.v4` to `v4.1` or `v5` —
+every specialization revises and **re-registers** against the new baseline, so a
+consumer is never guessing which baseline a specialization sat on. The resolution
+target is a forthcoming method/ruleset registry — CSpec one early implementer, not
+the standard. Be straight about current state: the slots are in the model, but
+version-stamping is optional not enforced, the code scheme isn't finalized, and the
+method/ruleset model itself isn't built yet — plus no who-ran-it/when stamp. The
+principle is settled; building the method side is the work ahead. This candor is what
+a technical audience trusts.
 
 ---
 
