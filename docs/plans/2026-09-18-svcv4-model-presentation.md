@@ -1,15 +1,44 @@
 # SVCv4 Data Model & Computational Design — 20-minute presentation
 
 **Date:** 2026-09-18
-**Audience:** Scientific & technical — **system developers and their curator
-users.** People who will *build software against* the model or *produce/consume*
-classifications with it. **They are NOT VA-Spec-literate** — assume no prior
+**Audience:** **Software developers who need to generate, share, and consume v4
+classifications — and their underlying evidence and assessments — across external
+groups and knowledgebases (ClinVar being the flagship example).** Plus the curator
+users those systems serve. **They are NOT VA-Spec-literate** — assume no prior
 knowledge of GA4GH GKS, VA-Spec, VRS, or its class/property vocabulary.
 **Goal:** Convey the computational modeling and coding design we're crafting for
 release alongside the SVCv4 classification specification, and what a developer can
 build against today.
-**Length:** 20 minutes. ~19 slides. Budget ≈ 1 min/slide, with 3 min held for the
-worked example and 2 min for Q&A. Keep to **one idea per slide.**
+**Length:** 20 minutes, ~20 slides. Budget ≈ 1 min/slide, 3 min held for the worked
+example, 2 min for Q&A. **One idea per slide.**
+
+## The spine: three principles the talk must land
+
+The deck is built around three developer-facing principles (the through-line, not
+just topics):
+
+1. **Show your work — the evidence travels with the verdict.** A v4 classification
+   is the call *plus* the evidence and assessments that produced it, in one shared
+   shape — so external groups and knowledgebases (ClinVar-style) can consume the
+   *reasoning*, not just a label. (Slides 4–7.)
+2. **One baseline, tuned — not forked.** Expert panels turn a v4 general version
+   into a domain-specialized version by changing the **configuration behind
+   workflow decision points** — re-weighting points, adding/limiting in-silico
+   tools, and shifting the ranges for categorical (nominal) and ranked (ordinal)
+   spectrums — never by rewriting the workflow or the record shape. (Slides 8–9.)
+3. **Bind every result to the version that made it.** General vs specialized:
+   the record names the exact version and the per-line rules, so community data
+   stays comparable, reproducible, and auditable — no chaos. (Slides 10–11.)
+
+## Coverage & depth guidance (per Larry — build it to see how far it can go)
+
+- **Land the three principles above + the worked example.** Those are the talk.
+- **Keep the computing internals shallow.** The scorer architecture (slides 12–13)
+  is *evidence that the model works*, not a code walkthrough — one or two slides,
+  not a deep dive. Depth lives in the docs, not the podium.
+- **Cuttable if long:** slide 5 (build-on-GA4GH) and slide 13 (engineering
+  discipline) compress first; protect the pillar slides (7–11) and the worked
+  example (15).
 
 > **Two hard constraints on every slide:**
 >
@@ -17,7 +46,8 @@ worked example and 2 min for Q&A. Keep to **one idea per slide.**
 >    Keep class/property names (`Statement`, `hasEvidenceLines`, `Proposition`,
 >    SPOQ, VRS) **out of on-slide text** — say "the record," "a scored line of
 >    evidence," "the captured facts." Technical names live in speaker notes as
->    *"for the technically curious,"* surfaced only if asked.
+>    *"for the technically curious,"* surfaced only if asked. Say "expert panels,"
+>    not "VCEPs"; show codes as `CLN_AFF (score +1.0)`, never `CLN_AFF_+1`.
 > 2. **v4-only — no v3.** Do **not** reference the 2015/v3 guidelines or any old
 >    criteria codes (PVS1, PS/PM/PP/BA/BS/BP…). SVCv4 stands on its own. (Same
 >    scrub is being applied to the docsite — see the simplification plan.)
@@ -25,24 +55,24 @@ worked example and 2 min for Q&A. Keep to **one idea per slide.**
 > **Author note — VA-Spec version (do not present):** the deck's model shape tracks
 > **GA4GH VA-Spec `1.1.0-ballot.2026-09`**
 > (<https://va-spec.ga4gh.org/en/1.1.0-ballot.2026-09/>), which folds the old
-> separate "EvidenceLine" class into a single recursive `Statement`. Slides 5–7 and
-> 12–13 already use the plain-language nested-claim framing this implies; reconcile
-> the repo model/docs wording before presenting.
+> separate "EvidenceLine" class into a single recursive `Statement`. The slides use
+> the plain-language nested-claim framing this implies; reconcile the repo
+> model/docs wording before presenting.
 
 **Reusable visuals already in the repo** (don't rebuild — pull these):
+
 - Points bands — `docs/assets/images/points-bands.png`
 - Summary Table — `docs/assets/images/summary-table.png`
 - HOD workflows — `docs/assets/images/hod-workflows.png`
 - Variant-impact (PFD) workflows — `docs/assets/images/variant-impact-workflows.png`
 - Scope/data-flow diagram — the ASCII flow in `docs/overview/scope.md` (redraw clean)
-- Entity model & Summary-Table-alignment slides — `tmp/extracted/The_SVCv4_Standard_Data_Model/`
-  and `tmp/extracted/TheSummaryTable_alignment_to_evidence_lines.ppt/`
+- Entity/summary-table slides — `tmp/extracted/The_SVCv4_Standard_Data_Model/` and
+  `tmp/extracted/TheSummaryTable_alignment_to_evidence_lines.ppt/`
 
-**Workflow explainer graphics (Larry's — location TBD):** the recently-created
-per-workflow explainer graphics are the intended visuals for **slides 8, 11, and
-13**. Drop the source files into `docs/assets/images/explainers/` (or tell me
-where they live) and I'll reference them by exact filename. Slots are marked
-`[EXPLAINER: <workflow>]` below.
+**Workflow explainer graphics** (Larry's — manifest at
+`docs/assets/images/explainers/README.md`): intended for **slides 7, 13, and 15**.
+Slots marked `[EXPLAINER: <workflow>]`. Several source artifacts still lead with
+old `EvidenceLine`/v3 framing — apply the two constraints above before use.
 
 ---
 
@@ -50,11 +80,13 @@ where they live) and I'll reference them by exact filename. Slots are marked
 
 | Segment | Slides | Time |
 |---|---|---|
-| Frame the problem & scope | 1–4 | 4 min |
-| The model (what a classification *is*) | 5–8 | 5 min |
-| From capture to a score (the computing layer) | 9–13 | 6 min |
-| Interop, status, and what to build against | 14–17 | 3 min |
-| Close + credits + Q&A | 18–19 | 2 min |
+| Frame the problem & scope | 1–3 | 3 min |
+| What a classification *is* (the model) | 4–6 | 4 min |
+| **Principle 1 — show your work / share with ClinVar** | 7 | 1.5 min |
+| **Principle 2 — one baseline, tuned not forked** | 8–9 | 2.5 min |
+| **Principle 3 — bind results to their version** | 10–11 | 2.5 min |
+| The computing layer (kept shallow) + worked example | 12–15 | 4 min |
+| Build against today · status · close · Q&A | 16–20 | 2.5 min |
 
 ---
 
@@ -62,388 +94,496 @@ where they live) and I'll reference them by exact filename. Slots are marked
 
 **On slide:**
 - **A Data Model & Reference Computation for SVCv4 Variant Classification**
-- Built as a GA4GH GKS VA-Spec community profile, for release alongside the
-  ACMG/AMP/CAP/ClinGen SVCv4 Standards
+- Built on a shared GA4GH standard, for release alongside the ACMG/AMP/CAP/ClinGen
+  SVCv4 Standards
 - Presenter · SVCv4 Standards data-modeling team (ClinGen Data Platform WG)
 - Date
 
-**Speaker notes (~30s):** One line on who you are and the one promise of the talk:
-"By the end you'll know what we're publishing, how it's structured, and what you
-can build against today." Set expectations: this is the *data model and reference
-code*, not the Standard itself and not the scoring authority.
+**Speaker notes (~30s):** Who you are and the one promise: "By the end you'll know
+what we're publishing, how it's structured, and what you can build against today."
+Set expectations — this is the *data model and reference code*, not the Standard
+itself and not the scoring authority.
 
 ---
 
 ## Slide 2 — Why this exists
 
 **On slide:**
-- SVCv4 moves variant classification to a **points-based** framework — evidence
-  carries a code and a point value; points combine into a final classification.
-- Points only interoperate if the **evidence behind them is captured in a common,
+- SVCv4 scores variant classification as **points** — each line of evidence carries
+  a code and a point value; the points combine into a final call.
+- Points only travel if the **evidence behind them is captured in a common,
   computable form** — "show your work."
-- Goal: **standard semantic interoperability** for producing, exchanging, and
-  consuming SVCv4-compliant classifications across labs and systems.
+- Goal: **produce, exchange, and consume** SVCv4 classifications across labs,
+  systems, and knowledgebases — with the same meaning everywhere.
 
-**Speaker notes (~1m):** SVCv4 scores evidence as **points** that combine — and
-can mix positive and negative evidence — into a final call. That granularity is
-powerful but fragile without a shared data structure. If every lab records the
-underlying evidence differently, the points aren't comparable and can't be
-recomputed or audited. The model is the substrate that makes points portable.
-*(Do not frame this as "v3 vs v4" or cite old criteria codes — SVCv4 stands on its
-own; keep the talk v4-only.)*
+**Speaker notes (~1m):** Points can mix positive and negative evidence and sum to a
+call. That granularity is powerful but fragile without a shared data structure: if
+every lab records the underlying evidence differently, the points aren't
+comparable, recomputable, or auditable. The model is the substrate that makes
+points portable. *(Keep it v4-only — no "v3 vs v4," no old criteria codes.)*
 
 *Visual: points-bands.png.*
 
 ---
 
-## Slide 3 — Three groups, three jobs (the scope boundary)
+## Slide 3 — Three groups, three jobs (and the seam between them)
 
 **On slide:** (table)
+
 | Owns | Who | What |
 |---|---|---|
 | The **framework** | ACMG/AMP/CAP/ClinGen SVCv4 WG | Summary Table, codes, workflows, scoring approach |
-| The **data model** | *This project* (ClinGen Data Platform WG offshoot) | The shape of a classification — for interoperability |
-| The **methods/rules** | ClinGen **CSpec** | Evaluates evidence, produces the scores |
+| The **data model** | *This project* (ClinGen Data Platform WG offshoot) | The **shape** of a classification — for interoperability |
+| The **methods/rules** | ClinGen **CSpec** | **Evaluates** evidence, produces the scores |
 
-**Speaker notes (~1m):** This is the single most important slide for a technical
-audience — it tells them what our artifact is authoritative for and what it isn't.
-We do **not** author the Standard, and we do **not** own the scoring rules. We
-model *what a classification is* so that the WG's framework and CSpec's methods
-have a common carrier. Everything downstream in the talk lives inside the middle
-row.
-
----
-
-## Slide 4 — Classification Model vs Method Model
-
-**On slide:**
-- **The classification** *(this project)* — the **shape** of a classification: the
-  claim, its evidence lines, and the captured facts. *What a classification is.*
-- **The methods/rules** *(ClinGen CSpec)* — the logic that **evaluates** the
-  evidence and produces the workflow scores.
-- They meet through **codes**: our record *names* a method/evidence code; CSpec
+- They meet through **codes**: our record *names* a rule/evidence code; CSpec
   *defines* what it does.
-- **Baseline vs specializations:** SVCv4 ships a baseline; expert panels (VCEPs)
-  add specialized rules later — in CSpec. Same record shape either way.
 
-**Speaker notes (~1m):** The junction is the key idea, in plain terms: we carry the
-**code**, CSpec carries the **rule behind the code**. That clean seam is what lets
-the very same classification record work with today's baseline and a
-panel-specialized rule later **without changing shape**. Keep "Statements /
-Evidence Lines" as internal vocabulary — say "the record" and "lines of evidence"
-out loud.
-
-*Visual: redraw the scope.md data-flow: curator captures facts → CSpec methods
-evaluate → a scored line of evidence (its code + the facts used + the score).*
+**Speaker notes (~1m):** The most important framing slide — what our artifact is
+authoritative for and what it isn't. We do **not** author the Standard and we do
+**not** own the scoring rules. We model *what a classification is* so the framework
+and CSpec's methods share one carrier. The last bullet — the code seam — is the
+hinge for the whole talk: it's what lets the same record work under the baseline
+today and a specialized rule later (slides 8–11). Everything downstream lives in the
+middle row.
 
 ---
 
-## Slide 5 — Why we build on a shared standard (GA4GH) *(plain-language foundation)*
-
-> **Audience is NOT VA-Spec-literate.** On-slide text stays plain; keep class
-> names and version numbers OUT of the bullets and in speaker notes only.
+## Slide 4 — Build on a shared standard (GA4GH) *(plain-language foundation)*
 
 **On slide:**
-- For classifications to be **shared and compared** across labs and software, they
-  need a **common, computer-readable shape** — not just a PDF or a spreadsheet.
+- To be **shared and compared** across labs and software, classifications need a
+  **common, computer-readable shape** — not a PDF or a spreadsheet.
 - **GA4GH** already publishes that shape for variant knowledge. We **build on it**
   instead of inventing our own.
-- Our job: **add the SVCv4-specific rules on top** of that shared foundation, so
-  an SVCv4 classification is understood the same way everywhere.
-- Payoff: **produce once, consume anywhere** — and we inherit GA4GH's existing
-  tools for naming variants precisely.
+- Our job: **add the SVCv4-specific rules on top**, so an SVCv4 classification is
+  understood the same way everywhere.
+- Payoff: **produce once, consume anywhere** — and we inherit GA4GH's tools for
+  naming variants precisely.
 
-**Speaker notes (~1m — the high-level "how we build on GA4GH" beat):** Keep this
-conceptual. The one idea: interoperability needs a shared structure, and GA4GH's
-VA-Spec (Variant Annotation Specification) is that structure for variant knowledge
-— computer-to-computer exchange. We publish a **community profile**: SVCv4-specific
-constraints layered on the shared classes (the same pattern the 2015 guidelines
-used). *For the technically curious only (don't put on the slide):* we track VA-Spec
-closely — the base standard just simplified its model this month and we've already
-absorbed it; we lean on VRS for variant identity. Don't say "VA-Spec / VRS /
-community profile" from the podium unless someone asks — say "the GA4GH standard."
+**Speaker notes (~1m):** One idea: interoperability needs a shared structure, and
+GA4GH already has one for variant knowledge (computer-to-computer exchange). We
+publish SVCv4-specific constraints layered on top. *For the technically curious
+only (off the slide):* this is a GA4GH VA-Spec community profile; we track it
+closely — the base standard just simplified its model this month and we've absorbed
+it; we lean on VRS for variant identity. From the podium say "the GA4GH standard,"
+not "VA-Spec / VRS / community profile," unless asked.
 
 ---
 
-## Slide 6 — What a classification *is*: evidence that nests *(plain language)*
+## Slide 5 — What a classification *is*: evidence that nests
 
 **On slide:**
-- A **classification** is a **claim about a variant and a condition** — e.g.
-  *"this variant is pathogenic for this condition"* — with a **direction**
-  (for / against) and a **score**.
+- A **classification** is a **claim about a variant and a condition** — e.g. *"this
+  variant is pathogenic for this condition"* — with a **direction** (for / against)
+  and a **score**.
 - That top claim is backed by **lines of evidence**.
-- Here's the key idea: **each line of evidence is itself a small scored claim**,
-  backed either by more evidence lines or by the **captured facts** underneath.
-- So the record **nests**: claim → evidence lines → the facts. Same shape at every
-  level. That uniformity is what makes it computable and auditable.
+- The key idea: **each line of evidence is itself a small scored claim**, backed
+  either by more evidence lines or by the **captured facts** underneath.
+- So the record **nests** — same shape at every level. That uniformity is what
+  makes it computable and auditable.
 
-**Speaker notes (~1.5m — the conceptual keystone):** Draw it as nesting boxes, no
-jargon. The whole model is one recursive shape: a scored, directional claim,
-supported by smaller scored, directional claims, all the way down to the raw
-captured data (a study result, a data point). Every scored box in SVCv4 is one of
-these. *For the technically curious only (keep off the slide):* GA4GH calls this
-box a **Statement**; an "evidence line" is just a Statement nested under another
-one. The base standard recently collapsed a separate "EvidenceLine" class into this
-single recursive Statement — which actually makes the plain-language story *truer*:
-it really is the same thing at every level. Don't lead with class names; lead with
-"scored claims that nest."
+**Speaker notes (~1.5m — the conceptual keystone):** Draw nesting boxes, no jargon.
+The whole model is one recursive shape: a scored, directional claim, supported by
+smaller scored, directional claims, down to the raw captured data. Every scored box
+in SVCv4 is one of these. *For the technically curious (off the slide):* GA4GH calls
+the box a `Statement`; an "evidence line" is just a Statement nested under another.
+The base standard recently collapsed a separate "EvidenceLine" class into this
+single recursive shape — which makes the plain-language story *truer*: it really is
+the same thing at every level. Lead with "scored claims that nest," never class
+names.
 
 > **Repo reconciliation note (for us, not the audience):** the site + model still
-> show the older three-box framing (Statement → EvidenceLine → EvidenceItem).
-> Update the wording/diagram to the single nested-claim shape before presenting.
-> The *concept* is unchanged; only the class structure simplified.
+> show the older three-box framing (Statement → EvidenceLine → EvidenceItem). Adopt
+> the single nested-claim wording before presenting; the concept is unchanged.
 
-*Visual: nesting boxes — "Classification (scored claim)" containing "Evidence line
-(scored claim)" containing "Captured facts." Reuse for the whole talk.*
+*Visual: nesting boxes — "Classification (scored claim)" ⊃ "Evidence line (scored
+claim)" ⊃ "Captured facts." Reuse this diagram all talk.*
 
 ---
 
-## Slide 7 — The Summary Table is the map
+## Slide 6 — The Summary Table is the map
 
 **On slide:**
-- The SVCv4 **Summary Table** organizes all the evidence: **categories →
-  concepts → codes**, and each **code opens a workflow** (a guided set of steps).
-- Each workflow produces a **score**, which **rolls up** to its code — with
-  **caps** (a category can't exceed its ceiling).
+- The SVCv4 **Summary Table** organizes all the evidence: **categories → concepts →
+  codes**, and each **code opens a workflow** (a guided set of steps).
+- Each workflow produces a **score** that **rolls up** to its code — with **caps**
+  (a category can't exceed its ceiling).
 - Every one of those scored boxes becomes **one line of evidence** in the record
   (the nesting from the previous slide).
 
-**Speaker notes (~1m):** This is how the Standard's own picture becomes our data
-structure — nothing new to learn, it's the table they already use. Pink boxes =
-where a workflow starts; green boxes = capped roll-ups. The point for this
-audience: the Summary Table isn't a diagram off to the side — it *is* the shape of
-the evidence, and it lines up one-to-one with the nesting claims from slide 6.
+**Speaker notes (~1m):** How the Standard's own picture becomes our data structure —
+nothing new to learn, it's the table curators already use. Pink boxes = where a
+workflow starts; green boxes = capped roll-ups. The Summary Table isn't a diagram
+off to the side — it *is* the shape of the evidence, one-to-one with the nesting
+claims from slide 5. *(This is also the map onto which slide 8's "dials" sit — each
+decision point lives inside one of these workflows.)*
 
 *Visual: summary-table.png.*
 
 ---
 
-## Slide 8 — "Show your work": the Case & evidence capture
+## Slide 7 — Principle 1: a record you can inspect, not a label you must trust
 
 **On slide:**
-- The curator captures **Evidence Items / data points** — the inputs a method
-  needs — in a structured **Case** entity.
-- A **Case model + applicability matrix** governs which fields are
-  required/optional/conditional/excluded per workflow.
-- Capture is **modeled and tested** across all evidence categories.
+- A v4 classification carries the **evidence and assessments** that produced it —
+  not just the verdict. "Show your work" is built in.
+- Curators capture the inputs as **structured evidence** (population data, affected-
+  proband observations, an in-silico score) — each under the line that scored it.
+- One **shared shape** → a lab's record and a knowledgebase's record are the same
+  shape; the same tooling validates and processes either.
+- A **ClinVar-style consumer** gets the *reasoning* — observations, references,
+  codes — and can re-derive, compare, or challenge the call, not just trust it.
 
-**Speaker notes (~1m):** This is where a developer's system actually plugs in: you
-collect structured evidence into Cases. The applicability matrix (r/o/c/x per
-workflow) is the contract for a capture UI — it tells the curator's tool what to
-ask for and when. Capture came first in our build precisely because it's the
-interoperability payload.
+**Speaker notes (~1.5m — Principle 1):** This is the interoperability payoff and the
+developer's plug-in point. When a lab generates a classification, the structured
+evidence lives *inside* the record under the line that scored it; when it's shared,
+that evidence travels with it — so a partner or knowledgebase receives "why," not
+just "Likely Pathogenic." The capture side is governed by a **Case model +
+applicability matrix** (which fields are required/optional/conditional/excluded per
+workflow) — that's the contract a capture UI builds to. **Honest framing on
+ClinVar:** it's the flagship *example* of a consuming knowledgebase, not a shipped
+integration — today it appears in the model as a variant-id namespace and as a
+source of external evidence (a review star-rating), and as the motivating use-case.
+Say "the kind of knowledgebase that would consume these records."
 
-*Visual: `[EXPLAINER: a representative workflow]` — lead with one of Larry's
-workflow explainer graphics here to make "structured capture" concrete; fall back
-to hod-workflows.png or a Case-fields snippet.*
+*Visual: `[EXPLAINER: a representative workflow]` beside a trimmed record showing
+evidence items under an evidence line; fall back to hod-workflows.png.*
 
 ---
 
-## Slide 9 — The reference computation layer (why it exists)
+## Slide 8 — Principle 2: one baseline, tuned — not forked
 
 **On slide:**
-- We built a **reference, non-authoritative scorer** in the repo —
-  `svcv4_model.scoring`.
+- SVCv4 ships **one baseline** set of workflows — same steps, weights, and
+  thresholds for every gene.
+- Biology isn't uniform, so the standard is built to be **tuned, not rewritten**:
+  expert panels author **specialized versions** by changing the **configuration
+  behind decision points** — never the workflow structure.
+- The **record keeps the same shape** either way; only the *rule behind a named
+  code* changes.
+- Baseline is the **operative default** wherever no specialization yet applies —
+  works on day one, sharpens over time.
+- Why it matters: expert knowledge **without a hundred private forks.**
+
+**Speaker notes (~1.5m — Principle 2, part 1):** The headline: SVCv4 is designed to
+be *tuned, not rewritten*. Everyone starts from the same baseline workflows and the
+same data shape; an expert panel encodes disease-specific knowledge by adjusting the
+configuration at particular decision points, and neither the workflow structure nor
+the record shape changes. For a developer that's the load-bearing guarantee: you
+build one capture-and-consume pipeline and it keeps working whether a classification
+came from the baseline or a specialization — the only difference is which rule a
+code resolves to. Those rules live in CSpec, which is why the model stays stable
+while the science evolves. And the baseline is always the fallback, so labs aren't
+blocked waiting for a specialization to exist.
+
+---
+
+## Slide 9 — Principle 2: three dials a specialization can turn
+
+**On slide:**
+- **Re-weight the points** at a decision point — e.g. how much a predicted
+  loss-of-function counts, given the gene's mechanism and which exons matter.
+- **Add or limit the predictive tools** — mandate a gene-calibrated in-silico
+  predictor; add an in-house one; down-weight or disallow one that misbehaves for a
+  gene.
+- **Shift the thresholds/ranges** — both categorical buckets and ranked bands —
+  e.g. move a frequency band edge, or set a disease-specific diagnostic-yield cutoff.
+- Same workflow, same codes, same record — **only the numbers and tool lists behind
+  a step change.**
+
+**Speaker notes (~1m — Principle 2, part 2):** Make it concrete with three real
+examples from the guidelines. **Weights:** the baseline scales a variant's
+predicted-impact points by how firmly the disease acts through loss-of-function and
+how relevant the exon is; a panel can override that per gene — force a
+known-irrelevant exon to zero, or waive the reduction where an exon already holds
+well-established pathogenic variants. **Tools:** the missense workflow lists several
+calibrated in-silico predictors and requires you pick one up front; a panel can
+require a specific gene-tuned one, add its own, or down-weight one that over-calls.
+**Thresholds:** the population-frequency bands and the diagnostic-yield cutoffs are
+exactly the kind of numbers a panel calibrates to its disease — even nudging where a
+band boundary sits. In every case the decision point, the code, and the record shape
+are untouched; only the configuration moves. *(Keep this at principle level — one
+example per dial, not a rules deep-dive.)*
+
+*Visual: the summary-table workflow with three callouts (a weight, a tool list, a
+threshold band) — or a simple "3 dials" graphic.*
+
+---
+
+## Slide 10 — Principle 3: every score carries the rulebook that made it
+
+**On slide:**
+- The same variant can score **differently** under the baseline vs a specialized
+  version — so a bare number is not enough.
+- Every classification record **names the exact version** it was produced under.
+- Every scored line of evidence **names the specific rule** that generated it.
+- Those names are **pointers into CSpec**, where the rules are defined — this repo
+  *names* them; CSpec *defines* them.
+
+**Speaker notes (~1.5m — Principle 3, part 1):** The framework is deliberately
+layered — one baseline, plus specialized versions on top for particular gene/disease
+scopes. That flexibility is the point, but it means a score is only interpretable if
+you also know which version produced it. So version identity is a first-class part
+of the record: the classification as a whole points at the applied version, and each
+scored line points at the specific rule invoked. *For the technically curious (off
+the slide):* both pointers are carried by a small method-reference object
+(`code`/`label`/`version`) on the record and on each line. In plain terms: **the
+number never travels alone — it travels with the identity of the rulebook that made
+it.**
+
+---
+
+## Slide 11 — Principle 3: comparable, reproducible, auditable (and where we honestly stand)
+
+**On slide:**
+- **Comparable** — two labs' scores mean the same thing only when they cite the
+  same version; the record lets you check.
+- **Reproducible** — re-resolve the named version and rules, recompute the result.
+- **Auditable** — the record shows not just the score, but the exact rule behind
+  each piece of evidence.
+- **Honest status:** the fields to carry version + rule identity exist **today**;
+  stamping isn't yet mandatory, the code scheme and the public CSpec registry are
+  still being finalized, and there's no "who/when" stamp on the shared record yet.
+
+**Speaker notes (~1m — Principle 3, part 2):** This is the payoff for a developer
+producing or consuming records — decide whether two classifications are even
+comparable, recompute from the same named rules, audit how each point was earned.
+The resolution target is a forthcoming public CSpec registry that turns a code into
+a concrete, versioned rule. Be straight about the current state: the slots are in
+the model, but recording the version is optional rather than enforced, the code
+scheme is deliberately opaque until CSpec issues it, and the registry is a near-term
+deliverable — plus there's no who-ran-it/when stamp on the shared record yet, a
+natural next addition. The principle is settled; tightening enforcement and
+resolution is the work ahead. This candor is what a technical audience trusts.
+
+---
+
+## Slide 12 — The reference computation layer (why it exists)
+
+**On slide:**
+- We built a **reference, non-authoritative scorer** in the repo.
 - Purpose: **tests, worked examples, and the practice variant set** — proving the
   captured data is sufficient to compute the documented points.
-- **CSpec remains authoritative.** Every result carries `authoritative = False`
-  (constructing it `True` raises). Any divergence from CSpec is a bug *here*.
+- **CSpec remains authoritative.** Every result is marked non-authoritative by
+  construction; any divergence from CSpec is a bug *here*.
 
-**Speaker notes (~1m):** Important framing for this audience: we are *not*
-competing with CSpec. We wrote a mirror of the Supplementary-Material point rules
-so we can prove — mechanically — that our data model captures everything a scorer
-needs. It's the first layer in the repo that *computes* anything; everything
-before it was capture + documentation.
+**Speaker notes (~1m):** We're *not* competing with CSpec. We wrote a mirror of the
+documented point rules so we can prove — mechanically — that the data model captures
+everything a scorer needs. It's the first layer in the repo that *computes*
+anything; everything before it was capture + documentation. It's also a handy
+**oracle**: build your own scorer, diff against ours (CSpec is still the authority).
 
 ---
 
-## Slide 10 — Coding design: pure functions, one-way dependencies
+## Slide 13 — Engineering discipline (kept shallow)
 
 **On slide:**
-- `reference_score_*(assessment, *, gene_disease_validity=…)` → a **`ScoreResult`**
-  (sub-code points, held-combined intermediates, capped parent total, provenance).
-- **Pure functions**; one-way dependency `scoring → models` (capture models never
-  import scoring).
-- **Kept out of the schema surface** — `ScoreResult` is a compute DTO, not
-  Pydantic; no scoring types leak into published JSON Schemas.
-- Un-scoreable / No-Data steps are **omitted**, never recorded as `0.0`.
+- Scoring is a **side-effect-free layer bolted *on top of* the data model** — never
+  woven in — so the published schemas stay clean and CSpec-authority is protected by
+  the code's structure, not just by documentation.
+- **One shared pipeline, parameterized per workflow** — a new workflow scorer is
+  often *a small table of caps + one line of delegation*, not a rewrite.
+- Every result carries a **step-by-step audit trail** (what rule/cap was applied).
 
-**Speaker notes (~1m):** The design discipline is the point. Scoring is a
-side-effect-free layer bolted *on top of* the data model, never woven into it — so
-the published schemas stay clean and CSpec-authority is structurally protected,
-not just documented. Provenance on every result gives an auditable step-by-step
-trail. This is how we keep "reference, non-authoritative" from being a slogan and
-make it a property of the code.
+**Speaker notes (~1m — keep it brief per the depth guidance):** The one thing to
+convey: the design *enforces* the boundaries the earlier slides claimed. Scoring
+depends on the models, never the reverse, so no scoring detail leaks into the
+published schemas. We found the shared shape of the ten variant-impact workflows and
+parameterized it — differences like a point floor or a mechanism-only multiplier are
+declared as data, not branched in code. Don't walk the code; this slide is
+*evidence of rigor*, then move on. *For the curious:* pure `reference_score_*`
+functions returning a `ScoreResult` with a `provenance` trail.
 
----
-
-## Slide 11 — One pattern, every workflow: the BranchSpec pipeline
-
-**On slide:**
-- LoF workflows (NUL_/CDS_) share **`score_nul_cds_workflow`**; each workflow is
-  just a **`BranchSpec` table** (parent/held/INF caps per outcome branch).
-- Splice (SPL_) shares a parallel `score_spl_workflow` (adds a splice-assay step +
-  a second held value).
-- Shared **primitives**: the SM18 mechanism × exon-relevance multiplier, caps, the
-  informative-variant tally, held-combined.
-- Result: a new workflow scorer is often **a table + one line of delegation.**
-
-**Speaker notes (~1m):** This is the software story a technical audience
-appreciates: we found the shared shape of ten variant workflows and parameterized
-it. Adding Frameshift after Nonsense was a branch table, not a rewrite. The per-
-workflow differences (a −4 parent floor, a mechanism-only multiplier, a functional-
-NA branch) are declared as data in the spec, not branched in code.
-
-*Visual: `[EXPLAINER: a NUL_/CDS_ or splice workflow]` — one of Larry's workflow
-explainer graphics pairs naturally here: show the human decision tree, then land
-"this whole tree is one BranchSpec table."*
+*Visual: `[EXPLAINER: a NUL_/CDS_ or splice workflow]` — show the human decision
+tree, then "this whole tree is one small config table."*
 
 ---
 
-## Slide 12 — End-to-end: capture → score → aggregate → classify
+## Slide 14 — End-to-end: capture → score → aggregate → classify
 
 **On slide:** (pipeline)
-- **Per-code scorers:** all 10 PFD workflows · POP · all CLN codes (AFF/DNV/ALT/
-  UAF/CCS) · LOC_PHE.
-- **Aggregation:** POP/LOC family subtotals → per-proband CLN combine →
-  cross-proband sum → **cross-code combine** into one **(VBC, MDE) total**.
-- **Classification band:** `reference_classify(points)` → Benign / Likely Benign /
-  VUS (low/mid/high) / Likely Pathogenic / Pathogenic (SM1 bands).
+- **Per-code scorers:** all 10 variant-impact workflows · population · all clinical
+  codes · the first locus code.
+- **Aggregation:** family subtotals → per-proband clinical combine → cross-proband
+  sum → **one (variant, disease) total.**
+- **Classification band:** the total maps to Benign / Likely Benign / VUS
+  (low/mid/high) / Likely Pathogenic / Pathogenic.
 
-**Speaker notes (~1.5m):** Walk the arrow. The reference layer now runs the whole
-way: from a captured Case, through each evidence code, up through aggregation, to a
-banded classification. Call out that this end-to-end path is *real and tested* —
-it's the strongest evidence that the data model is sufficient. Remaining pieces:
-LOC_SEG (point values now in hand from SM5 Fig 2 — implementation pending) and
-`validate_case` applicability enforcement.
+**Speaker notes (~1m):** The reference layer now runs the whole way: from a captured
+case, through each evidence code, up through aggregation, to a banded classification
+— *real and tested*, the strongest evidence that the data model is sufficient.
+Remaining pieces: the co-segregation locus code (point values now in hand from the
+source figure — implementation pending) and applicability enforcement.
 
 *Visual: a clean left-to-right pipeline diagram.*
 
 ---
 
-## Slide 13 — Worked example (the 3-minute payoff)
+## Slide 15 — Worked example (the 3-minute payoff)
 
 **On slide:**
 - One practice-set variant, end to end: captured facts → evidence codes fired →
   **scored lines of evidence** (each with its code + score) → combined total → band.
-- Show the **provenance trail** for one code.
+- Show the **audit trail** for one code.
 
 **Speaker notes (~3m — the anchor of the talk):** Pick one clean example from the
-practice variant set (32 encoded). Show the actual captured fields, then the scored
-lines of evidence it produces — each with its code, direction, and score — then the
-roll-up to a total and the band. Emphasize: **code = identity, score = outcome,
-shown separately** (`CLN_AFF (score: +1.0)`, never `CLN_AFF_+1`) — and that the same
-nested structure is what another system would consume. This is where the abstract
-model becomes concrete for a developer.
+practice variant set (32 encoded, all CI-validated). Show the actual captured
+fields, then the scored lines of evidence — each with its code, direction, and score
+— then the roll-up to a total and the band. Emphasize **code = identity, score =
+outcome, shown separately** (`CLN_AFF (score +1.0)`, never `CLN_AFF_+1`), and that
+the same nested structure is what another system consumes. This is where the
+abstract model becomes concrete.
 
-> Prep: choose the example before the talk; a monoallelic CLN_AFF or a Nonsense
-> PFD case reads most cleanly. Have the JSON on the slide, trimmed. If the chosen
-> example has a matching **`[EXPLAINER: <that workflow>]`** graphic, show it beside
-> the JSON so the audience sees the human view and the computed record together.
-
----
-
-## Slide 14 — Where the model meets CSpec
-
-**On slide:**
-- Each scored **line of evidence** carries a **code** (a method/evidence reference).
-- CSpec resolves those codes into **definitions** (baseline + expert-panel
-  specializations).
-- The same classification record works with **today's baseline and a specialized
-  rule later — no shape change.**
-
-**Speaker notes (~45s):** Reinforce the seam from slide 4 now that they've seen a
-real record. For an implementer: you store the code; you resolve it against the
-CSpec registry at evaluation time. The model doesn't hard-code any scoring rule.
-
----
-
-## Slide 15 — Honest about the edges
-
-**On slide:**
-- **Solid:** the shared-standard foundation, the scope boundary, the Case model,
-  the schemas, evidence capture across all categories.
-- **In progress:** aligning our record wording to the base standard's latest
-  simplification; the scoring map; workflow write-ups; scorer aggregation.
-- **Open questions for the Working Group:** a few Supplementary-Material
-  boundary/typo points — all recorded in the code's audit trail and `known-gaps`.
-
-**Speaker notes (~45s):** Credibility comes from naming the gaps precisely. Note
-the recent win: two figure-only rules we'd had to *assume* (the mechanism×exon
-multiplier's edge cell, and the co-segregation point values) are now resolved
-against the source figures — one of them corrected an assumption we'd made. Every
-place we still infer is flagged in the code's audit trail *and* the docs. We're not
-hiding approximations; we log them for WG confirmation. *(Keep "VA-Spec / Statement"
-off the slide — say "the shared GA4GH standard" and "our record.")*
+> Prep: choose the example beforehand; a monoallelic affected-clinical case or a
+> nonsense variant-impact case reads most cleanly. Trim the JSON on the slide. If a
+> matching `[EXPLAINER: <that workflow>]` graphic exists, show it beside the record
+> so the human view and the computed record sit together.
 
 ---
 
 ## Slide 16 — What you can build against today
 
 **On slide:**
-- **JSON Schemas** for every entity (generated from the model).
-- The **documentation site** (model reference, workflows, scoring map, glossary,
-  interop).
-- **32 worked practice examples** as learning/test fixtures.
-- The **reference scorer** as an oracle for your own implementation's expected
-  points.
+- **JSON Schemas** for every entity — generated from the model, CI-enforced source
+  of truth for any language.
+- Two record shapes: the **inputs** you submit (evidence going in) and the
+  **rolled-up classification** (scored, coming back).
+- **32 validated worked examples** (the practice variant set) as ready-made
+  fixtures — traceable to source.
+- The **reference scorer** as an oracle for your implementation's expected points.
 
-**Speaker notes (~45s):** Concrete takeaways. If you're building a capture tool,
-target the Case model + applicability matrix and validate against the schemas. If
-you're building a consumer, read the classification record and its lines of
-evidence. If you're building a scorer, diff against our reference results
-(remembering CSpec is the authority).
+**Speaker notes (~45s):** You don't wait for the guideline to start building — the
+contract exists as JSON Schema generated from the model, and CI fails if the
+committed schemas drift, so what's published is what the model enforces. Two shapes
+to know: the case record you submit with evidence going in, and the rolled-up
+classification that comes back with scores attached. Test against 32 real curated
+pilot variants, not synthetic stubs. One caveat: the Standard isn't finalized —
+treat schemas as advisory and expect field-level change; the *shapes* are stable
+enough to build against, the illustrative *scores* are not spec-locked.
 
 ---
 
-## Slide 17 — Timeline & deliverables
+## Slide 17 — Honest about the edges
 
 **On slide:**
-- **~October 2026** — SVCv4 Standards published in *Genetics in Medicine*; the
-  model release aligns to it.
-- Draft access before publication: **GA4GH VA community profile** (JSON Schema +
-  docs), learning examples/use cases.
-- Specialized methods via the **CSpec Registry** (public API + docs).
+- **Solid:** the shared-standard foundation, the scope boundary, the Case model, the
+  schemas, evidence capture across all categories, the end-to-end reference scorer.
+- **In progress:** aligning our record wording to the base standard's latest
+  simplification; the scoring map; workflow write-ups.
+- **Open questions for the Working Group:** a few Supplementary-Material
+  boundary/typo points — all recorded in the code's audit trail and `known-gaps`.
+
+**Speaker notes (~45s):** Credibility comes from naming gaps precisely. Recent win:
+two figure-only rules we'd had to *assume* (a mechanism×exon edge cell, and the
+co-segregation point values) are now resolved against the source figures — one of
+them corrected an assumption we'd made. Every place we still infer is flagged in the
+code's audit trail *and* the docs. We log approximations for WG confirmation rather
+than hide them.
+
+---
+
+## Slide 18 — Timeline & deliverables
+
+**On slide:**
+- **~October 2026** — SVCv4 Standards published in *Genetics in Medicine*; the model
+  release aligns to it.
+- Draft access before publication: the **data model** (JSON Schema + docs) and
+  learning examples/use cases.
+- Specialized methods via the forthcoming **CSpec registry** (public API + docs).
 
 **Speaker notes (~30s):** Set the clock. We're building toward the GIM publication;
 draft artifacts are available ahead of it for developers who want to start.
 
 ---
 
-## Slide 18 — Close: one sentence to remember
+## Slide 19 — Close: one sentence to remember
 
 **On slide:**
 - **The Standard defines the framework; CSpec defines the methods; we define the
-  shape — built on a shared GA4GH standard so SVCv4 classifications are computable,
-  exchangeable, and auditable.**
+  shape — built on a shared GA4GH standard so SVCv4 classifications, and the
+  evidence behind them, are computable, exchangeable, and auditable.**
 
-**Speaker notes (~30s):** Land the single-sentence takeaway. Invite engagement:
-here's the repo, here's the docs, here's how to give feedback.
+**Speaker notes (~30s):** Land the takeaway. Invite engagement: here's the repo,
+here's the docs, here's how to give feedback.
 
 ---
 
-## Slide 19 — Credits & Q&A
+## Slide 20 — Credits & Q&A
 
 **On slide:**
 - Key contributors: Alicia Byrne, Larry Babb, Christine Preston, Neethu Shah
-  *(+ the wider data-modeling team & VA-Spec profile authors)*
+  *(+ the wider data-modeling team)*
 - Repo + docs links · contact
 - **Questions**
 
-**Speaker notes:** Keep 2 min for Q&A. Likely questions to pre-load:
+**Speaker notes:** Keep 2 min for Q&A. Pre-load likely questions:
 *"Is this the scorer of record?"* (No — CSpec is; ours is a reference oracle.)
 *"How do expert-panel specializations fit?"* (Same record shape; the code resolves
-to a different rule in CSpec.) *"Why build on an outside standard instead of your
-own format?"* (Interoperability + we inherit existing tooling.) *"When can I depend
-on it?"* (Draft now, aligned to the ~Oct 2026 GIM publication.)
+to a different rule/version in CSpec — slides 8–11.) *"How do I know which version
+produced a result?"* (It's named on the record; resolution via the forthcoming CSpec
+registry.) *"Can ClinVar consume this today?"* (It's the motivating use-case, not a
+shipped integration; the shared shape is what makes it possible.) *"Why build on an
+outside standard?"* (Interoperability + inherited tooling.) *"When can I depend on
+it?"* (Draft now, aligned to the ~Oct 2026 GIM publication.)
 
 ---
 
 ## Delivery notes
 
-- **Cut lever if you run long:** compress slides 5 and 14 (both are "trust the
-  seam" points) and hold the time for the worked example (13) — that's what sells
-  it.
-- **Density:** on-slide bullets are prompts, not scripts. Keep ≤ 5 lines/slide.
+- **Protect the spine.** The three principle pairs (slides 7, 8–9, 10–11) and the
+  worked example (15) are the talk — never cut into them for time.
+- **Cut levers if long:** compress slide 4 (build-on-GA4GH) and slide 13
+  (engineering discipline) first.
+- **Density:** on-slide bullets are prompts, not scripts. ≤ 5 lines/slide.
 - **Tone:** confident about the model and the design discipline; precise and
   un-defensive about what's still provisional. This audience rewards both.
+
+---
+
+## Appendix — Embedding this as a docsite learning tool (feasibility)
+
+**Question:** can this presentation live in the docs site under **Getting Started**
+as a learning tool? **Yes — best as a doc-native "Learn the model" learning path,
+not embedded slides.**
+
+**Recommendation (Option A — doc-native path):** rebuild the talk as a short
+**numbered sub-series (3 pages)** under Getting Started, using only extensions the
+site already enables (admonitions, `pymdownx.tabbed`, tables, `mermaid`
+superfences, existing PNGs). This keeps a **single source of truth** (prose lives
+natively in docs, not duplicated into a deck), inherits light/dark + search for
+free, is fully self-contained/offline, and passes the `strict` build with **no new
+dependencies or CI changes**. For a *developer* learning tool, a scannable,
+deep-linkable lesson beats a projector deck; the live talk stays a separate artifact.
+**Effort ≈ 0.5–1 day.**
+
+**Why not the alternatives:** a reveal.js deck embedded via iframe means dual
+maintenance (slides drift from docs), a light/dark mismatch with the Material theme,
+and vendoring ~1–2 MB of JS to stay offline; a CDN version fails the self-contained
+requirement; a dedicated slides plugin isn't worth editing the pinned dependency set
+for a single deck.
+
+**Suggested page split** (maps the deck's segments):
+
+1. **Learn the model · why & scope** — slides 1–4 (scope table; the code seam;
+   build-on-GA4GH). Reuse points-bands.png; a `tabbed` "for the technically curious"
+   aside for the scope boundary.
+2. **Learn the model · what a classification is & how it's shared** — slides 5–7
+   (nesting diagram in **mermaid**; summary-table.png; Principle 1 / show-your-work).
+3. **Learn the model · versions, scoring & what you build against** — slides 8–16
+   condensed (Principles 2–3; a **mermaid** end-to-end pipeline; a `tabbed` "human
+   view / record" worked example; a compact "build against today" admonition).
+
+**Nav placement:** append after `getting-started/first-case.md`, e.g.
+`getting-started/learn/why-and-scope.md`, `.../what-a-classification-is.md`,
+`.../versions-scoring-and-building.md`.
+
+**Two caveats:** (1) the learning path must adopt the reconciled single
+nested-claim wording, not re-import the older three-box framing still present in
+`getting-started/show-your-work.md`; (2) the slide-7/13/15 explainer graphics don't
+exist as stills yet (`explainers/` is a stub) — fall back to the existing
+hod-workflows.png / variant-impact-workflows.png until they land.
+
+> **[DECIDE]** Larry: build the live-talk deck first (this file), then decide
+> whether to invest the ~1 day to also publish the doc-native learning path. The two
+> share all their content, so the deck is the prerequisite either way.
