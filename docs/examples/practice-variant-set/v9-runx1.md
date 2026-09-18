@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of RUNX1 c.1412_1413dup (p.Leu472AlafsTer123) against hereditary thrombocytopenia and hematologic cancer predisposition syndrome, drawn from the
 `PVS-v9-RUNX1` Practice Variant Set entry.
@@ -22,10 +22,11 @@ An SVCv4 classification of RUNX1 c.1412_1413dup (p.Leu472AlafsTer123) against he
 
     The variant being classified (VBC) is RUNX1 c.1412_1413dup (p.Leu472AlafsTer123); the disease/condition (MDE) is hereditary thrombocytopenia and hematologic cancer predisposition syndrome. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF_+1`, score 1.0) — Affected proband (illustrative).
-    - **Locus specificity** (`LOC_SEG_+3`, score 3.0) — Co-segregation (illustrative).
-    - **RNA / coding alteration (CDS)** (`CDS_+2`, score 2.0) — Coding-alteration / critical-domain evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF`, score 1.0) — Affected proband (illustrative).
+    - **Locus specificity** (`LOC_SEG`, score 3.0) — Co-segregation (illustrative).
+    - **RNA / coding alteration (CDS)** (`CDS`, score 2.0) — Coding-alteration / critical-domain evidence (PFD, illustrative).
+      - `CDS_PRD` (score 2.0) — Structural coding-sequence assessment.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 6.0 → *likely pathogenic*.
 
@@ -34,18 +35,19 @@ An SVCv4 classification of RUNX1 c.1412_1413dup (p.Leu472AlafsTer123) against he
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): RUNX1 c.1412_1413dup (p.Leu472AlafsTer123)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0011071 (hereditary thrombocytopenia and hematologic cancer predisposition syndrome)
-        qualifiers:           moi=AD; note=Loss of function is an established disease mechanism.
+        subject (VBC): RUNX1 c.1412_1413dup (p.Leu472AlafsTer123)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0011071 (hereditary thrombocytopenia and hematologic cancer predisposition syndrome)
+        qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - CLN_AFF_+1   score  1.0
-        - LOC_SEG_+3   score  3.0
-        - CDS_+2       score  2.0
-      final_score:          6.0
-      score_classification: likely_pathogenic
+        - POP_FRQ                  score   0.0
+        - CLN_AFF                  score   1.0
+        - LOC_SEG                  score   3.0
+        - CDS                      score   2.0
+          - CDS_PRD                  score   2.0
+      score:         6.0
+      outcome:       likely_pathogenic
     ```
 
 === "JSON"

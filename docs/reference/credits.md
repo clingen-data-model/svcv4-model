@@ -44,5 +44,5 @@ Mulhall · Christine Preston · Neethu Shah · Matt Wright · Bryan Wulf · Keya
 
 SVCv4 is a joint Standard of **ACMG**, **AMP**, **CAP**, and **ClinGen**, built
 on the **GA4GH** Genomic Knowledge Standards (GKS) — VA-Spec, VRS, and Cat-VRS.
-See [Interop: GA4GH GKS](gks-interop.md) and
+See Interop: GA4GH GKS and
 [VA-Spec community profile](va-spec-profile.md).

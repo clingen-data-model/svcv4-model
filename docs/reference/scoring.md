@@ -124,7 +124,7 @@ descriptor plus the VUS subclass — the capstone the aggregation increments fee
 It returns a `Classification` NamedTuple (`category` + `vus_subclass`, the latter set only for
 VUS). The band is **not clamped** (SM 1 makes Pathogenic open-ended `≥ +10.0`); whether the summed
 total is globally clamped is a separate open question deferred to the cross-code-combination
-increment (see [known gaps](known-gaps.md)). The summing that produces `points` — POP/LOC
+increment (see known gaps). The summing that produces `points` — POP/LOC
 subtotals, CLN cross-proband aggregation, and cross-code combination — and `validate_case`
 applicability enforcement follow in later increments (see the scoping doc).
 
@@ -179,7 +179,7 @@ finalize).
 LOC subtotals into one **(VBC, MDE) total**. An `_ND` family contributes `0`; the per-family
 breakdown is kept in `sub_code_points`. The sum is **unclamped** — faithful to SM 1's open-ended
 Pathogenic (`≥ +10`) / Benign (`≤ −4`); the GA4GH JSON `scale` cap of `[−8, +10]` is a display
-concern (flagged in [known gaps](known-gaps.md)). `reference_classify` then bands that total — but
+concern (flagged in known gaps). `reference_classify` then bands that total — but
 an all-`_ND` case (no evidence in any family) yields `parent_total=None` (not classifiable, and
 distinct from a scored `0.0`), so guard first: `t = reference_combine_case([...]).parent_total`;
 `reference_classify(t)` only when `t is not None`.

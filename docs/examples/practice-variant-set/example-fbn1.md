@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of FBN1 c.7003C>T (p.Arg2335Trp) against Marfan syndrome, drawn from the
 `PVS-EXAMPLE-FBN1` Practice Variant Set entry.
@@ -22,9 +22,11 @@ An SVCv4 classification of FBN1 c.7003C>T (p.Arg2335Trp) against Marfan syndrome
 
     The variant being classified (VBC) is FBN1 c.7003C>T (p.Arg2335Trp); the disease/condition (MDE) is Marfan syndrome. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF_+3`, score 3.0) — Affected probands (illustrative). Proband 2's confirmed de novo is captured separately under CLN_DNV.
-    - **Single-amino-acid change (MIS)** (`MIS_+2`, score 2.0) — Predictive missense evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF`, score 3.0) — Affected probands (illustrative). Proband 2's confirmed de novo is captured separately under CLN_DNV.
+    - **Single-amino-acid change (MIS)** (`MIS`, score 2.0) — Predictive missense evidence (PFD, illustrative).
+      - `MIS_PRD` (score 2.0) — In-silico predictive missense assessment.
+        - `MIS_PRD_INIT_REVEL` (score 2.0) · *provisional* — REVEL 0.841 — supportive in-silico missense evidence.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 5.0 → *likely pathogenic*.
 
@@ -33,17 +35,19 @@ An SVCv4 classification of FBN1 c.7003C>T (p.Arg2335Trp) against Marfan syndrome
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): FBN1 c.7003C>T (p.Arg2335Trp)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0007947 (Marfan syndrome)
-        qualifiers:           moi=AD; note=Loss of function is an established disease mechanism.
+        subject (VBC): FBN1 c.7003C>T (p.Arg2335Trp)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0007947 (Marfan syndrome)
+        qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - CLN_AFF_+3   score  3.0
-        - MIS_+2       score  2.0
-      final_score:          5.0
-      score_classification: likely_pathogenic
+        - POP_FRQ                  score   0.0
+        - CLN_AFF                  score   3.0
+        - MIS                      score   2.0
+          - MIS_PRD                  score   2.0
+            - MIS_PRD_INIT_REVEL (prov) score   2.0
+      score:         5.0
+      outcome:       likely_pathogenic
     ```
 
 === "JSON"

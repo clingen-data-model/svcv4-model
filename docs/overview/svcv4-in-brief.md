@@ -47,6 +47,6 @@ This documentation and data model provide a **standard, interoperable
 representation** of the above so that systems can capture and exchange the
 evidence and the resulting classifications. The Standards define *what* the evidence and codes
 are; this project defines *how the data is structured*; and
-[ClinGen CSpec](../reference/cspec-interop.md) owns the *methods/rules* that turn
+ClinGen CSpec owns the *methods/rules* that turn
 captured evidence into scores. See
 [What this project is — and isn't](scope.md).

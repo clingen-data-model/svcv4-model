@@ -1,10 +1,5 @@
 # Collecting the evidence: the shape it all rolls into
 
-!!! info "Maturity: Stable"
-
-    The nesting shape described here is a decision we stand behind. The
-    individual parts of the arc (linked at the bottom) carry their own labels.
-
 The cornerstone of SVCv4 — and of this model — is **showing your work with
 structured evidence**. A classification isn't just a verdict; it's a verdict
 *plus* the evidence and reasoning behind it, captured so others (and machines)
@@ -15,7 +10,7 @@ collects the evidence behind a classification and **structures it before sharing
 the final outcome**. It is the side of the work that sits *underneath* the
 scoring — this model captures the evidence; the scoring rules that turn it into
 points live in a separate, not-yet-built method/ruleset model (of which
-[ClinGen CSpec](../reference/cspec-interop.md) is one early implementer, not a
+ClinGen CSpec is one early implementer, not a
 governing authority).
 
 Throughout: **the variant = the VBC** (Variant Being Classified) and **the
@@ -80,9 +75,7 @@ roll-up arithmetic or the capping rules — those are scoring, covered in the
     nested `Statement` (VA-Spec 1.1.0 folded the earlier standalone
     "EvidenceLine" class into `Statement`), and the captured facts are
     `EvidenceItem` / `EvidenceData` — see the
-    [VA-Spec community profile](../reference/va-spec-profile.md),
-    [Model reference](../reference/model.md), and the
-    [evidence data structures catalog](../reference/evidence-structures.md).
+    [VA-Spec community profile](../reference/va-spec-profile.md).
 
 ## The arc, in four parts
 

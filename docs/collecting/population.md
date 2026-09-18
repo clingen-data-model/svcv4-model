@@ -1,10 +1,5 @@
 # 2 · Population observations (POP)
 
-!!! info "Maturity: Draft"
-
-    Inputs are modeled; the gating behaviour and point tables are documented from
-    the SVCv4 Standards, not computed here.
-
 **Population (POP)** is the first assessment family a curator meets, and it earns
 its place early: `POP_FRQ` can **gate several downstream assessments**. Getting
 it settled before the CLN and LOC codes it gates keeps the rest of the arc from
@@ -65,7 +60,7 @@ individuals implausible among those population samples). It is distinct from
 
 ## How it is structured before sharing
 
-POP's inputs are modeled as [`PopulationEvidence`][svcv4_model.PopulationEvidence]
+POP's inputs are modeled as `PopulationEvidence`
 (the payload behind a `population_frequency` Evidence Item), a permissive entity
 where every field is optional:
 

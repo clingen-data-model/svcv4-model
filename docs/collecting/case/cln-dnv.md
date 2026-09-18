@@ -1,10 +1,5 @@
 # De novo (CLN_DNV)
 
-!!! info "Maturity: Draft"
-
-    Fields and applicability track the [Case model](../../workflows/case-model.md);
-    scoring is documented elsewhere, not computed here.
-
 **CLN_DNV** collects evidence that the VBC arose **de novo** in an affected
 proband — a strong signal for pathogenicity when parentage is confirmed. It uses
 the [Case superset](index.md); this page names the portion it turns on.

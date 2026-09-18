@@ -1,10 +1,5 @@
 # Unaffected (CLN_UAF)
 
-!!! info "Maturity: Draft"
-
-    Fields and applicability track the [Case model](../../workflows/case-model.md);
-    scoring is documented elsewhere, not computed here.
-
 **CLN_UAF** collects evidence from **unaffected individuals who carry the VBC** —
 benignity evidence, since a truly pathogenic, penetrant variant is not expected in
 people who don't have the disease. It uses the [Case superset](index.md); this

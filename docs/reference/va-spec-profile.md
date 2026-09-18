@@ -46,4 +46,3 @@ authored on top of VA-Spec.
 ## See also
 
 - [Collecting the evidence](../collecting/index.md) — the nesting shape in narrative form
-- [GA4GH GKS interop](gks-interop.md)

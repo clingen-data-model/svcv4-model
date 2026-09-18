@@ -1,10 +1,5 @@
 # Segregation (LOC_SEG)
 
-!!! info "Maturity: Draft"
-
-    Fields and applicability track the [Case model](../../workflows/case-model.md);
-    scoring is documented elsewhere, not computed here.
-
 **LOC_SEG** collects evidence that the VBC **co-segregates with disease across a
 family** — affected relatives carry it, unaffected relatives don't. It is the
 assessment that most exercises the Case superset's family structure. It uses the
@@ -16,7 +11,7 @@ Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
 ## What is collected
 
 The distinguishing evidence is the **`relatives[]`** list — each a
-[`CaseRelative`](../../reference/evidence-structures.md#caserelative) capturing:
+`CaseRelative` capturing:
 
 - **`parent_of_proband`** (`R`), **`sex`** (`C`, required if X-linked),
   **`affected_w_mde`** (`R`), **`severe_phenotype`** (`C`, for semi-dominant /

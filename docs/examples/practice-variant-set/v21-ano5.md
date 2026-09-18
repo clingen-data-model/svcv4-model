@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of ANO5 c.139-1del (splice acceptor) against autosomal recessive limb-girdle muscular dystrophy, drawn from the
 `PVS-v21-ANO5` Practice Variant Set entry.
@@ -22,8 +22,9 @@ An SVCv4 classification of ANO5 c.139-1del (splice acceptor) against autosomal r
 
     The variant being classified (VBC) is ANO5 c.139-1del (splice acceptor); the disease/condition (MDE) is autosomal recessive limb-girdle muscular dystrophy. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Splicing (SPL)** (`SPL_+2`, score 2.0) — Splicing / domain evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Splicing (SPL)** (`SPL`, score 2.0) — Splicing / domain evidence (PFD, illustrative).
+      - `SPL_PRD` (score 2.0) — In-silico splice prediction.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 2.0 → *variant of uncertain significance*.
 
@@ -32,16 +33,17 @@ An SVCv4 classification of ANO5 c.139-1del (splice acceptor) against autosomal r
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): ANO5 c.139-1del (splice acceptor)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0015152 (autosomal recessive limb-girdle muscular dystrophy)
-        qualifiers:           moi=AR; note=Loss of function is an established disease mechanism.
+        subject (VBC): ANO5 c.139-1del (splice acceptor)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0015152 (autosomal recessive limb-girdle muscular dystrophy)
+        qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - SPL_+2       score  2.0
-      final_score:          2.0
-      score_classification: variant_of_uncertain_significance
+        - POP_FRQ                  score   0.0
+        - SPL                      score   2.0
+          - SPL_PRD                  score   2.0
+      score:         2.0
+      outcome:       variant_of_uncertain_significance
     ```
 
 === "JSON"

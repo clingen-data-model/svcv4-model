@@ -1,10 +1,5 @@
 # Case-control (CLN_CCS)
 
-!!! info "Maturity: Draft"
-
-    Inputs are modeled as `CaseControlStudyEvidence`; the scoring and exclusivity
-    rule are documented from SVCv4 (SM 4), not computed here.
-
 **CLN_CCS** is the one member of this family that is **not a per-proband `Case`.**
 It collects a **variant-specific case-control study** — a single study-level
 result comparing the VBC's frequency in phenotyped cases against controls — so its
@@ -17,7 +12,7 @@ Throughout: **the variant = the VBC**; **the disease/condition = the MDE**
 
 ## What is collected
 
-A single [`CaseControlStudyEvidence`][svcv4_model.CaseControlStudyEvidence] payload:
+A single `CaseControlStudyEvidence` payload:
 
 - **`odds_ratio`** with **`ci_lower`** / **`ci_upper`** — the VBC's enrichment in
   cases vs. controls, and the confidence interval around it.
@@ -38,6 +33,6 @@ Scoring — `OR > 5.0` → `CLN_CCS_+4.0`, a CI including 1.0 → no points, `OR
 
 ## Reference
 
-- Inputs catalog: [evidence data structures](../../reference/evidence-structures.md#casecontrolstudyevidence).
+- Inputs catalog: evidence data structures.
 - Scoring and exclusivity: the `CLN_CCS` note on
   [Clinical Observations (CLN)](../../workflows/hod/cln/index.md).

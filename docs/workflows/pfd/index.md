@@ -36,7 +36,7 @@ Each concept uses a common code pattern: **`_PRD`** (prediction), **`_FXN`**
 | **Alteration to splicing (SPL)** | `SPL_PRD`, `SPL_SPA`, `SPL_FXN`, `SPL_INF` |
 
 Scoring for these codes is defined in
-[ClinGen CSpec](../../reference/cspec-interop.md).
+ClinGen CSpec.
 
 ## The shape of the remaining work
 

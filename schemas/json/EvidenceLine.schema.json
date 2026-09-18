@@ -61,6 +61,126 @@
       "title": "EvidenceItem",
       "type": "object"
     },
+    "EvidenceLine": {
+      "additionalProperties": false,
+      "description": "Result of invoking a CSpec method/rule on a curator's Evidence Items.\n\nEach Evidence Line records:\n\n- The **method/rule code** (`method`) that was invoked.\n- The **evidence used** (`evidence`) \u2014 the Evidence Items that were\n  provided as inputs.\n- The **score** and optional **strength**/**direction** that the\n  CSpec method produced.\n- Optional `outcome` if the line maps to a categorical label.\n\nPer VA-Spec, *any process, rule, or method that produces a score\nmaps to an Evidence Line*. The method's *definition* lives in\nCSpec; only the invocation *result* lives here.",
+      "properties": {
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional Evidence Code / method-code reference; mirrors or disambiguates `method.code` where helpful.",
+          "title": "Code"
+        },
+        "contribution": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional weighted contribution this Evidence Line makes to the Statement's final score.",
+          "title": "Contribution"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional prose summary of the line for human readers.",
+          "title": "Description"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional direction label produced alongside the score (e.g. `pathogenic`, `benign`). Vocabulary TBD.",
+          "title": "Direction"
+        },
+        "evidence": {
+          "description": "Evidence Items used as inputs to the method/rule. May be a subset of all items captured for the (VBC, MDE) curation.",
+          "items": {
+            "$ref": "#/$defs/EvidenceItem"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "evidence_lines": {
+          "description": "Nested child Evidence Lines \u2014 the lower-level method/rule assessments (concept \u2192 code \u2192 subcode) that compose into this line's `score`. Per VA-Spec 1.1.0, an Evidence Line may nest further Evidence Lines.",
+          "items": {
+            "$ref": "#/$defs/EvidenceLine"
+          },
+          "title": "Evidence Lines",
+          "type": "array"
+        },
+        "method": {
+          "$ref": "#/$defs/Method",
+          "description": "Reference to the CSpec method or rule whose invocation produced this Evidence Line."
+        },
+        "outcome": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VariantPathogenicityClassification"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional categorical classification associated with this Evidence Line's score, where applicable."
+        },
+        "provisional": {
+          "default": false,
+          "description": "True when this line's `code` is a **provisional** SVCv4 code or subcode \u2014 one derived to fill a gap in the official Summary Table (a combination-cap cell) or a deeper method-level assessment (predictor initial points, exon relevance, same-/distant-AA tally). Provisional codes follow the SVCv4 nomenclature but are not yet part of the official code list.",
+          "title": "Provisional",
+          "type": "boolean"
+        },
+        "score": {
+          "description": "Numeric score produced by the method/rule.",
+          "title": "Score",
+          "type": "number"
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional strength label produced alongside the score (e.g. `supporting`, `moderate`, `strong`). Vocabulary TBD.",
+          "title": "Strength"
+        }
+      },
+      "required": [
+        "method",
+        "score"
+      ],
+      "title": "EvidenceLine",
+      "type": "object"
+    },
     "Method": {
       "additionalProperties": false,
       "description": "A reference to a CSpec-defined method, rule, or specification.\n\nThis class **names**, but does not **define**, a method. Method\ndefinitions \u2014 together with their evaluation logic, scoring rules,\nand version selection \u2014 live in ClinGen CSpec, which is outside\nthis repository and outside GA4GH GKS VA-Spec.\n\nUsed in two roles:\n\n1. At the `Statement` level, `method` identifies the **applied\n   SVCv4 specification version** \u2014 either the baseline SVCv4\n   Standard or a specific VCEP-specialised version that was\n   selected for the (VBC, MDE) curation.\n2. At the `EvidenceLine` level, `method` identifies the specific\n   CSpec method or rule whose invocation produced that Evidence\n   Line's score.",
@@ -129,95 +249,5 @@
       "type": "string"
     }
   },
-  "additionalProperties": false,
-  "description": "Result of invoking a CSpec method/rule on a curator's Evidence Items.\n\nEach Evidence Line records:\n\n- The **method/rule code** (`method`) that was invoked.\n- The **evidence used** (`evidence`) \u2014 the Evidence Items that were\n  provided as inputs.\n- The **score** and optional **strength** that the CSpec method\n  produced.\n- Optional `score_classification` if the line maps to a categorical\n  label.\n\nPer VA-Spec, *any process, rule, or method that produces a score\nmaps to an Evidence Line*. The method's *definition* lives in\nCSpec; only the invocation *result* lives here.",
-  "properties": {
-    "code": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional Evidence Code / method-code reference; mirrors or disambiguates `method.code` where helpful.",
-      "title": "Code"
-    },
-    "contribution": {
-      "anyOf": [
-        {
-          "type": "number"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional weighted contribution this Evidence Line makes to the Statement's final score.",
-      "title": "Contribution"
-    },
-    "description": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional prose summary of the line for human readers.",
-      "title": "Description"
-    },
-    "evidence": {
-      "description": "Evidence Items used as inputs to the method/rule. May be a subset of all items captured for the (VBC, MDE) curation.",
-      "items": {
-        "$ref": "#/$defs/EvidenceItem"
-      },
-      "title": "Evidence",
-      "type": "array"
-    },
-    "method": {
-      "$ref": "#/$defs/Method",
-      "description": "Reference to the CSpec method or rule whose invocation produced this Evidence Line."
-    },
-    "score": {
-      "description": "Numeric score produced by the method/rule.",
-      "title": "Score",
-      "type": "number"
-    },
-    "score_classification": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/VariantPathogenicityClassification"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional categorical classification associated with this Evidence Line's score, where applicable."
-    },
-    "strength_direction": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional strength-direction label produced alongside the score (e.g. `pathogenic_supporting`). Vocabulary TBD.",
-      "title": "Strength Direction"
-    }
-  },
-  "required": [
-    "method",
-    "score"
-  ],
-  "title": "EvidenceLine",
-  "type": "object"
+  "$ref": "#/$defs/EvidenceLine"
 }

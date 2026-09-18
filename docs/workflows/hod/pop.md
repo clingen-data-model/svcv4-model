@@ -13,7 +13,7 @@ against pathogenicity, never for it.
 !!! note "Modeled here — inputs captured, scoring documented not computed"
 
     POP's structured evidence inputs are modeled as
-    [`PopulationEvidence`](../../reference/model.md) (the payload behind a
+    `PopulationEvidence` (the payload behind a
     `population_frequency` Evidence Item). This model **captures** the inputs a
     curator records; it does **not** compute the points — the scoring tables
     below are reproduced from the SVCv4 Standards for reference. Point
@@ -84,8 +84,7 @@ explicit clinical details.
 
     SM 3's prose text lumps AD with AR at −0.5, but **Table 7** (the explicit
     point-value table) assigns Autosomal Dominant −1.0. This project follows
-    Table 7; the conflict is logged under
-    [Known gaps](../../reference/known-gaps.md).
+    Table 7; the conflict is logged as a known gap.
 
 ## See also
 
@@ -93,5 +92,5 @@ explicit clinical details.
   DAFT in more depth.
 - [Population observations (POP)](../../collecting/population.md)
   — the narrative walkthrough of `POP_FRQ`/`POP_HMZ` evidence collection.
-- [ClinGen CSpec](../../reference/cspec-interop.md) — where the scoring
+- ClinGen CSpec — where the scoring
   methods/rules that consume this evidence are defined.

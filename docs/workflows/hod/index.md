@@ -24,4 +24,4 @@ The **[Clinical Observations (CLN)](cln/index.md)** and
 backed by the [Case model](../case-model.md). **[Population (POP)](pop.md)** is
 summarized for now and will be modeled in a later phase.
 
-Scoring rules for every code live in [ClinGen CSpec](../../reference/cspec-interop.md).
+Scoring rules for every code live in ClinGen CSpec.

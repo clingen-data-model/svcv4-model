@@ -26,7 +26,6 @@ piece by piece rather than dropping you into the middle of it:
 9. [Clinical Observations (CLN)](../workflows/hod/cln/index.md) and [Locus Specificity (LOC)](../workflows/hod/loc/index.md)
 10. [Spec coverage](../reference/spec-alignment.md)
 11. [Core concepts](../reference/concepts.md)
-12. [Known gaps](../reference/known-gaps.md)
 
 ## What we'd like feedback on
 
@@ -53,9 +52,8 @@ piece by piece rather than dropping you into the middle of it:
   page (VBC, MDE, Gene, MOI, Zygosity & Phase, Case) match how you think
   about these day to day as a curator?
 - The items above, plus a few more (Gene-Disease Validity, DAFT, rule
-  enforcement, case aggregation), are tracked in one place on
-  [Known gaps](../reference/known-gaps.md) — does the way they're grouped
-  there make sense, or would you organize this differently?
+  enforcement, case aggregation), are tracked together as known gaps — does
+  the way they're grouped make sense, or would you organize this differently?
 
 ## What's not here
 

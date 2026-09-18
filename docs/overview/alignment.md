@@ -41,7 +41,7 @@ configuration. **Specialized** versions (e.g. gene-disease-MoI scoping, workflow
 modifications, domain-specific thresholds) layer on top. The Summary Table's
 evidence definitions are fixed; **workflows** carry the customization. Method
 specifications — including specialized versions — are published through
-[ClinGen CSpec](../reference/cspec-interop.md); this model links to them rather
+ClinGen CSpec; this model links to them rather
 than implementing the scoring itself.
 
 ## Where to go next

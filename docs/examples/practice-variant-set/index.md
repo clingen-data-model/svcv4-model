@@ -26,7 +26,7 @@ uv run python scripts/validate_examples.py
 
     The **shapes are real; the data is illustrative.** Scores and classifications
     shown here are not spec-locked — the scoring arithmetic lives in
-    [ClinGen CSpec](../../reference/cspec-interop.md), not in this model.
+    ClinGen CSpec, not in this model.
 
 ## Entries
 

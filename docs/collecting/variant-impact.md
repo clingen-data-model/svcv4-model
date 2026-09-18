@@ -1,10 +1,5 @@
 # 4 · Variant Impact data collection
 
-!!! info "Maturity: Draft"
-
-    All inputs are modeled; the pipeline and its multipliers are documented from
-    the SVCv4 Standards, not computed here.
-
 The final family is **Variant Impact** — the **Predictive & Functional Data
 (PFD)** evidence about the variant's molecular effect. Where the case families ask
 *what was seen in people*, this one asks *what the variant does to the protein or
@@ -58,7 +53,7 @@ feed them** — the capture side, consistent with the rest of the arc.
 
 - The shared submodules and per-variant-type assessment entities
   (`MissenseAssessment`, `NonsenseAssessment`, …) are catalogued in the
-  [evidence data structures](../reference/evidence-structures.md) reference.
+  evidence data structures reference.
 - The [PFD workflows overview](../workflows/pfd/index.md) and its ten
   per-variant-type pages hold the branch-by-branch detail — kept out of this arc
   so the pipeline is narrated once here and specified there.
@@ -70,4 +65,4 @@ feed them** — the capture side, consistent with the rest of the arc.
 That completes the four families of collected evidence — curation activities,
 population, case & segregation, and variant impact — each captured in a structure
 ready to share. From here, the [Workflows](../workflows/index.md) tab specifies
-each code and the [Reference](../reference/model.md) tab catalogs every structure.
+each code and the Reference tab catalogs every structure.

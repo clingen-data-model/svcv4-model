@@ -34,5 +34,5 @@ at the category level and will be detailed as the model grows.
 
     These pages describe **what evidence each workflow needs** (the Evidence
     Items to capture). The scoring **rules** that turn that evidence into points
-    are defined and applied in [ClinGen CSpec](../reference/cspec-interop.md), not
+    are defined and applied in ClinGen CSpec, not
     in this model.

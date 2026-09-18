@@ -1,10 +1,5 @@
 # 3 · Case & segregation data collection
 
-!!! info "Maturity: Stable"
-
-    The Case superset design is a decision we stand behind. The per-assessment
-    subsections it links to are `Draft`.
-
 This is the arc's centerpiece. Every clinical-observation (CLN) and
 locus-specificity (LOC) assessment draws on **case-level evidence** — what was
 seen in probands and their relatives — and SVCv4 collects all of it in **one
@@ -81,11 +76,7 @@ autosomal-dominant inheritance.* Note the split — `moi`, `pop_frq_points`, and
 - The [structuring case evidence](../../reference/scoring-map/structuring-case-evidence.md)
   page shows how those captured cases are arranged in the nested
   evidence-line tree (Approach 1 is the default).
-- The [`Case`][svcv4_model.Case] and
-  [`CaseRelative`](../../reference/evidence-structures.md#caserelative)
-  model references, and the
-  [evidence data structures catalog](../../reference/evidence-structures.md),
-  give every field and type.
+- The `Case` and `CaseRelative` model classes give every field and type.
 
 ## The assessments this evidence feeds
 

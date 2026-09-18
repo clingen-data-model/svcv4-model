@@ -14,7 +14,7 @@ that aren't modeled yet).
 **What it is.** The single variant under evaluation — the thing every
 workflow gathers evidence *about*.
 
-**Why it matters.** The VBC is the Proposition's subject (`subjectVariant`)
+**Why it matters.** The VBC is the Proposition's subject (`subject`)
 in the final Statement: every line of evidence a workflow produces is, in the
 end, evidence about this one variant. See
 [Collecting the evidence](../collecting/index.md#the-one-shape-everything-nests-into)
@@ -35,8 +35,7 @@ Classification Model are unified in a later phase.
 **What it is.** The disease/condition the VBC is classified *against* — a
 gene + phenotype pairing, not just a gene name.
 
-**Why it matters.** The MDE is the Proposition's object (`objectCondition` /
-`objectConditionSet`). Critically, **the gene ↔ MDE relationship is not
+**Why it matters.** The MDE is the Proposition's object (`object`). Critically, **the gene ↔ MDE relationship is not
 1:1**: a single gene may map to more than one MDE, with different modes of
 inheritance, different mechanisms, or both (for example, one gene causing a
 dominant, gain-of-function disorder and a separate, recessive, loss-of-function
@@ -309,5 +308,3 @@ MOI); its effect lands in PFD scoring and final-tier gating.
 - [Spec coverage](../reference/spec-alignment.md) — full SVCv4 Standards
   coverage tracking, including the Multiple Disorders Guidance and Population
   Database Frequency rows referenced above.
-- [Known gaps](known-gaps.md) — the organized backlog for the three
-  not-yet-modeled concepts above, plus other concrete model/documentation gaps.

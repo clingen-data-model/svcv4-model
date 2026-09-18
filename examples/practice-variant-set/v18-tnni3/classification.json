@@ -1,33 +1,143 @@
 {
   "proposition": {
     "subject": {
-      "variation": { "id": "CAID:CA021404", "type": "Allele", "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA021404." },
-      "label": "TNNI3 c.236G>T (p.Arg79Leu) — PVS-v18-TNNI3 VBC"
+      "variation": {
+        "id": "CAID:CA021404",
+        "type": "Allele",
+        "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA021404."
+      },
+      "label": "TNNI3 c.236G>T (p.Arg79Leu) \u2014 PVS-v18-TNNI3 VBC"
     },
     "predicate": "is_causal_for",
-    "object": { "curie": "MONDO:0005045", "label": "hypertrophic cardiomyopathy" },
-    "qualifiers": [ { "moi": "AD", "note": "Loss of function is NOT an established mechanism for TNNI3-related HCM." } ]
+    "object": {
+      "curie": "MONDO:0005045",
+      "label": "hypertrophic cardiomyopathy"
+    },
+    "qualifiers": [
+      {
+        "moi": "AD",
+        "note": "Loss of function is NOT an established mechanism for TNNI3-related HCM."
+      }
+    ]
   },
-  "method": { "code": "svcv4:baseline", "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)", "version": "draft-2026-pre-release" },
-  "final_score": 0.0,
-  "score_classification": "variant_of_uncertain_significance",
-  "strength_direction": null,
+  "method": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "score": 0.0,
+  "outcome": "variant_of_uncertain_significance",
+  "strength": null,
+  "direction": null,
   "contribution": null,
   "evidence_lines": [
     {
-      "method": { "code": "svcv4:POP_FRQ", "label": "Population allele frequency (POP_FRQ)", "version": "draft-2026-pre-release" },
-      "code": "POP_FRQ_+0",
-      "evidence": [ { "id": "PVS-v18-TNNI3-pop-001", "type": "population_frequency", "data": { "prevalence_estimate": "1 in 200", "allelic_heterogeneity": 0.10, "genetic_heterogeneity": 0.05, "penetrance": 0.30, "pop_frq_points": 0 }, "references": ["https://gnomad.broadinstitute.org/variant/chr19-55156247-C-A?dataset=gnomad_r4"], "description": "POP inputs from the tab." } ],
-      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
+      "method": {
+        "code": "svcv4:POP_FRQ",
+        "label": "Population allele frequency (POP_FRQ)",
+        "version": "draft-2026-pre-release"
+      },
+      "code": "POP_FRQ",
+      "evidence": [
+        {
+          "id": "PVS-v18-TNNI3-pop-001",
+          "type": "population_frequency",
+          "data": {
+            "prevalence_estimate": "1 in 200",
+            "allelic_heterogeneity": 0.1,
+            "genetic_heterogeneity": 0.05,
+            "penetrance": 0.3,
+            "pop_frq_points": 0
+          },
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr19-55156247-C-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab."
+        }
+      ],
+      "score": 0.0,
+      "strength": null,
+      "direction": null,
+      "outcome": null,
+      "contribution": 0.0,
       "description": "Population frequency (illustrative)."
     },
     {
-      "method": { "code": "svcv4:MIS", "label": "Single-amino-acid change (MIS)", "version": "draft-2026-pre-release" },
-      "code": "MIS_+0",
-      "evidence": [ { "id": "PVS-v18-TNNI3-mis-001", "type": "computational_prediction", "data": { "tool": "REVEL", "score": 0.542, "splice_impact": "none" }, "references": [], "description": "REVEL 0.542 is intermediate — uninformative on its own." } ],
-      "score": 0.0, "strength_direction": null, "score_classification": null, "contribution": 0.0,
-      "description": "Predictive missense evidence (PFD, illustrative)."
+      "method": {
+        "code": "svcv4:MIS",
+        "label": "Single-amino-acid change (MIS)",
+        "version": "draft-2026-pre-release"
+      },
+      "code": "MIS",
+      "evidence": [
+        {
+          "id": "PVS-v18-TNNI3-mis-001",
+          "type": "computational_prediction",
+          "data": {
+            "tool": "REVEL",
+            "score": 0.542,
+            "splice_impact": "none"
+          },
+          "references": [],
+          "description": "REVEL 0.542 is intermediate \u2014 uninformative on its own."
+        }
+      ],
+      "score": 0.0,
+      "strength": null,
+      "direction": null,
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative).",
+      "evidence_lines": [
+        {
+          "method": {
+            "code": "svcv4:MIS_PRD",
+            "label": "Predictive missense (MIS_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "code": "MIS_PRD",
+          "evidence": [],
+          "score": 0.0,
+          "strength": null,
+          "direction": null,
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "evidence_lines": [
+            {
+              "method": {
+                "code": "svcv4:MIS_PRD_INIT_REVEL",
+                "label": "Predictor initial points (REVEL)",
+                "version": "draft-2026-pre-release"
+              },
+              "code": "MIS_PRD_INIT_REVEL",
+              "evidence": [
+                {
+                  "id": "PVS-v18-TNNI3-mis-001",
+                  "type": "computational_prediction",
+                  "data": {
+                    "tool": "REVEL",
+                    "score": 0.542,
+                    "splice_impact": "none"
+                  },
+                  "references": [],
+                  "description": "REVEL 0.542 is intermediate \u2014 uninformative on its own."
+                }
+              ],
+              "score": 0.0,
+              "strength": null,
+              "direction": null,
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "evidence_lines": [],
+              "description": "REVEL 0.542 is intermediate \u2014 uninformative on its own."
+            }
+          ],
+          "description": "In-silico predictive missense assessment."
+        }
+      ]
     }
   ],
-  "description": "PVS-v18-TNNI3 rolled-up SVCv4 classification. Illustrative — scoring lives in CSpec. Source tab: 'v18: TNNI3'. A VUS: the only proband (Framingham/Jackson Heart Study) has no clinical phenotype details, so no CLN_AFF or CLN_UAF points, and REVEL is intermediate."
+  "description": "PVS-v18-TNNI3 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v18: TNNI3'. A VUS: the only proband (Framingham/Jackson Heart Study) has no clinical phenotype details, so no CLN_AFF or CLN_UAF points, and REVEL is intermediate."
 }

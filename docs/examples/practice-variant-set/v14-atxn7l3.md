@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of ATXN7L3 c.332del (p.Asn111ThrfsTer16) against complex neurodevelopmental disorder (ATXN7L3-related; MONDO pending), drawn from the
 `PVS-v14-ATXN7L3` Practice Variant Set entry.
@@ -22,9 +22,10 @@ An SVCv4 classification of ATXN7L3 c.332del (p.Asn111ThrfsTer16) against complex
 
     The variant being classified (VBC) is ATXN7L3 c.332del (p.Asn111ThrfsTer16); the disease/condition (MDE) is complex neurodevelopmental disorder (ATXN7L3-related; MONDO pending). The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF_+2`, score 2.0) — Affected proband + confirmed de novo (illustrative). CLN_DNV also applicable.
-    - **Absent protein / loss of function (NUL)** (`NUL_+0`, score 0.0) — Predicted null, mechanism-tempered (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF`, score 2.0) — Affected proband + confirmed de novo (illustrative). CLN_DNV also applicable.
+    - **Absent protein / loss of function (NUL)** (`NUL`, score 0.0) — Predicted null, mechanism-tempered (PFD, illustrative).
+      - `NUL_PRD` (score 0.0) — Predicted-LoF / structural nonsense assessment.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 2.0 → *variant of uncertain significance*.
 
@@ -33,17 +34,18 @@ An SVCv4 classification of ATXN7L3 c.332del (p.Asn111ThrfsTer16) against complex
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): ATXN7L3 c.332del (p.Asn111ThrfsTer16)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0100038 (complex neurodevelopmental disorder (ATXN7L3-related; MONDO pending))
-        qualifiers:           moi=AD; note=Loss of function is the SUSPECTED (not established) mechanism (GenCC LoF framework).
+        subject (VBC): ATXN7L3 c.332del (p.Asn111ThrfsTer16)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0100038 (complex neurodevelopmental disorder (ATXN7L3-related; MONDO pending))
+        qualifiers:    moi=AD; note=Loss of function is the SUSPECTED (not established) mechanism (GenCC LoF framework).
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - CLN_AFF_+2   score  2.0
-        - NUL_+0       score  0.0
-      final_score:          2.0
-      score_classification: variant_of_uncertain_significance
+        - POP_FRQ                  score   0.0
+        - CLN_AFF                  score   2.0
+        - NUL                      score   0.0
+          - NUL_PRD                  score   0.0
+      score:         2.0
+      outcome:       variant_of_uncertain_significance
     ```
 
 === "JSON"

@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of MECP2 c.907_1080del (p.Ser303_Glu360del) against Rett syndrome, drawn from the
 `PVS-v24-MECP2` Practice Variant Set entry.
@@ -22,9 +22,10 @@ An SVCv4 classification of MECP2 c.907_1080del (p.Ser303_Glu360del) against Rett
 
     The variant being classified (VBC) is MECP2 c.907_1080del (p.Ser303_Glu360del); the disease/condition (MDE) is Rett syndrome. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF_+2`, score 2.0) — Affected XX probands (illustrative).
-    - **RNA / coding alteration (CDS)** (`CDS_+4`, score 4.0) — Coding-alteration / critical-domain evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Clinical observation in affected individual(s) (CLN_AFF)** (`CLN_AFF`, score 2.0) — Affected XX probands (illustrative).
+    - **RNA / coding alteration (CDS)** (`CDS`, score 4.0) — Coding-alteration / critical-domain evidence (PFD, illustrative).
+      - `CDS_PRD` (score 4.0) — Structural coding-sequence assessment.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 6.0 → *likely pathogenic*.
 
@@ -33,17 +34,18 @@ An SVCv4 classification of MECP2 c.907_1080del (p.Ser303_Glu360del) against Rett
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): MECP2 c.907_1080del (p.Ser303_Glu360del)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0010726 (Rett syndrome)
-        qualifiers:           moi=XLD; note=X-linked; affected XX and XY count under the monoallelic section. Loss of function is an established disease mechanism.
+        subject (VBC): MECP2 c.907_1080del (p.Ser303_Glu360del)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0010726 (Rett syndrome)
+        qualifiers:    moi=XLD; note=X-linked; affected XX and XY count under the monoallelic section. Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - CLN_AFF_+2   score  2.0
-        - CDS_+4       score  4.0
-      final_score:          6.0
-      score_classification: likely_pathogenic
+        - POP_FRQ                  score   0.0
+        - CLN_AFF                  score   2.0
+        - CDS                      score   4.0
+          - CDS_PRD                  score   4.0
+      score:         6.0
+      outcome:       likely_pathogenic
     ```
 
 === "JSON"

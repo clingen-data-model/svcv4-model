@@ -1,10 +1,5 @@
 # Affected (CLN_AFF)
 
-!!! info "Maturity: Draft"
-
-    Fields and applicability track the [Case model](../../workflows/case-model.md);
-    scoring is documented elsewhere, not computed here.
-
 **CLN_AFF** collects evidence from **affected individuals who carry the VBC** —
 the most common source of case-level support for pathogenicity. It is part of the
 [Case superset](index.md); this page names the portion of that superset it turns

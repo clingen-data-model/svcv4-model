@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of MSH2 c.630G>A (p.Met210Ile) against Lynch syndrome / hereditary non-polyposis colorectal cancer, drawn from the
 `PVS-v25-MSH2` Practice Variant Set entry.
@@ -22,9 +22,12 @@ An SVCv4 classification of MSH2 c.630G>A (p.Met210Ile) against Lynch syndrome / 
 
     The variant being classified (VBC) is MSH2 c.630G>A (p.Met210Ile); the disease/condition (MDE) is Lynch syndrome / hereditary non-polyposis colorectal cancer. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Functional assay (FNC)** (`FNC_-4`, score -4.0) — Functional assay, benign (PFD, illustrative).
-    - **Single-amino-acid change (MIS)** (`MIS_+0`, score 0.0) — Predictive missense evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Functional assay (FNC)** (`FNC`, score -4.0) — Functional assay, benign (PFD, illustrative).
+      - `FNC_ASY` (score -4.0) · *provisional* — Functional assay result.
+    - **Single-amino-acid change (MIS)** (`MIS`, score 0.0) — Predictive missense evidence (PFD, illustrative).
+      - `MIS_PRD` (score 0.0) — In-silico predictive missense assessment.
+        - `MIS_PRD_INIT_REVEL` (score 0.0) · *provisional* — REVEL 0.40 is low; no same-codon informative variants.
 
     Each became an Evidence Line; their scores compose to a Statement final score of -4.0 → *likely benign*.
 
@@ -33,17 +36,20 @@ An SVCv4 classification of MSH2 c.630G>A (p.Met210Ile) against Lynch syndrome / 
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): MSH2 c.630G>A (p.Met210Ile)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0005835 (Lynch syndrome / hereditary non-polyposis colorectal cancer)
-        qualifiers:           moi=AD; note=Loss of function is an established disease mechanism.
+        subject (VBC): MSH2 c.630G>A (p.Met210Ile)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0005835 (Lynch syndrome / hereditary non-polyposis colorectal cancer)
+        qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - FNC_-4       score -4.0
-        - MIS_+0       score  0.0
-      final_score:          -4.0
-      score_classification: likely_benign
+        - POP_FRQ                  score   0.0
+        - FNC                      score  -4.0
+          - FNC_ASY (prov)           score  -4.0
+        - MIS                      score   0.0
+          - MIS_PRD                  score   0.0
+            - MIS_PRD_INIT_REVEL (prov) score   0.0
+      score:         -4.0
+      outcome:       likely_benign
     ```
 
 === "JSON"

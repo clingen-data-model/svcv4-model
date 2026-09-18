@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of AIPL1 c.150C>T (p.Asp50=) against AIPL1-related retinopathy, drawn from the
 `PVS-v13-AIPL1` Practice Variant Set entry.
@@ -22,9 +22,12 @@ An SVCv4 classification of AIPL1 c.150C>T (p.Asp50=) against AIPL1-related retin
 
     The variant being classified (VBC) is AIPL1 c.150C>T (p.Asp50=); the disease/condition (MDE) is AIPL1-related retinopathy. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Population homozygotes/hemizygotes (POP_HMZ)** (`POP_HMZ_-2`, score -2.0) — Population homozygotes (benign, illustrative).
-    - **Single-amino-acid change (MIS)** (`MIS_-2`, score -2.0) — Synonymous / no-impact evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Population homozygotes/hemizygotes (POP_HMZ)** (`POP_HMZ`, score -2.0) — Population homozygotes (benign, illustrative).
+    - **Single-amino-acid change (MIS)** (`MIS`, score -2.0) — Synonymous / no-impact evidence (PFD, illustrative).
+      - `MIS_PRD` (score -2.0) — In-silico predictive missense assessment.
+        - `MIS_PRD_INIT` (score -2.0) · *provisional* — Synonymous change with no predicted splicing impact — benign-leaning.
+        - `PRD_EXON_ALL` (score -2.0) · *provisional* — Exon-relevance multiplier on the predictor initial points (illustrative).
 
     Each became an Evidence Line; their scores compose to a Statement final score of -4.0 → *likely benign*.
 
@@ -33,17 +36,20 @@ An SVCv4 classification of AIPL1 c.150C>T (p.Asp50=) against AIPL1-related retin
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): AIPL1 c.150C>T (p.Asp50=)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0100438 (AIPL1-related retinopathy)
-        qualifiers:           moi=AR; note=Loss of function is an established disease mechanism.
+        subject (VBC): AIPL1 c.150C>T (p.Asp50=)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0100438 (AIPL1-related retinopathy)
+        qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - POP_HMZ_-2   score -2.0
-        - MIS_-2       score -2.0
-      final_score:          -4.0
-      score_classification: likely_benign
+        - POP_FRQ                  score   0.0
+        - POP_HMZ                  score  -2.0
+        - MIS                      score  -2.0
+          - MIS_PRD                  score  -2.0
+            - MIS_PRD_INIT (prov)      score  -2.0
+            - PRD_EXON_ALL (prov)      score  -2.0
+      score:         -4.0
+      outcome:       likely_benign
     ```
 
 === "JSON"

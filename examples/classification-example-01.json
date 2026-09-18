@@ -21,9 +21,9 @@
     "version": "draft-2026-pre-release",
     "description": "Placeholder reference to the baseline SVCv4 specification version in CSpec."
   },
-  "final_score": 4.0,
-  "score_classification": "likely_pathogenic",
-  "strength_direction": null,
+  "score": 4.0,
+  "outcome": "likely_pathogenic",
+  "strength": null, "direction": null,
   "contribution": null,
   "evidence_lines": [
     {
@@ -32,7 +32,7 @@
         "label": "Clinical observation in affected individual(s) — placeholder",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF_+2",
+      "code": "CLN_AFF",
       "evidence": [
         {
           "id": "evidence-item-001",
@@ -46,8 +46,8 @@
         }
       ],
       "score": 2.0,
-      "strength_direction": "pathogenic_moderate",
-      "score_classification": null,
+      "strength": "moderate", "direction": "pathogenic",
+      "outcome": null,
       "contribution": 2.0,
       "description": "Placeholder Evidence Line illustrating an affected-individual observation."
     },
@@ -57,7 +57,7 @@
         "label": "Functional assay — placeholder",
         "version": "draft-2026-pre-release"
       },
-      "code": "FNC_ASY_+2",
+      "code": "FNC_ASY",
       "evidence": [
         {
           "id": "evidence-item-002",
@@ -71,8 +71,8 @@
         }
       ],
       "score": 2.0,
-      "strength_direction": "pathogenic_moderate",
-      "score_classification": null,
+      "strength": "moderate", "direction": "pathogenic",
+      "outcome": null,
       "contribution": 2.0,
       "description": "Placeholder Evidence Line illustrating a functional-assay result."
     }

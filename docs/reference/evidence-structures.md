@@ -8,7 +8,7 @@ Every model is a *permissive superset*: all fields are optional (`| None` / empt
 `extra="forbid"`. Which fields are required / optional / conditional / not-applicable per
 workflow is expressed by the applicability matrix and the SM point rules, not by these types.
 The coded-point fields (`*_points`, `*_combined`, `*_total`) are **capture placeholders** — the
-[reference scorer](scoring.md) computes them; the models themselves store only the raw inputs.
+reference scorer computes them; the models themselves store only the raw inputs.
 
 Two families of workflow exist:
 

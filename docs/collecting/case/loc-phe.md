@@ -1,10 +1,5 @@
 # Phenotype specificity (LOC_PHE)
 
-!!! info "Maturity: Draft"
-
-    Fields and applicability track the [Case model](../../workflows/case-model.md);
-    scoring is documented elsewhere, not computed here.
-
 **LOC_PHE** collects evidence about **how specifically the locus tracks with a
 phenotype** — whether the proband's phenotype points to this gene in particular
 rather than to many genes. It uses the [Case superset](index.md); this page names

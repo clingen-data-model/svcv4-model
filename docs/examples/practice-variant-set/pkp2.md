@@ -7,7 +7,7 @@
 
     This example traces back to a [Practice Variant Set](index.md) entry; the
     entry traces back to the source tab. Values are illustrative — scoring lives
-    in [CSpec](../../reference/cspec-interop.md).
+    in CSpec.
 
 An SVCv4 classification of PKP2 c.1481C>A (p.Ser494Ter, alt transcript NM_004572.4) against arrhythmogenic right ventricular cardiomyopathy, drawn from the
 `PVS-PKP2` Practice Variant Set entry.
@@ -22,8 +22,9 @@ An SVCv4 classification of PKP2 c.1481C>A (p.Ser494Ter, alt transcript NM_004572
 
     The variant being classified (VBC) is PKP2 c.1481C>A (p.Ser494Ter, alt transcript NM_004572.4); the disease/condition (MDE) is arrhythmogenic right ventricular cardiomyopathy. The curator captured:
 
-    - **Population allele frequency (POP_FRQ)** (`POP_FRQ_+0`, score 0.0) — Population frequency (illustrative).
-    - **Absent protein / loss of function (NUL)** (`NUL_+0`, score 0.0) — Transcript-context-limited LoF evidence (PFD, illustrative).
+    - **Population allele frequency (POP_FRQ)** (`POP_FRQ`, score 0.0) — Population frequency (illustrative).
+    - **Absent protein / loss of function (NUL)** (`NUL`, score 0.0) — Transcript-context-limited LoF evidence (PFD, illustrative).
+      - `NUL_PRD` (score 0.0) — Predicted-LoF / structural nonsense assessment.
 
     Each became an Evidence Line; their scores compose to a Statement final score of 0.0 → *variant of uncertain significance*.
 
@@ -32,16 +33,17 @@ An SVCv4 classification of PKP2 c.1481C>A (p.Ser494Ter, alt transcript NM_004572
     ```text
     Statement
       proposition:
-        subjectVariant (VBC): PKP2 c.1481C>A (p.Ser494Ter, alt transcript NM_004572.4)
-        predicate:            is_causal_for
-        objectCondition (MDE): MONDO:0016587 (arrhythmogenic right ventricular cardiomyopathy)
-        qualifiers:           moi=AD; note=Loss of function is an established disease mechanism.
+        subject (VBC): PKP2 c.1481C>A (p.Ser494Ter, alt transcript NM_004572.4)
+        predicate:     is_causal_for
+        object (MDE):  MONDO:0016587 (arrhythmogenic right ventricular cardiomyopathy)
+        qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
       method:        svcv4:baseline
       evidence_lines:
-        - POP_FRQ_+0   score  0.0
-        - NUL_+0       score  0.0
-      final_score:          0.0
-      score_classification: variant_of_uncertain_significance
+        - POP_FRQ                  score   0.0
+        - NUL                      score   0.0
+          - NUL_PRD                  score   0.0
+      score:         0.0
+      outcome:       variant_of_uncertain_significance
     ```
 
 === "JSON"
