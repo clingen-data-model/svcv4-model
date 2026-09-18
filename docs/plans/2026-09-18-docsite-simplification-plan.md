@@ -83,25 +83,48 @@ scientific/informatics reader doesn't share. Two problems, one fix.
 - Add a dated "Built on the GA4GH standard (VA-Spec `1.1.0-ballot.2026-09`)" line
   to `reference/va-spec-profile.md` and the Home scope block — reference pages only.
 
-## 2b. Blocking content task: scrub all v3 / 2015 criteria-code references **[DECIDE: aggressiveness]**
+## 2b. Blocking content task: remove v3 criteria-code *mappings* (not principled differences)
 
-The v4 docs must **stand on their own** — no references to the 2015/v3 guidelines
-or their criteria codes (PVS1, PS/PM/PP/BA/BS/BP…). Sweep results (published pages
-only; `superpowers/` working notes excluded):
+**Refined intent (Larry, 2026-09-18):** the scrub is **not** about erasing the
+high-level, *principled* differences between v3 and v4 — those are fine to state
+(e.g. "v4 is points-based; v3 used strength categories + combining rules"; "a v4
+code names the evidence *type*, with the points shown separately"). The scrub
+targets any **mapping of a specific v3 criteria code to a v4 process** — anything
+that implies a v4 assessment *is / equals / corresponds to* a v3 rule. **We do not
+want v4 users to think there's a straightforward path from a v3 rule assessment to
+v4, even though many assessments overlap or are similar.** Remove the v3 **code
+token** *and* its **association to the v4 process** — wherever it lives: **text,
+figures, or the explainer graphics.**
 
-**Scrub (real v3 references):**
+**Keep (principled, no code mapping):**
 
-| Page | What | Fix |
+- "v4 is points-based; v3 used strength categories + combining rules" — the
+  conceptual shift (`svcv4-in-brief.md`, `summary-table.md`, `glossary.md`).
+- "v4 codes name the evidence type; the points are separate" — the code-shape
+  principle (drop only the *v3 code examples* used to illustrate it).
+- "SVCv4 succeeds the 2015 guidelines" / predecessor lineage — factual, not a
+  per-rule mapping.
+
+**Remove (v3 code ↔ v4-process mappings):**
+
+| Location | Mapping to remove | Result |
 |---|---|---|
-| `overview/svcv4-in-brief.md` | "What changed from v3 to v4" section; `PS4`, `PS4_Moderate`; "succeeding the 2015 Richards et al." | Remove the v3→v4 section; restate points-based framing v4-only; drop code examples |
-| `reference/summary-table.md` | "v3 to v4 code shape" section; `PS4`, `PS4_Moderate` | Remove/rewrite as "SVCv4 code shape" — code names type, `_+N` is the point value |
-| `reference/glossary.md` | SVCv4 def "replaces v3's strength-categories… (SVCv3)" | Drop the v3 comparison clause; define SVCv4 on its own |
-| `workflows/pfd/index.md` | "already capture much of v3's PM1 'critical domain' evidence" | Remove the PM1 reference; state the v4 evidence directly |
-| `examples/v19-tp53.md` | "(PM5-type) evidence" | Drop "(PM5-type)" |
-| `examples/v22-f8.md` | "same-AA (PS1) + same-codon (PM5)" | Drop the `(PS1)`/`(PM5)` parentheticals |
-| `examples/v5-myh7.md` | "PM5-type support" | Reword to the v4 same-residue concept without the code |
-| `reference/scoring-map/population.md` | "SVCv4 chose –3, not BS1's –4" | Drop the `BS1` comparison |
-| `reference/scoring-map/locus.md` | "(BS4-equivalent)" | Drop the `BS4` parenthetical |
+| `overview/svcv4-in-brief.md` | the `PS4` / `PS4_Moderate` **code examples** in the "codes carry type" point | keep the principle; drop the v3 code tokens |
+| `reference/summary-table.md` | the `PS4` / `PS4_Moderate` **code examples** in "code shape" | keep the shape principle; drop the v3 code tokens |
+| `workflows/pfd/index.md` | "already capture much of v3's **PM1** 'critical domain' evidence" | state the v4 evidence directly; no PM1 / v3-process claim |
+| `examples/v19-tp53.md` | "(**PM5**-type) evidence" | drop the code + "-type" association |
+| `examples/v22-f8.md` | "same-AA (**PS1**) + same-codon (**PM5**)" | describe the v4 evidence; drop the `(PS1)`/`(PM5)` mappings |
+| `examples/v5-myh7.md` | "**PM5**-type support" | reword to the v4 same-residue concept; no code |
+| `reference/scoring-map/population.md` | "SVCv4 chose –3, not **BS1**'s –4" | drop the `BS1` equivalence |
+| `reference/scoring-map/locus.md` | "(**BS4**-equivalent)" | drop the `BS4` equivalence |
+
+**Also sweep (not yet audited for v3 codes):**
+
+- **Figures** in `docs/assets/images/` — check any embedded v3 criteria codes /
+  v3↔v4 mapping cells; re-export without them if found.
+- **Explainer graphics** (the claude.ai artifacts + any exported stills in
+  `docs/assets/images/explainers/`) — several predate this rule; audit each for v3
+  code tokens or "= v3 X" mappings before use, per the manifest note.
 
 **Preserve (false positives — do NOT scrub):**
 
@@ -109,16 +132,13 @@ only; `superpowers/` working notes excluded):
   ACMG v3 (all example IDs are `v1…v30`).
 - `Sue Richards (OHSU)` in `reference/credits.md` — a contributor's name.
 - `reference/va-spec-profile.md` line on the 2015 guidelines being an earlier
-  VA-Spec profile — factual lineage about VA-Spec, not a criteria-code mapping;
-  **[DECIDE]** keep (recommended) or drop for strict v4-only purity.
+  VA-Spec profile — VA-Spec lineage, not a criteria-code mapping.
 
-> **[DECIDE] aggressiveness:** recommend removing the two dedicated "v3 → v4"
-> sections outright (a non-VA, v4-first audience doesn't need the contrast) and
-> reducing the inline code mentions to the underlying v4 concept. Confirm and I'll
-> execute in one pass with `mkdocs build --strict` as the gate.
->
-> **Source material** (`source-material/svcv4-supplements/SM02-v3-to-v4-status.txt`,
-> and the figures) is *inputs*, not published — leave as-is unless a figure with a
+> Ready to execute on your go — text edits in one pass with `mkdocs build --strict`
+> as the gate; figures/explainers audited separately (I can't re-export a PNG that
+> has a baked-in v3 code without the source). **Source material**
+> (`source-material/svcv4-supplements/SM02-v3-to-v4-status.txt` and the SM figures)
+> is *inputs*, not published — leave as-is unless a figure with a
 > visible v3 code gets embedded in the site.
 
 > Treat this as **Tier A, item 0** — it gates "shareable with a technical
