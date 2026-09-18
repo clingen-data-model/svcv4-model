@@ -147,7 +147,7 @@ flowchart TD
 
 The scoring is **documented, not computed**. For **critical domains**, SM 7 makes no
 specific point recommendation — v4 substantially strengthened the in-silico predictors
-(which already capture much of v3's PM1 "critical domain" evidence), so adding domain points
+(which already capture much of the critical-domain signal), so adding domain points
 risks *double-counting* (`double_counting_considered` records that the analyst checked this).
 Not every conserved domain is critical: immunoglobulin-like domains generally do not qualify,
 and a duplicated domain (e.g. the BRCA1 BRCT motif) may tolerate disruption of one copy. For

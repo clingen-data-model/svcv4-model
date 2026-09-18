@@ -22,10 +22,10 @@ Group, with publication targeted in *Genetics in Medicine*.
   v4 assigns **points** to each line of evidence and sums them, which is more
   granular, improves calibration, and lets positive and negative evidence
   combine on one scale.
-- **Codes carry type, not strength.** In v3 the strength was baked into the code
-  (e.g. `PS4`, `PS4_Moderate`). In v4 a code names the *type* of evidence
+- **Codes carry type, not strength.** A v4 code names the *type* of evidence
   (e.g. `CLN_AFF` — Clinical observation of an Affected individual) and a
-  **point value** gives it weight (e.g. `CLN_AFF_+1`, `CLN_AFF_+2`).
+  **point value** gives it weight (e.g. `CLN_AFF_+1`, `CLN_AFF_+2`) — rather than
+  baking the strength into the code itself.
 - **Decision-tree "curation SOP."** v4 evidence types are framed as detailed
   decision trees that mimic the steps a curator follows, rather than simple
   Met / Not-Met criteria.

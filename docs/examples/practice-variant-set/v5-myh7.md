@@ -116,7 +116,7 @@ the other two probands follow the same shape and are summarized inside the
   with the POP_FRQ method.
 - **LOC_PHE** is applicable (probands are counted) but is not scored here — the
   tab lacks the gene-specificity and diagnostic-yield inputs the method needs.
-- **PM5-type support** is not a clinical line: it is a single-amino-acid-change
+- **Same-residue support** is not a clinical line: it is a single-amino-acid-change
   (`MIS`) datum, and the non-VBC comparator allele rides along as one of that
   workflow's evidence items. Because the comparator is a VUS, it carries little
   or no positive weight.

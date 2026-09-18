@@ -127,7 +127,7 @@ and capped at +4.0.
 | `LOC_SEG`         | roll-up = Σ observations | **0.0 … +4.0** |
 
 † summed across affected co-segregants (multiplier), then capped at +4.0.
-‡ a non-segregation **zeroes** any co-segregation points **and** assigns **−4.0** (BS4-equivalent) for
+‡ a non-segregation **zeroes** any co-segregation points **and** assigns **−4.0** for
 **AD / AR-homozygous / X-linked** — but **not plain AR** (an AR non-segregation may just mean another
 locus explains that family, not benignity of the VBC).
 

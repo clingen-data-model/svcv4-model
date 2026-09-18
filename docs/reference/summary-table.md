@@ -21,14 +21,12 @@ For a given (VBC, MDE) curation:
    Line — recording the method code, the evidence used, and the score
    produced.
 
-## v3 to v4 code shape
+## SVCv4 code shape
 
-SVCv4 separates evidence *type* from *weight* in its codes:
-
-- **v3** baked strength into the code: `PS4`, `PS4_Moderate`,
-  `PS4_Supporting`.
-- **v4** uses `<EvidenceCode>_+<points>` form: e.g. `CLN_AFF_+1`,
-  `CLN_AFF_+2`.
+SVCv4 separates evidence *type* from *weight* in its codes: a code names the
+evidence **type** and a suffix gives the **points** — `<EvidenceCode>_+<points>`
+form, e.g. `CLN_AFF_+1`, `CLN_AFF_+2` — rather than baking the strength into the
+code itself.
 
 The Classification Model carries the code as an opaque string on the
 Evidence Line (`code` slot). Strength labels travel separately in the
