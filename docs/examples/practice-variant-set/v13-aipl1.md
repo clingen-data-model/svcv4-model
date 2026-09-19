@@ -27,7 +27,7 @@ An SVCv4 classification of AIPL1 c.150C>T (p.Asp50=) against AIPL1-related retin
     - **Single-amino-acid change (MIS)** (`MIS`, score -2.0) — Synonymous / no-impact evidence (PFD, illustrative).
       - `MIS_PRD` (score -2.0) — In-silico predictive missense assessment.
         - `MIS_PRD_INIT` (score -2.0) · *provisional* — Synonymous change with no predicted splicing impact — benign-leaning.
-        - `PRD_EXON_ALL` (score -2.0) · *provisional* — Exon-relevance multiplier on the predictor initial points (illustrative).
+        - `MIS_PRD_EXON_ALL` (score -2.0) · *provisional* — Exon-relevance multiplier on the predictor initial points (illustrative).
 
     Each became an Evidence Line; their scores compose to a Statement final score of -4.0 → *likely benign*.
 
@@ -47,7 +47,7 @@ An SVCv4 classification of AIPL1 c.150C>T (p.Asp50=) against AIPL1-related retin
         - MIS                      score  -2.0
           - MIS_PRD                  score  -2.0
             - MIS_PRD_INIT (prov)      score  -2.0
-            - PRD_EXON_ALL (prov)      score  -2.0
+            - MIS_PRD_EXON_ALL (prov)  score  -2.0
       score:         -4.0
       outcome:       likely_benign
     ```
