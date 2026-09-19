@@ -163,11 +163,11 @@
             },
             {
               "method": {
-                "code": "svcv4:PRD_EXON_ALL",
+                "code": "svcv4:MIS_PRD_EXON_ALL",
                 "label": "Exon relevance multiplier",
                 "version": "draft-2026-pre-release"
               },
-              "code": "PRD_EXON_ALL",
+              "code": "MIS_PRD_EXON_ALL",
               "evidence": [],
               "score": -2.0,
               "strength": null,
