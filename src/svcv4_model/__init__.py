@@ -11,6 +11,16 @@ Community Profile as the SVCv4 Standards and the VA-Spec profile
 firm up. See `docs/concepts/` for the conceptual narrative.
 """
 
+from svcv4_model.assessment import (
+    ASSESSMENT_TYPES,
+    METHOD_CONFIGS,
+    AssessmentType,
+    DataItemSpec,
+    MethodConfig,
+    make_method_id,
+    parse_method_id,
+    resolve,
+)
 from svcv4_model.canonical_splice import CanonicalSpliceAssessment
 from svcv4_model.case import (
     MOI,
@@ -146,6 +156,14 @@ __all__ = [
     "AgeUnit",
     "AnimalModelEvidence",
     "AnimalModelType",
+    "ASSESSMENT_TYPES",
+    "AssessmentType",
+    "DataItemSpec",
+    "METHOD_CONFIGS",
+    "MethodConfig",
+    "make_method_id",
+    "parse_method_id",
+    "resolve",
     "CanonicalSpliceAssessment",
     "Case",
     "CaseControlStudyEvidence",

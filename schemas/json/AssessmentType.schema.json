@@ -1,0 +1,160 @@
+{
+  "$defs": {
+    "DataItemSpec": {
+      "additionalProperties": false,
+      "description": "One evidence data item an assessment consumes.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "example": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A concrete example value, for docs.",
+          "title": "Example"
+        },
+        "key": {
+          "description": "Stable key for the data item (a DataItem subtype).",
+          "title": "Key",
+          "type": "string"
+        },
+        "role": {
+          "description": "Why it's needed: input (scored), gate, router, or provenance.",
+          "enum": [
+            "input",
+            "gate",
+            "router",
+            "provenance"
+          ],
+          "title": "Role",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "role"
+      ],
+      "title": "DataItemSpec",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The reusable *shape* of an assessment \u2014 stable across configurations.",
+  "properties": {
+    "data_items": {
+      "items": {
+        "$ref": "#/$defs/DataItemSpec"
+      },
+      "title": "Data Items",
+      "type": "array"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "group": {
+      "description": "Pipeline role.",
+      "enum": [
+        "router",
+        "initial",
+        "adjuster",
+        "module",
+        "gate"
+      ],
+      "title": "Group",
+      "type": "string"
+    },
+    "method_type": {
+      "description": "Stable assessment name; the value of `specifiedBy.methodType`.",
+      "title": "Method Type",
+      "type": "string"
+    },
+    "output_kind": {
+      "description": "`points` (adds a score), `multiplier` (scales), or `route` (picks a lane).",
+      "enum": [
+        "points",
+        "multiplier",
+        "route"
+      ],
+      "title": "Output Kind",
+      "type": "string"
+    },
+    "params": {
+      "description": "Parameter names a MethodConfig may set/override.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Params",
+      "type": "array"
+    },
+    "produces": {
+      "description": "Code(s) / code-patterns this assessment can emit.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Produces",
+      "type": "array"
+    },
+    "score_max": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Score Max"
+    },
+    "score_min": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Score Min"
+    },
+    "title": {
+      "description": "Human-readable label.",
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "method_type",
+    "title",
+    "group",
+    "output_kind"
+  ],
+  "title": "AssessmentType",
+  "type": "object"
+}
