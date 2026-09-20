@@ -1,0 +1,53 @@
+{
+  "additionalProperties": false,
+  "description": "One evidence data item an assessment consumes.",
+  "properties": {
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "example": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "A concrete example value, for docs.",
+      "title": "Example"
+    },
+    "key": {
+      "description": "Stable key for the data item (a DataItem subtype).",
+      "title": "Key",
+      "type": "string"
+    },
+    "role": {
+      "description": "Why it's needed: input (scored), gate, router, or provenance.",
+      "enum": [
+        "input",
+        "gate",
+        "router",
+        "provenance"
+      ],
+      "title": "Role",
+      "type": "string"
+    }
+  },
+  "required": [
+    "key",
+    "role"
+  ],
+  "title": "DataItemSpec",
+  "type": "object"
+}
