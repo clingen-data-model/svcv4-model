@@ -2,7 +2,7 @@
   "$defs": {
     "DataItemSpec": {
       "additionalProperties": false,
-      "description": "One evidence data item an assessment consumes.",
+      "description": "One evidence data item a pattern consumes.",
       "properties": {
         "description": {
           "anyOf": [
@@ -26,16 +26,13 @@
             }
           ],
           "default": null,
-          "description": "A concrete example value, for docs.",
           "title": "Example"
         },
         "key": {
-          "description": "Stable key for the data item (a DataItem subtype).",
           "title": "Key",
           "type": "string"
         },
         "role": {
-          "description": "Why it's needed: input (scored), gate, router, or provenance.",
           "enum": [
             "input",
             "gate",
@@ -55,7 +52,7 @@
     }
   },
   "additionalProperties": false,
-  "description": "The reusable *shape* of an assessment \u2014 stable across configurations.",
+  "description": "A reusable assessment **pattern** \u2014 the value of ``specifiedBy.methodType``.",
   "properties": {
     "data_items": {
       "items": {
@@ -77,24 +74,22 @@
       "title": "Description"
     },
     "group": {
-      "description": "Pipeline role.",
       "enum": [
+        "rollup",
         "router",
         "initial",
         "adjuster",
-        "module",
-        "gate"
+        "module"
       ],
       "title": "Group",
       "type": "string"
     },
     "method_type": {
-      "description": "Stable assessment name; the value of `specifiedBy.methodType`.",
+      "description": "Stable, descriptive pattern name.",
       "title": "Method Type",
       "type": "string"
     },
     "output_kind": {
-      "description": "`points` (adds a score), `multiplier` (scales), or `route` (picks a lane).",
       "enum": [
         "points",
         "multiplier",
@@ -104,19 +99,10 @@
       "type": "string"
     },
     "params": {
-      "description": "Parameter names a MethodConfig may set/override.",
       "items": {
         "type": "string"
       },
       "title": "Params",
-      "type": "array"
-    },
-    "produces": {
-      "description": "Code(s) / code-patterns this assessment can emit.",
-      "items": {
-        "type": "string"
-      },
-      "title": "Produces",
       "type": "array"
     },
     "score_max": {
@@ -144,7 +130,6 @@
       "title": "Score Min"
     },
     "title": {
-      "description": "Human-readable label.",
       "title": "Title",
       "type": "string"
     }

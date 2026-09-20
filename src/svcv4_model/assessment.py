@@ -1,20 +1,18 @@
-"""Assessment registry — the reusable rulesets that produce SVCv4 evidence-line scores.
+"""Assessment registry — SVCv4 rulesets as a hierarchical method.
 
-Every scored branch of a workflow is an **assessment**. Its stable name is the
-``methodType`` carried on the ``specifiedBy`` (``Method``) of an evidence-line
-``Statement``. This module defines:
+Two layers, deliberately separated:
 
-- ``AssessmentType`` — the *shape* of an assessment (data items it needs, what it
-  produces, which parameters may be reconfigured). Keyed by ``method_type`` in
-  ``ASSESSMENT_TYPES``. Stable across baseline and every specialization.
-- ``MethodConfig`` — a *configured instance* of an assessment: the baseline
-  framework's settings, or a specialised alternative for a gene / disease area.
-  Identified by a namespaced, versioned id ``svcv4-<scope>:<method_type>:<version>``.
+- ``AssessmentType`` — a **pattern** (the general *type* of assessment). Its name
+  is the ``methodType`` on an evidence-line ``Statement``. A pattern is **reusable**:
+  the same pattern (e.g. ``functional-assay-assessment``) appears in many pathways.
+- ``Ruleset`` — a **specific, registered ruleset**: one node of a workflow pathway,
+  with a unique id ``svcv4-<scope>:<CODE>:<version>`` named for its SVCv4 code, its
+  own configured ``params``, and a ``parent`` (its place in the hierarchy). A
+  registered ruleset is **never reused** — each pathway node is its own id, even when
+  two nodes share a ``method_type`` pattern (they may carry different values).
 
-The split is deliberate: ``methodType`` keeps results **comparable** ("this is a
-mechanism-exon assessment"); ``specifiedBy.id`` keeps them **reproducible** (exactly
-which configured ruleset ran). A specialisation reuses the same ``method_type`` but
-mints a new ``id`` under its own scope — it does not mint a new code each time.
+The whole **SVCv4 method** is therefore the tree of baseline ``Ruleset`` nodes; a
+specialization overrides individual nodes by id (same ``method_type``, new scoped id).
 """
 
 from __future__ import annotations
@@ -23,78 +21,58 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-# --------------------------------------------------------------------------- #
-# vocabularies
-# --------------------------------------------------------------------------- #
-
-
-GROUP = Literal["router", "initial", "adjuster", "module", "gate"]
+GROUP = Literal["rollup", "router", "initial", "adjuster", "module"]
 DATA_ROLE = Literal["input", "gate", "router", "provenance"]
 OUTPUT_KIND = Literal["points", "multiplier", "route"]
 
 
 class DataItemSpec(BaseModel):
-    """One evidence data item an assessment consumes."""
+    """One evidence data item a pattern consumes."""
 
     model_config = ConfigDict(extra="forbid")
 
-    key: str = Field(description="Stable key for the data item (a DataItem subtype).")
-    role: DATA_ROLE = Field(
-        description="Why it's needed: input (scored), gate, router, or provenance."
-    )
-    description: str | None = Field(default=None)
-    example: str | None = Field(default=None, description="A concrete example value, for docs.")
+    key: str
+    role: DATA_ROLE
+    description: str | None = None
+    example: str | None = None
 
 
 class AssessmentType(BaseModel):
-    """The reusable *shape* of an assessment — stable across configurations."""
+    """A reusable assessment **pattern** — the value of ``specifiedBy.methodType``."""
 
     model_config = ConfigDict(extra="forbid")
 
-    method_type: str = Field(
-        description="Stable assessment name; the value of `specifiedBy.methodType`."
-    )
-    title: str = Field(description="Human-readable label.")
-    group: GROUP = Field(description="Pipeline role.")
-    output_kind: OUTPUT_KIND = Field(
-        description="`points` (adds a score), `multiplier` (scales), or `route` (picks a lane)."
-    )
-    produces: list[str] = Field(
-        default_factory=list,
-        description="Code(s) / code-patterns this assessment can emit.",
-    )
-    score_min: float | None = Field(default=None)
-    score_max: float | None = Field(default=None)
+    method_type: str = Field(description="Stable, descriptive pattern name.")
+    title: str
+    group: GROUP
+    output_kind: OUTPUT_KIND
+    score_min: float | None = None
+    score_max: float | None = None
     data_items: list[DataItemSpec] = Field(default_factory=list)
-    params: list[str] = Field(
-        default_factory=list,
-        description="Parameter names a MethodConfig may set/override.",
-    )
-    description: str | None = Field(default=None)
+    params: list[str] = Field(default_factory=list)
+    description: str | None = None
 
 
-class MethodConfig(BaseModel):
-    """A configured instance of an ``AssessmentType`` — baseline or specialised."""
+class Ruleset(BaseModel):
+    """A specific registered ruleset — one node of a pathway. Its id is never reused."""
 
     model_config = ConfigDict(extra="forbid")
 
-    id: str = Field(
-        description="`svcv4-<scope>:<method_type>:<version>` — the value of `specifiedBy.id`."
-    )
-    method_type: str = Field(description="The AssessmentType this configures.")
-    scope: str = Field(description="`baseline`, or a specialisation scope e.g. `gene-MYH7`.")
-    version: str = Field(description="Config version (independent of the framework version).")
-    params: dict[str, Any] = Field(
-        default_factory=dict,
-        description="Configured parameter values (overrides of the baseline).",
-    )
-    description: str | None = Field(default=None)
+    id: str = Field(description="`svcv4-<scope>:<CODE>:<version>` — value of `specifiedBy.id`.")
+    code: str = Field(description="The SVCv4 code this node produces, e.g. `MIS_PRD_EXON`.")
+    label: str = Field(description="Human method name for this exact pathway node.")
+    method_type: str = Field(description="The AssessmentType (pattern) this instantiates.")
+    scope: str = Field(description="`baseline` or a specialisation scope, e.g. `gene-MYH7`.")
+    version: str = Field(default="1.0")
+    parent: str | None = Field(default=None, description="Parent ruleset id (hierarchy).")
+    params: dict[str, Any] = Field(default_factory=dict)
+    description: str | None = None
 
     @field_validator("id")
     @classmethod
     def _id_shape(cls, v: str) -> str:
         if not v.startswith("svcv4-") or v.count(":") != 2:
-            raise ValueError("Method id must be 'svcv4-<scope>:<method_type>:<version>'")
+            raise ValueError("Ruleset id must be 'svcv4-<scope>:<CODE>:<version>'")
         return v
 
 
@@ -103,462 +81,395 @@ class MethodConfig(BaseModel):
 # --------------------------------------------------------------------------- #
 
 
-def make_method_id(scope: str, method_type: str, version: str) -> str:
-    """Build a Method id: ``svcv4-<scope>:<method_type>:<version>``."""
-    return f"svcv4-{scope}:{method_type}:{version}"
+def make_ruleset_id(scope: str, code: str, version: str = "1.0") -> str:
+    return f"svcv4-{scope}:{code}:{version}"
 
 
-def parse_method_id(method_id: str) -> tuple[str, str, str]:
-    """Return ``(scope, method_type, version)`` from a Method id."""
-    ns, method_type, version = method_id.split(":")
-    return ns.removeprefix("svcv4-"), method_type, version
+def parse_ruleset_id(rid: str) -> tuple[str, str, str]:
+    ns, code, version = rid.split(":")
+    return ns.removeprefix("svcv4-"), code, version
 
 
 # --------------------------------------------------------------------------- #
-# registry helpers
+# registries + helpers
 # --------------------------------------------------------------------------- #
-
-
-def _di(
-    key: str, role: DATA_ROLE, example: str | None = None, description: str | None = None
-) -> DataItemSpec:
-    return DataItemSpec(key=key, role=role, example=example, description=description)
-
-
-def register_assessment(a: AssessmentType) -> AssessmentType:
-    ASSESSMENT_TYPES[a.method_type] = a
-    return a
-
-
-def register_config(c: MethodConfig) -> MethodConfig:
-    scope, mt, _ = parse_method_id(c.id)
-    if mt != c.method_type:
-        raise ValueError(f"id method_type '{mt}' != config.method_type '{c.method_type}'")
-    if c.method_type not in ASSESSMENT_TYPES:
-        raise ValueError(f"unknown method_type '{c.method_type}'")
-    METHOD_CONFIGS[c.id] = c
-    return c
-
-
-def resolve(method_id: str) -> MethodConfig:
-    """Resolve a ``specifiedBy.id`` to its registered ``MethodConfig``."""
-    return METHOD_CONFIGS[method_id]
-
 
 ASSESSMENT_TYPES: dict[str, AssessmentType] = {}
-METHOD_CONFIGS: dict[str, MethodConfig] = {}
+RULESETS: dict[str, Ruleset] = {}
+
+
+def _pat(
+    method_type: str,
+    title: str,
+    group: GROUP,
+    output_kind: OUTPUT_KIND,
+    smin: float | None = None,
+    smax: float | None = None,
+    params: tuple[str, ...] = (),
+    data_items: tuple[DataItemSpec, ...] = (),
+) -> None:
+    ASSESSMENT_TYPES[method_type] = AssessmentType(
+        method_type=method_type,
+        title=title,
+        group=group,
+        output_kind=output_kind,
+        score_min=smin,
+        score_max=smax,
+        params=list(params),
+        data_items=list(data_items),
+    )
+
+
+def _di(key: str, role: DATA_ROLE, example: str | None = None) -> DataItemSpec:
+    return DataItemSpec(key=key, role=role, example=example)
+
+
+def ruleset(
+    code: str,
+    label: str,
+    method_type: str,
+    *,
+    parent: str | None = None,
+    scope: str = "baseline",
+    version: str = "1.0",
+    params: dict[str, Any] | None = None,
+) -> Ruleset:
+    if method_type not in ASSESSMENT_TYPES:
+        raise ValueError(f"unknown method_type '{method_type}' for {code}")
+    rid = make_ruleset_id(scope, code, version)
+    if rid in RULESETS:
+        raise ValueError(f"ruleset id already registered (no reuse): {rid}")
+    parent_id = make_ruleset_id(scope, parent, version) if parent else None
+    if parent_id and parent_id not in RULESETS:
+        raise ValueError(f"parent {parent_id} not registered before {rid}")
+    r = Ruleset(
+        id=rid,
+        code=code,
+        label=label,
+        method_type=method_type,
+        scope=scope,
+        version=version,
+        parent=parent_id,
+        params=params or {},
+    )
+    RULESETS[rid] = r
+    return r
+
+
+def resolve(rid: str) -> Ruleset:
+    return RULESETS[rid]
+
+
+def children(rid: str) -> list[Ruleset]:
+    return [r for r in RULESETS.values() if r.parent == rid]
+
+
+def roots(scope: str = "baseline") -> list[Ruleset]:
+    return [r for r in RULESETS.values() if r.parent is None and r.scope == scope]
 
 
 # --------------------------------------------------------------------------- #
-# PRD-family assessment types (grounded in SM 6 / 8 / 11 / 18 / 20)
+# patterns (methodType vocabulary)
 # --------------------------------------------------------------------------- #
 
-register_assessment(
-    AssessmentType(
-        method_type="nmd-prediction-assessment",
-        title="NMD prediction (router)",
-        group="router",
-        output_kind="route",
-        produces=["routes NUL/CDS"],
-        params=["nmd_upstream_nt"],
-        data_items=[
-            _di("ptc_vs_last_junction", "router", "60 nt upstream ⇒ NMD"),
-            _di("exon_count", "router", "single-exon ⇒ no NMD"),
-            _di("start_proximity", "provenance", "possible 5′ NMD escape"),
-        ],
-        description="PTC ≥ nmd_upstream_nt upstream of the last junction ⇒ NUL lane; else CDS.",
-    )
+# HOD — names as specified by the SVCv4 team
+_pat("population-observation-assessment", "Population observations (POP)", "rollup", "points")
+_pat(
+    "population-frequency-assessment",
+    "Population allele frequency",
+    "initial",
+    "points",
+    -6.0,
+    0.0,
+    ("fold_thresholds",),
+    (_di("faf", "input", "gnomAD FAF 0.00072"), _di("daft", "input", "0.000118")),
 )
-register_assessment(
-    AssessmentType(
-        method_type="alt-met-rescue-assessment",
-        title="Alternative-Met rescue (router)",
-        group="router",
-        output_kind="route",
-        produces=["routes NUL/CDS"],
-        params=[],
-        data_items=[
-            _di("alt_met_functional_rescue", "router", "truncated protein retains function"),
-            _di("no_plp_between_starts", "router", "no P/LP between Met1 and alt-Met"),
-        ],
-        description="Rescue evidence ⇒ leave NUL for the CDS lane.",
-    )
+_pat(
+    "population-observation-homo-hemizygote-assessment",
+    "Homozygote / hemizygote burden",
+    "initial",
+    "points",
+    -8.0,
+    0.0,
+    ("per_obs_weight",),
+    (
+        _di("homozygote_count", "input"),
+        _di("hemizygote_count", "input"),
+        _di("moi", "input"),
+        _di("hmz_eligible", "gate"),
+    ),
 )
-register_assessment(
-    AssessmentType(
-        method_type="insilico-missense-predictor-assessment",
-        title="In-silico missense predictor",
-        group="initial",
-        output_kind="points",
-        produces=["MIS_PRD_INIT_*"],
-        score_min=-4.0,
-        score_max=4.0,
-        params=["predictor", "calibration_thresholds"],
-        data_items=[
-            _di("predictor", "input", "REVEL"),
-            _di("raw_score", "input", "0.972 ⇒ +4.0"),
-            _di("calibration", "provenance", "REVEL ≥ 0.932 ⇒ +4.0"),
-        ],
-        description="One pre-selected calibrated predictor sets the missense initial points.",
-    )
+_pat("clinical-observation-assessment", "Clinical observations (CLN)", "rollup", "points")
+_pat(
+    "affected-observation-assessment",
+    "Affected proband",
+    "initial",
+    "points",
+    -8.0,
+    8.0,
+    ("mono_table", "biallelic_table"),
+    (
+        _di("pheno_specificity_for_mde", "input", "SPECIFIC/CONSISTENT/INCONSISTENT"),
+        _di("moi", "gate", "selects mono vs biallelic table"),
+        _di("pop_frq_points", "gate", "NA unless in {0.0,-1.0}"),
+    ),
 )
-register_assessment(
-    AssessmentType(
-        method_type="nmd-initial-points-assessment",
-        title="NMD initial points",
-        group="initial",
-        output_kind="points",
-        produces=["NUL_PRD"],
-        score_min=0.0,
-        score_max=6.0,
-        params=["award"],
-        data_items=[_di("nmd_predicted", "input", "true ⇒ +6.0")],
-        description="Fixed initial points when NMD is predicted (no alt-Met rescue).",
-    )
+_pat(
+    "unaffected-observation-assessment",
+    "Unaffected carrier",
+    "initial",
+    "points",
+    -8.0,
+    0.0,
+    ("point_table",),
+    (_di("age_matched_penetrance", "input"), _di("vbc_zygosity", "input")),
 )
-register_assessment(
-    AssessmentType(
-        method_type="protein-loss-assessment",
-        title="Protein-loss / critical-domain",
-        group="initial",
-        output_kind="points",
-        produces=["CDS_PRD"],
-        score_min=-1.0,
-        score_max=6.0,
-        params=["tier_points"],
-        data_items=[
-            _di("protein_fraction_reduced", "input", ">50% lost ⇒ +6.0"),
-            _di("critical_domain_loss", "input", "alters critical motif ⇒ +6.0"),
-            _di("alt_met_functional", "input", "functional alt-start ⇒ −1.0"),
-        ],
-        description="Initial points for CDS lanes: protein lost / criticality (first hit wins).",
-    )
+_pat(
+    "affected-alternative-observation-assessment",
+    "Alternative cause",
+    "initial",
+    "points",
+    -8.0,
+    0.0,
+    ("point_table",),
+    (_di("pheno_severity", "input"), _di("additional_variants", "input")),
 )
-register_assessment(
-    AssessmentType(
-        method_type="splice-prediction-assessment",
-        title="Splice prediction",
-        group="initial",
-        output_kind="points",
-        produces=["SPL_PRD"],
-        score_min=0.0,
-        score_max=3.0,
-        params=["predictor", "calibration_thresholds"],
-        data_items=[
-            _di("splice_prediction", "input", "SpliceAI Δ 0.82 ⇒ likely"),
-            _di("splice_frameshift_nmd", "router", "PTC ≥50 nt upstream ⇒ NMD sub-path"),
-        ],
-        description="In-silico splice prediction; sub-routes on frameshift & NMD.",
-    )
+_pat(
+    "affected-denovo-observation-assessment",
+    "De-novo occurrence",
+    "initial",
+    "points",
+    -8.0,
+    8.0,
+    ("point_table",),
+    (_di("confirmed_parental_relationship", "input"), _di("pheno_specificity_for_mde", "input")),
 )
-register_assessment(
-    AssessmentType(
-        method_type="exon-transcript-relevance-assessment",
-        title="Exon / transcript relevance",
-        group="adjuster",
-        output_kind="multiplier",
-        produces=["MIS_PRD_EXON_*"],
-        score_min=0.0,
-        score_max=1.0,
-        params=["tier_multipliers"],
-        data_items=[
-            _di("exon_relevance", "input", "All ⇒ ×1.0 · Few ⇒ ×0"),
-            _di("mane_status", "gate", "not in MANE ⇒ only Few"),
-            _di("tissue_expression", "provenance", "GTEx / pext"),
-        ],
-        description="Exon axis only (missense) — mechanism axis is not applied on MIS_PRD.",
-    )
+_pat(
+    "case-control-observation-assessment",
+    "Case-control study",
+    "initial",
+    "points",
+    -8.0,
+    8.0,
+    ("or_thresholds",),
+    (_di("odds_ratio", "input"), _di("case_count", "input"), _di("control_count", "input")),
 )
-register_assessment(
-    AssessmentType(
-        method_type="mechanism-exon-relevance-assessment",
-        title="Mechanism × exon relevance (SM 18)",
-        group="adjuster",
-        output_kind="multiplier",
-        produces=["NUL_PRD", "CDS_PRD", "SPL_PRD"],
-        score_min=0.0,
-        score_max=1.0,
-        params=["matrix", "gdv_gate"],
-        data_items=[
-            _di("gencc_mechanism", "input", "Established ⇒ 1.0 · Suspected ⇒ 0.25"),
-            _di("gene_disease_validity", "gate", "below Moderate ⇒ Uncertain ⇒ ×0"),
-            _di("exon_relevance", "input", "Most ⇒ ×0.5"),
-            _di("mane_status", "gate", "not in MANE ⇒ only Few"),
-        ],
-        description="Full SM 18 matrix — both mechanism and exon axes, on positive initial points.",
-    )
+_pat("locus-specificity-assessment", "Locus specificity (LOC)", "rollup", "points")
+_pat(
+    "specific-phenotype-assessment",
+    "Phenotype specificity",
+    "initial",
+    "points",
+    -8.0,
+    8.0,
+    ("specificity_table",),
+    (
+        _di("gene_specificity_for_phenotypes", "input"),
+        _di("testing.diagnostic_yield_for_phenotypes", "input"),
+    ),
 )
-register_assessment(
-    AssessmentType(
-        method_type="splice-assay-assessment",
-        title="Splice assay",
-        group="module",
-        output_kind="points",
-        produces=["SPL_SPA"],
-        score_min=0.0,
-        score_max=6.0,
-        params=["calibration"],
-        data_items=[
-            _di("aberrant_product_level", "input", "near-complete ⇒ 100% of SPL_PRD"),
-            _di("concordance", "gate", "discordant ⇒ re-route"),
-        ],
-        description="RNA/splice data supplementing the SPL_PRD prediction.",
-    )
-)
-register_assessment(
-    AssessmentType(
-        method_type="functional-assay-assessment",
-        title="Functional assay (generic)",
-        group="module",
-        output_kind="points",
-        produces=["*_FXN"],
-        score_min=-8.0,
-        score_max=8.0,
-        params=["calibration"],
-        data_items=[
-            _di("assay_result", "input", "loss of transactivation ⇒ +4"),
-            _di("calibrated_weight", "input", "OddsPath / MaveDB"),
-            _di("flow_concordance", "gate", "must confirm this flow's prediction"),
-        ],
-        description="Generic functional module appended in every flow (*_FXN).",
-    )
-)
-register_assessment(
-    AssessmentType(
-        method_type="informative-variants-assessment",
-        title="Informative variants (generic)",
-        group="module",
-        output_kind="points",
-        produces=["*_INF"],
-        score_min=-8.0,
-        score_max=8.0,
-        params=["point_values", "relatedness_rule"],
-        data_items=[
-            _di("comparator_variant", "input", "same-AA c.1420G>A"),
-            _di("classification_tier", "input", "P ⇒ +4 · LP ⇒ +2"),
-            _di("order_first_additional", "input", "first vs additional"),
-            _di("relatedness", "gate", "flow-specific relatedness rule"),
-            _di("grantham", "provenance", "distinct-AA Grantham comparison"),
-        ],
-        description="Generic informative-variants module (*_INF); relatedness rule per flow.",
-    )
+_pat(
+    "segregation-with-disease-assessment",
+    "Co-segregation",
+    "initial",
+    "points",
+    -4.0,
+    4.0,
+    ("seg_point_tiers", "nonseg_flip"),
+    (
+        _di("relatives", "input"),
+        _di("cosegregation_count", "input"),
+        _di("moi", "gate"),
+        _di("non_segregation", "gate"),
+    ),
 )
 
-
-# --------------------------------------------------------------------------- #
-# HOD-family assessment types (grounded in SM 3 / 4 / 5)
-# --------------------------------------------------------------------------- #
-
-register_assessment(
-    AssessmentType(
-        method_type="population-frequency-assessment",
-        title="Population allele frequency",
-        group="initial",
-        output_kind="points",
-        produces=["POP_FRQ"],
-        score_min=-6.0,
-        score_max=0.0,
-        params=["fold_thresholds"],
-        data_items=[
-            _di("faf", "input", "gnomAD FAF 0.00072"),
-            _di("daft", "input", "DAFT 0.000118"),
-            _di(
-                "daft_calculator_inputs",
-                "provenance",
-                "prevalence · penetrance · locus/allelic heterogeneity · inheritance",
-            ),
-        ],
-        description="Benignity from FAF/DAFT fold (SM 3). Benignity-only (≤0).",
-    )
+# PFD — rollups + MIS_PRD (named by the team) + shared/proposed patterns
+_pat("missense-variant-assessment", "Missense variant (MIS)", "rollup", "points")
+_pat("null-variant-assessment", "Null / nonsense variant (NUL)", "rollup", "points")
+_pat(
+    "single-aa-change-prediction-assessment",
+    "Single-AA-change prediction (MIS_PRD)",
+    "rollup",
+    "points",
+    -4.0,
+    4.0,
 )
-register_assessment(
-    AssessmentType(
-        method_type="homozygote-burden-assessment",
-        title="Homozygote / hemizygote burden",
-        group="initial",
-        output_kind="points",
-        produces=["POP_HMZ"],
-        score_min=-8.0,
-        score_max=0.0,
-        params=["per_obs_weight"],
-        data_items=[
-            _di("homozygote_count", "input", "count in population DB"),
-            _di("hemizygote_count", "input", "X-linked only"),
-            _di("moi", "input", "AD ⇒ −1.0/obs · else −0.5/obs"),
-            _di("hmz_eligible", "gate", "near-100% penetrance; affecteds not expected"),
-        ],
-        description="Benignity from homozygous/hemizygous observations (SM 3). Benignity-only.",
-    )
+_pat(
+    "null-predictive-assessment", "Null predictive roll-up (NUL_PRD)", "rollup", "points", 0.0, 6.0
 )
-register_assessment(
-    AssessmentType(
-        method_type="affected-proband-assessment",
-        title="Affected proband (CLN_AFF)",
-        group="initial",
-        output_kind="points",
-        produces=["CLN_AFF"],
-        score_min=-8.0,
-        score_max=8.0,
-        params=["mono_table", "biallelic_table"],
-        data_items=[
-            _di("pheno_specificity_for_mde", "input", "SPECIFIC / CONSISTENT / INCONSISTENT"),
-            _di("testing.covers_all_genes_relevant_to_mde", "input", "TRUE"),
-            _di("vbc_zygosity", "input", "HET / HOM"),
-            _di("moi", "gate", "selects monoallelic vs biallelic table"),
-            _di("pop_frq_points", "gate", "NA unless in {0.0, −1.0}"),
-        ],
-        description="Per-proband affected observation (SM 4); MOI selects the scoring table.",
-    )
+_pat(
+    "insilico-predictor-assessment",
+    "In-silico predictor",
+    "initial",
+    "points",
+    -4.0,
+    4.0,
+    ("predictor", "calibration_thresholds"),
+    (_di("predictor", "input", "REVEL"), _di("raw_score", "input", "0.972 ⇒ +4.0")),
 )
-register_assessment(
-    AssessmentType(
-        method_type="de-novo-assessment",
-        title="De-novo occurrence (CLN_DNV)",
-        group="initial",
-        output_kind="points",
-        produces=["CLN_DNV"],
-        score_min=-8.0,
-        score_max=8.0,
-        params=["point_table"],
-        data_items=[
-            _di("confirmed_parental_relationship", "input", "confirmed vs assumed"),
-            _di("pheno_specificity_for_mde", "input", "SPECIFIC / CONSISTENT"),
-            _di("testing.covers_all_genes_relevant_to_mde", "input", "TRUE"),
-            _di("pop_frq_points", "gate", "NA unless in {0.0, −1.0}"),
-        ],
-        description="Confirmed de-novo observation (SM 4).",
-    )
+_pat(
+    "exon-relevance-assessment",
+    "Exon / transcript relevance",
+    "adjuster",
+    "multiplier",
+    0.0,
+    1.0,
+    ("tier_multipliers",),
+    (_di("exon_relevance", "input", "All/Most/Few"), _di("mane_status", "gate")),
 )
-register_assessment(
-    AssessmentType(
-        method_type="unaffected-assessment",
-        title="Unaffected carrier (CLN_UAF)",
-        group="initial",
-        output_kind="points",
-        produces=["CLN_UAF"],
-        score_min=-8.0,
-        score_max=0.0,
-        params=["point_table"],
-        data_items=[
-            _di("age_matched_penetrance", "input", "LT_80 / GTE_80"),
-            _di("vbc_zygosity", "input", "HET / HOM"),
-            _di("moi", "gate", "monoallelic vs biallelic expectation"),
-        ],
-        description="Unaffected individuals carrying the VBC (SM 4). Benignity-leaning.",
-    )
+_pat(
+    "mechanism-exon-relevance-assessment",
+    "Mechanism × exon relevance (SM 18)",
+    "adjuster",
+    "multiplier",
+    0.0,
+    1.0,
+    ("matrix", "gdv_gate"),
+    (
+        _di("gencc_mechanism", "input", "Established/Likely/Suspected/Uncertain"),
+        _di("gene_disease_validity", "gate"),
+        _di("exon_relevance", "input"),
+    ),
 )
-register_assessment(
-    AssessmentType(
-        method_type="case-control-assessment",
-        title="Case-control study (CLN_CCS)",
-        group="initial",
-        output_kind="points",
-        produces=["CLN_CCS"],
-        score_min=-8.0,
-        score_max=8.0,
-        params=["or_thresholds"],
-        data_items=[
-            _di("odds_ratio", "input", "variant-specific OR + CI"),
-            _di("case_count", "input", "cases carrying VBC"),
-            _di("control_count", "input", "controls carrying VBC"),
-            _di("statistical_significance", "input", "p-value / CI"),
-        ],
-        description="Variant-specific case-control study (SM 4) — a study-level StudyResult, "
-        "not a per-proband Case; exclusive of other CLN except CLN_DNV.",
-    )
+_pat(
+    "nmd-prediction-assessment",
+    "NMD prediction (router)",
+    "router",
+    "route",
+    params=("nmd_upstream_nt",),
+    data_items=(_di("ptc_vs_last_junction", "router"), _di("exon_count", "router")),
 )
-register_assessment(
-    AssessmentType(
-        method_type="alternative-cause-assessment",
-        title="Alternative cause (CLN_ALT)",
-        group="initial",
-        output_kind="points",
-        produces=["CLN_ALTV", "CLN_ALTG"],
-        score_min=-8.0,
-        score_max=0.0,
-        params=["point_table"],
-        data_items=[
-            _di("pheno_severity", "input", "severity vs MDE expectation"),
-            _di("additional_variants", "input", "co-occurring P/LP alternate cause"),
-            _di("age_matched_penetrance", "input", "LT_80 / GTE_80"),
-        ],
-        description="Affected individuals with an alternate genetic cause (SM 4). Benignity.",
-    )
+_pat(
+    "alt-met-rescue-assessment",
+    "Alternative-Met rescue (router)",
+    "router",
+    "route",
+    data_items=(_di("alt_met_functional_rescue", "router"), _di("no_plp_between_starts", "router")),
 )
-register_assessment(
-    AssessmentType(
-        method_type="phenotype-specificity-assessment",
-        title="Phenotype specificity (LOC_PHE)",
-        group="initial",
-        output_kind="points",
-        produces=["LOC_PHE"],
-        score_min=-8.0,
-        score_max=8.0,
-        params=["specificity_table"],
-        data_items=[
-            _di("gene_specificity_for_phenotypes", "input", "how specifically the locus tracks"),
-            _di("testing.diagnostic_yield_for_phenotypes", "input", "diagnostic yield"),
-            _di("pop_frq_points", "gate", "carried in"),
-        ],
-        description="How specifically the locus tracks with phenotype (SM 5). MOI not applicable.",
-    )
+_pat(
+    "fixed-initial-points-assessment",
+    "Fixed initial points",
+    "initial",
+    "points",
+    0.0,
+    6.0,
+    ("award",),
+    (_di("nmd_predicted", "input", "true ⇒ +6.0"),),
 )
-register_assessment(
-    AssessmentType(
-        method_type="segregation-assessment",
-        title="Co-segregation (LOC_SEG)",
-        group="initial",
-        output_kind="points",
-        produces=["LOC_SEG"],
-        score_min=-4.0,
-        score_max=4.0,
-        params=["seg_point_tiers", "nonseg_flip"],
-        data_items=[
-            _di("relatives", "input", "CaseRelative[] — affected/unaffected, phase"),
-            _di("cosegregation_count", "input", "informative meioses"),
-            _di("moi", "gate", "per-co-segregation point tier by MOI"),
-            _di(
-                "non_segregation",
-                "gate",
-                "observed non-seg ⇒ zeroes LOC_PHE, flips LOC_SEG to −4.0",
-            ),
-        ],
-        description="Co-segregation across a family (SM 5); non-segregation flips to benign.",
-    )
+_pat(
+    "protein-loss-assessment",
+    "Protein-loss / critical-domain",
+    "initial",
+    "points",
+    -1.0,
+    6.0,
+    ("tier_points",),
+    (_di("protein_fraction_reduced", "input"), _di("critical_domain_loss", "input")),
+)
+_pat(
+    "splice-prediction-assessment",
+    "Splice prediction",
+    "initial",
+    "points",
+    0.0,
+    3.0,
+    ("predictor", "calibration_thresholds"),
+    (_di("splice_prediction", "input", "SpliceAI Δ 0.82"),),
+)
+_pat(
+    "splice-assay-assessment",
+    "Splice assay",
+    "module",
+    "points",
+    0.0,
+    6.0,
+    ("calibration",),
+    (_di("aberrant_product_level", "input"),),
+)
+_pat(
+    "functional-assay-assessment",
+    "Functional assay (generic)",
+    "module",
+    "points",
+    -8.0,
+    8.0,
+    ("calibration",),
+    (_di("assay_result", "input"), _di("calibrated_weight", "input", "OddsPath/MaveDB")),
+)
+_pat(
+    "informative-variants-assessment",
+    "Informative variants (generic)",
+    "module",
+    "points",
+    -8.0,
+    8.0,
+    ("point_values", "relatedness_rule"),
+    (_di("comparator_variant", "input"), _di("classification_tier", "input", "P⇒+4·LP⇒+2")),
 )
 
 
 # --------------------------------------------------------------------------- #
-# baseline configs — one per assessment type
+# baseline rulesets (the SVCv4 method as a hierarchy) — parent-first
 # --------------------------------------------------------------------------- #
 
-for _mt in list(ASSESSMENT_TYPES):
-    register_config(
-        MethodConfig(
-            id=make_method_id("baseline", _mt, "1.0"),
-            method_type=_mt,
-            scope="baseline",
-            version="1.0",
-            params={},
-            description="Baseline SVCv4 framework configuration.",
-        )
-    )
+# POP
+ruleset("POP", "Population observations", "population-observation-assessment")
+ruleset("POP_FRQ", "Population allele frequency", "population-frequency-assessment", parent="POP")
+ruleset(
+    "POP_HMZ",
+    "Homozygote/hemizygote burden",
+    "population-observation-homo-hemizygote-assessment",
+    parent="POP",
+)
+# CLN
+ruleset("CLN", "Clinical observations", "clinical-observation-assessment")
+ruleset("CLN_AFF", "Affected proband", "affected-observation-assessment", parent="CLN")
+ruleset("CLN_UAF", "Unaffected carrier", "unaffected-observation-assessment", parent="CLN")
+ruleset("CLN_ALT", "Alternative cause", "affected-alternative-observation-assessment", parent="CLN")
+ruleset("CLN_DNV", "De-novo occurrence", "affected-denovo-observation-assessment", parent="CLN")
+ruleset("CLN_CCS", "Case-control study", "case-control-observation-assessment", parent="CLN")
+# LOC
+ruleset("LOC", "Locus specificity", "locus-specificity-assessment")
+ruleset("LOC_PHE", "Phenotype specificity", "specific-phenotype-assessment", parent="LOC")
+ruleset("LOC_SEG", "Co-segregation", "segregation-with-disease-assessment", parent="LOC")
+# MIS (amino-acid path)
+ruleset("MIS", "Missense variant", "missense-variant-assessment")
+ruleset(
+    "MIS_PRD", "Single-AA-change prediction", "single-aa-change-prediction-assessment", parent="MIS"
+)
+ruleset(
+    "MIS_PRD_INIT_REVEL",
+    "REVEL predictor initial points",
+    "insilico-predictor-assessment",
+    parent="MIS_PRD",
+    params={"predictor": "REVEL"},
+)
+ruleset("MIS_PRD_EXON", "Exon relevance (missense)", "exon-relevance-assessment", parent="MIS_PRD")
+ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS")
+ruleset("MIS_INF", "Missense informative variants", "informative-variants-assessment", parent="MIS")
+# NUL (NMD path)
+ruleset("NUL", "Null / nonsense variant", "null-variant-assessment")
+ruleset("NUL_PRD", "Null predictive", "null-predictive-assessment", parent="NUL")
+ruleset("NUL_PRD_INIT", "NMD initial points", "fixed-initial-points-assessment", parent="NUL_PRD")
+ruleset(
+    "NUL_PRD_MECH_EXON",
+    "Mechanism × exon (null)",
+    "mechanism-exon-relevance-assessment",
+    parent="NUL_PRD",
+)
+ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL")
+ruleset("NUL_INF", "Null informative variants", "informative-variants-assessment", parent="NUL")
+
 
 # --------------------------------------------------------------------------- #
-# example specialisation — a gene-specific missense predictor config
+# example specialisation — override ONE node by id (same methodType, new scoped id)
 # --------------------------------------------------------------------------- #
 
-register_config(
-    MethodConfig(
-        id=make_method_id("gene-MYH7", "insilico-missense-predictor-assessment", "1.0"),
-        method_type="insilico-missense-predictor-assessment",
-        scope="gene-MYH7",
-        version="1.0",
-        params={
-            "predictor": "REVEL(MYH7-recalibrated)",
-            "calibration_thresholds": {"+4.0": ">=0.90"},
-        },
-        description="MYH7 cardiomyopathy specialisation: gene-recalibrated REVEL thresholds. "
-        "Same methodType as baseline; distinct id/scope.",
-    )
+ruleset(
+    "MIS_PRD_INIT_REVEL",
+    "REVEL predictor initial points (MYH7-recalibrated)",
+    "insilico-predictor-assessment",
+    scope="gene-MYH7",
+    params={"predictor": "REVEL(MYH7-recalibrated)", "calibration_thresholds": {"+4.0": ">=0.90"}},
 )
