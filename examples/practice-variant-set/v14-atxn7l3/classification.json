@@ -37,7 +37,7 @@
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
-      "outcome": null,
+      "outcome": "POP_FRQ_+0",
       "contribution": 0.0,
       "description": "Population frequency (illustrative).",
       "specifiedBy": {
@@ -68,7 +68,7 @@
       "score": 2.0,
       "strength": "moderate",
       "direction": "supports",
-      "outcome": null,
+      "outcome": "CLN_AFF_+2",
       "contribution": 2.0,
       "description": "Affected proband + confirmed de novo (illustrative). CLN_DNV also applicable.",
       "specifiedBy": {
@@ -98,7 +98,7 @@
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
-      "outcome": null,
+      "outcome": "NUL_+0",
       "contribution": 0.0,
       "description": "Predicted null, mechanism-tempered (PFD, illustrative).",
       "specifiedBy": {
@@ -125,7 +125,7 @@
           "score": 0.0,
           "strength": null,
           "direction": "neutral",
-          "outcome": null,
+          "outcome": "NUL_PRD_+0",
           "contribution": null,
           "provisional": false,
           "description": "Predicted-LoF / structural nonsense assessment.",

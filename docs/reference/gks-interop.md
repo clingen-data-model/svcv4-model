@@ -9,7 +9,7 @@ gks-core.
 
 | GKS schema | Version | Role in this model |
 |---|---|---|
-| **VA-Spec** | v1.0 | Baseline for the SVCv4 Classification Model — `Statement`, `Proposition`, `EvidenceLine`, `InformationEntity` / `EvidenceData`. |
+| **VA-Spec** | 1.1.0-ballot.2026-09 | Baseline for the SVCv4 Classification Model — `Statement` (recursive; an evidence line is a nested `Statement`), `Proposition`, `DataItem`. |
 | **VRS** | v2.0 | Used to represent the **VBC**'s variation. |
 | **Cat-VRS** | v1.0 | Used where the variant is described categorically. |
 | **gks-core** | — | Shared identifier, CURIE, and provenance constructs. |

@@ -31,26 +31,23 @@ uv run python scripts/validate_examples.py
 |---|---|---|
 | `Statement` | [`Statement.schema.json`][stmt] | [`statement.py`][src-statement] |
 | `Proposition` | [`Proposition.schema.json`][prop] | [`proposition.py`][src-proposition] |
-| `EvidenceLine` | [`EvidenceLine.schema.json`][el] | [`evidence_line.py`][src-evidence-line] |
-| `EvidenceItem` | [`EvidenceItem.schema.json`][ei] | [`evidence_item.py`][src-evidence-item] |
+| `DataItem` | [`DataItem.schema.json`][di] | [`data_item.py`][src-data-item] |
 | `Method` | [`Method.schema.json`][meth] | [`method.py`][src-method] |
 | `VBC` | [`VBC.schema.json`][vbc] | [`inputs.py`][src-inputs] |
 | `MDE` | [`MDE.schema.json`][mde] | [`inputs.py`][src-inputs] |
 
-The `VariantPathogenicityClassification` enum appears inline within
-the schemas that reference it.
+The classification tier and line-level codes travel as the open `outcome`
+string (VA-Spec Mappable Concept), not a fixed enum in the schema.
 
 [schemas-src]: https://github.com/clingen-data-model/svcv4-model/tree/main/schemas/json
 [stmt]: https://github.com/clingen-data-model/svcv4-model/blob/main/schemas/json/Statement.schema.json
 [prop]: https://github.com/clingen-data-model/svcv4-model/blob/main/schemas/json/Proposition.schema.json
-[el]: https://github.com/clingen-data-model/svcv4-model/blob/main/schemas/json/EvidenceLine.schema.json
-[ei]: https://github.com/clingen-data-model/svcv4-model/blob/main/schemas/json/EvidenceItem.schema.json
+[di]: https://github.com/clingen-data-model/svcv4-model/blob/main/schemas/json/DataItem.schema.json
 [meth]: https://github.com/clingen-data-model/svcv4-model/blob/main/schemas/json/Method.schema.json
 [vbc]: https://github.com/clingen-data-model/svcv4-model/blob/main/schemas/json/VBC.schema.json
 [mde]: https://github.com/clingen-data-model/svcv4-model/blob/main/schemas/json/MDE.schema.json
 [src-statement]: https://github.com/clingen-data-model/svcv4-model/blob/main/src/svcv4_model/statement.py
 [src-proposition]: https://github.com/clingen-data-model/svcv4-model/blob/main/src/svcv4_model/proposition.py
-[src-evidence-line]: https://github.com/clingen-data-model/svcv4-model/blob/main/src/svcv4_model/evidence_line.py
-[src-evidence-item]: https://github.com/clingen-data-model/svcv4-model/blob/main/src/svcv4_model/evidence_item.py
+[src-data-item]: https://github.com/clingen-data-model/svcv4-model/blob/main/src/svcv4_model/data_item.py
 [src-method]: https://github.com/clingen-data-model/svcv4-model/blob/main/src/svcv4_model/method.py
 [src-inputs]: https://github.com/clingen-data-model/svcv4-model/blob/main/src/svcv4_model/inputs.py

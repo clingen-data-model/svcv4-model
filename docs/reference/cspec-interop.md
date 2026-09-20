@@ -14,8 +14,8 @@ evidence code, it is a reference into CSpec.
 | Where | Slot | Purpose |
 |---|---|---|
 | `Statement` | `method` | Identifies the **applied SVCv4 specification version** — baseline SVCv4 or a VCEP-specialised version selected via gene-disease-MOI scoping. |
-| `EvidenceLine` | `method` | Identifies the **specific CSpec method or rule** whose invocation produced the Evidence Line's score. |
-| `EvidenceLine` | `code` | Optional Evidence Code or method-code mirror, where useful for disambiguation. |
+| `Statement` (evidence line) | `specifiedBy` | Identifies the **specific CSpec method or rule** whose invocation produced the evidence-line Statement's score. |
+| `Statement` (evidence line) | `code` | Optional Evidence Code / subcode identity, where useful for disambiguation. |
 
 `Method.code` is an opaque CURIE-style string for now; the precise
 scheme that CSpec will issue is TBD.

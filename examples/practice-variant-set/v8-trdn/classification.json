@@ -37,7 +37,7 @@
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
-      "outcome": null,
+      "outcome": "POP_FRQ_+0",
       "contribution": 0.0,
       "description": "Population frequency (illustrative).",
       "specifiedBy": {
@@ -69,7 +69,7 @@
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
-      "outcome": null,
+      "outcome": "CLN_UAF_+0",
       "contribution": 0.0,
       "description": "Unaffected heterozygous carrier (illustrative).",
       "specifiedBy": {
@@ -96,7 +96,7 @@
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
-      "outcome": null,
+      "outcome": "NUL_+0",
       "contribution": 0.0,
       "description": "Transcript-context-limited LoF evidence (PFD, illustrative).",
       "specifiedBy": {
@@ -123,7 +123,7 @@
           "score": 0.0,
           "strength": null,
           "direction": "neutral",
-          "outcome": null,
+          "outcome": "NUL_PRD_+0",
           "contribution": null,
           "provisional": false,
           "description": "Predicted-LoF / structural nonsense assessment.",

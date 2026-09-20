@@ -37,7 +37,7 @@
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
-      "outcome": null,
+      "outcome": "POP_FRQ_+0",
       "contribution": 0.0,
       "description": "Population frequency (illustrative).",
       "specifiedBy": {
@@ -68,7 +68,7 @@
       "score": -3.0,
       "strength": "strong",
       "direction": "disputes",
-      "outcome": null,
+      "outcome": "SPL_-3",
       "contribution": -3.0,
       "description": "Splicing assay, benign (PFD, illustrative).",
       "specifiedBy": {
@@ -94,7 +94,7 @@
           "score": -3.0,
           "strength": null,
           "direction": "disputes",
-          "outcome": null,
+          "outcome": "SPL_SPA_-3",
           "contribution": null,
           "provisional": false,
           "description": "RNA / splicing functional assay.",
