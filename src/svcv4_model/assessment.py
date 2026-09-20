@@ -346,6 +346,189 @@ register_assessment(
 
 
 # --------------------------------------------------------------------------- #
+# HOD-family assessment types (grounded in SM 3 / 4 / 5)
+# --------------------------------------------------------------------------- #
+
+register_assessment(
+    AssessmentType(
+        method_type="population-frequency-assessment",
+        title="Population allele frequency",
+        group="initial",
+        output_kind="points",
+        produces=["POP_FRQ"],
+        score_min=-6.0,
+        score_max=0.0,
+        params=["fold_thresholds"],
+        data_items=[
+            _di("faf", "input", "gnomAD FAF 0.00072"),
+            _di("daft", "input", "DAFT 0.000118"),
+            _di(
+                "daft_calculator_inputs",
+                "provenance",
+                "prevalence · penetrance · locus/allelic heterogeneity · inheritance",
+            ),
+        ],
+        description="Benignity from FAF/DAFT fold (SM 3). Benignity-only (≤0).",
+    )
+)
+register_assessment(
+    AssessmentType(
+        method_type="homozygote-burden-assessment",
+        title="Homozygote / hemizygote burden",
+        group="initial",
+        output_kind="points",
+        produces=["POP_HMZ"],
+        score_min=-8.0,
+        score_max=0.0,
+        params=["per_obs_weight"],
+        data_items=[
+            _di("homozygote_count", "input", "count in population DB"),
+            _di("hemizygote_count", "input", "X-linked only"),
+            _di("moi", "input", "AD ⇒ −1.0/obs · else −0.5/obs"),
+            _di("hmz_eligible", "gate", "near-100% penetrance; affecteds not expected"),
+        ],
+        description="Benignity from homozygous/hemizygous observations (SM 3). Benignity-only.",
+    )
+)
+register_assessment(
+    AssessmentType(
+        method_type="affected-proband-assessment",
+        title="Affected proband (CLN_AFF)",
+        group="initial",
+        output_kind="points",
+        produces=["CLN_AFF"],
+        score_min=-8.0,
+        score_max=8.0,
+        params=["mono_table", "biallelic_table"],
+        data_items=[
+            _di("pheno_specificity_for_mde", "input", "SPECIFIC / CONSISTENT / INCONSISTENT"),
+            _di("testing.covers_all_genes_relevant_to_mde", "input", "TRUE"),
+            _di("vbc_zygosity", "input", "HET / HOM"),
+            _di("moi", "gate", "selects monoallelic vs biallelic table"),
+            _di("pop_frq_points", "gate", "NA unless in {0.0, −1.0}"),
+        ],
+        description="Per-proband affected observation (SM 4); MOI selects the scoring table.",
+    )
+)
+register_assessment(
+    AssessmentType(
+        method_type="de-novo-assessment",
+        title="De-novo occurrence (CLN_DNV)",
+        group="initial",
+        output_kind="points",
+        produces=["CLN_DNV"],
+        score_min=-8.0,
+        score_max=8.0,
+        params=["point_table"],
+        data_items=[
+            _di("confirmed_parental_relationship", "input", "confirmed vs assumed"),
+            _di("pheno_specificity_for_mde", "input", "SPECIFIC / CONSISTENT"),
+            _di("testing.covers_all_genes_relevant_to_mde", "input", "TRUE"),
+            _di("pop_frq_points", "gate", "NA unless in {0.0, −1.0}"),
+        ],
+        description="Confirmed de-novo observation (SM 4).",
+    )
+)
+register_assessment(
+    AssessmentType(
+        method_type="unaffected-assessment",
+        title="Unaffected carrier (CLN_UAF)",
+        group="initial",
+        output_kind="points",
+        produces=["CLN_UAF"],
+        score_min=-8.0,
+        score_max=0.0,
+        params=["point_table"],
+        data_items=[
+            _di("age_matched_penetrance", "input", "LT_80 / GTE_80"),
+            _di("vbc_zygosity", "input", "HET / HOM"),
+            _di("moi", "gate", "monoallelic vs biallelic expectation"),
+        ],
+        description="Unaffected individuals carrying the VBC (SM 4). Benignity-leaning.",
+    )
+)
+register_assessment(
+    AssessmentType(
+        method_type="case-control-assessment",
+        title="Case-control study (CLN_CCS)",
+        group="initial",
+        output_kind="points",
+        produces=["CLN_CCS"],
+        score_min=-8.0,
+        score_max=8.0,
+        params=["or_thresholds"],
+        data_items=[
+            _di("odds_ratio", "input", "variant-specific OR + CI"),
+            _di("case_count", "input", "cases carrying VBC"),
+            _di("control_count", "input", "controls carrying VBC"),
+            _di("statistical_significance", "input", "p-value / CI"),
+        ],
+        description="Variant-specific case-control study (SM 4) — a study-level StudyResult, "
+        "not a per-proband Case; exclusive of other CLN except CLN_DNV.",
+    )
+)
+register_assessment(
+    AssessmentType(
+        method_type="alternative-cause-assessment",
+        title="Alternative cause (CLN_ALT)",
+        group="initial",
+        output_kind="points",
+        produces=["CLN_ALTV", "CLN_ALTG"],
+        score_min=-8.0,
+        score_max=0.0,
+        params=["point_table"],
+        data_items=[
+            _di("pheno_severity", "input", "severity vs MDE expectation"),
+            _di("additional_variants", "input", "co-occurring P/LP alternate cause"),
+            _di("age_matched_penetrance", "input", "LT_80 / GTE_80"),
+        ],
+        description="Affected individuals with an alternate genetic cause (SM 4). Benignity.",
+    )
+)
+register_assessment(
+    AssessmentType(
+        method_type="phenotype-specificity-assessment",
+        title="Phenotype specificity (LOC_PHE)",
+        group="initial",
+        output_kind="points",
+        produces=["LOC_PHE"],
+        score_min=-8.0,
+        score_max=8.0,
+        params=["specificity_table"],
+        data_items=[
+            _di("gene_specificity_for_phenotypes", "input", "how specifically the locus tracks"),
+            _di("testing.diagnostic_yield_for_phenotypes", "input", "diagnostic yield"),
+            _di("pop_frq_points", "gate", "carried in"),
+        ],
+        description="How specifically the locus tracks with phenotype (SM 5). MOI not applicable.",
+    )
+)
+register_assessment(
+    AssessmentType(
+        method_type="segregation-assessment",
+        title="Co-segregation (LOC_SEG)",
+        group="initial",
+        output_kind="points",
+        produces=["LOC_SEG"],
+        score_min=-4.0,
+        score_max=4.0,
+        params=["seg_point_tiers", "nonseg_flip"],
+        data_items=[
+            _di("relatives", "input", "CaseRelative[] — affected/unaffected, phase"),
+            _di("cosegregation_count", "input", "informative meioses"),
+            _di("moi", "gate", "per-co-segregation point tier by MOI"),
+            _di(
+                "non_segregation",
+                "gate",
+                "observed non-seg ⇒ zeroes LOC_PHE, flips LOC_SEG to −4.0",
+            ),
+        ],
+        description="Co-segregation across a family (SM 5); non-segregation flips to benign.",
+    )
+)
+
+
+# --------------------------------------------------------------------------- #
 # baseline configs — one per assessment type
 # --------------------------------------------------------------------------- #
 
