@@ -37,7 +37,7 @@
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
-      "outcome": null,
+      "outcome": "POP_FRQ_+0",
       "contribution": 0.0,
       "description": "Population frequency (illustrative).",
       "specifiedBy": {
@@ -69,7 +69,7 @@
       "score": 2.0,
       "strength": "moderate",
       "direction": "supports",
-      "outcome": null,
+      "outcome": "SPL_+2",
       "contribution": 2.0,
       "description": "Splicing / domain evidence (PFD, illustrative).",
       "specifiedBy": {
@@ -98,7 +98,7 @@
           "score": 2.0,
           "strength": null,
           "direction": "supports",
-          "outcome": null,
+          "outcome": "SPL_PRD_+2",
           "contribution": null,
           "provisional": false,
           "description": "In-silico splice prediction.",

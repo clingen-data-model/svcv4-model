@@ -33,7 +33,7 @@
       "score": 2.0,
       "strength": "moderate",
       "direction": "supports",
-      "outcome": null,
+      "outcome": "CLN_AFF_+2",
       "contribution": 2.0,
       "description": "Placeholder Evidence Line illustrating an affected-individual observation.",
       "specifiedBy": {
@@ -61,7 +61,7 @@
       "score": 2.0,
       "strength": "moderate",
       "direction": "supports",
-      "outcome": null,
+      "outcome": "FNC_ASY_+2",
       "contribution": 2.0,
       "description": "Placeholder Evidence Line illustrating a functional-assay result.",
       "specifiedBy": {

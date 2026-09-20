@@ -15,7 +15,7 @@ reference a stable local asset rather than a remote artifact.
 
 > These artifacts predate the plain-language / VA-Spec-`1.1.0` reconciliation.
 > Before using one in front of the (non-VA-literate) audience, check it doesn't
-> lead with `EvidenceLine`/`Statement` class vocabulary or v3 criteria codes — see
+> lead with `Statement` class vocabulary or v3 criteria codes — see
 > the presentation plan's two hard constraints.
 
 ## Workflow "start here" explainers
