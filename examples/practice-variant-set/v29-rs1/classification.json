@@ -28,7 +28,7 @@
   "score": 7.0,
   "outcome": "pathogenic",
   "strength": null,
-  "direction": null,
+  "direction": "supports",
   "contribution": null,
   "evidence_lines": [
     {
@@ -55,7 +55,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Population frequency (illustrative)."
@@ -84,7 +84,7 @@
       ],
       "score": 2.0,
       "strength": "moderate",
-      "direction": "pathogenic",
+      "direction": "supports",
       "outcome": null,
       "contribution": 2.0,
       "description": "Affected hemizygous proband (illustrative)."
@@ -110,7 +110,7 @@
       ],
       "score": 4.0,
       "strength": "strong",
-      "direction": "pathogenic",
+      "direction": "supports",
       "outcome": null,
       "contribution": 4.0,
       "description": "Loss-of-function evidence (PFD, illustrative).",
@@ -136,7 +136,7 @@
           ],
           "score": 4.0,
           "strength": null,
-          "direction": null,
+          "direction": "supports",
           "outcome": null,
           "contribution": null,
           "provisional": false,

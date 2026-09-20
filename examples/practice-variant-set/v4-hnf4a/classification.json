@@ -28,7 +28,7 @@
   "score": 5.0,
   "outcome": "likely_pathogenic",
   "strength": null,
-  "direction": null,
+  "direction": "supports",
   "contribution": null,
   "evidence_lines": [
     {
@@ -58,7 +58,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Population frequency (illustrative)."
@@ -87,7 +87,7 @@
       ],
       "score": 1.0,
       "strength": "supporting",
-      "direction": "pathogenic",
+      "direction": "supports",
       "outcome": null,
       "contribution": 1.0,
       "description": "Affected proband (illustrative). Note: LOC_SEG also applicable \u2014 variant segregated with MODY in 3 affected relatives \u2014 but is captured separately."
@@ -114,7 +114,7 @@
       ],
       "score": 4.0,
       "strength": "strong",
-      "direction": "pathogenic",
+      "direction": "supports",
       "outcome": null,
       "contribution": 4.0,
       "description": "Predicted null / LoF evidence (PFD, illustrative).",
@@ -141,7 +141,7 @@
           ],
           "score": 4.0,
           "strength": null,
-          "direction": null,
+          "direction": "supports",
           "outcome": null,
           "contribution": null,
           "provisional": false,

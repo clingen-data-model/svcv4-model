@@ -28,7 +28,7 @@
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
-  "direction": null,
+  "direction": "neutral",
   "contribution": null,
   "evidence_lines": [
     {
@@ -58,7 +58,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Population frequency (illustrative)."
@@ -85,7 +85,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Unaffected heterozygous carrier (illustrative)."
@@ -112,7 +112,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Transcript-context-limited LoF evidence (PFD, illustrative).",
@@ -139,7 +139,7 @@
           ],
           "score": 0.0,
           "strength": null,
-          "direction": null,
+          "direction": "neutral",
           "outcome": null,
           "contribution": null,
           "provisional": false,

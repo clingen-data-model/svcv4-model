@@ -28,7 +28,7 @@
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
-  "direction": null,
+  "direction": "neutral",
   "contribution": null,
   "evidence_lines": [
     {
@@ -57,7 +57,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Population frequency (illustrative)."
@@ -85,7 +85,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Start-loss with uncertain LoF (PFD, illustrative).",
@@ -113,7 +113,7 @@
           ],
           "score": 0.0,
           "strength": null,
-          "direction": null,
+          "direction": "neutral",
           "outcome": null,
           "contribution": null,
           "provisional": false,
