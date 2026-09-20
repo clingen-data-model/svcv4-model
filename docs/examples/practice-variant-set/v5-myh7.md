@@ -56,8 +56,8 @@ illustrative **variant of uncertain significance**.
         predicate:            is_causal_for
         object (MDE): MONDO:0005045 (hypertrophic cardiomyopathy)
         qualifiers:           MOI=AD; LoF not an established mechanism
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ  (prevalence 1/200; penetrance 0.40; pop_frq_points 0)  score  0
         - CLN_AFF  (3 probands: SPECIFIC / CONSISTENT / INCONSISTENT)     score +1
         - MIS      (REVEL 0.577; same-codon VUS ClinVar:525029)           score  0

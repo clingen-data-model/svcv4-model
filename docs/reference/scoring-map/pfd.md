@@ -28,7 +28,7 @@ a PFD parent code is built by a **fixed sequence of sub-code steps**, each **cap
 PRD  →  (SPA, splice only)  →  FXN  →  [held]  →  INF  →  parent total
 ```
 
-**Sub-codes.** Each is its own `EvidenceLine` (`method.code` = `<PARENT>_PRD` / `_SPA` / `_FXN` /
+**Sub-codes.** Each is its own `Statement` (`method.code` = `<PARENT>_PRD` / `_SPA` / `_FXN` /
 `_INF`):
 
 | Sub-code | Source | Computed or analyst-coded? |
@@ -43,7 +43,7 @@ PRD  →  (SPA, splice only)  →  FXN  →  [held]  →  INF  →  parent total
 distinct evidence code for the combination … it is just held until the next step … the VCI will
 record the separate values."* So a scoring engine records **both** the separate sub-codes **and** the
 held combined value. In the trees below a held node is drawn with `"held": true` and **no `method`** —
-the deliberate exception to *"every scored node is an `EvidenceLine` with a code"* (index principle 1).
+the deliberate exception to *"every scored node is an `Statement` with a code"* (index principle 1).
 The LoF path holds `PRD+FXN`; the splice path holds `PRD+SPA` then `PRD+SPA+FXN`.
 
 **Ripple (principle 6) is everywhere here.** Every step feeds the next through a cap, and the SM 18
@@ -131,7 +131,7 @@ The **NMD prediction routes the parent code**:
 | `fxn_points` | `_FXN` | coded SM 20 value (raw) |
 | `informative.variants[].classification` | `_INF` | P/LP/B/LB/VUS at the locus |
 
-### `NUL` as a GKS `EvidenceLine` tree (Approach 1)
+### `NUL` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Manufactured (pipeline breakdown).** Real `NUL` parent totals are grounded in the
 > practice set — `v4-hnf4a` (`NUL_+4`, NMD predicted), `v29-rs1` (`NUL_+4`), `v20-ush2a` (`CDS_+2`),
@@ -139,34 +139,34 @@ The **NMD prediction routes the parent code**:
 > the decomposition here is illustrative. Nonsense · NMD · no rescue → `NUL`.
 
 ```text
-EvidenceLine  NUL                          score +7.0   (= cap(held[PRD+FXN] + INF, [-8,+10]))
-└─ evidenceLines:
+Statement  NUL                          score +7.0   (= cap(held[PRD+FXN] + INF, [-8,+10]))
+└─ hasEvidenceLines:
    ├─ (held) PRD+FXN                        score +5.0   (cap(PRD+FXN, [-8,+10]); recorded · NO method.code)
-   │  ├─ EvidenceLine  NUL_PRD              score +3.0 → evidenceItems: [1]  (initial +6.0 × SM18 0.5 [Likely×All]; cap [0,+6])
-   │  └─ EvidenceLine  NUL_FXN              score +2.0 → evidenceItems: [1]  (calibrated LoF assay · SM20 · raw)
-   └─ EvidenceLine  NUL_INF                 score +2.0 → evidenceItems: [1]  (1 P informative NMD variant, same exon; cap [-8,+8])
+   │  ├─ Statement  NUL_PRD              score +3.0 → hasEvidenceItems: [1]  (initial +6.0 × SM18 0.5 [Likely×All]; cap [0,+6])
+   │  └─ Statement  NUL_FXN              score +2.0 → hasEvidenceItems: [1]  (calibrated LoF assay · SM20 · raw)
+   └─ Statement  NUL_INF                 score +2.0 → hasEvidenceItems: [1]  (1 P informative NMD variant, same exon; cap [-8,+8])
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "NUL", "label": "Nonsense · NMD, no rescue (LoF)" }, "score": 7.0,
+  "type": "Statement", "specifiedBy": { "code": "NUL", "label": "Nonsense · NMD, no rescue (LoF)" }, "score": 7.0,
   "note": "parent = cap(held[PRD+FXN] + INF, [-8,+10]); held and sub-codes both recorded",
-  "evidenceLines": [
+  "hasEvidenceLines": [
     { "held": true, "label": "PRD + FXN (held — recorded, no method.code)", "score": 5.0,
       "note": "cap(PRD + FXN, [-8,+10]); SM 8 L15 — no distinct code, VCI records the separate values",
-      "evidenceLines": [
-        { "type": "EvidenceLine", "method": { "code": "NUL_PRD", "label": "in-silico · NMD prediction × SM 18" }, "score": 3.0,
-          "evidenceItems": [ { "id": "nul-prd-01", "type": "computational_prediction", "references": ["practice-variant-set:v4-hnf4a"],
+      "hasEvidenceLines": [
+        { "type": "Statement", "specifiedBy": { "code": "NUL_PRD", "label": "in-silico · NMD prediction × SM 18" }, "score": 3.0,
+          "hasEvidenceItems": [ { "id": "nul-prd-01", "type": "computational_prediction", "references": ["practice-variant-set:v4-hnf4a"],
             "description": "Manufactured — NMD predicted (+6.0 initial) reduced by SM 18 (Likely × All = 0.5).",
             "data": { "prediction_outcome": "NMD_NO_RESCUE", "initial_points": 6.0,
               "gencc_mechanism": "LIKELY", "exon_relevance": "ALL", "gene_disease_validity": "STRONG", "sm18_fraction": 0.5 } } ] },
-        { "type": "EvidenceLine", "method": { "code": "NUL_FXN", "label": "functional assay (SM 20)" }, "score": 2.0,
-          "evidenceItems": [ { "id": "nul-fxn-01", "type": "functional_assay", "references": [],
+        { "type": "Statement", "specifiedBy": { "code": "NUL_FXN", "label": "functional assay (SM 20)" }, "score": 2.0,
+          "hasEvidenceItems": [ { "id": "nul-fxn-01", "type": "functional_assay", "references": [],
             "description": "Manufactured — calibrated assay confirming loss of transcript/protein.",
             "data": { "fxn_points": 2.0, "assay": "RNA/protein loss; OddsPath-calibrated" } } ] }
       ] },
-    { "type": "EvidenceLine", "method": { "code": "NUL_INF", "label": "informative variants (SM 19)" }, "score": 2.0,
-      "evidenceItems": [ { "id": "nul-inf-01", "type": "informative_variant", "references": [],
+    { "type": "Statement", "specifiedBy": { "code": "NUL_INF", "label": "informative variants (SM 19)" }, "score": 2.0,
+      "hasEvidenceItems": [ { "id": "nul-inf-01", "type": "informative_variant", "references": [],
         "description": "Manufactured — one Pathogenic NMD variant in the same exon, classified for the same MDE.",
         "data": { "variants": [ { "classification": "P", "same_exon": true, "nmd_predicted": true } ] } } ] }
   ]
@@ -226,50 +226,50 @@ SM 6, inverts the blue/violet parent caps — a suspected SM 6 inconsistency, re
 | `fxn_points` | `_FXN` (raw) |
 | `informative.variants[].classification` | `_INF` |
 
-### `SPL` as a GKS `EvidenceLine` tree (Approach 1)
+### `SPL` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Manufactured (breakdown).** Real `SPL` totals are grounded — `v12-ada` (`SPL_+6`,
 > in-frame exon skip of a critical region), `v17-ldlr` (`SPL_+5`), `v6-nf1` (`SPL_+4`), `v28-pten`
 > (`SPL_−3`) — but the per-step decomposition is illustrative. In-frame exon skip, no frameshift.
 
 ```text
-EvidenceLine  SPL                          score +7.0   (= cap(held[PRD+SPA+FXN] + INF, [-8,+10]))
-└─ evidenceLines:
+Statement  SPL                          score +7.0   (= cap(held[PRD+SPA+FXN] + INF, [-8,+10]))
+└─ hasEvidenceLines:
    ├─ (held) PRD+SPA+FXN                    score +6.0   (cap(held[PRD+SPA] + FXN, [-8,+9]); recorded · no code)
    │  ├─ (held) PRD+SPA                     score +5.0   (cap(PRD + SPA, [-8,+10]); recorded · no code)
-   │  │  ├─ EvidenceLine  SPL_PRD           score +3.0 → evidenceItems:[1]  (initial +6.0 × SM18 0.5 [Likely×All]; cap [-1,+6])
-   │  │  └─ EvidenceLine  SPL_SPA           score +2.0 → evidenceItems:[1]  (RNA splice assay confirms; raw)
-   │  └─ EvidenceLine  SPL_FXN              score +1.0 → evidenceItems:[1]  (protein assay · SM20 · raw)
-   └─ EvidenceLine  SPL_INF                 score +1.0 → evidenceItems:[1]  (1 LP informative splice variant; cap [-8,+8])
+   │  │  ├─ Statement  SPL_PRD           score +3.0 → hasEvidenceItems:[1]  (initial +6.0 × SM18 0.5 [Likely×All]; cap [-1,+6])
+   │  │  └─ Statement  SPL_SPA           score +2.0 → hasEvidenceItems:[1]  (RNA splice assay confirms; raw)
+   │  └─ Statement  SPL_FXN              score +1.0 → hasEvidenceItems:[1]  (protein assay · SM20 · raw)
+   └─ Statement  SPL_INF                 score +1.0 → hasEvidenceItems:[1]  (1 LP informative splice variant; cap [-8,+8])
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "SPL", "label": "Splice · in-frame exon skip" }, "score": 7.0,
+  "type": "Statement", "specifiedBy": { "code": "SPL", "label": "Splice · in-frame exon skip" }, "score": 7.0,
   "note": "two held values; parent = cap(held[PRD+SPA+FXN] + INF, [-8,+10])",
-  "evidenceLines": [
+  "hasEvidenceLines": [
     { "held": true, "label": "PRD + SPA + FXN (held — recorded, no method.code)", "score": 6.0,
       "note": "cap(held[PRD+SPA] + FXN, [-8,+9])",
-      "evidenceLines": [
+      "hasEvidenceLines": [
         { "held": true, "label": "PRD + SPA (held — recorded, no method.code)", "score": 5.0,
           "note": "cap(PRD + SPA, [-8,+10])",
-          "evidenceLines": [
-            { "type": "EvidenceLine", "method": { "code": "SPL_PRD", "label": "splice prediction × SM 18" }, "score": 3.0,
-              "evidenceItems": [ { "id": "spl-prd-01", "type": "computational_prediction", "references": ["practice-variant-set:v12-ada"],
+          "hasEvidenceLines": [
+            { "type": "Statement", "specifiedBy": { "code": "SPL_PRD", "label": "splice prediction × SM 18" }, "score": 3.0,
+              "hasEvidenceItems": [ { "id": "spl-prd-01", "type": "computational_prediction", "references": ["practice-variant-set:v12-ada"],
                 "description": "Manufactured — in-frame exon skip (+6.0 initial) × SM 18 (Likely × All = 0.5).",
                 "data": { "prediction_outcome": "SPLICE_NO_FRAMESHIFT", "initial_points": 6.0,
                   "gencc_mechanism": "LIKELY", "exon_relevance": "ALL", "gene_disease_validity": "STRONG", "sm18_fraction": 0.5 } } ] },
-            { "type": "EvidenceLine", "method": { "code": "SPL_SPA", "label": "RNA splice assay" }, "score": 2.0,
-              "evidenceItems": [ { "id": "spl-spa-01", "type": "splice_assay", "references": [],
+            { "type": "Statement", "specifiedBy": { "code": "SPL_SPA", "label": "RNA splice assay" }, "score": 2.0,
+              "hasEvidenceItems": [ { "id": "spl-spa-01", "type": "splice_assay", "references": [],
                 "description": "Manufactured — minigene/RNA assay confirms aberrant splicing.",
                 "data": { "spa_points": 2.0, "assay": "minigene / RNA-seq" } } ] }
           ] },
-        { "type": "EvidenceLine", "method": { "code": "SPL_FXN", "label": "functional assay (SM 20)" }, "score": 1.0,
-          "evidenceItems": [ { "id": "spl-fxn-01", "type": "functional_assay", "references": [],
+        { "type": "Statement", "specifiedBy": { "code": "SPL_FXN", "label": "functional assay (SM 20)" }, "score": 1.0,
+          "hasEvidenceItems": [ { "id": "spl-fxn-01", "type": "functional_assay", "references": [],
             "description": "Manufactured — protein-level assay.", "data": { "fxn_points": 1.0 } } ] }
       ] },
-    { "type": "EvidenceLine", "method": { "code": "SPL_INF", "label": "informative variants (SM 19)" }, "score": 1.0,
-      "evidenceItems": [ { "id": "spl-inf-01", "type": "informative_variant", "references": [],
+    { "type": "Statement", "specifiedBy": { "code": "SPL_INF", "label": "informative variants (SM 19)" }, "score": 1.0,
+      "hasEvidenceItems": [ { "id": "spl-inf-01", "type": "informative_variant", "references": [],
         "description": "Manufactured — one LP splice variant at the locus.",
         "data": { "variants": [ { "classification": "LP", "same_splice_consequence": true } ] } } ] }
   ]
@@ -321,7 +321,7 @@ A VUS or off-polarity class scores 0. (The SM 7 motif-variant special case is de
 | positive, `> MIS_` | splice `SPL_` applies (parent code becomes `SPL`) |
 | positive, `≤ MIS_` (incl. tie) | amino-acid `MIS_` applies |
 
-### `MIS` as a GKS `EvidenceLine` tree (Approach 1)
+### `MIS` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Manufactured (breakdown).** Real `MIS` totals are grounded — `v22-f8` (`MIS_+5`),
 > `v10-scn2a` / `v7-pah` (`MIS_+4`), `v19-tp53` (`MIS_+1`), `v3-foxg1` (`MIS_−1`), `v13-aipl1`
@@ -329,33 +329,33 @@ A VUS or off-polarity class scores 0. (The SM 7 motif-variant special case is de
 
 ```text
 take-higher:  MIS_ +7.0   vs   SPL_ +2.0   →   MIS_   (applied parent = MIS, score +7.0)
-EvidenceLine  MIS                          score +7.0   (amino-acid path — SELECTED)
-└─ evidenceLines:
+Statement  MIS                          score +7.0   (amino-acid path — SELECTED)
+└─ hasEvidenceLines:
    ├─ (held) PRD+FXN                        score +5.0   (cap(PRD + FXN, [-8,+6]); recorded · no code)
-   │  ├─ EvidenceLine  MIS_PRD              score +4.0 → evidenceItems:[1]  (REVEL 0.92 → +4.0 × transcript All; cap [-4,+4])
-   │  └─ EvidenceLine  MIS_FXN              score +1.0 → evidenceItems:[1]  (functional assay · SM20 · raw)
-   └─ EvidenceLine  MIS_INF                 score +2.0 → evidenceItems:[1]  (1 distinct-AA P; four-category tally; cap [-8,+8])
+   │  ├─ Statement  MIS_PRD              score +4.0 → hasEvidenceItems:[1]  (REVEL 0.92 → +4.0 × transcript All; cap [-4,+4])
+   │  └─ Statement  MIS_FXN              score +1.0 → hasEvidenceItems:[1]  (functional assay · SM20 · raw)
+   └─ Statement  MIS_INF                 score +2.0 → hasEvidenceItems:[1]  (1 distinct-AA P; four-category tally; cap [-8,+8])
    ·  (SPL_ path scored separately = +2.0 — not selected; shown for the comparison)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "MIS", "label": "Missense · amino-acid (selected by take-higher)" }, "score": 7.0,
+  "type": "Statement", "specifiedBy": { "code": "MIS", "label": "Missense · amino-acid (selected by take-higher)" }, "score": 7.0,
   "note": "take-higher: MIS_ +7.0 vs SPL_ +2.0 -> MIS_ applies; mis_total = cap(held[PRD+FXN] + INF, [-8,+9])",
-  "evidenceLines": [
+  "hasEvidenceLines": [
     { "held": true, "label": "PRD + FXN (held — recorded, no method.code)", "score": 5.0,
       "note": "cap(PRD + FXN, [-8,+6])",
-      "evidenceLines": [
-        { "type": "EvidenceLine", "method": { "code": "MIS_PRD", "label": "in-silico (calibrated) × transcript relevance" }, "score": 4.0,
-          "evidenceItems": [ { "id": "mis-prd-01", "type": "computational_prediction", "references": ["practice-variant-set:v10-scn2a"],
+      "hasEvidenceLines": [
+        { "type": "Statement", "specifiedBy": { "code": "MIS_PRD", "label": "in-silico (calibrated) × transcript relevance" }, "score": 4.0,
+          "hasEvidenceItems": [ { "id": "mis-prd-01", "type": "computational_prediction", "references": ["practice-variant-set:v10-scn2a"],
             "description": "Manufactured — REVEL 0.92 -> +4.0, transcript relevance All (x1.0); no mechanism/GDV axis.",
             "data": { "predictor": "REVEL", "raw_score": 0.92, "initial_points": 4.0, "transcript_relevance": "ALL" } } ] },
-        { "type": "EvidenceLine", "method": { "code": "MIS_FXN", "label": "functional assay (SM 20)" }, "score": 1.0,
-          "evidenceItems": [ { "id": "mis-fxn-01", "type": "functional_assay", "references": [],
+        { "type": "Statement", "specifiedBy": { "code": "MIS_FXN", "label": "functional assay (SM 20)" }, "score": 1.0,
+          "hasEvidenceItems": [ { "id": "mis-fxn-01", "type": "functional_assay", "references": [],
             "description": "Manufactured — calibrated missense functional assay.", "data": { "fxn_points": 1.0 } } ] }
       ] },
-    { "type": "EvidenceLine", "method": { "code": "MIS_INF", "label": "informative variants · four-category (SM 6)" }, "score": 2.0,
-      "evidenceItems": [ { "id": "mis-inf-01", "type": "informative_variant", "references": [],
+    { "type": "Statement", "specifiedBy": { "code": "MIS_INF", "label": "informative variants · four-category (SM 6)" }, "score": 2.0,
+      "hasEvidenceItems": [ { "id": "mis-inf-01", "type": "informative_variant", "references": [],
         "description": "Manufactured — one Pathogenic variant, distinct amino-acid change at the residue (category 2).",
         "data": { "variants": [ { "category": "DISTINCT_AA_PATHOGENIC", "classification": "P" } ] } } ] }
   ]

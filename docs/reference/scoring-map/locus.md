@@ -24,10 +24,10 @@ whole `LOC` subtotal — the dependency runs from `case.relatives` into both cod
 > `v9-runx1` — *different* practice variants, shown together to illustrate the sum and the cap.
 
 ```text
-EvidenceLine  LOC                         score +4.0   (capped; raw Σ = +7.0; cap 0…+4.0)
-└─ evidenceLines:
-   ├─ EvidenceLine  LOC_PHE               score +4.0 → see LOC_PHE example (FBN1 · Ghent · 91–93% yield)
-   └─ EvidenceLine  LOC_SEG               score +3.0 → see LOC_SEG example (RUNX1 · 7 affected co-segregants)
+Statement  LOC                         score +4.0   (capped; raw Σ = +7.0; cap 0…+4.0)
+└─ hasEvidenceLines:
+   ├─ Statement  LOC_PHE               score +4.0 → see LOC_PHE example (FBN1 · Ghent · 91–93% yield)
+   └─ Statement  LOC_SEG               score +3.0 → see LOC_SEG example (RUNX1 · 7 affected co-segregants)
 ```
 
 Raw `LOC_PHE (+4.0) + LOC_SEG (+3.0) = +7.0` → capped to **+4.0**.
@@ -76,24 +76,24 @@ VBC-carrier at near-100% penetrance** (not for AR).
 | `case.age_matched_penetrance` | non-seg rule (b) | near-100% for the unaffected-carrier trigger |
 | `moi` | non-seg rule (b) gate | AR suppresses the unaffected-carrier trigger |
 
-### `LOC_PHE` as a GKS `EvidenceLine` tree (Approach 1)
+### `LOC_PHE` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Grounded (SM 5 worked example, FBN1 · Marfan).** Two publications show a 91–93%
 > diagnostic yield for FBN1 in individuals meeting Ghent criteria → the `FULL` band → **+4.0**.
 
 ```text
-EvidenceLine  LOC_PHE                     score +4.0   (single assessment; zeroed by a non-segregation)
-└─ evidenceLines:
-   └─ EvidenceLine  LOC_PHE_FULL          score +4.0 → evidenceItems: [1 locus obs]  (FBN1 · Ghent · 91–93% ≥82%)
+Statement  LOC_PHE                     score +4.0   (single assessment; zeroed by a non-segregation)
+└─ hasEvidenceLines:
+   └─ Statement  LOC_PHE_FULL          score +4.0 → hasEvidenceItems: [1 locus obs]  (FBN1 · Ghent · 91–93% ≥82%)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "LOC_PHE", "label": "Phenotype specificity (locus)" }, "score": 4.0,
+  "type": "Statement", "specifiedBy": { "code": "LOC_PHE", "label": "Phenotype specificity (locus)" }, "score": 4.0,
   "note": "per-VBC/locus; single most-specific-proband assessment; zeroed by an observed non-segregation",
-  "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "LOC_PHE_FULL", "label": "diagnostic yield ≥ 82%" }, "score": 4.0,
-      "evidenceItems": [ { "id": "locphe-01", "type": "phenotype_specificity", "references": ["PMID:15241795", "PMID:21542060"],
+  "hasEvidenceLines": [
+    { "type": "Statement", "specifiedBy": { "code": "LOC_PHE_FULL", "label": "diagnostic yield ≥ 82%" }, "score": 4.0,
+      "hasEvidenceItems": [ { "id": "locphe-01", "type": "phenotype_specificity", "references": ["PMID:15241795", "PMID:21542060"],
         "description": "Grounded — FBN1 · Marfan; classic case meeting Ghent criteria; 91–93% diagnostic yield (SM 5).",
         "data": { "diagnostic_yield_for_phenotypes": "91-93%", "most_specific_proband": "classic Marfan syndrome, meets Ghent criteria" } } ] }
   ]
@@ -139,25 +139,25 @@ locus explains that family, not benignity of the VBC).
 | `moi` | affected tier + AR unaffected weight + non-seg flip scope | |
 | `case.age_matched_penetrance` | unaffected counting | near-100% required |
 
-### `LOC_SEG` as a GKS `EvidenceLine` tree (Approach 1)
+### `LOC_SEG` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Grounded (practice `v9-runx1`).** RUNX1 · familial platelet disorder / AML · AD: **7
 > affected relatives** segregating the VBC → `LOC_SEG_AFF` summed → **+3.0** (practice target). The
 > per-affected value is Fig-2 image-only, so the leaf shows the practice total, not a per-item weight.
 
 ```text
-EvidenceLine  LOC_SEG                     score +3.0   (Σ observations, capped 0…+4.0)
-└─ evidenceLines:
-   └─ EvidenceLine  LOC_SEG_AFF           score +3.0 → evidenceItems: [7 affected co-segregants]  (RUNX1 · FPD/AML · AD)
+Statement  LOC_SEG                     score +3.0   (Σ observations, capped 0…+4.0)
+└─ hasEvidenceLines:
+   └─ Statement  LOC_SEG_AFF           score +3.0 → hasEvidenceItems: [7 affected co-segregants]  (RUNX1 · FPD/AML · AD)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "LOC_SEG", "label": "Co-segregation (locus)" }, "score": 3.0,
+  "type": "Statement", "specifiedBy": { "code": "LOC_SEG", "label": "Co-segregation (locus)" }, "score": 3.0,
   "note": "Σ informative meioses, capped +4.0; per-affected tier is Fig-2 image-only; zeroed + flipped -4.0 by a non-segregation (AD/AR-hom/XL)",
-  "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "LOC_SEG_AFF", "label": "affected co-segregants (AD)" }, "score": 3.0,
-      "evidenceItems": [ { "id": "locseg-01", "type": "segregation", "references": ["practice-variant-set:v9-runx1"],
+  "hasEvidenceLines": [
+    { "type": "Statement", "specifiedBy": { "code": "LOC_SEG_AFF", "label": "affected co-segregants (AD)" }, "score": 3.0,
+      "hasEvidenceItems": [ { "id": "locseg-01", "type": "segregation", "references": ["practice-variant-set:v9-runx1"],
         "description": "Grounded — 7 affected relatives segregating the VBC (FPD/AML). Represents 7 informative meioses; total +3.0.",
         "data": { "affected_relatives_segregating": 7, "moi": "AD", "phenotype": "FPD/AML" } } ] }
   ]

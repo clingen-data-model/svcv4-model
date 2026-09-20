@@ -4,10 +4,11 @@ The **GA4GH GKS [Variant Annotation Specification (VA-Spec)][va-spec]**
 provides a baseline set of classes for representing evidence-based
 scientific assertions about genomic variants:
 
-- `Statement`
+- `Statement` (recursive — an *evidence line* is a `Statement` nested via
+  `hasEvidenceLines`, not a distinct class in 1.1.0-ballot.2026-09)
 - `Proposition`
-- `EvidenceLine`
-- `InformationEntity` / `EvidenceData`
+- `DataItem` / `EvidenceData` (the evidence items a Statement consumes via
+  `hasEvidenceItems`)
 
 A **community profile** layers additional constraints on top of those
 baseline classes to enforce alignment with the terminology and shape
