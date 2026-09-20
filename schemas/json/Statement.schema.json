@@ -63,7 +63,7 @@
     },
     "EvidenceLine": {
       "additionalProperties": false,
-      "description": "Result of invoking a CSpec method/rule on a curator's Evidence Items.\n\nEach Evidence Line records:\n\n- The **method/rule code** (`method`) that was invoked.\n- The **evidence used** (`evidence`) \u2014 the Evidence Items that were\n  provided as inputs.\n- The **score** and optional **strength**/**direction** that the\n  CSpec method produced.\n- Optional `outcome` if the line maps to a categorical label.\n\nPer VA-Spec, *any process, rule, or method that produces a score\nmaps to an Evidence Line*. The method's *definition* lives in\nCSpec; only the invocation *result* lives here.",
+      "description": "Result of invoking a CSpec method/rule on a curator's Evidence Items.\n\nEach Evidence Line records:\n\n- The **method/rule code** (`method`) that was invoked.\n- The **evidence used** (`evidence`) \u2014 the Evidence Items that were\n  provided as inputs.\n- The **score**, the required **direction** (from the score sign),\n  and the optional **strength** that the CSpec method produced.\n- Optional `outcome` if the line maps to a categorical label.\n\nPer VA-Spec, *any process, rule, or method that produces a score\nmaps to an Evidence Line*. The method's *definition* lives in\nCSpec; only the invocation *result* lives here.",
       "properties": {
         "code": {
           "anyOf": [
@@ -105,17 +105,14 @@
           "title": "Description"
         },
         "direction": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
+          "description": "VA-Spec direction of this line's evidence relative to the proposition (required, 1..1 per 1.1.0-ballot.2026-09): `supports` when `score` > 0, `neutral` when `score` == 0, `disputes` when `score` < 0.",
+          "enum": [
+            "supports",
+            "neutral",
+            "disputes"
           ],
-          "default": null,
-          "description": "Optional direction label produced alongside the score (e.g. `pathogenic`, `benign`). Vocabulary TBD.",
-          "title": "Direction"
+          "title": "Direction",
+          "type": "string"
         },
         "evidence": {
           "description": "Evidence Items used as inputs to the method/rule. May be a subset of all items captured for the (VBC, MDE) curation.",
@@ -176,7 +173,8 @@
       },
       "required": [
         "method",
-        "score"
+        "score",
+        "direction"
       ],
       "title": "EvidenceLine",
       "type": "object"
@@ -378,17 +376,14 @@
       "title": "Description"
     },
     "direction": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+      "description": "VA-Spec direction of the evidence relative to the proposition (required, 1..1 per 1.1.0-ballot.2026-09): `supports` when `score` > 0, `neutral` when `score` == 0, `disputes` when `score` < 0.",
+      "enum": [
+        "supports",
+        "neutral",
+        "disputes"
       ],
-      "default": null,
-      "description": "Optional direction label for the score (e.g. `pathogenic`, `benign`).",
-      "title": "Direction"
+      "title": "Direction",
+      "type": "string"
     },
     "evidence_lines": {
       "description": "Evidence Lines whose scores compose into `score`. Each Evidence Line is the artifact of one CSpec method/rule invocation.",
@@ -432,7 +427,8 @@
     "proposition",
     "method",
     "score",
-    "outcome"
+    "outcome",
+    "direction"
   ],
   "title": "Statement",
   "type": "object"

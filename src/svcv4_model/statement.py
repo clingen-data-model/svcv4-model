@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from svcv4_model.classification import VariantPathogenicityClassification
@@ -51,9 +53,13 @@ class Statement(BaseModel):
         default=None,
         description="Optional strength label for the score (e.g. `strong`, `supporting`).",
     )
-    direction: str | None = Field(
-        default=None,
-        description="Optional direction label for the score (e.g. `pathogenic`, `benign`).",
+    direction: Literal["supports", "neutral", "disputes"] = Field(
+        description=(
+            "VA-Spec direction of the evidence relative to the proposition "
+            "(required, 1..1 per 1.1.0-ballot.2026-09): `supports` when "
+            "`score` > 0, `neutral` when `score` == 0, `disputes` when "
+            "`score` < 0."
+        ),
     )
     contribution: float | None = Field(
         default=None,

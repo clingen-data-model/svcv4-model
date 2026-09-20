@@ -28,7 +28,7 @@
   "score": 6.0,
   "outcome": "likely_pathogenic",
   "strength": null,
-  "direction": null,
+  "direction": "supports",
   "contribution": null,
   "evidence_lines": [
     {
@@ -56,7 +56,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Population frequency (illustrative)."
@@ -84,7 +84,7 @@
       ],
       "score": 1.0,
       "strength": "supporting",
-      "direction": "pathogenic",
+      "direction": "supports",
       "outcome": null,
       "contribution": 1.0,
       "description": "Affected proband (illustrative)."
@@ -110,7 +110,7 @@
       ],
       "score": 3.0,
       "strength": "strong",
-      "direction": "pathogenic",
+      "direction": "supports",
       "outcome": null,
       "contribution": 3.0,
       "description": "Co-segregation (illustrative)."
@@ -137,7 +137,7 @@
       ],
       "score": 2.0,
       "strength": "moderate",
-      "direction": "pathogenic",
+      "direction": "supports",
       "outcome": null,
       "contribution": 2.0,
       "description": "Coding-alteration / critical-domain evidence (PFD, illustrative).",
@@ -164,7 +164,7 @@
           ],
           "score": 2.0,
           "strength": null,
-          "direction": null,
+          "direction": "supports",
           "outcome": null,
           "contribution": null,
           "provisional": false,

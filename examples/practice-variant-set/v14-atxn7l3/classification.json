@@ -28,7 +28,7 @@
   "score": 2.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
-  "direction": null,
+  "direction": "supports",
   "contribution": null,
   "evidence_lines": [
     {
@@ -57,7 +57,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Population frequency (illustrative)."
@@ -87,7 +87,7 @@
       ],
       "score": 2.0,
       "strength": "moderate",
-      "direction": "pathogenic",
+      "direction": "supports",
       "outcome": null,
       "contribution": 2.0,
       "description": "Affected proband + confirmed de novo (illustrative). CLN_DNV also applicable."
@@ -114,7 +114,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Predicted null, mechanism-tempered (PFD, illustrative).",
@@ -141,7 +141,7 @@
           ],
           "score": 0.0,
           "strength": null,
-          "direction": null,
+          "direction": "neutral",
           "outcome": null,
           "contribution": null,
           "provisional": false,

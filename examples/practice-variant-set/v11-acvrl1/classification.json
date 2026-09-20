@@ -28,7 +28,7 @@
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
-  "direction": null,
+  "direction": "neutral",
   "contribution": null,
   "evidence_lines": [
     {
@@ -57,7 +57,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Population frequency (illustrative)."
@@ -84,7 +84,7 @@
       ],
       "score": -1.0,
       "strength": "supporting",
-      "direction": "benign",
+      "direction": "disputes",
       "outcome": null,
       "contribution": -1.0,
       "description": "Alternate cause \u2014 variant (illustrative)."
@@ -111,7 +111,7 @@
       ],
       "score": -1.0,
       "strength": "supporting",
-      "direction": "benign",
+      "direction": "disputes",
       "outcome": null,
       "contribution": -1.0,
       "description": "Alternate cause \u2014 gene (illustrative)."
@@ -138,7 +138,7 @@
       ],
       "score": 0.0,
       "strength": null,
-      "direction": null,
+      "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
       "description": "Predictive missense evidence (PFD, illustrative).",
@@ -153,7 +153,7 @@
           "evidence": [],
           "score": 0.0,
           "strength": null,
-          "direction": null,
+          "direction": "neutral",
           "outcome": null,
           "contribution": null,
           "provisional": false,
@@ -180,7 +180,7 @@
               ],
               "score": 0.0,
               "strength": null,
-              "direction": null,
+              "direction": "neutral",
               "outcome": null,
               "contribution": null,
               "provisional": true,

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from svcv4_model.classification import VariantPathogenicityClassification
@@ -17,8 +19,8 @@ class EvidenceLine(BaseModel):
     - The **method/rule code** (`method`) that was invoked.
     - The **evidence used** (`evidence`) — the Evidence Items that were
       provided as inputs.
-    - The **score** and optional **strength**/**direction** that the
-      CSpec method produced.
+    - The **score**, the required **direction** (from the score sign),
+      and the optional **strength** that the CSpec method produced.
     - Optional `outcome` if the line maps to a categorical label.
 
     Per VA-Spec, *any process, rule, or method that produces a score
@@ -57,11 +59,12 @@ class EvidenceLine(BaseModel):
             "(e.g. `supporting`, `moderate`, `strong`). Vocabulary TBD."
         ),
     )
-    direction: str | None = Field(
-        default=None,
+    direction: Literal["supports", "neutral", "disputes"] = Field(
         description=(
-            "Optional direction label produced alongside the score "
-            "(e.g. `pathogenic`, `benign`). Vocabulary TBD."
+            "VA-Spec direction of this line's evidence relative to the "
+            "proposition (required, 1..1 per 1.1.0-ballot.2026-09): "
+            "`supports` when `score` > 0, `neutral` when `score` == 0, "
+            "`disputes` when `score` < 0."
         ),
     )
     outcome: VariantPathogenicityClassification | None = Field(

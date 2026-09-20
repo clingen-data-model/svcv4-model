@@ -26,12 +26,14 @@ def _make_statement() -> Statement:
         ),
         method=Method(code="svcv4:baseline", version="test"),
         score=4.0,
+        direction="supports",
         outcome=VariantPathogenicityClassification.LIKELY_PATHOGENIC,
         evidence_lines=[
             EvidenceLine(
                 method=Method(code="svcv4:CLN_AFF"),
                 evidence=[EvidenceItem(type="clinical_observation", data={"n": 4})],
                 score=2.0,
+                direction="supports",
             ),
         ],
     )
