@@ -48,17 +48,17 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v30-RYR1-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [],
+          "description": "POP inputs from the tab; penetrance is very low (0.01).",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 10000",
             "allelic_heterogeneity": 0.1,
             "genetic_heterogeneity": 0.76,
             "penetrance": 0.01,
             "gnomad": "absent",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "POP inputs from the tab; penetrance is very low (0.01)."
+          }
         }
       ]
     },
@@ -78,16 +78,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v30-RYR1-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "One proband with an MH episode and positive IVCT; other known genes cleared.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 1,
             "pheno_specificity_for_mde": "CONSISTENT",
             "phenotype": "malignant-hyperthermia episode with a positive in-vitro contracture test (IVCT); CACNA1S ruled out",
             "note": "a substantial fraction of MHS cases have no identified genetic cause",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "One proband with an MH episode and positive IVCT; other known genes cleared."
+          }
         }
       ]
     },
@@ -107,14 +107,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v30-RYR1-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "REVEL 0.248 is low; no same-codon informative variants.",
+          "subtype": "computational_prediction",
+          "value": {
             "tool": "REVEL",
             "score": 0.248,
             "splice_impact": "none"
-          },
-          "references": [],
-          "description": "REVEL 0.248 is low; no same-codon informative variants."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -151,14 +151,14 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v30-RYR1-mis-001",
-                  "type": "computational_prediction",
-                  "data": {
+                  "references": [],
+                  "description": "REVEL 0.248 is low; no same-codon informative variants.",
+                  "subtype": "computational_prediction",
+                  "value": {
                     "tool": "REVEL",
                     "score": 0.248,
                     "splice_impact": "none"
-                  },
-                  "references": [],
-                  "description": "REVEL 0.248 is low; no same-codon informative variants."
+                  }
                 }
               ],
               "hasEvidenceLines": []

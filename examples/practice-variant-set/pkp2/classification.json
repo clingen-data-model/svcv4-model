@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-PKP2-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr12-32843211-G-T?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 1000",
             "allelic_heterogeneity": 1.0,
             "genetic_heterogeneity": 0.6,
             "penetrance": 0.3,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr12-32843211-G-T?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab."
+          }
         }
       ]
     },
@@ -79,14 +79,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-PKP2-nul-001",
-          "type": "predicted_lof",
-          "data": {
+          "references": [],
+          "description": "Nonsense change in an exon absent from the clinically relevant transcript, so the LoF mechanism does not clearly apply.",
+          "subtype": "predicted_lof",
+          "value": {
             "consequence": "nonsense p.Ser494Ter in an alt transcript (NM_004572.4, exon 6/10)",
             "mane_select": "deep intronic (c.1379-2006C>A); the nonsense-bearing exon is absent from MANE Select",
             "interpretation": "LoF weight is uncertain \u2014 the affected exon is not in the clinically relevant transcript"
-          },
-          "references": [],
-          "description": "Nonsense change in an exon absent from the clinically relevant transcript, so the LoF mechanism does not clearly apply."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -107,14 +107,14 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-PKP2-nul-001",
-              "type": "predicted_lof",
-              "data": {
+              "references": [],
+              "description": "Nonsense change in an exon absent from the clinically relevant transcript, so the LoF mechanism does not clearly apply.",
+              "subtype": "predicted_lof",
+              "value": {
                 "consequence": "nonsense p.Ser494Ter in an alt transcript (NM_004572.4, exon 6/10)",
                 "mane_select": "deep intronic (c.1379-2006C>A); the nonsense-bearing exon is absent from MANE Select",
                 "interpretation": "LoF weight is uncertain \u2014 the affected exon is not in the clinically relevant transcript"
-              },
-              "references": [],
-              "description": "Nonsense change in an exon absent from the clinically relevant transcript, so the LoF mechanism does not clearly apply."
+              }
             }
           ],
           "hasEvidenceLines": []

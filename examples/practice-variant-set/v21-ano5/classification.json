@@ -48,19 +48,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v21-ANO5-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr11-22218244-AG-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab (biallelic threshold).",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 50000",
             "allelic_heterogeneity": 0.2,
             "genetic_heterogeneity": 0.25,
             "penetrance": 0.85,
             "inheritance": "biallelic",
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr11-22218244-AG-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab (biallelic threshold)."
+          }
         }
       ]
     },
@@ -80,16 +80,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v21-ANO5-spl-001",
-          "type": "computational_prediction",
-          "data": {
-            "variant": "loss of exon-4 acceptor (SpliceAI just above 0.20)",
-            "predicted_effect": "skipping of in-frame exon 4 (p.Pro47_Met60del; ~1.5% of protein; cytoplasmic region)",
-            "informative_variants": "a same-exon P/LP missense with supporting clinical data (ClinVar:197402) suggests the exon contributes to function"
-          },
           "references": [
             "https://www.ncbi.nlm.nih.gov/clinvar/variation/197402/"
           ],
-          "description": "Predicted exon-4 skip; a same-exon P/LP missense supports that this region matters."
+          "description": "Predicted exon-4 skip; a same-exon P/LP missense supports that this region matters.",
+          "subtype": "computational_prediction",
+          "value": {
+            "variant": "loss of exon-4 acceptor (SpliceAI just above 0.20)",
+            "predicted_effect": "skipping of in-frame exon 4 (p.Pro47_Met60del; ~1.5% of protein; cytoplasmic region)",
+            "informative_variants": "a same-exon P/LP missense with supporting clinical data (ClinVar:197402) suggests the exon contributes to function"
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -110,16 +110,16 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v21-ANO5-spl-001",
-              "type": "computational_prediction",
-              "data": {
-                "variant": "loss of exon-4 acceptor (SpliceAI just above 0.20)",
-                "predicted_effect": "skipping of in-frame exon 4 (p.Pro47_Met60del; ~1.5% of protein; cytoplasmic region)",
-                "informative_variants": "a same-exon P/LP missense with supporting clinical data (ClinVar:197402) suggests the exon contributes to function"
-              },
               "references": [
                 "https://www.ncbi.nlm.nih.gov/clinvar/variation/197402/"
               ],
-              "description": "Predicted exon-4 skip; a same-exon P/LP missense supports that this region matters."
+              "description": "Predicted exon-4 skip; a same-exon P/LP missense supports that this region matters.",
+              "subtype": "computational_prediction",
+              "value": {
+                "variant": "loss of exon-4 acceptor (SpliceAI just above 0.20)",
+                "predicted_effect": "skipping of in-frame exon 4 (p.Pro47_Met60del; ~1.5% of protein; cytoplasmic region)",
+                "informative_variants": "a same-exon P/LP missense with supporting clinical data (ClinVar:197402) suggests the exon contributes to function"
+              }
             }
           ],
           "hasEvidenceLines": []

@@ -48,19 +48,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v8-TRDN-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr6-123331888-T-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab (biallelic threshold).",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 7000",
             "allelic_heterogeneity": 0.2,
             "genetic_heterogeneity": 0.02,
             "penetrance": 0.75,
             "inheritance": "biallelic",
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr6-123331888-T-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab (biallelic threshold)."
+          }
         }
       ]
     },
@@ -80,14 +80,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v8-TRDN-uaf-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "One unaffected heterozygous carrier \u2014 expected for a recessive condition, so uninformative here.",
+          "subtype": "clinical_observation",
+          "value": {
             "affected": false,
             "zygosity": "HET",
             "context": "unaffected individual with a family history of sudden cardiac death; no second TRDN variant identified"
-          },
-          "references": [],
-          "description": "One unaffected heterozygous carrier \u2014 expected for a recessive condition, so uninformative here."
+          }
         }
       ]
     },
@@ -107,14 +107,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v8-TRDN-nul-001",
-          "type": "predicted_lof",
-          "data": {
+          "references": [],
+          "description": "Nonsense change outside the cardiac-predominant transcript region \u2192 LoF does not clearly apply.",
+          "subtype": "predicted_lof",
+          "value": {
             "consequence": "nonsense p.Lys488Ter in exon 23 of MANE Select",
             "cardiac_transcript": "the predominant cardiac transcript (NM_001256021.1) comprises exons 1-8; only variants there are disease-implicated",
             "interpretation": "LoF variants after exon 8 are not classified P/LP \u2014 weight is uncertain"
-          },
-          "references": [],
-          "description": "Nonsense change outside the cardiac-predominant transcript region \u2192 LoF does not clearly apply."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -135,14 +135,14 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v8-TRDN-nul-001",
-              "type": "predicted_lof",
-              "data": {
+              "references": [],
+              "description": "Nonsense change outside the cardiac-predominant transcript region \u2192 LoF does not clearly apply.",
+              "subtype": "predicted_lof",
+              "value": {
                 "consequence": "nonsense p.Lys488Ter in exon 23 of MANE Select",
                 "cardiac_transcript": "the predominant cardiac transcript (NM_001256021.1) comprises exons 1-8; only variants there are disease-implicated",
                 "interpretation": "LoF variants after exon 8 are not classified P/LP \u2014 weight is uncertain"
-              },
-              "references": [],
-              "description": "Nonsense change outside the cardiac-predominant transcript region \u2192 LoF does not clearly apply."
+              }
             }
           ],
           "hasEvidenceLines": []

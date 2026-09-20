@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-EXAMPLE-FBN1-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr15-48427768-G-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 5000",
             "allelic_heterogeneity": 0.1,
             "genetic_heterogeneity": 1.0,
             "penetrance": 0.85,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr15-48427768-G-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab."
+          }
         }
       ]
     },
@@ -79,8 +79,10 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-EXAMPLE-FBN1-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "Two probands; proband 2 (ectopia lentis \u2014 FBN1 accounts for ~60-68%) is a confirmed de novo, also scoreable under CLN_DNV.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 2,
             "probands": [
               {
@@ -93,9 +95,7 @@
               }
             ],
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "Two probands; proband 2 (ectopia lentis \u2014 FBN1 accounts for ~60-68%) is a confirmed de novo, also scoreable under CLN_DNV."
+          }
         }
       ]
     },
@@ -115,14 +115,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-EXAMPLE-FBN1-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "REVEL 0.841 \u2014 supportive in-silico missense evidence.",
+          "subtype": "computational_prediction",
+          "value": {
             "tool": "REVEL",
             "score": 0.841,
             "splice_impact": "none"
-          },
-          "references": [],
-          "description": "REVEL 0.841 \u2014 supportive in-silico missense evidence."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -159,14 +159,14 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-EXAMPLE-FBN1-mis-001",
-                  "type": "computational_prediction",
-                  "data": {
+                  "references": [],
+                  "description": "REVEL 0.841 \u2014 supportive in-silico missense evidence.",
+                  "subtype": "computational_prediction",
+                  "value": {
                     "tool": "REVEL",
                     "score": 0.841,
                     "splice_impact": "none"
-                  },
-                  "references": [],
-                  "description": "REVEL 0.841 \u2014 supportive in-silico missense evidence."
+                  }
                 }
               ],
               "hasEvidenceLines": []

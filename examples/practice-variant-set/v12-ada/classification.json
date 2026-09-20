@@ -48,19 +48,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v12-ADA-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr20-44626601-T-C?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab (biallelic threshold).",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 5000",
             "allelic_heterogeneity": 0.2,
             "genetic_heterogeneity": 0.13,
             "penetrance": 0.5,
             "inheritance": "biallelic",
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr20-44626601-T-C?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab (biallelic threshold)."
+          }
         }
       ]
     },
@@ -80,16 +80,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v12-ADA-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "One homozygous proband with a SCID-specific T-B-NK- profile; all relevant genes tested.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 1,
             "zygosity": "homozygous",
             "pheno_specificity_for_mde": "SPECIFIC",
             "phenotype": "SCID with T-B-NK- lymphocyte subset profile; large SCID panel tested",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "One homozygous proband with a SCID-specific T-B-NK- profile; all relevant genes tested."
+          }
         }
       ]
     },
@@ -109,17 +109,17 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v12-ADA-spl-001",
-          "type": "functional_assay",
-          "data": {
+          "references": [
+            "PMID:3182793"
+          ],
+          "description": "Canonical splice-site variant with RT-PCR-confirmed exon-4 skipping removing a critical region.",
+          "subtype": "functional_assay",
+          "value": {
             "variant": "canonical splice acceptor (-2) of intron 3",
             "predicted_effect": "skipping of biologically relevant exon 4 \u2192 in-frame deletion of aa 74-121 (>10% of protein; critical region)",
             "rt_pcr": "confirmed exon 4 skipping in the proband",
             "concordance": "splicing data and PRD concordant; near-complete alternative transcript"
-          },
-          "references": [
-            "PMID:3182793"
-          ],
-          "description": "Canonical splice-site variant with RT-PCR-confirmed exon-4 skipping removing a critical region."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -140,17 +140,17 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v12-ADA-spl-001",
-              "type": "functional_assay",
-              "data": {
+              "references": [
+                "PMID:3182793"
+              ],
+              "description": "Canonical splice-site variant with RT-PCR-confirmed exon-4 skipping removing a critical region.",
+              "subtype": "functional_assay",
+              "value": {
                 "variant": "canonical splice acceptor (-2) of intron 3",
                 "predicted_effect": "skipping of biologically relevant exon 4 \u2192 in-frame deletion of aa 74-121 (>10% of protein; critical region)",
                 "rt_pcr": "confirmed exon 4 skipping in the proband",
                 "concordance": "splicing data and PRD concordant; near-complete alternative transcript"
-              },
-              "references": [
-                "PMID:3182793"
-              ],
-              "description": "Canonical splice-site variant with RT-PCR-confirmed exon-4 skipping removing a critical region."
+              }
             }
           ],
           "hasEvidenceLines": []

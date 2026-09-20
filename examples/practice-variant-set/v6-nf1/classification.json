@@ -48,19 +48,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v6-NF1-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/region/17-31232861-31232901?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab; variant absent from gnomAD.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 2600",
             "allelic_heterogeneity": 0.06,
             "genetic_heterogeneity": 1.0,
             "penetrance": 0.8,
             "gnomad": "absent",
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/region/17-31232861-31232901?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab; variant absent from gnomAD."
+          }
         }
       ]
     },
@@ -80,8 +80,10 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v6-NF1-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "Three probands; proband 1 is a confirmed de novo (also scoreable under CLN_DNV) with a clinical NF1 diagnosis.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 3,
             "probands": [
               {
@@ -98,9 +100,7 @@
               }
             ],
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "Three probands; proband 1 is a confirmed de novo (also scoreable under CLN_DNV) with a clinical NF1 diagnosis."
+          }
         }
       ]
     },
@@ -120,26 +120,26 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v6-NF1-spl-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "Donor-loss at the last base of the exon \u2192 out-of-frame exon skip in a LoF gene.",
+          "subtype": "computational_prediction",
+          "value": {
             "position": "last base of exon 26 of 57",
             "spliceai": "loss of donor (0.76)",
             "predicted_effect": "skipping of an out-of-frame exon \u2192 LoF",
             "informative_variants": "other variants with the same SpliceAI donor-loss prediction"
-          },
-          "references": [],
-          "description": "Donor-loss at the last base of the exon \u2192 out-of-frame exon skip in a LoF gene."
+          }
         },
         {
           "id": "PVS-v6-NF1-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "Missense predictors are intermediate/low \u2014 the splicing effect, not the amino-acid change, drives this line.",
+          "subtype": "computational_prediction",
+          "value": {
             "tool": "REVEL",
             "score": 0.51,
             "bayesdel": 0.05
-          },
-          "references": [],
-          "description": "Missense predictors are intermediate/low \u2014 the splicing effect, not the amino-acid change, drives this line."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -160,26 +160,26 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v6-NF1-spl-001",
-              "type": "computational_prediction",
-              "data": {
+              "references": [],
+              "description": "Donor-loss at the last base of the exon \u2192 out-of-frame exon skip in a LoF gene.",
+              "subtype": "computational_prediction",
+              "value": {
                 "position": "last base of exon 26 of 57",
                 "spliceai": "loss of donor (0.76)",
                 "predicted_effect": "skipping of an out-of-frame exon \u2192 LoF",
                 "informative_variants": "other variants with the same SpliceAI donor-loss prediction"
-              },
-              "references": [],
-              "description": "Donor-loss at the last base of the exon \u2192 out-of-frame exon skip in a LoF gene."
+              }
             },
             {
               "id": "PVS-v6-NF1-mis-001",
-              "type": "computational_prediction",
-              "data": {
+              "references": [],
+              "description": "Missense predictors are intermediate/low \u2014 the splicing effect, not the amino-acid change, drives this line.",
+              "subtype": "computational_prediction",
+              "value": {
                 "tool": "REVEL",
                 "score": 0.51,
                 "bayesdel": 0.05
-              },
-              "references": [],
-              "description": "Missense predictors are intermediate/low \u2014 the splicing effect, not the amino-acid change, drives this line."
+              }
             }
           ],
           "hasEvidenceLines": []

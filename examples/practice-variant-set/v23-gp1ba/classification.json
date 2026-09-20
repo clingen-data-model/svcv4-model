@@ -48,19 +48,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v23-GP1BA-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr17-4932938-G-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab (biallelic threshold).",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 1000000",
             "allelic_heterogeneity": 0.4,
             "genetic_heterogeneity": 0.4,
             "penetrance": 1.0,
             "inheritance": "biallelic",
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr17-4932938-G-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab (biallelic threshold)."
+          }
         }
       ]
     },
@@ -80,14 +80,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v23-GP1BA-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "REVEL 0.322 is low \u2014 mildly benign-leaning, but not decisive.",
+          "subtype": "computational_prediction",
+          "value": {
             "tool": "REVEL",
             "score": 0.322,
             "splice_impact": "none"
-          },
-          "references": [],
-          "description": "REVEL 0.322 is low \u2014 mildly benign-leaning, but not decisive."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -124,14 +124,14 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v23-GP1BA-mis-001",
-                  "type": "computational_prediction",
-                  "data": {
+                  "references": [],
+                  "description": "REVEL 0.322 is low \u2014 mildly benign-leaning, but not decisive.",
+                  "subtype": "computational_prediction",
+                  "value": {
                     "tool": "REVEL",
                     "score": 0.322,
                     "splice_impact": "none"
-                  },
-                  "references": [],
-                  "description": "REVEL 0.322 is low \u2014 mildly benign-leaning, but not decisive."
+                  }
                 }
               ],
               "hasEvidenceLines": []

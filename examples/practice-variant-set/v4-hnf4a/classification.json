@@ -48,19 +48,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v4-HNF4A-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/region/20-44413773-44413813?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab; variant absent from gnomAD.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 1000",
             "allelic_heterogeneity": 0.4,
             "genetic_heterogeneity": 0.1,
             "penetrance": 0.5,
             "gnomad": "absent",
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/region/20-44413773-44413813?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab; variant absent from gnomAD."
+          }
         }
       ]
     },
@@ -80,16 +80,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v4-HNF4A-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "One proband with HNF4A-MODY phenotype and negative testing of other MODY genes.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 1,
             "pheno_specificity_for_mde": "CONSISTENT",
             "phenotype": "HNF4A-MODY (diazoxide-responsive neonatal hypoglycemia); all other MODY genes negative",
             "diagnostic_yield": "33-50%",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "One proband with HNF4A-MODY phenotype and negative testing of other MODY genes."
+          }
         }
       ]
     },
@@ -109,14 +109,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v4-HNF4A-nul-001",
-          "type": "predicted_lof",
-          "data": {
+          "references": [],
+          "description": "Frameshift predicted to undergo NMD in a gene where LoF is the mechanism.",
+          "subtype": "predicted_lof",
+          "value": {
             "consequence": "frameshift at codon 141, PTC in exon 5 of 10",
             "nmd": "predicted",
             "informative_variants": "\u22653 other NMD-predicted LoF variants in this exon classified Pathogenic by the Monogenic Diabetes VCEP"
-          },
-          "references": [],
-          "description": "Frameshift predicted to undergo NMD in a gene where LoF is the mechanism."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -137,14 +137,14 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v4-HNF4A-nul-001",
-              "type": "predicted_lof",
-              "data": {
+              "references": [],
+              "description": "Frameshift predicted to undergo NMD in a gene where LoF is the mechanism.",
+              "subtype": "predicted_lof",
+              "value": {
                 "consequence": "frameshift at codon 141, PTC in exon 5 of 10",
                 "nmd": "predicted",
                 "informative_variants": "\u22653 other NMD-predicted LoF variants in this exon classified Pathogenic by the Monogenic Diabetes VCEP"
-              },
-              "references": [],
-              "description": "Frameshift predicted to undergo NMD in a gene where LoF is the mechanism."
+              }
             }
           ],
           "hasEvidenceLines": []

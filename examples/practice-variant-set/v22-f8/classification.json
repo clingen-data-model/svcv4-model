@@ -48,16 +48,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v22-F8-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [],
+          "description": "POP inputs via the binning approach; variant absent from gnomAD.",
+          "subtype": "population_frequency",
+          "value": {
             "approach": "binning (X-linked dominant combined table)",
             "prevalence_estimate": "1 in 10000",
             "penetrance": 0.2,
             "gnomad": "absent",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "POP inputs via the binning approach; variant absent from gnomAD."
+          }
         }
       ]
     },
@@ -77,29 +77,29 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v22-F8-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "Strong in-silico missense support (REVEL 0.972).",
+          "subtype": "computational_prediction",
+          "value": {
             "tool": "REVEL",
             "score": 0.972,
             "grantham": 125,
             "splice_impact": "none"
-          },
-          "references": [],
-          "description": "Strong in-silico missense support (REVEL 0.972)."
+          }
         },
         {
           "id": "PVS-v22-F8-mis-002",
-          "type": "same_residue_variant",
-          "data": {
+          "references": [],
+          "description": "A different nucleotide giving the SAME amino-acid change is LP (PS1-type), and two other same-codon changes are P/LP (PM5-type).",
+          "subtype": "same_residue_variant",
+          "value": {
             "residue": "p.Gly474",
             "same_aa_change": "c.1420G>A (p.Gly474Arg) is LP (PS1-type: same amino-acid change)",
             "same_codon": [
               "c.1421G>A (p.Gly474Glu) \u2014 Pathogenic (Grantham 98)",
               "c.1420G>T (p.Gly474Trp) \u2014 LP (Grantham 184)"
             ]
-          },
-          "references": [],
-          "description": "A different nucleotide giving the SAME amino-acid change is LP (PS1-type), and two other same-codon changes are P/LP (PM5-type)."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -136,15 +136,15 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v22-F8-mis-001",
-                  "type": "computational_prediction",
-                  "data": {
+                  "references": [],
+                  "description": "Strong in-silico missense support (REVEL 0.972).",
+                  "subtype": "computational_prediction",
+                  "value": {
                     "tool": "REVEL",
                     "score": 0.972,
                     "grantham": 125,
                     "splice_impact": "none"
-                  },
-                  "references": [],
-                  "description": "Strong in-silico missense support (REVEL 0.972)."
+                  }
                 }
               ],
               "hasEvidenceLines": []
@@ -184,17 +184,17 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v22-F8-mis-002",
-                  "type": "same_residue_variant",
-                  "data": {
+                  "references": [],
+                  "description": "A different nucleotide giving the SAME amino-acid change is LP (PS1-type), and two other same-codon changes are P/LP (PM5-type).",
+                  "subtype": "same_residue_variant",
+                  "value": {
                     "residue": "p.Gly474",
                     "same_aa_change": "c.1420G>A (p.Gly474Arg) is LP (PS1-type: same amino-acid change)",
                     "same_codon": [
                       "c.1421G>A (p.Gly474Glu) \u2014 Pathogenic (Grantham 98)",
                       "c.1420G>T (p.Gly474Trp) \u2014 LP (Grantham 184)"
                     ]
-                  },
-                  "references": [],
-                  "description": "A different nucleotide giving the SAME amino-acid change is LP (PS1-type), and two other same-codon changes are P/LP (PM5-type)."
+                  }
                 }
               ],
               "hasEvidenceLines": []
