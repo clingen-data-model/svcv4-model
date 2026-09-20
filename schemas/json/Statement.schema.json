@@ -94,6 +94,14 @@
       "additionalProperties": false,
       "description": "A reference to a CSpec-defined method, rule, or specification.\n\nThis class **names**, but does not **define**, a method. Method\ndefinitions \u2014 together with their evaluation logic, scoring rules,\nand version selection \u2014 live in ClinGen CSpec, which is outside\nthis repository and outside GA4GH GKS VA-Spec.\n\nUsed in two roles:\n\n1. At the `Statement` level, `method` identifies the **applied\n   SVCv4 specification version** \u2014 either the baseline SVCv4\n   Standard or a specific VCEP-specialised version that was\n   selected for the (VBC, MDE) curation.\n2. At the `EvidenceLine` level, `method` identifies the specific\n   CSpec method or rule whose invocation produced that Evidence\n   Line's score.",
       "properties": {
+        "aliases": {
+          "description": "VA-Spec `aliases` (0..m).",
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
         "code": {
           "description": "Opaque method/rule code as published by CSpec. CURIE-style scheme TBD; treated as an opaque string for now.",
           "title": "Code",
@@ -112,6 +120,28 @@
           "description": "Optional prose description; usually a pointer into CSpec.",
           "title": "Description"
         },
+        "extensions": {
+          "description": "VA-Spec `extensions` (0..m).",
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Extensions",
+          "type": "array"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VA-Spec `id` (0..1): stable identifier for the method.",
+          "title": "Id"
+        },
         "label": {
           "anyOf": [
             {
@@ -124,6 +154,39 @@
           "default": null,
           "description": "Human-readable label for the method/rule.",
           "title": "Label"
+        },
+        "methodType": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VA-Spec `methodType` (0..1): the kind of method (e.g. a guideline or computational procedure).",
+          "title": "Methodtype"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VA-Spec `name` (0..1): short human-readable label.",
+          "title": "Name"
+        },
+        "type": {
+          "const": "Method",
+          "default": "Method",
+          "description": "VA-Spec entity `type` (1..1); always `Method`.",
+          "title": "Type",
+          "type": "string"
         },
         "version": {
           "anyOf": [
@@ -189,6 +252,14 @@
       "additionalProperties": false,
       "description": "A VA-Spec 1.1.0 ``Statement``, profiled for SVCv4.\n\nUsed at two levels:\n\n1. **Top level** \u2014 the rolled-up Variant Pathogenicity Classification: a\n   ``proposition`` (the SPOQ assertion about a VBC and MDE), the final\n   ``score`` / ``direction`` / ``outcome``, the applied specification\n   version (``specifiedBy``), and the composing ``hasEvidenceLines``.\n2. **Evidence-line level** \u2014 one CSpec method/rule assessment nested under a\n   parent via ``hasEvidenceLines``: its ``code``, ``score``, ``direction``,\n   ``strength``, ``outcome``, the ``hasEvidenceItems`` it consumed, and any\n   deeper ``hasEvidenceLines`` (concept \u2192 code \u2192 subcode).\n\n``score`` and ``quality`` are deprecated in VA-Spec core; SVCv4 continues to\nuse ``score`` for its Bayesian points. ``code`` and ``provisional`` are SVCv4\nprofile extensions.",
       "properties": {
+        "aliases": {
+          "description": "VA-Spec `aliases` (0..m): alternate names/identifiers.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
         "code": {
           "anyOf": [
             {
@@ -238,6 +309,15 @@
           "title": "Direction",
           "type": "string"
         },
+        "extensions": {
+          "description": "VA-Spec `extensions` (0..m): profile/implementation-specific Extension objects.",
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Extensions",
+          "type": "array"
+        },
         "hasEvidenceItems": {
           "description": "VA-Spec `hasEvidenceItems` (0..m): the Data Items / Study Results consumed by this Statement.",
           "items": {
@@ -253,6 +333,32 @@
           },
           "title": "Hasevidencelines",
           "type": "array"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VA-Spec `id` (0..1): stable identifier for this Statement.",
+          "title": "Id"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VA-Spec `name` (0..1): a short human-readable label.",
+          "title": "Name"
         },
         "outcome": {
           "anyOf": [
@@ -314,6 +420,13 @@
           "default": null,
           "description": "VA-Spec strength (0..1, Mappable Concept; open vocabulary) \u2014 e.g. `supporting`, `moderate`, `strong`.",
           "title": "Strength"
+        },
+        "type": {
+          "const": "Statement",
+          "default": "Statement",
+          "description": "VA-Spec entity `type` (1..1); always `Statement`.",
+          "title": "Type",
+          "type": "string"
         }
       },
       "required": [

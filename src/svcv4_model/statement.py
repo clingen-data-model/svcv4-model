@@ -8,7 +8,7 @@ nested evidence-line assessment are all Statements.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -38,6 +38,28 @@ class Statement(BaseModel):
 
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
+    id: str | None = Field(
+        default=None,
+        description="VA-Spec `id` (0..1): stable identifier for this Statement.",
+    )
+    type: Literal["Statement"] = Field(
+        default="Statement",
+        description="VA-Spec entity `type` (1..1); always `Statement`.",
+    )
+    name: str | None = Field(
+        default=None,
+        description="VA-Spec `name` (0..1): a short human-readable label.",
+    )
+    aliases: list[str] = Field(
+        default_factory=list,
+        description="VA-Spec `aliases` (0..m): alternate names/identifiers.",
+    )
+    extensions: list[dict[str, Any]] = Field(
+        default_factory=list,
+        description=(
+            "VA-Spec `extensions` (0..m): profile/implementation-specific Extension objects."
+        ),
+    )
     proposition: Proposition | None = Field(
         default=None,
         description=(

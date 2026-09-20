@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any, Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -24,8 +26,36 @@ class Method(BaseModel):
        Line's score.
     """
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
+    id: str | None = Field(
+        default=None,
+        description="VA-Spec `id` (0..1): stable identifier for the method.",
+    )
+    type: Literal["Method"] = Field(
+        default="Method",
+        description="VA-Spec entity `type` (1..1); always `Method`.",
+    )
+    name: str | None = Field(
+        default=None,
+        description="VA-Spec `name` (0..1): short human-readable label.",
+    )
+    aliases: list[str] = Field(
+        default_factory=list,
+        description="VA-Spec `aliases` (0..m).",
+    )
+    extensions: list[dict[str, Any]] = Field(
+        default_factory=list,
+        description="VA-Spec `extensions` (0..m).",
+    )
+    method_type: str | None = Field(
+        default=None,
+        alias="methodType",
+        description=(
+            "VA-Spec `methodType` (0..1): the kind of method (e.g. a guideline "
+            "or computational procedure)."
+        ),
+    )
     code: str = Field(
         description=(
             "Opaque method/rule code as published by CSpec. CURIE-style "
