@@ -24,25 +24,25 @@ variant's presence in affected probands is not pathogenic evidence. **Benign cod
 `CLN_ALTV`/`CLN_ALTG`) are *not* POP-gated.**
 
 > **Why `pop_frq_vbc_score` rides on the evidence item.** The gate needs the VBC's `POP_FRQ` outcome
-> at the moment it scores `CLN_AFF` / `CLN_DNV`, so those codes' `evidenceItems` carry a
+> at the moment it scores `CLN_AFF` / `CLN_DNV`, so those codes' `hasEvidenceItems` carry a
 > **`pop_frq_vbc_score`** attribute — the VBC-level `POP_FRQ` score (`= POP_FRQ.score`, one of
 > `0.0 / −1.0 / −3.0 / −6.0`). Each proband's contribution is then self-auditable: a reviewer sees
 > the frequency that either admits or zeroes the count, right beside the observation. (The value is
 > per-VBC, so it is identical across that code's items.)
 
 ```json
-{ "type": "EvidenceLine", "method": { "code": "CLN_AFF", "label": "Affected observations" }, "score": 5.5,
+{ "type": "Statement", "specifiedBy": { "code": "CLN_AFF", "label": "Affected observations" }, "score": 5.5,
   "note": "POP_FRQ-gated: if pop_frq_vbc_score is not 0.0 or -1.0, this whole code is NA (score → 0, dropped)",
-  "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_CTP", "label": "rare · confirmed-trans P/LP" }, "score": 3.0,
-      "evidenceItems": [ { "id": "ush2a-proband-3", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
+  "hasEvidenceLines": [
+    { "type": "Statement", "specifiedBy": { "code": "CLN_AFF_BIAL_RARE_CTP", "label": "rare · confirmed-trans P/LP" }, "score": 3.0,
+      "hasEvidenceItems": [ { "id": "ush2a-proband-3", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
         "data": { "id": "ush2a-proband-3", "pop_frq_vbc_score": 0.0, "vbc_zygosity": "HET",
           "compound_het_variant": { "classification": "P", "phase_confidence": "HIGH", "co_occurrence_likelihood": "LT_0_0001" } } } ] }
   ]
 }
 ```
 
-Flip that `pop_frq_vbc_score` to `−3.0` and the entire `CLN_AFF` `EvidenceLine` is dropped from the
+Flip that `pop_frq_vbc_score` to `−3.0` and the entire `CLN_AFF` `Statement` is dropped from the
 CLN roll-up — no matter how many strong probands it holds.
 
 **This is the ripple effect (principle 6) made concrete.** `pop_frq_vbc_score` is *collected
@@ -63,25 +63,25 @@ landing at `+6.5`, `−11.0`, or `+16.0` depending only on *other* evidence line
 **(a) VBC rare — `pop_frq_vbc_score = 0.0` — every code kept:**
 
 ```text
-EvidenceLine  CLN                         score +6.5   (Σ kept sub-codes)
-└─ evidenceLines:
-   ├─ EvidenceLine  CLN_AFF   score +5.5   [pop_frq_vbc_score 0.0 → kept]   → CLN_AFF example (USH2A biallelic)
-   ├─ EvidenceLine  CLN_DNV   score +12.0  [pop_frq_vbc_score 0.0 → kept]   → CLN_DNV example (PTPN11, capped)
-   ├─ EvidenceLine  CLN_ALTV  score -0.5   (benign · not POP-gated)         → CLN_ALTV example (ACVRL1)
-   ├─ EvidenceLine  CLN_ALTG  score -0.5   (benign · not POP-gated)         → CLN_ALTG example (ACVRL1)
-   └─ EvidenceLine  CLN_UAF   score -10.0  (benign · not POP-gated)         → CLN_UAF example
+Statement  CLN                         score +6.5   (Σ kept sub-codes)
+└─ hasEvidenceLines:
+   ├─ Statement  CLN_AFF   score +5.5   [pop_frq_vbc_score 0.0 → kept]   → CLN_AFF example (USH2A biallelic)
+   ├─ Statement  CLN_DNV   score +12.0  [pop_frq_vbc_score 0.0 → kept]   → CLN_DNV example (PTPN11, capped)
+   ├─ Statement  CLN_ALTV  score -0.5   (benign · not POP-gated)         → CLN_ALTV example (ACVRL1)
+   ├─ Statement  CLN_ALTG  score -0.5   (benign · not POP-gated)         → CLN_ALTG example (ACVRL1)
+   └─ Statement  CLN_UAF   score -10.0  (benign · not POP-gated)         → CLN_UAF example
 ```
 
 **(b) `POP_FRQ` gate — same probands, but `pop_frq_vbc_score = −3.0` (VBC too common):**
 
 ```text
-EvidenceLine  CLN                         score -11.0   (Σ kept sub-codes)
-└─ evidenceLines:
+Statement  CLN                         score -11.0   (Σ kept sub-codes)
+└─ hasEvidenceLines:
    ├─ (CLN_AFF   NA)   pop_frq_vbc_score −3.0 → too common → zeroed
    ├─ (CLN_DNV   NA)   pop_frq_vbc_score −3.0 → too common → zeroed
-   ├─ EvidenceLine  CLN_ALTV  score -0.5    (benign · not gated)
-   ├─ EvidenceLine  CLN_ALTG  score -0.5    (benign · not gated)
-   └─ EvidenceLine  CLN_UAF   score -10.0   (benign · not gated)
+   ├─ Statement  CLN_ALTV  score -0.5    (benign · not gated)
+   ├─ Statement  CLN_ALTG  score -0.5    (benign · not gated)
+   └─ Statement  CLN_UAF   score -10.0   (benign · not gated)
 ```
 
 The pathogenic proband counting vanished the moment the VBC became too common; only the benign
@@ -90,16 +90,16 @@ observations survive.
 **(c) `CLN_CCS` exclusivity — a robust case-control study is present:**
 
 ```text
-EvidenceLine  CLN                         score +16.0   (Σ kept sub-codes)
-└─ evidenceLines:
-   ├─ EvidenceLine  CLN_CCS   score +4.0    (applied → silences the others)  → CLN_CCS example
-   ├─ EvidenceLine  CLN_DNV   score +12.0   (the sole CLN exception, kept)
+Statement  CLN                         score +16.0   (Σ kept sub-codes)
+└─ hasEvidenceLines:
+   ├─ Statement  CLN_CCS   score +4.0    (applied → silences the others)  → CLN_CCS example
+   ├─ Statement  CLN_DNV   score +12.0   (the sole CLN exception, kept)
    ├─ (CLN_AFF            NA)   CLN_CCS exclusivity
    ├─ (CLN_ALTV/CLN_ALTG  NA)  CLN_CCS exclusivity
    └─ (CLN_UAF            NA)   CLN_CCS exclusivity
 ```
 
-Each child is worked in full (cells, data items, `EvidenceLine` tree) in its section below.
+Each child is worked in full (cells, data items, `Statement` tree) in its section below.
 
 ---
 
@@ -398,7 +398,7 @@ Where positions share a code (the collapses):
 **Code-minting rule (decided).** A `method.code` is minted **per cell — one distinct scoring
 opportunity, i.e. a single point value (or a range, for roll-up/parent codes).** A **cell**, not a
 point value, is the unit of a code. Every case signature that resolves to the same cell shares that
-code, and its cases group in that code's `evidenceItems`. Consequences:
+code, and its cases group in that code's `hasEvidenceItems`. Consequences:
 
 - **`NON` stays merged** — its several signatures (no 2nd variant, *cis*, unknown phase, assumed
   VUS, benign 2nd) all resolve to the one `+0.0` "none" cell → `CLN_AFF_BIAL_NON`. Likewise
@@ -432,7 +432,7 @@ noted.
 | `CLN_AFF_BIAL_ALT` | — | — | — | — | — | +0.0 → `CLN_ALT` *(≥1 P/LP additional variant, different gene)* |
 | `CLN_AFF_BIAL_UAF` | — | — | — | — | — | +0.0 → `CLN_UAF` *(`pheno_specificity_for_mde`=INCONSISTENT)* |
 
-### `EvidenceLine` tree — a realistic biallelic classification (USH2A · Usher syndrome type 2 · AR)
+### `Statement` tree — a realistic biallelic classification (USH2A · Usher syndrome type 2 · AR)
 
 > **Basis — Grounded (practice variant `v20-ush2a`).** The gene, MDE, and the three-proband
 > second-allele pattern are drawn from a practice variant. Contrast the *catalog* grid above, which
@@ -451,34 +451,34 @@ only a **few** cells. Here, **three unrelated affected biallelic probands** shar
 `Σ = +5.5` → `CLN_AFF (score: +5.5)`. `data` is abbreviated to discriminators.
 
 ```text
-EvidenceLine  CLN_AFF                          score +5.5   (Σ evidenceLines; cap floor 0)
-└─ evidenceLines:
-   └─ EvidenceLine  CLN_AFF_BIAL               score +5.5   (Σ evidenceLines)
-      └─ evidenceLines:
-         ├─ EvidenceLine  CLN_AFF_BIAL_THOR_HOM    score +1.0 → evidenceItems: [1 case]  (proband 1 · homozygous VBC)
-         ├─ EvidenceLine  CLN_AFF_BIAL_RARE_CTV    score +1.5 → evidenceItems: [1 case]  (proband 2 · in-trans VUS)
-         └─ EvidenceLine  CLN_AFF_BIAL_RARE_CTP    score +3.0 → evidenceItems: [1 case]  (proband 3 · in-trans P)
+Statement  CLN_AFF                          score +5.5   (Σ hasEvidenceLines; cap floor 0)
+└─ hasEvidenceLines:
+   └─ Statement  CLN_AFF_BIAL               score +5.5   (Σ hasEvidenceLines)
+      └─ hasEvidenceLines:
+         ├─ Statement  CLN_AFF_BIAL_THOR_HOM    score +1.0 → hasEvidenceItems: [1 case]  (proband 1 · homozygous VBC)
+         ├─ Statement  CLN_AFF_BIAL_RARE_CTV    score +1.5 → hasEvidenceItems: [1 case]  (proband 2 · in-trans VUS)
+         └─ Statement  CLN_AFF_BIAL_RARE_CTP    score +3.0 → hasEvidenceItems: [1 case]  (proband 3 · in-trans P)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "CLN_AFF", "label": "Affected observations" }, "score": 5.5,
-  "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL", "label": "Biallelic (Table 2) subtotal" }, "score": 5.5,
-      "evidenceLines": [
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_THOR_HOM", "label": "homozygous · thorough" }, "score": 1.0,
-          "evidenceItems": [ { "id": "ush2a-proband-1", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
+  "type": "Statement", "specifiedBy": { "code": "CLN_AFF", "label": "Affected observations" }, "score": 5.5,
+  "hasEvidenceLines": [
+    { "type": "Statement", "specifiedBy": { "code": "CLN_AFF_BIAL", "label": "Biallelic (Table 2) subtotal" }, "score": 5.5,
+      "hasEvidenceLines": [
+        { "type": "Statement", "specifiedBy": { "code": "CLN_AFF_BIAL_THOR_HOM", "label": "homozygous · thorough" }, "score": 1.0,
+          "hasEvidenceItems": [ { "id": "ush2a-proband-1", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
             "description": "Illustrative — proband 1 homozygous for the VBC; classic Usher type 2.",
             "data": { "id": "ush2a-proband-1", "family_id": "ush-fam-1", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HOM",
               "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_CTV", "label": "rare · confirmed-trans VUS" }, "score": 1.5,
-          "evidenceItems": [ { "id": "ush2a-proband-2", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
+        { "type": "Statement", "specifiedBy": { "code": "CLN_AFF_BIAL_RARE_CTV", "label": "rare · confirmed-trans VUS" }, "score": 1.5,
+          "hasEvidenceItems": [ { "id": "ush2a-proband-2", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
             "description": "Illustrative — proband 2 second allele a VUS confirmed in trans.",
             "data": { "id": "ush2a-proband-2", "family_id": "ush-fam-2", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HET",
               "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
               "compound_het_variant": { "classification": "VUS", "phase_confidence": "HIGH", "co_occurrence_likelihood": "LT_0_0001" } } } ] },
-        { "type": "EvidenceLine", "method": { "code": "CLN_AFF_BIAL_RARE_CTP", "label": "rare · confirmed-trans P/LP" }, "score": 3.0,
-          "evidenceItems": [ { "id": "ush2a-proband-3", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
+        { "type": "Statement", "specifiedBy": { "code": "CLN_AFF_BIAL_RARE_CTP", "label": "rare · confirmed-trans P/LP" }, "score": 3.0,
+          "hasEvidenceItems": [ { "id": "ush2a-proband-3", "type": "clinical_observation", "references": ["practice-variant-set:v20-ush2a"],
             "description": "Illustrative — proband 3 second allele a known Pathogenic LoF confirmed in trans.",
             "data": { "id": "ush2a-proband-3", "family_id": "ush-fam-3", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC", "vbc_zygosity": "HET",
               "testing": { "covers_all_genes_relevant_to_mde": "TRUE", "non_genetic_etiology_excluded": "TRUE" },
@@ -513,7 +513,7 @@ once the cell codes are finalized (see the practice-set caveat).
 **Where it sits:** HOD → CLN → `CLN_DNV` · Evidence Code Cap **0 to +12** (SM 4 Table 3). Scored
 **per de-novo proband** and **additive on `CLN_AFF`** — a de-novo affected proband is counted under
 *both* codes (SM 4: a PTPN11 de-novo Noonan proband earns `CLN_AFF (+1.0)` **and** `CLN_DNV
-(+7.0)`). `CLN_DNV` is its own `EvidenceLine`; the same proband simply appears as a case under a
+(+7.0)`). `CLN_DNV` is its own `Statement`; the same proband simply appears as a case under a
 `CLN_AFF` cell and under a `CLN_DNV` cell. Cross-proband sum, floored at 0 and capped at +12.
 
 **De-novo eligibility (the gate).** A proband is eligible only when **both parents are unaffected
@@ -580,7 +580,7 @@ resolves to the same cells, not new codes.
 
 † includes biallelic probands whose `pheno_specificity_for_mde` is `SPECIFIC` (folded).
 
-### `CLN_DNV` as a GKS `EvidenceLine` tree (Approach 1)
+### `CLN_DNV` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Manufactured (cap demonstration).** PTPN11 · Noonan is SM 4's worked de-novo example;
 > the multi-proband set here is invented so the raw Σ (`+17.0`) overflows the `+12` code cap. A
@@ -593,33 +593,33 @@ so the roll-up is **capped to +12.0** — the "non-leaf = capped Σ children" ru
 abbreviated to the discriminators + the de-novo gate.
 
 ```text
-EvidenceLine  CLN_DNV                        score +12.0  (Σ evidenceLines capped 0…+12; raw +17.0)
-└─ evidenceLines:
-   ├─ EvidenceLine  CLN_DNV_SPEC_CONF          score +7.0 → evidenceItems: [1 case]
-   ├─ EvidenceLine  CLN_DNV_SPEC_UNCONF        score +2.0 → evidenceItems: [1 case]
-   ├─ EvidenceLine  CLN_DNV_CONS_CONF          score +8.0 → evidenceItems: [2 cases]  (2 × +4.0)
-   └─ EvidenceLine  CLN_DNV_INCON              score +0.0 → evidenceItems: [1 case]  (→ CLN_UAF)
+Statement  CLN_DNV                        score +12.0  (Σ hasEvidenceLines capped 0…+12; raw +17.0)
+└─ hasEvidenceLines:
+   ├─ Statement  CLN_DNV_SPEC_CONF          score +7.0 → hasEvidenceItems: [1 case]
+   ├─ Statement  CLN_DNV_SPEC_UNCONF        score +2.0 → hasEvidenceItems: [1 case]
+   ├─ Statement  CLN_DNV_CONS_CONF          score +8.0 → hasEvidenceItems: [2 cases]  (2 × +4.0)
+   └─ Statement  CLN_DNV_INCON              score +0.0 → hasEvidenceItems: [1 case]  (→ CLN_UAF)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "CLN_DNV", "label": "De novo observations" }, "score": 12.0,
+  "type": "Statement", "specifiedBy": { "code": "CLN_DNV", "label": "De novo observations" }, "score": 12.0,
   "note": "raw Σ children = +17.0; Evidence Code Cap 0 to +12 → +12.0",
-  "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "CLN_DNV_SPEC_CONF", "label": "specific · confirmed parentage" }, "score": 7.0,
-      "evidenceItems": [ { "id": "dnv-01", "type": "clinical_observation", "references": ["PMID:16358218"],
+  "hasEvidenceLines": [
+    { "type": "Statement", "specifiedBy": { "code": "CLN_DNV_SPEC_CONF", "label": "specific · confirmed parentage" }, "score": 7.0,
+      "hasEvidenceItems": [ { "id": "dnv-01", "type": "clinical_observation", "references": ["PMID:16358218"],
         "data": { "id": "proband-A", "family_id": "fam-A", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC",
           "confirmed_parental_relationship": "TRUE",
           "relatives": [ { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" },
                          { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" } ] } } ] },
-    { "type": "EvidenceLine", "method": { "code": "CLN_DNV_SPEC_UNCONF", "label": "specific · unconfirmed parentage" }, "score": 2.0,
-      "evidenceItems": [ { "id": "dnv-02", "type": "clinical_observation", "references": ["PMID:16358218"],
+    { "type": "Statement", "specifiedBy": { "code": "CLN_DNV_SPEC_UNCONF", "label": "specific · unconfirmed parentage" }, "score": 2.0,
+      "hasEvidenceItems": [ { "id": "dnv-02", "type": "clinical_observation", "references": ["PMID:16358218"],
         "data": { "id": "proband-B", "family_id": "fam-B", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "SPECIFIC",
           "confirmed_parental_relationship": "FALSE",
           "relatives": [ { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" },
                          { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" } ] } } ] },
-    { "type": "EvidenceLine", "method": { "code": "CLN_DNV_CONS_CONF", "label": "consistent · confirmed parentage" }, "score": 8.0,
-      "evidenceItems": [
+    { "type": "Statement", "specifiedBy": { "code": "CLN_DNV_CONS_CONF", "label": "consistent · confirmed parentage" }, "score": 8.0,
+      "hasEvidenceItems": [
         { "id": "dnv-03a", "type": "clinical_observation", "references": ["PMID:19077116"],
           "data": { "id": "proband-C", "family_id": "fam-C", "pop_frq_vbc_score": 0.0, "pheno_specificity_for_mde": "CONSISTENT",
             "confirmed_parental_relationship": "TRUE",
@@ -631,8 +631,8 @@ EvidenceLine  CLN_DNV                        score +12.0  (Σ evidenceLines capp
             "relatives": [ { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" },
                            { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" } ] } }
       ] },
-    { "type": "EvidenceLine", "method": { "code": "CLN_DNV_INCON", "label": "phenotype not consistent" }, "score": 0.0,
-      "evidenceItems": [ { "id": "dnv-04", "type": "clinical_observation", "references": ["PMID:20301303"],
+    { "type": "Statement", "specifiedBy": { "code": "CLN_DNV_INCON", "label": "phenotype not consistent" }, "score": 0.0,
+      "hasEvidenceItems": [ { "id": "dnv-04", "type": "clinical_observation", "references": ["PMID:20301303"],
         "data": { "id": "proband-E", "family_id": "fam-E", "pheno_specificity_for_mde": "INCONSISTENT",
           "confirmed_parental_relationship": "TRUE",
           "relatives": [ { "parent_of_proband": "TRUE", "vbc_exists": "FALSE", "affected_w_mde": "FALSE" },
@@ -697,7 +697,7 @@ severe biallelic phenotype, which is *not* observed).
 | `CLN_ALTV_ONE` / `CLN_ALTG_ONE`   | same / different gene | `MONO_EQ_EXPECTED`                  | — |
 | `CLN_ALTV_REC`                    | same gene             | `BIALLELIC_LT_EXPECTED`             | >80% |
 
-### `CLN_ALTV` / `CLN_ALTG` as GKS `EvidenceLine` trees (Approach 1)
+### `CLN_ALTV` / `CLN_ALTG` as GKS `Statement` trees (Approach 1)
 
 > **Basis — Grounded (practice `v11-acvrl1`).** ACVRL1 · hereditary hemorrhagic telangiectasia · AD.
 > One VBC, two alternate-cause scenarios: a P LoF in **ACVRL1** (same gene → `CLN_ALTV`) and a P LoF
@@ -708,32 +708,32 @@ severe biallelic phenotype, which is *not* observed).
 affected individual whose HHT is explained by the alternate P/LP cause:
 
 ```text
-EvidenceLine  CLN_ALTV                    score -0.5   (Σ evidenceLines; benignity-only ≤ 0)
-└─ evidenceLines:
-   └─ EvidenceLine  CLN_ALTV_ONE          score -0.5 → evidenceItems: [1 case]  (same-gene ACVRL1 P LoF in trans · typical HHT)
+Statement  CLN_ALTV                    score -0.5   (Σ hasEvidenceLines; benignity-only ≤ 0)
+└─ hasEvidenceLines:
+   └─ Statement  CLN_ALTV_ONE          score -0.5 → hasEvidenceItems: [1 case]  (same-gene ACVRL1 P LoF in trans · typical HHT)
 
-EvidenceLine  CLN_ALTG                    score -0.5   (Σ evidenceLines; benignity-only ≤ 0)
-└─ evidenceLines:
-   └─ EvidenceLine  CLN_ALTG_ONE          score -0.5 → evidenceItems: [1 case]  (different-gene ENG P LoF · typical HHT)
+Statement  CLN_ALTG                    score -0.5   (Σ hasEvidenceLines; benignity-only ≤ 0)
+└─ hasEvidenceLines:
+   └─ Statement  CLN_ALTG_ONE          score -0.5 → hasEvidenceItems: [1 case]  (different-gene ENG P LoF · typical HHT)
 ```
 
 ```json
 [
   {
-    "type": "EvidenceLine", "method": { "code": "CLN_ALTV", "label": "Alternative cause · same gene" }, "score": -0.5,
-    "evidenceLines": [
-      { "type": "EvidenceLine", "method": { "code": "CLN_ALTV_ONE", "label": "alt explains phenotype · not more severe" }, "score": -0.5,
-        "evidenceItems": [ { "id": "altv-01", "type": "clinical_observation", "references": ["practice-variant-set:v11-acvrl1"],
+    "type": "Statement", "specifiedBy": { "code": "CLN_ALTV", "label": "Alternative cause · same gene" }, "score": -0.5,
+    "hasEvidenceLines": [
+      { "type": "Statement", "specifiedBy": { "code": "CLN_ALTV_ONE", "label": "alt explains phenotype · not more severe" }, "score": -0.5,
+        "hasEvidenceItems": [ { "id": "altv-01", "type": "clinical_observation", "references": ["practice-variant-set:v11-acvrl1"],
           "description": "Grounded — typical HHT; a Pathogenic LoF ACVRL1 variant confirmed in trans accounts for the phenotype.",
           "data": { "id": "acvrl1-proband-a", "pheno_severity": "MONO_EQ_EXPECTED",
             "additional_variants": [ { "id": "acvrl1-alt", "classification": "P", "phase_in_ref_to_vbc": "TRANS" } ] } } ] }
     ]
   },
   {
-    "type": "EvidenceLine", "method": { "code": "CLN_ALTG", "label": "Alternative cause · different gene" }, "score": -0.5,
-    "evidenceLines": [
-      { "type": "EvidenceLine", "method": { "code": "CLN_ALTG_ONE", "label": "alt explains phenotype · not more severe" }, "score": -0.5,
-        "evidenceItems": [ { "id": "altg-01", "type": "clinical_observation", "references": ["practice-variant-set:v11-acvrl1"],
+    "type": "Statement", "specifiedBy": { "code": "CLN_ALTG", "label": "Alternative cause · different gene" }, "score": -0.5,
+    "hasEvidenceLines": [
+      { "type": "Statement", "specifiedBy": { "code": "CLN_ALTG_ONE", "label": "alt explains phenotype · not more severe" }, "score": -0.5,
+        "hasEvidenceItems": [ { "id": "altg-01", "type": "clinical_observation", "references": ["practice-variant-set:v11-acvrl1"],
           "description": "Grounded — typical HHT; a Pathogenic LoF in ENG (a different HHT gene) accounts for the phenotype.",
           "data": { "id": "acvrl1-proband-b", "pheno_severity": "MONO_EQ_EXPECTED",
             "additional_variants": [ { "id": "eng-alt", "classification": "P", "phase_in_ref_to_vbc": null } ] } } ] }
@@ -821,7 +821,7 @@ separate.)
 | `CLN_UAF_LOW`       | `LT_80` / `None` | *(any)* |
 | `CLN_UAF_NON`       | *(any)*       | rec/XL, HET, no confirmed-trans P/LP (or unknown phase) |
 
-### `CLN_UAF` as a GKS `EvidenceLine` tree (Approach 1)
+### `CLN_UAF` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Manufactured (negative cells) + grounded zero cells.** No practice variant scores
 > `CLN_UAF` negative, so the `−4.0` / `−2.0` cells are invented — a dominant MDE with well-phenotyped
@@ -836,20 +836,20 @@ individuals, different cells"* logic as the USH2A biallelic example, here driven
 penetrance** rather than the second allele. `Σ = −10.0`.
 
 ```text
-EvidenceLine  CLN_UAF                       score -10.0  (Σ evidenceLines; benignity-only ≤ 0)
-└─ evidenceLines:
-   ├─ EvidenceLine  CLN_UAF_FULL_NEAR         score -8.0 → evidenceItems: [2 cases]  (2 × -4.0 · near-100% penetrance)
-   ├─ EvidenceLine  CLN_UAF_FULL_HIGH         score -2.0 → evidenceItems: [1 case]   (80-100% penetrance)
-   └─ EvidenceLine  CLN_UAF_LOW               score  0.0 → evidenceItems: [1 case]   (young carrier · below penetrance age → 0)
+Statement  CLN_UAF                       score -10.0  (Σ hasEvidenceLines; benignity-only ≤ 0)
+└─ hasEvidenceLines:
+   ├─ Statement  CLN_UAF_FULL_NEAR         score -8.0 → hasEvidenceItems: [2 cases]  (2 × -4.0 · near-100% penetrance)
+   ├─ Statement  CLN_UAF_FULL_HIGH         score -2.0 → hasEvidenceItems: [1 case]   (80-100% penetrance)
+   └─ Statement  CLN_UAF_LOW               score  0.0 → hasEvidenceItems: [1 case]   (young carrier · below penetrance age → 0)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "CLN_UAF", "label": "Unaffected observations (benignity)" }, "score": -10.0,
+  "type": "Statement", "specifiedBy": { "code": "CLN_UAF", "label": "Unaffected observations (benignity)" }, "score": -10.0,
   "note": "benignity-only; per well-phenotyped unaffected individual; cross-proband sum",
-  "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "CLN_UAF_FULL_NEAR", "label": "full-strength · near-100% penetrance" }, "score": -8.0,
-      "evidenceItems": [
+  "hasEvidenceLines": [
+    { "type": "Statement", "specifiedBy": { "code": "CLN_UAF_FULL_NEAR", "label": "full-strength · near-100% penetrance" }, "score": -8.0,
+      "hasEvidenceItems": [
         { "id": "uaf-01", "type": "clinical_observation", "references": [],
           "description": "Manufactured — well-phenotyped unaffected adult carrier past the near-100% penetrance age.",
           "data": { "id": "unaff-1", "family_id": "uaf-fam-1", "affected_w_mde": "FALSE", "vbc_zygosity": "HET", "age_matched_penetrance": "NEAR_100" } },
@@ -857,12 +857,12 @@ EvidenceLine  CLN_UAF                       score -10.0  (Σ evidenceLines; beni
           "description": "Manufactured — second unaffected adult carrier, same signature (multiplier).",
           "data": { "id": "unaff-2", "family_id": "uaf-fam-2", "affected_w_mde": "FALSE", "vbc_zygosity": "HET", "age_matched_penetrance": "NEAR_100" } }
       ] },
-    { "type": "EvidenceLine", "method": { "code": "CLN_UAF_FULL_HIGH", "label": "full-strength · 80-100% penetrance" }, "score": -2.0,
-      "evidenceItems": [ { "id": "uaf-03", "type": "clinical_observation", "references": [],
+    { "type": "Statement", "specifiedBy": { "code": "CLN_UAF_FULL_HIGH", "label": "full-strength · 80-100% penetrance" }, "score": -2.0,
+      "hasEvidenceItems": [ { "id": "uaf-03", "type": "clinical_observation", "references": [],
         "description": "Manufactured — unaffected carrier in the 80-100% age-matched penetrance band.",
         "data": { "id": "unaff-3", "family_id": "uaf-fam-3", "affected_w_mde": "FALSE", "vbc_zygosity": "HET", "age_matched_penetrance": "PCT_80_100" } } ] },
-    { "type": "EvidenceLine", "method": { "code": "CLN_UAF_LOW", "label": "age-matched penetrance <80% -> no points" }, "score": 0.0,
-      "evidenceItems": [ { "id": "uaf-04", "type": "clinical_observation", "references": ["practice-variant-set:v1-actc1"],
+    { "type": "Statement", "specifiedBy": { "code": "CLN_UAF_LOW", "label": "age-matched penetrance <80% -> no points" }, "score": 0.0,
+      "hasEvidenceItems": [ { "id": "uaf-04", "type": "clinical_observation", "references": ["practice-variant-set:v1-actc1"],
         "description": "Grounded — young unaffected carrier below the penetrance age window (cf. practice v1-actc1 proband 2).",
         "data": { "id": "unaff-4", "family_id": "uaf-fam-4", "affected_w_mde": "FALSE", "vbc_zygosity": "HET", "age_matched_penetrance": "LT_80" } } ] }
   ]
@@ -922,7 +922,7 @@ and **matched controls**. If not, or if no odds ratio is given → `CLN_CCS_ND` 
 | `evidence.controls_matched`              | robustness | `TRUE` |
 | `evidence.ascertainment_bias_considered` | caution    | provenance note if not `TRUE` (not gated) |
 
-### `CLN_CCS` as a GKS `EvidenceLine` tree (Approach 1)
+### `CLN_CCS` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Manufactured (no practice `CLN_CCS` example).** Values follow SM 4's worked case-control
 > guidance: a robust study with `OR = 8.0`, `CI = 3.2–19.0` (excludes 1.0), 12 case-variant
@@ -930,18 +930,18 @@ and **matched controls**. If not, or if no odds ratio is given → `CLN_CCS_ND` 
 > `OR = 5.5, CI = 0.9–7.4` would instead be `CLN_CCS_NS` = 0.0 — the CI includes 1.0.)
 
 ```text
-EvidenceLine  CLN_CCS                     score +4.0   (single per-study assessment; 0 or +4.0)
-└─ evidenceLines:
-   └─ EvidenceLine  CLN_CCS_SIG           score +4.0 → evidenceItems: [1 case-control study]  (OR 8.0 · CI 3.2–19.0 · robust)
+Statement  CLN_CCS                     score +4.0   (single per-study assessment; 0 or +4.0)
+└─ hasEvidenceLines:
+   └─ Statement  CLN_CCS_SIG           score +4.0 → hasEvidenceItems: [1 case-control study]  (OR 8.0 · CI 3.2–19.0 · robust)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "CLN_CCS", "label": "Case-control (enrichment)" }, "score": 4.0,
+  "type": "Statement", "specifiedBy": { "code": "CLN_CCS", "label": "Case-control (enrichment)" }, "score": 4.0,
   "note": "single per-study assessment; when applied, other CLN codes NA except CLN_DNV",
-  "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "CLN_CCS_SIG", "label": "OR > 5.0 · CI excludes 1.0 · robust" }, "score": 4.0,
-      "evidenceItems": [ { "id": "ccs-01", "type": "case_control_study", "references": ["PMID:38054408"],
+  "hasEvidenceLines": [
+    { "type": "Statement", "specifiedBy": { "code": "CLN_CCS_SIG", "label": "OR > 5.0 · CI excludes 1.0 · robust" }, "score": 4.0,
+      "hasEvidenceItems": [ { "id": "ccs-01", "type": "case_control_study", "references": ["PMID:38054408"],
         "description": "Manufactured — robust variant-specific case-control study per SM 4 guidance.",
         "data": { "odds_ratio": 8.0, "ci_lower": 3.2, "ci_upper": 19.0,
           "case_variant_count": 12, "case_cohort_size": 400, "controls_matched": true, "ascertainment_bias_considered": true } } ] }

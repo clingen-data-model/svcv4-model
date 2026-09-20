@@ -9,7 +9,7 @@ SVCv4 code), not a scored cell — it collects two independent, **benignity-only
 codes: **`POP_FRQ`** (allele frequency vs DAFT) and **`POP_HMZ`** (homozygous / hemizygous
 occurrences). The category total is their **sum**; SM 3 sets **no combined POP cap**.
 
-Both children are worked in full below (cells, data items, `EvidenceLine` tree). This roll-up only
+Both children are worked in full below (cells, data items, `Statement` tree). This roll-up only
 **references** their examples:
 
 > **Basis — Manufactured composite.** The two child scores are taken from the worked examples in the
@@ -18,10 +18,10 @@ Both children are worked in full below (cells, data items, `EvidenceLine` tree).
 > both codes apply to the **same** VBC.
 
 ```text
-EvidenceLine  POP                         score -3.5   (Σ evidenceLines; benignity-only ≤ 0; no combined cap)
-└─ evidenceLines:
-   ├─ EvidenceLine  POP_FRQ               score -3.0 → see the POP_FRQ example below (FBN1 · FAF ≈ 6.1× DAFT → MOD band)
-   └─ EvidenceLine  POP_HMZ               score -0.5 → see the POP_HMZ example below (AIPL1 · 2 homozygotes · n−1 rule)
+Statement  POP                         score -3.5   (Σ hasEvidenceLines; benignity-only ≤ 0; no combined cap)
+└─ hasEvidenceLines:
+   ├─ Statement  POP_FRQ               score -3.0 → see the POP_FRQ example below (FBN1 · FAF ≈ 6.1× DAFT → MOD band)
+   └─ Statement  POP_HMZ               score -0.5 → see the POP_HMZ example below (AIPL1 · 2 homozygotes · n−1 rule)
 ```
 
 ---
@@ -88,7 +88,7 @@ low allele number, or FAF undefined at allele count 1 (SM 3 caveats), or `daft �
 | `POP_FRQ_STRG` | ≥ 15 |
 | *(no code → `_ND`)* | `faf` or `daft` missing, or `daft ≤ 0` |
 
-### `POP_FRQ` as a GKS `EvidenceLine` tree (Approach 1)
+### `POP_FRQ` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Grounded DAFT inputs + manufactured FAF.** The DAFT inputs (prevalence 1/5000,
 > penetrance 0.85, heterogeneity) match SM 3's worked FBN1 example and practice `example-fbn1`
@@ -100,18 +100,18 @@ fold ≈ 6.1 → the `MOD` band → **–3.0**. The tree is shallow — one band
 observation, no multiplier:
 
 ```text
-EvidenceLine  POP_FRQ                     score -3.0   (single per-variant assessment; range 0.0…-6.0)
-└─ evidenceLines:
-   └─ EvidenceLine  POP_FRQ_MOD           score -3.0 → evidenceItems: [1 pop-frequency obs]  (FAF ≈ 6.1× DAFT)
+Statement  POP_FRQ                     score -3.0   (single per-variant assessment; range 0.0…-6.0)
+└─ hasEvidenceLines:
+   └─ Statement  POP_FRQ_MOD           score -3.0 → hasEvidenceItems: [1 pop-frequency obs]  (FAF ≈ 6.1× DAFT)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "POP_FRQ", "label": "Population frequency (benignity)" }, "score": -3.0,
+  "type": "Statement", "specifiedBy": { "code": "POP_FRQ", "label": "Population frequency (benignity)" }, "score": -3.0,
   "note": "single per-variant assessment; exactly one band applies; range 0.0 to -6.0",
-  "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "POP_FRQ_MOD", "label": "FAF 5-15x DAFT · moderate benign" }, "score": -3.0,
-      "evidenceItems": [ { "id": "pop-01", "type": "population_frequency", "references": ["gnomAD:v4.1.0"],
+  "hasEvidenceLines": [
+    { "type": "Statement", "specifiedBy": { "code": "POP_FRQ_MOD", "label": "FAF 5-15x DAFT · moderate benign" }, "score": -3.0,
+      "hasEvidenceItems": [ { "id": "pop-01", "type": "population_frequency", "references": ["gnomAD:v4.1.0"],
         "data": { "faf": 0.00072, "faf_source": "gnomAD v4.1.0",
           "daft": 0.000118, "daft_method": "calculator",
           "daft_calculator_inputs": { "prevalence_denominator": 5000, "penetrance": 0.85,
@@ -179,7 +179,7 @@ collapsed `OTH` cell (point-identical); only Autosomal Dominant homozygous is `�
 | `POP_HMZ_OTH` | XLD / XLR | `homozygote_count + hemizygote_count` |
 | *(no code → `_ND`)* | any | `hmz_eligible` not TRUE, or no count |
 
-### `POP_HMZ` as a GKS `EvidenceLine` tree (Approach 1)
+### `POP_HMZ` as a GKS `Statement` tree (Approach 1)
 
 > **Basis — Grounded (practice `v13-aipl1`).** AIPL1 · AR retinopathy: a near-100%-penetrant,
 > early-onset recessive disease, so homozygotes are **not** expected in gnomAD → eligible. gnomAD
@@ -189,18 +189,18 @@ collapsed `OTH` cell (point-identical); only Autosomal Dominant homozygous is `�
 The count lives in one population observation; the multiplier is `count − 1`, not a per-item array.
 
 ```text
-EvidenceLine  POP_HMZ                     score -0.5   (weight × (count − 1); benignity-only ≤ 0)
-└─ evidenceLines:
-   └─ EvidenceLine  POP_HMZ_OTH           score -0.5 → evidenceItems: [1 pop obs]  (2 homozygotes → 2−1 counted × −0.5)
+Statement  POP_HMZ                     score -0.5   (weight × (count − 1); benignity-only ≤ 0)
+└─ hasEvidenceLines:
+   └─ Statement  POP_HMZ_OTH           score -0.5 → hasEvidenceItems: [1 pop obs]  (2 homozygotes → 2−1 counted × −0.5)
 ```
 
 ```json
 {
-  "type": "EvidenceLine", "method": { "code": "POP_HMZ", "label": "Homozygous/hemizygous occurrences (benignity)" }, "score": -0.5,
+  "type": "Statement", "specifiedBy": { "code": "POP_HMZ", "label": "Homozygous/hemizygous occurrences (benignity)" }, "score": -0.5,
   "note": "weight × (count − 1); AR weight −0.5; 2 homozygotes → 1 counted",
-  "evidenceLines": [
-    { "type": "EvidenceLine", "method": { "code": "POP_HMZ_OTH", "label": "SD / AR / X-linked · −0.5 per occurrence" }, "score": -0.5,
-      "evidenceItems": [ { "id": "hmz-01", "type": "population_frequency", "references": ["practice-variant-set:v13-aipl1", "gnomAD:v4.1.0"],
+  "hasEvidenceLines": [
+    { "type": "Statement", "specifiedBy": { "code": "POP_HMZ_OTH", "label": "SD / AR / X-linked · −0.5 per occurrence" }, "score": -0.5,
+      "hasEvidenceItems": [ { "id": "hmz-01", "type": "population_frequency", "references": ["practice-variant-set:v13-aipl1", "gnomAD:v4.1.0"],
         "description": "Grounded — AIPL1 AR retinopathy; 2 homozygotes in gnomAD; near-100% penetrant early-onset → eligible.",
         "data": { "hmz_eligible": "TRUE", "homozygote_count": 2, "hemizygote_count": 0 } } ] }
   ]
