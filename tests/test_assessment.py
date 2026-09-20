@@ -57,3 +57,38 @@ def test_specifiedby_id_matches_a_registered_config() -> None:
     cfg = resolve("svcv4-baseline:mechanism-exon-relevance-assessment:1.0")
     assert cfg.method_type == "mechanism-exon-relevance-assessment"
     assert cfg.scope == "baseline"
+
+
+def test_two_statements_same_methodtype_different_specifiedby() -> None:
+    """Baseline vs specialisation: same methodType, distinct specifiedBy.id, per the doc."""
+    from svcv4_model import Method, Statement
+
+    mt = "insilico-missense-predictor-assessment"
+    base = Statement(
+        code="MIS_PRD_INIT_REVEL",
+        score=3.0,
+        direction="supports",
+        specified_by=Method(
+            code="svcv4:MIS_PRD_INIT_REVEL",
+            id="svcv4-baseline:insilico-missense-predictor-assessment:1.0",
+            method_type=mt,
+        ),
+    )
+    spec = Statement(
+        code="MIS_PRD_INIT_REVEL",
+        score=4.0,
+        direction="supports",
+        specified_by=Method(
+            code="svcv4:MIS_PRD_INIT_REVEL",
+            id="svcv4-gene-MYH7:insilico-missense-predictor-assessment:1.0",
+            method_type=mt,
+        ),
+    )
+    # comparable
+    assert base.specified_by.method_type == spec.specified_by.method_type == mt
+    # reproducible / distinct, and each id resolves to its config
+    assert base.specified_by.id != spec.specified_by.id
+    assert resolve(base.specified_by.id).scope == "baseline"
+    assert resolve(spec.specified_by.id).scope == "gene-MYH7"
+    # same evidence, different configured score
+    assert base.score != spec.score
