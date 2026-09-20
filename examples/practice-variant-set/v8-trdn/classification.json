@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "neutral",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v8-TRDN rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v8: TRDN'. VUS: the only observation is an unaffected het carrier, and the nonsense change lies outside the cardiac-predominant transcript.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v8-TRDN-pop-001",
           "type": "population_frequency",
@@ -55,22 +62,22 @@
           ],
           "description": "POP inputs from the tab (biallelic threshold)."
         }
-      ],
+      ]
+    },
+    {
+      "code": "CLN_UAF",
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
-    },
-    {
-      "method": {
+      "description": "Unaffected heterozygous carrier (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_UAF",
         "label": "Clinical observation in unaffected individual(s) (CLN_UAF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_UAF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v8-TRDN-uaf-001",
           "type": "clinical_observation",
@@ -82,22 +89,22 @@
           "references": [],
           "description": "One unaffected heterozygous carrier \u2014 expected for a recessive condition, so uninformative here."
         }
-      ],
+      ]
+    },
+    {
+      "code": "NUL",
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
-      "description": "Unaffected heterozygous carrier (illustrative)."
-    },
-    {
-      "method": {
+      "description": "Transcript-context-limited LoF evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:NUL",
         "label": "Absent protein / loss of function (NUL)",
         "version": "draft-2026-pre-release"
       },
-      "code": "NUL",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v8-TRDN-nul-001",
           "type": "predicted_lof",
@@ -110,21 +117,22 @@
           "description": "Nonsense change outside the cardiac-predominant transcript region \u2192 LoF does not clearly apply."
         }
       ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Transcript-context-limited LoF evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "NUL_PRD",
+          "score": 0.0,
+          "strength": null,
+          "direction": "neutral",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "Predicted-LoF / structural nonsense assessment.",
+          "specifiedBy": {
             "code": "svcv4:NUL_PRD",
             "label": "Predicted loss of function (NUL_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "NUL_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v8-TRDN-nul-001",
               "type": "predicted_lof",
@@ -137,17 +145,9 @@
               "description": "Nonsense change outside the cardiac-predominant transcript region \u2192 LoF does not clearly apply."
             }
           ],
-          "score": 0.0,
-          "strength": null,
-          "direction": "neutral",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "Predicted-LoF / structural nonsense assessment."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v8-TRDN rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v8: TRDN'. VUS: the only observation is an unaffected het carrier, and the nonsense change lies outside the cardiac-predominant transcript."
+  ]
 }

@@ -38,8 +38,8 @@ An SVCv4 classification of TRDN c.1462A>T (p.Lys488Ter) against catecholaminergi
         predicate:     is_causal_for
         object (MDE):  MONDO:0017990 (catecholaminergic polymorphic ventricular tachycardia)
         qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_UAF                  score   0.0
         - NUL                      score   0.0

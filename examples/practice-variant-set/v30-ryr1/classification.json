@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 2.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v30-RYR1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v30: RYR1'. A VUS: a single consistent clinical case (MH + IVCT) is offset by a low REVEL and the fact that LoF is not the disease mechanism.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v30-RYR1-pop-001",
           "type": "population_frequency",
@@ -53,22 +60,22 @@
           "references": [],
           "description": "POP inputs from the tab; penetrance is very low (0.01)."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Affected proband (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v30-RYR1-cln-001",
           "type": "clinical_observation",
@@ -82,22 +89,22 @@
           "references": [],
           "description": "One proband with an MH episode and positive IVCT; other known genes cleared."
         }
-      ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Affected proband (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "MIS",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v30-RYR1-mis-001",
           "type": "computational_prediction",
@@ -110,36 +117,38 @@
           "description": "REVEL 0.248 is low; no same-codon informative variants."
         }
       ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Predictive missense evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
-            "code": "svcv4:MIS_PRD",
-            "label": "Predictive missense (MIS_PRD)",
-            "version": "draft-2026-pre-release"
-          },
           "code": "MIS_PRD",
-          "evidence": [],
           "score": 0.0,
           "strength": null,
           "direction": "neutral",
           "outcome": null,
           "contribution": null,
           "provisional": false,
-          "evidence_lines": [
+          "description": "In-silico predictive missense assessment.",
+          "specifiedBy": {
+            "code": "svcv4:MIS_PRD",
+            "label": "Predictive missense (MIS_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "hasEvidenceItems": [],
+          "hasEvidenceLines": [
             {
-              "method": {
+              "code": "MIS_PRD_INIT_REVEL",
+              "score": 0.0,
+              "strength": null,
+              "direction": "neutral",
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "description": "REVEL 0.248 is low; no same-codon informative variants.",
+              "specifiedBy": {
                 "code": "svcv4:MIS_PRD_INIT_REVEL",
                 "label": "Predictor initial points (REVEL)",
                 "version": "draft-2026-pre-release"
               },
-              "code": "MIS_PRD_INIT_REVEL",
-              "evidence": [
+              "hasEvidenceItems": [
                 {
                   "id": "PVS-v30-RYR1-mis-001",
                   "type": "computational_prediction",
@@ -152,20 +161,11 @@
                   "description": "REVEL 0.248 is low; no same-codon informative variants."
                 }
               ],
-              "score": 0.0,
-              "strength": null,
-              "direction": "neutral",
-              "outcome": null,
-              "contribution": null,
-              "provisional": true,
-              "evidence_lines": [],
-              "description": "REVEL 0.248 is low; no same-codon informative variants."
+              "hasEvidenceLines": []
             }
-          ],
-          "description": "In-silico predictive missense assessment."
+          ]
         }
       ]
     }
-  ],
-  "description": "PVS-v30-RYR1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v30: RYR1'. A VUS: a single consistent clinical case (MH + IVCT) is offset by a low REVEL and the fact that LoF is not the disease mechanism."
+  ]
 }

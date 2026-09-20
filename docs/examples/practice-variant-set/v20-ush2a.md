@@ -38,8 +38,8 @@ An SVCv4 classification of USH2A del exons 63-64 (c.12295-?_14133+?del) against 
         predicate:     is_causal_for
         object (MDE):  MONDO:0019501 (Usher syndrome)
         qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   3.0
         - CDS                      score   2.0

@@ -40,8 +40,8 @@ An SVCv4 classification of ACVRL1 c.88C>T (p.Pro30Ser) against hereditary hemorr
         predicate:     is_causal_for
         object (MDE):  MONDO:0019180 (hereditary hemorrhagic telangiectasia)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_ALTV                 score  -1.0
         - CLN_ALTG                 score  -1.0

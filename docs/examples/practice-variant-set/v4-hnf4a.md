@@ -38,8 +38,8 @@ An SVCv4 classification of HNF4A c.421del (p.Arg141AspfsTer29) against monogenic
         predicate:     is_causal_for
         object (MDE):  MONDO:0015967 (monogenic diabetes)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   1.0
         - NUL                      score   4.0

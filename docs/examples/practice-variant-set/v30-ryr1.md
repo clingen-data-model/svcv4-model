@@ -39,8 +39,8 @@ An SVCv4 classification of RYR1 c.12383C>T (p.Ala4128Val) against malignant hype
         predicate:     is_causal_for
         object (MDE):  MONDO:0007783 (malignant hyperthermia, susceptibility to, 1)
         qualifiers:    moi=AD; note=Loss of function is NOT an established mechanism for RYR1-related malignant hyperthermia susceptibility.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   2.0
         - MIS                      score   0.0

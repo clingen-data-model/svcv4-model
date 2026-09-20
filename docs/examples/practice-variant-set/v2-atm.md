@@ -38,8 +38,8 @@ An SVCv4 classification of ATM c.5005+1G>A against ataxia telangiectasia, drawn 
         predicate:     is_causal_for
         object (MDE):  MONDO:0008840 (ataxia telangiectasia)
         qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   2.0
         - SPL                      score   3.0

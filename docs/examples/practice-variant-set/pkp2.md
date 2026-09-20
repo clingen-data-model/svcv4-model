@@ -37,8 +37,8 @@ An SVCv4 classification of PKP2 c.1481C>A (p.Ser494Ter, alt transcript NM_004572
         predicate:     is_causal_for
         object (MDE):  MONDO:0016587 (arrhythmogenic right ventricular cardiomyopathy)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - NUL                      score   0.0
           - NUL_PRD                  score   0.0

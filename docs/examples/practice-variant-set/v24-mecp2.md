@@ -38,8 +38,8 @@ An SVCv4 classification of MECP2 c.907_1080del (p.Ser303_Glu360del) against Rett
         predicate:     is_causal_for
         object (MDE):  MONDO:0010726 (Rett syndrome)
         qualifiers:    moi=XLD; note=X-linked; affected XX and XY count under the monoallelic section. Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   2.0
         - CDS                      score   4.0

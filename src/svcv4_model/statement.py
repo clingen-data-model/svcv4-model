@@ -1,4 +1,10 @@
-"""Statement — the top-level VA-Spec entity for an SVCv4 classification."""
+"""Statement — the core VA-Spec 1.1.0 entity for an SVCv4 classification.
+
+Per VA-Spec 1.1.0-ballot.2026-09, an *Evidence Line is not a distinct class* — it
+is a ``Statement`` referenced from another Statement via ``hasEvidenceLines``.
+Statement is therefore **recursive**: the top-level classification and every
+nested evidence-line assessment are all Statements.
+"""
 
 from __future__ import annotations
 
@@ -6,77 +12,121 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from svcv4_model.classification import VariantPathogenicityClassification
-from svcv4_model.evidence_line import EvidenceLine
+from svcv4_model.evidence_item import EvidenceItem
 from svcv4_model.method import Method
 from svcv4_model.proposition import Proposition
 
 
 class Statement(BaseModel):
-    """A SVCv4 Variant Pathogenicity Classification expressed as a VA-Spec Statement.
+    """A VA-Spec 1.1.0 ``Statement``, profiled for SVCv4.
 
-    The Statement is the canonical entry point into the model. It carries:
+    Used at two levels:
 
-    - a `Proposition` (the SPOQ-structured assertion about a VBC and an
-      MDE);
-    - the `score` and `outcome` for the curation;
-    - a `method` reference identifying the **applied SVCv4
-      specification version** — baseline SVCv4 or a VCEP-specialised
-      version selected via gene-disease-MOI scoping (resolves into
-      CSpec); and
-    - the collection of `evidence_lines` whose scores compose into
-      `score`.
+    1. **Top level** — the rolled-up Variant Pathogenicity Classification: a
+       ``proposition`` (the SPOQ assertion about a VBC and MDE), the final
+       ``score`` / ``direction`` / ``outcome``, the applied specification
+       version (``specifiedBy``), and the composing ``hasEvidenceLines``.
+    2. **Evidence-line level** — one CSpec method/rule assessment nested under a
+       parent via ``hasEvidenceLines``: its ``code``, ``score``, ``direction``,
+       ``strength``, ``outcome``, the ``hasEvidenceItems`` it consumed, and any
+       deeper ``hasEvidenceLines`` (concept → code → subcode).
 
-    Worked examples in `examples/` validate against `Statement`.
+    ``score`` and ``quality`` are deprecated in VA-Spec core; SVCv4 continues to
+    use ``score`` for its Bayesian points. ``code`` and ``provisional`` are SVCv4
+    profile extensions.
     """
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
-    proposition: Proposition
-    method: Method = Field(
+    proposition: Proposition | None = Field(
+        default=None,
         description=(
-            "Reference identifying the **applied SVCv4 specification "
-            "version** — baseline SVCv4 or a VCEP-specialised version "
-            "selected for this (VBC, MDE) curation. Resolves into CSpec."
+            "The SPOQ proposition (VBC subject / predicate / MDE object). "
+            "Present on the top-level classification; omitted on nested "
+            "evidence-line Statements (0..1 per VA-Spec 1.1.0)."
+        ),
+    )
+    specified_by: Method | None = Field(
+        default=None,
+        alias="specifiedBy",
+        description=(
+            "VA-Spec `specifiedBy`: the Method this Statement was produced by. "
+            "At top level, the applied SVCv4 specification version (baseline or "
+            "VCEP-specialised, resolving into CSpec); at line level, the CSpec "
+            "method/rule invoked."
+        ),
+    )
+    code: str | None = Field(
+        default=None,
+        description=(
+            "SVCv4 profile extension: the Evidence Code / subcode identity of an "
+            "evidence-line Statement (e.g. `POP_FRQ`, `MIS_PRD`). Omitted on the "
+            "top-level classification."
         ),
     )
     score: float = Field(
-        description="The Statement's final composed score.",
-    )
-    outcome: VariantPathogenicityClassification = Field(
         description=(
-            "Categorical classification produced by mapping "
-            "`score` to the Benign ↔ Pathogenic spectrum."
+            "The composed (top level) or produced (line level) SVCv4 points. "
+            "VA-Spec core deprecates `score`; SVCv4 retains it as its Bayesian "
+            "point value."
+        ),
+    )
+    direction: Literal["supports", "neutral", "disputes"] = Field(
+        description=(
+            "VA-Spec direction relative to the proposition (required, 1..1 per "
+            "1.1.0-ballot.2026-09): `supports` when `score` > 0, `neutral` when "
+            "`score` == 0, `disputes` when `score` < 0."
         ),
     )
     strength: str | None = Field(
         default=None,
-        description="Optional strength label for the score (e.g. `strong`, `supporting`).",
-    )
-    direction: Literal["supports", "neutral", "disputes"] = Field(
         description=(
-            "VA-Spec direction of the evidence relative to the proposition "
-            "(required, 1..1 per 1.1.0-ballot.2026-09): `supports` when "
-            "`score` > 0, `neutral` when `score` == 0, `disputes` when "
-            "`score` < 0."
+            "VA-Spec strength (0..1, Mappable Concept; open vocabulary) — e.g. "
+            "`supporting`, `moderate`, `strong`."
+        ),
+    )
+    outcome: str | None = Field(
+        default=None,
+        description=(
+            "VA-Spec outcome (0..1, Mappable Concept): the coded result label — "
+            "the classification tier at top level (e.g. `likely_pathogenic`) or "
+            "the spec-nomenclature code at line level (e.g. `POP_FRQ_-3`)."
+        ),
+    )
+    provisional: bool = Field(
+        default=False,
+        description=(
+            "SVCv4 profile extension: True when `code` is a provisional SVCv4 "
+            "code/subcode (combination-cap or deeper method-level) not yet in "
+            "the official code list."
         ),
     )
     contribution: float | None = Field(
         default=None,
+        description="Optional weighted contribution to the parent Statement's score.",
+    )
+    has_evidence_items: list[EvidenceItem] = Field(
+        default_factory=list,
+        alias="hasEvidenceItems",
         description=(
-            "Reserved VA-Spec slot; currently unused at the Statement "
-            "level. Retained for forward compatibility."
+            "VA-Spec `hasEvidenceItems` (0..m): the Data Items / Study Results "
+            "consumed by this Statement."
         ),
     )
-    evidence_lines: list[EvidenceLine] = Field(
+    has_evidence_lines: list[Statement] = Field(
         default_factory=list,
+        alias="hasEvidenceLines",
         description=(
-            "Evidence Lines whose scores compose into `score`. "
-            "Each Evidence Line is the artifact of one CSpec "
-            "method/rule invocation."
+            "VA-Spec `hasEvidenceLines` (0..m Statement): nested evidence-line "
+            "assessments composing into this Statement (concept → code → "
+            "subcode)."
         ),
     )
     description: str | None = Field(
         default=None,
-        description="Optional prose summary of the classification.",
+        description="Optional prose summary.",
     )
+
+
+# Resolve the self-referential ``hasEvidenceLines`` forward reference.
+Statement.model_rebuild()

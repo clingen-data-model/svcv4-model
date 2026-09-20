@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "neutral",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v27-MYOC rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v27: MYOC'. A VUS by insufficient evidence: not yet seen in a glaucoma proband, LoF is not the mechanism, and REVEL is low.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v27-MYOC-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs from the tab."
         }
-      ],
+      ]
+    },
+    {
+      "code": "MIS",
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
-    },
-    {
-      "method": {
+      "description": "Predictive missense evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v27-MYOC-mis-001",
           "type": "computational_prediction",
@@ -82,36 +89,38 @@
           "description": "REVEL 0.205 is low; no same-codon informative variants."
         }
       ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Predictive missense evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
-            "code": "svcv4:MIS_PRD",
-            "label": "Predictive missense (MIS_PRD)",
-            "version": "draft-2026-pre-release"
-          },
           "code": "MIS_PRD",
-          "evidence": [],
           "score": 0.0,
           "strength": null,
           "direction": "neutral",
           "outcome": null,
           "contribution": null,
           "provisional": false,
-          "evidence_lines": [
+          "description": "In-silico predictive missense assessment.",
+          "specifiedBy": {
+            "code": "svcv4:MIS_PRD",
+            "label": "Predictive missense (MIS_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "hasEvidenceItems": [],
+          "hasEvidenceLines": [
             {
-              "method": {
+              "code": "MIS_PRD_INIT_REVEL",
+              "score": 0.0,
+              "strength": null,
+              "direction": "neutral",
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "description": "REVEL 0.205 is low; no same-codon informative variants.",
+              "specifiedBy": {
                 "code": "svcv4:MIS_PRD_INIT_REVEL",
                 "label": "Predictor initial points (REVEL)",
                 "version": "draft-2026-pre-release"
               },
-              "code": "MIS_PRD_INIT_REVEL",
-              "evidence": [
+              "hasEvidenceItems": [
                 {
                   "id": "PVS-v27-MYOC-mis-001",
                   "type": "computational_prediction",
@@ -124,20 +133,11 @@
                   "description": "REVEL 0.205 is low; no same-codon informative variants."
                 }
               ],
-              "score": 0.0,
-              "strength": null,
-              "direction": "neutral",
-              "outcome": null,
-              "contribution": null,
-              "provisional": true,
-              "evidence_lines": [],
-              "description": "REVEL 0.205 is low; no same-codon informative variants."
+              "hasEvidenceLines": []
             }
-          ],
-          "description": "In-silico predictive missense assessment."
+          ]
         }
       ]
     }
-  ],
-  "description": "PVS-v27-MYOC rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v27: MYOC'. A VUS by insufficient evidence: not yet seen in a glaucoma proband, LoF is not the mechanism, and REVEL is low."
+  ]
 }

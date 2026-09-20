@@ -15,26 +15,33 @@
     },
     "qualifiers": []
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release",
-    "description": "Placeholder reference to the baseline SVCv4 specification version in CSpec."
-  },
   "score": 4.0,
   "outcome": "likely_pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "Placeholder SVCv4 classification \u2014 values are illustrative only and will be replaced as the SVCv4 Standards and VA-Spec community profile firm up.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release",
+    "description": "Placeholder reference to the baseline SVCv4 specification version in CSpec."
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Placeholder Evidence Line illustrating an affected-individual observation.",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) \u2014 placeholder",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "evidence-item-001",
           "type": "clinical_observation",
@@ -47,22 +54,22 @@
           ],
           "description": "Placeholder: four affected individuals reported with consistent phenotype."
         }
-      ],
+      ]
+    },
+    {
+      "code": "FNC_ASY",
       "score": 2.0,
       "strength": "moderate",
       "direction": "supports",
       "outcome": null,
       "contribution": 2.0,
-      "description": "Placeholder Evidence Line illustrating an affected-individual observation."
-    },
-    {
-      "method": {
+      "description": "Placeholder Evidence Line illustrating a functional-assay result.",
+      "specifiedBy": {
         "code": "svcv4:FNC_ASY",
         "label": "Functional assay \u2014 placeholder",
         "version": "draft-2026-pre-release"
       },
-      "code": "FNC_ASY",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "evidence-item-002",
           "type": "functional_assay",
@@ -75,14 +82,7 @@
           ],
           "description": "Placeholder: HDR assay shows loss of function."
         }
-      ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Placeholder Evidence Line illustrating a functional-assay result."
+      ]
     }
-  ],
-  "description": "Placeholder SVCv4 classification \u2014 values are illustrative only and will be replaced as the SVCv4 Standards and VA-Spec community profile firm up."
+  ]
 }

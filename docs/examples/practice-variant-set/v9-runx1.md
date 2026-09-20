@@ -39,8 +39,8 @@ An SVCv4 classification of RUNX1 c.1412_1413dup (p.Leu472AlafsTer123) against he
         predicate:     is_causal_for
         object (MDE):  MONDO:0011071 (hereditary thrombocytopenia and hematologic cancer predisposition syndrome)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   1.0
         - LOC_SEG                  score   3.0

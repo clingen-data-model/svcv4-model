@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 5.0,
   "outcome": "likely_pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-EXAMPLE-FBN1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'Example: FBN1' (the spreadsheet's template tab). Two affected probands (one a confirmed de novo, CLN_DNV) with supportive missense prediction.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-EXAMPLE-FBN1-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs from the tab."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 3.0,
+      "strength": "strong",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 3.0,
+      "description": "Affected probands (illustrative). Proband 2's confirmed de novo is captured separately under CLN_DNV.",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-EXAMPLE-FBN1-cln-001",
           "type": "clinical_observation",
@@ -90,22 +97,22 @@
           "references": [],
           "description": "Two probands; proband 2 (ectopia lentis \u2014 FBN1 accounts for ~60-68%) is a confirmed de novo, also scoreable under CLN_DNV."
         }
-      ],
-      "score": 3.0,
-      "strength": "strong",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 3.0,
-      "description": "Affected probands (illustrative). Proband 2's confirmed de novo is captured separately under CLN_DNV."
+      ]
     },
     {
-      "method": {
+      "code": "MIS",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Predictive missense evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-EXAMPLE-FBN1-mis-001",
           "type": "computational_prediction",
@@ -118,36 +125,38 @@
           "description": "REVEL 0.841 \u2014 supportive in-silico missense evidence."
         }
       ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Predictive missense evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
-            "code": "svcv4:MIS_PRD",
-            "label": "Predictive missense (MIS_PRD)",
-            "version": "draft-2026-pre-release"
-          },
           "code": "MIS_PRD",
-          "evidence": [],
           "score": 2.0,
           "strength": null,
           "direction": "supports",
           "outcome": null,
           "contribution": null,
           "provisional": false,
-          "evidence_lines": [
+          "description": "In-silico predictive missense assessment.",
+          "specifiedBy": {
+            "code": "svcv4:MIS_PRD",
+            "label": "Predictive missense (MIS_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "hasEvidenceItems": [],
+          "hasEvidenceLines": [
             {
-              "method": {
+              "code": "MIS_PRD_INIT_REVEL",
+              "score": 2.0,
+              "strength": null,
+              "direction": "supports",
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "description": "REVEL 0.841 \u2014 supportive in-silico missense evidence.",
+              "specifiedBy": {
                 "code": "svcv4:MIS_PRD_INIT_REVEL",
                 "label": "Predictor initial points (REVEL)",
                 "version": "draft-2026-pre-release"
               },
-              "code": "MIS_PRD_INIT_REVEL",
-              "evidence": [
+              "hasEvidenceItems": [
                 {
                   "id": "PVS-EXAMPLE-FBN1-mis-001",
                   "type": "computational_prediction",
@@ -160,20 +169,11 @@
                   "description": "REVEL 0.841 \u2014 supportive in-silico missense evidence."
                 }
               ],
-              "score": 2.0,
-              "strength": null,
-              "direction": "supports",
-              "outcome": null,
-              "contribution": null,
-              "provisional": true,
-              "evidence_lines": [],
-              "description": "REVEL 0.841 \u2014 supportive in-silico missense evidence."
+              "hasEvidenceLines": []
             }
-          ],
-          "description": "In-silico predictive missense assessment."
+          ]
         }
       ]
     }
-  ],
-  "description": "PVS-EXAMPLE-FBN1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'Example: FBN1' (the spreadsheet's template tab). Two affected probands (one a confirmed de novo, CLN_DNV) with supportive missense prediction."
+  ]
 }

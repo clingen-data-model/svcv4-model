@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 2.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v21-ANO5 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v21: ANO5'. A VUS: both probands carry only a single heterozygous ANO5 variant (no second allele) for a recessive disease, so neither is a countable biallelic case; the evidence is predictive only.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v21-ANO5-pop-001",
           "type": "population_frequency",
@@ -55,22 +62,22 @@
           ],
           "description": "POP inputs from the tab (biallelic threshold)."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "SPL",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Splicing / domain evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:SPL",
         "label": "Splicing (SPL)",
         "version": "draft-2026-pre-release"
       },
-      "code": "SPL",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v21-ANO5-spl-001",
           "type": "computational_prediction",
@@ -85,21 +92,22 @@
           "description": "Predicted exon-4 skip; a same-exon P/LP missense supports that this region matters."
         }
       ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Splicing / domain evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "SPL_PRD",
+          "score": 2.0,
+          "strength": null,
+          "direction": "supports",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "In-silico splice prediction.",
+          "specifiedBy": {
             "code": "svcv4:SPL_PRD",
             "label": "Predictive splicing (SPL_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "SPL_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v21-ANO5-spl-001",
               "type": "computational_prediction",
@@ -114,17 +122,9 @@
               "description": "Predicted exon-4 skip; a same-exon P/LP missense supports that this region matters."
             }
           ],
-          "score": 2.0,
-          "strength": null,
-          "direction": "supports",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "In-silico splice prediction."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v21-ANO5 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v21: ANO5'. A VUS: both probands carry only a single heterozygous ANO5 variant (no second allele) for a recessive disease, so neither is a countable biallelic case; the evidence is predictive only."
+  ]
 }

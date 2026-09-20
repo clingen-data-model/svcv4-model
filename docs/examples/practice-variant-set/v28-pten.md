@@ -37,8 +37,8 @@ An SVCv4 classification of PTEN c.802-3T>A (intronic, splice region) against PTE
         predicate:     is_causal_for
         object (MDE):  MONDO:0017623 (PTEN hamartoma tumor syndrome)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - SPL                      score  -3.0
           - SPL_SPA                  score  -3.0

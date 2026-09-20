@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": -4.0,
   "outcome": "likely_benign",
   "strength": null,
   "direction": "disputes",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v13-AIPL1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v13: AIPL1'. A benign-leaning example: a synonymous variant with no splice impact plus homozygotes in gnomAD (POP_HMZ). No clinical data.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v13-AIPL1-pop-001",
           "type": "population_frequency",
@@ -55,22 +62,22 @@
           ],
           "description": "POP inputs from the tab (biallelic threshold)."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "POP_HMZ",
+      "score": -2.0,
+      "strength": "strong",
+      "direction": "disputes",
+      "outcome": null,
+      "contribution": -2.0,
+      "description": "Population homozygotes (benign, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_HMZ",
         "label": "Population homozygotes/hemizygotes (POP_HMZ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_HMZ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v13-AIPL1-hmz-001",
           "type": "population_frequency",
@@ -82,22 +89,22 @@
           "references": [],
           "description": "Two homozygous individuals in gnomAD for a fully penetrant early-onset recessive disease \u2014 benign-leaning population evidence."
         }
-      ],
+      ]
+    },
+    {
+      "code": "MIS",
       "score": -2.0,
-      "strength": "strong",
+      "strength": "supporting",
       "direction": "disputes",
       "outcome": null,
       "contribution": -2.0,
-      "description": "Population homozygotes (benign, illustrative)."
-    },
-    {
-      "method": {
+      "description": "Synonymous / no-impact evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v13-AIPL1-mis-001",
           "type": "computational_prediction",
@@ -110,36 +117,38 @@
           "description": "Synonymous change with no predicted splicing impact \u2014 benign-leaning."
         }
       ],
-      "score": -2.0,
-      "strength": "supporting",
-      "direction": "disputes",
-      "outcome": null,
-      "contribution": -2.0,
-      "description": "Synonymous / no-impact evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
-            "code": "svcv4:MIS_PRD",
-            "label": "Predictive missense (MIS_PRD)",
-            "version": "draft-2026-pre-release"
-          },
           "code": "MIS_PRD",
-          "evidence": [],
           "score": -2.0,
           "strength": null,
           "direction": "disputes",
           "outcome": null,
           "contribution": null,
           "provisional": false,
-          "evidence_lines": [
+          "description": "In-silico predictive missense assessment.",
+          "specifiedBy": {
+            "code": "svcv4:MIS_PRD",
+            "label": "Predictive missense (MIS_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "hasEvidenceItems": [],
+          "hasEvidenceLines": [
             {
-              "method": {
+              "code": "MIS_PRD_INIT",
+              "score": -2.0,
+              "strength": null,
+              "direction": "disputes",
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "description": "Synonymous change with no predicted splicing impact \u2014 benign-leaning.",
+              "specifiedBy": {
                 "code": "svcv4:MIS_PRD_INIT",
                 "label": "Predictor initial points",
                 "version": "draft-2026-pre-release"
               },
-              "code": "MIS_PRD_INIT",
-              "evidence": [
+              "hasEvidenceItems": [
                 {
                   "id": "PVS-v13-AIPL1-mis-001",
                   "type": "computational_prediction",
@@ -152,37 +161,28 @@
                   "description": "Synonymous change with no predicted splicing impact \u2014 benign-leaning."
                 }
               ],
+              "hasEvidenceLines": []
+            },
+            {
+              "code": "MIS_PRD_EXON_ALL",
               "score": -2.0,
               "strength": null,
               "direction": "disputes",
               "outcome": null,
               "contribution": null,
               "provisional": true,
-              "evidence_lines": [],
-              "description": "Synonymous change with no predicted splicing impact \u2014 benign-leaning."
-            },
-            {
-              "method": {
+              "description": "Exon-relevance multiplier on the predictor initial points (illustrative).",
+              "specifiedBy": {
                 "code": "svcv4:MIS_PRD_EXON_ALL",
                 "label": "Exon relevance multiplier",
                 "version": "draft-2026-pre-release"
               },
-              "code": "MIS_PRD_EXON_ALL",
-              "evidence": [],
-              "score": -2.0,
-              "strength": null,
-              "direction": "disputes",
-              "outcome": null,
-              "contribution": null,
-              "provisional": true,
-              "evidence_lines": [],
-              "description": "Exon-relevance multiplier on the predictor initial points (illustrative)."
+              "hasEvidenceItems": [],
+              "hasEvidenceLines": []
             }
-          ],
-          "description": "In-silico predictive missense assessment."
+          ]
         }
       ]
     }
-  ],
-  "description": "PVS-v13-AIPL1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v13: AIPL1'. A benign-leaning example: a synonymous variant with no splice impact plus homozygotes in gnomAD (POP_HMZ). No clinical data."
+  ]
 }

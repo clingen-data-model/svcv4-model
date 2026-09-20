@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 8.0,
   "outcome": "pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v16-DYSF rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v16: DYSF'. A rich biallelic example: homozygous proband, functional assay, same-residue comparator, and segregating affected siblings (LOC_SEG).",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v16-DYSF-pop-001",
           "type": "population_frequency",
@@ -55,22 +62,22 @@
           ],
           "description": "POP inputs from the tab (biallelic threshold)."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Affected homozygous proband (illustrative). LOC_SEG (3 affected sibs) applicable, captured separately.",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v16-DYSF-cln-001",
           "type": "clinical_observation",
@@ -85,22 +92,22 @@
           "references": [],
           "description": "Homozygous proband with a DYSF-specific phenotype; three affected homozygous siblings co-segregate."
         }
-      ],
+      ]
+    },
+    {
+      "code": "FNC",
       "score": 2.0,
       "strength": "moderate",
       "direction": "supports",
       "outcome": null,
       "contribution": 2.0,
-      "description": "Affected homozygous proband (illustrative). LOC_SEG (3 affected sibs) applicable, captured separately."
-    },
-    {
-      "method": {
+      "description": "Functional assay (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:FNC",
         "label": "Functional assay (FNC)",
         "version": "draft-2026-pre-release"
       },
-      "code": "FNC",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v16-DYSF-fnc-001",
           "type": "functional_assay",
@@ -115,21 +122,22 @@
           "description": "Membrane-localization assay shows loss of function; VCEP-calibrated to +2."
         }
       ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Functional assay (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "FNC_ASY",
+          "score": 2.0,
+          "strength": null,
+          "direction": "supports",
+          "outcome": null,
+          "contribution": null,
+          "provisional": true,
+          "description": "Functional assay result.",
+          "specifiedBy": {
             "code": "svcv4:FNC_ASY",
             "label": "Functional assay (FNC_ASY)",
             "version": "draft-2026-pre-release"
           },
-          "code": "FNC_ASY",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v16-DYSF-fnc-001",
               "type": "functional_assay",
@@ -144,25 +152,24 @@
               "description": "Membrane-localization assay shows loss of function; VCEP-calibrated to +2."
             }
           ],
-          "score": 2.0,
-          "strength": null,
-          "direction": "supports",
-          "outcome": null,
-          "contribution": null,
-          "provisional": true,
-          "evidence_lines": [],
-          "description": "Functional assay result."
+          "hasEvidenceLines": []
         }
       ]
     },
     {
-      "method": {
+      "code": "MIS",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Predictive missense + same-residue evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v16-DYSF-mis-001",
           "type": "same_residue_variant",
@@ -180,36 +187,38 @@
           "description": "REVEL 0.819 and a same-residue LP comparator (a more conservative Asp\u2192Asn change than the LP Asp\u2192His)."
         }
       ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Predictive missense + same-residue evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
-            "code": "svcv4:MIS_INF",
-            "label": "Missense inference (MIS_INF)",
-            "version": "draft-2026-pre-release"
-          },
           "code": "MIS_INF",
-          "evidence": [],
           "score": 2.0,
           "strength": null,
           "direction": "supports",
           "outcome": null,
           "contribution": null,
           "provisional": false,
-          "evidence_lines": [
+          "description": "Same-residue comparator evidence.",
+          "specifiedBy": {
+            "code": "svcv4:MIS_INF",
+            "label": "Missense inference (MIS_INF)",
+            "version": "draft-2026-pre-release"
+          },
+          "hasEvidenceItems": [],
+          "hasEvidenceLines": [
             {
-              "method": {
+              "code": "INF_SAMEAA",
+              "score": 2.0,
+              "strength": null,
+              "direction": "supports",
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "description": "Same-amino-acid change comparator (PS1-type; illustrative).",
+              "specifiedBy": {
                 "code": "svcv4:INF_SAMEAA",
                 "label": "Same-amino-acid tally (INF_SAMEAA)",
                 "version": "draft-2026-pre-release"
               },
-              "code": "INF_SAMEAA",
-              "evidence": [
+              "hasEvidenceItems": [
                 {
                   "id": "PVS-v16-DYSF-mis-001",
                   "type": "same_residue_variant",
@@ -227,20 +236,11 @@
                   "description": "REVEL 0.819 and a same-residue LP comparator (a more conservative Asp\u2192Asn change than the LP Asp\u2192His)."
                 }
               ],
-              "score": 2.0,
-              "strength": null,
-              "direction": "supports",
-              "outcome": null,
-              "contribution": null,
-              "provisional": true,
-              "evidence_lines": [],
-              "description": "Same-amino-acid change comparator (PS1-type; illustrative)."
+              "hasEvidenceLines": []
             }
-          ],
-          "description": "Same-residue comparator evidence."
+          ]
         }
       ]
     }
-  ],
-  "description": "PVS-v16-DYSF rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v16: DYSF'. A rich biallelic example: homozygous proband, functional assay, same-residue comparator, and segregating affected siblings (LOC_SEG)."
+  ]
 }

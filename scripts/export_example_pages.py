@@ -60,8 +60,8 @@ def _pretty_data(data: dict) -> str:
 
 def _banner_workflows(clf: dict, case_files: list[Path]) -> str:
     codes: list[str] = []
-    for line in clf.get("evidence_lines", []):
-        code = _short_code(line["method"]["code"])
+    for line in clf.get("hasEvidenceLines", []):
+        code = _short_code(line["specifiedBy"]["code"])
         if code not in codes:
             codes.append(code)
     for cf in case_files:
@@ -78,9 +78,9 @@ def _prose(clf: dict) -> str:
     quals = prop.get("qualifiers") or [{}]
     moi = quals[0].get("moi")
     moi_phrase = f", under {moi} inheritance" if moi else ""
-    n = len(clf["evidence_lines"])
+    n = len(clf["hasEvidenceLines"])
     concepts = ", ".join(
-        line["method"]["label"].split(" (")[0].lower() for line in clf["evidence_lines"]
+        line["specifiedBy"]["label"].split(" (")[0].lower() for line in clf["hasEvidenceLines"]
     )
     cls = CLASS_LABEL.get(clf["outcome"], clf["outcome"])
     return (
@@ -96,7 +96,7 @@ def _narr_line(line: dict, depth: int, lines: list[str]) -> None:
     indent = "    " + "  " * depth
     prov = " · *provisional*" if line.get("provisional") else ""
     if depth == 0:
-        label = line["method"]["label"].split(" — ")[0]
+        label = line["specifiedBy"]["label"].split(" — ")[0]
         desc = line.get("description") or ""
         tail = f" — {desc}" if desc else ""
         lines.append(f"{indent}- **{label}** (`{line['code']}`, score {line['score']}){tail}")
@@ -104,7 +104,7 @@ def _narr_line(line: dict, depth: int, lines: list[str]) -> None:
         desc = line.get("description") or ""
         tail = f" — {desc}" if desc else ""
         lines.append(f"{indent}- `{line['code']}` (score {line['score']}){prov}{tail}")
-    for child in line.get("evidence_lines", []):
+    for child in line.get("hasEvidenceLines", []):
         _narr_line(child, depth + 1, lines)
 
 
@@ -114,7 +114,7 @@ def _semi_line(line: dict, depth: int, out: list[str]) -> None:
     prov = " (prov)" if line.get("provisional") else ""
     label = f"{line['code']}{prov}"
     out.append(f"{indent}- {label:<24} score {line['score']:>5}")
-    for child in line.get("evidence_lines", []):
+    for child in line.get("hasEvidenceLines", []):
         _semi_line(child, depth + 1, out)
 
 
@@ -126,7 +126,7 @@ def _narrative(clf: dict) -> str:
         f"the disease/condition (MDE) is {prop['object']['label']}. The curator captured:",
         "",
     ]
-    for line in clf["evidence_lines"]:
+    for line in clf["hasEvidenceLines"]:
         _narr_line(line, 0, lines)
     cls = CLASS_LABEL.get(clf["outcome"], clf["outcome"])
     lines += [
@@ -151,9 +151,9 @@ def _semi(clf: dict) -> list[str]:
     ]
     if qual_bits:
         out.append(f"        qualifiers:    {qual_bits}")
-    out.append(f"      method:        {clf['method']['code']}")
-    out.append("      evidence_lines:")
-    for line in clf["evidence_lines"]:
+    out.append(f"      specifiedBy:   {clf['specifiedBy']['code']}")
+    out.append("      hasEvidenceLines:")
+    for line in clf["hasEvidenceLines"]:
         _semi_line(line, 0, out)
     out.append(f"      score:         {clf['score']}")
     out.append(f"      outcome:       {clf['outcome']}")

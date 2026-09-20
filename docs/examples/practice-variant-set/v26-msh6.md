@@ -39,8 +39,8 @@ An SVCv4 classification of MSH6 c.107C>T (p.Ala36Val) against Lynch syndrome / h
         predicate:     is_causal_for
         object (MDE):  MONDO:0005835 (Lynch syndrome / hereditary non-polyposis colorectal cancer)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_ALTV                 score  -1.0
         - MIS                      score   0.0

@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "neutral",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v11-ACVRL1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v11: ACVRL1'. Both observed cases are alternate-cause (Case 1 an in-trans Pathogenic ACVRL1 variant \u2192 CLN_ALTV; Case 2 a Pathogenic ENG variant \u2192 CLN_ALTG), so neither credits the VBC; with only an intermediate REVEL, this is a VUS.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v11-ACVRL1-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs from the tab."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_ALTV",
+      "score": -1.0,
+      "strength": "supporting",
+      "direction": "disputes",
+      "outcome": null,
+      "contribution": -1.0,
+      "description": "Alternate cause \u2014 variant (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_ALTV",
         "label": "Affected with an alternate cause \u2014 variant (CLN_ALTV)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_ALTV",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v11-ACVRL1-altv-001",
           "type": "clinical_observation",
@@ -81,22 +88,22 @@
           "references": [],
           "description": "Case 1's HHT is explained by an in-trans Pathogenic ACVRL1 variant \u2192 alternate cause (variant)."
         }
-      ],
+      ]
+    },
+    {
+      "code": "CLN_ALTG",
       "score": -1.0,
       "strength": "supporting",
       "direction": "disputes",
       "outcome": null,
       "contribution": -1.0,
-      "description": "Alternate cause \u2014 variant (illustrative)."
-    },
-    {
-      "method": {
+      "description": "Alternate cause \u2014 gene (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_ALTG",
         "label": "Affected with an alternate cause \u2014 gene (CLN_ALTG)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_ALTG",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v11-ACVRL1-altg-001",
           "type": "clinical_observation",
@@ -108,22 +115,22 @@
           "references": [],
           "description": "Case 2's HHT is explained by a Pathogenic ENG variant \u2192 alternate cause (gene)."
         }
-      ],
-      "score": -1.0,
-      "strength": "supporting",
-      "direction": "disputes",
-      "outcome": null,
-      "contribution": -1.0,
-      "description": "Alternate cause \u2014 gene (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "MIS",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v11-ACVRL1-mis-001",
           "type": "computational_prediction",
@@ -136,36 +143,38 @@
           "description": "REVEL 0.499 is intermediate; no other reported variants in this codon."
         }
       ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Predictive missense evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
-            "code": "svcv4:MIS_PRD",
-            "label": "Predictive missense (MIS_PRD)",
-            "version": "draft-2026-pre-release"
-          },
           "code": "MIS_PRD",
-          "evidence": [],
           "score": 0.0,
           "strength": null,
           "direction": "neutral",
           "outcome": null,
           "contribution": null,
           "provisional": false,
-          "evidence_lines": [
+          "description": "In-silico predictive missense assessment.",
+          "specifiedBy": {
+            "code": "svcv4:MIS_PRD",
+            "label": "Predictive missense (MIS_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "hasEvidenceItems": [],
+          "hasEvidenceLines": [
             {
-              "method": {
+              "code": "MIS_PRD_INIT_REVEL",
+              "score": 0.0,
+              "strength": null,
+              "direction": "neutral",
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "description": "REVEL 0.499 is intermediate; no other reported variants in this codon.",
+              "specifiedBy": {
                 "code": "svcv4:MIS_PRD_INIT_REVEL",
                 "label": "Predictor initial points (REVEL)",
                 "version": "draft-2026-pre-release"
               },
-              "code": "MIS_PRD_INIT_REVEL",
-              "evidence": [
+              "hasEvidenceItems": [
                 {
                   "id": "PVS-v11-ACVRL1-mis-001",
                   "type": "computational_prediction",
@@ -178,20 +187,11 @@
                   "description": "REVEL 0.499 is intermediate; no other reported variants in this codon."
                 }
               ],
-              "score": 0.0,
-              "strength": null,
-              "direction": "neutral",
-              "outcome": null,
-              "contribution": null,
-              "provisional": true,
-              "evidence_lines": [],
-              "description": "REVEL 0.499 is intermediate; no other reported variants in this codon."
+              "hasEvidenceLines": []
             }
-          ],
-          "description": "In-silico predictive missense assessment."
+          ]
         }
       ]
     }
-  ],
-  "description": "PVS-v11-ACVRL1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v11: ACVRL1'. Both observed cases are alternate-cause (Case 1 an in-trans Pathogenic ACVRL1 variant \u2192 CLN_ALTV; Case 2 a Pathogenic ENG variant \u2192 CLN_ALTG), so neither credits the VBC; with only an intermediate REVEL, this is a VUS."
+  ]
 }

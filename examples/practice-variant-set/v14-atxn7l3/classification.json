@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 2.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v14-ATXN7L3 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v14: ATXN7L3'. A VUS: a confirmed de novo in a phenotype-consistent proband, tempered by a new gene-disease with only a suspected LoF mechanism. Also exercises CLN_DNV.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v14-ATXN7L3-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs via the binning approach; variant absent from gnomAD."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Affected proband + confirmed de novo (illustrative). CLN_DNV also applicable.",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v14-ATXN7L3-cln-001",
           "type": "clinical_observation",
@@ -84,22 +91,22 @@
           "references": [],
           "description": "One exome proband, phenotype consistent; also a confirmed de novo (scoreable under CLN_DNV)."
         }
-      ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Affected proband + confirmed de novo (illustrative). CLN_DNV also applicable."
+      ]
     },
     {
-      "method": {
+      "code": "NUL",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Predicted null, mechanism-tempered (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:NUL",
         "label": "Absent protein / loss of function (NUL)",
         "version": "draft-2026-pre-release"
       },
-      "code": "NUL",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v14-ATXN7L3-nul-001",
           "type": "predicted_lof",
@@ -112,21 +119,22 @@
           "description": "Frameshift predicted to undergo NMD, but LoF is only a suspected mechanism, so weight is reduced."
         }
       ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Predicted null, mechanism-tempered (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "NUL_PRD",
+          "score": 0.0,
+          "strength": null,
+          "direction": "neutral",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "Predicted-LoF / structural nonsense assessment.",
+          "specifiedBy": {
             "code": "svcv4:NUL_PRD",
             "label": "Predicted loss of function (NUL_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "NUL_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v14-ATXN7L3-nul-001",
               "type": "predicted_lof",
@@ -139,17 +147,9 @@
               "description": "Frameshift predicted to undergo NMD, but LoF is only a suspected mechanism, so weight is reduced."
             }
           ],
-          "score": 0.0,
-          "strength": null,
-          "direction": "neutral",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "Predicted-LoF / structural nonsense assessment."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v14-ATXN7L3 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v14: ATXN7L3'. A VUS: a confirmed de novo in a phenotype-consistent proband, tempered by a new gene-disease with only a suspected LoF mechanism. Also exercises CLN_DNV."
+  ]
 }

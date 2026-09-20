@@ -61,124 +61,6 @@
       "title": "EvidenceItem",
       "type": "object"
     },
-    "EvidenceLine": {
-      "additionalProperties": false,
-      "description": "Result of invoking a CSpec method/rule on a curator's Evidence Items.\n\nEach Evidence Line records:\n\n- The **method/rule code** (`method`) that was invoked.\n- The **evidence used** (`evidence`) \u2014 the Evidence Items that were\n  provided as inputs.\n- The **score**, the required **direction** (from the score sign),\n  and the optional **strength** that the CSpec method produced.\n- Optional `outcome` if the line maps to a categorical label.\n\nPer VA-Spec, *any process, rule, or method that produces a score\nmaps to an Evidence Line*. The method's *definition* lives in\nCSpec; only the invocation *result* lives here.",
-      "properties": {
-        "code": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Optional Evidence Code / method-code reference; mirrors or disambiguates `method.code` where helpful.",
-          "title": "Code"
-        },
-        "contribution": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Optional weighted contribution this Evidence Line makes to the Statement's final score.",
-          "title": "Contribution"
-        },
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Optional prose summary of the line for human readers.",
-          "title": "Description"
-        },
-        "direction": {
-          "description": "VA-Spec direction of this line's evidence relative to the proposition (required, 1..1 per 1.1.0-ballot.2026-09): `supports` when `score` > 0, `neutral` when `score` == 0, `disputes` when `score` < 0.",
-          "enum": [
-            "supports",
-            "neutral",
-            "disputes"
-          ],
-          "title": "Direction",
-          "type": "string"
-        },
-        "evidence": {
-          "description": "Evidence Items used as inputs to the method/rule. May be a subset of all items captured for the (VBC, MDE) curation.",
-          "items": {
-            "$ref": "#/$defs/EvidenceItem"
-          },
-          "title": "Evidence",
-          "type": "array"
-        },
-        "evidence_lines": {
-          "description": "Nested child Evidence Lines \u2014 the lower-level method/rule assessments (concept \u2192 code \u2192 subcode) that compose into this line's `score`. Per VA-Spec 1.1.0, an Evidence Line may nest further Evidence Lines.",
-          "items": {
-            "$ref": "#/$defs/EvidenceLine"
-          },
-          "title": "Evidence Lines",
-          "type": "array"
-        },
-        "method": {
-          "$ref": "#/$defs/Method",
-          "description": "Reference to the CSpec method or rule whose invocation produced this Evidence Line."
-        },
-        "outcome": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/VariantPathogenicityClassification"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Optional categorical classification associated with this Evidence Line's score, where applicable."
-        },
-        "provisional": {
-          "default": false,
-          "description": "True when this line's `code` is a **provisional** SVCv4 code or subcode \u2014 one derived to fill a gap in the official Summary Table (a combination-cap cell) or a deeper method-level assessment (predictor initial points, exon relevance, same-/distant-AA tally). Provisional codes follow the SVCv4 nomenclature but are not yet part of the official code list.",
-          "title": "Provisional",
-          "type": "boolean"
-        },
-        "score": {
-          "description": "Numeric score produced by the method/rule.",
-          "title": "Score",
-          "type": "number"
-        },
-        "strength": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Optional strength label produced alongside the score (e.g. `supporting`, `moderate`, `strong`). Vocabulary TBD.",
-          "title": "Strength"
-        }
-      },
-      "required": [
-        "method",
-        "score",
-        "direction"
-      ],
-      "title": "EvidenceLine",
-      "type": "object"
-    },
     "MDE": {
       "additionalProperties": false,
       "description": "Mendelian Disease Entity \u2014 the disease the VBC is being assessed against.\n\n`curie` is intentionally a flexible string for the scaffold.\nAcceptable namespaces include MONDO, OMIM, and Orphanet; precise\nnamespace constraints will be set by the SVCv4 VA-Spec community\nprofile.",
@@ -303,6 +185,144 @@
       "title": "Proposition",
       "type": "object"
     },
+    "Statement": {
+      "additionalProperties": false,
+      "description": "A VA-Spec 1.1.0 ``Statement``, profiled for SVCv4.\n\nUsed at two levels:\n\n1. **Top level** \u2014 the rolled-up Variant Pathogenicity Classification: a\n   ``proposition`` (the SPOQ assertion about a VBC and MDE), the final\n   ``score`` / ``direction`` / ``outcome``, the applied specification\n   version (``specifiedBy``), and the composing ``hasEvidenceLines``.\n2. **Evidence-line level** \u2014 one CSpec method/rule assessment nested under a\n   parent via ``hasEvidenceLines``: its ``code``, ``score``, ``direction``,\n   ``strength``, ``outcome``, the ``hasEvidenceItems`` it consumed, and any\n   deeper ``hasEvidenceLines`` (concept \u2192 code \u2192 subcode).\n\n``score`` and ``quality`` are deprecated in VA-Spec core; SVCv4 continues to\nuse ``score`` for its Bayesian points. ``code`` and ``provisional`` are SVCv4\nprofile extensions.",
+      "properties": {
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "SVCv4 profile extension: the Evidence Code / subcode identity of an evidence-line Statement (e.g. `POP_FRQ`, `MIS_PRD`). Omitted on the top-level classification.",
+          "title": "Code"
+        },
+        "contribution": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional weighted contribution to the parent Statement's score.",
+          "title": "Contribution"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional prose summary.",
+          "title": "Description"
+        },
+        "direction": {
+          "description": "VA-Spec direction relative to the proposition (required, 1..1 per 1.1.0-ballot.2026-09): `supports` when `score` > 0, `neutral` when `score` == 0, `disputes` when `score` < 0.",
+          "enum": [
+            "supports",
+            "neutral",
+            "disputes"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "hasEvidenceItems": {
+          "description": "VA-Spec `hasEvidenceItems` (0..m): the Data Items / Study Results consumed by this Statement.",
+          "items": {
+            "$ref": "#/$defs/EvidenceItem"
+          },
+          "title": "Hasevidenceitems",
+          "type": "array"
+        },
+        "hasEvidenceLines": {
+          "description": "VA-Spec `hasEvidenceLines` (0..m Statement): nested evidence-line assessments composing into this Statement (concept \u2192 code \u2192 subcode).",
+          "items": {
+            "$ref": "#/$defs/Statement"
+          },
+          "title": "Hasevidencelines",
+          "type": "array"
+        },
+        "outcome": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VA-Spec outcome (0..1, Mappable Concept): the coded result label \u2014 the classification tier at top level (e.g. `likely_pathogenic`) or the spec-nomenclature code at line level (e.g. `POP_FRQ_-3`).",
+          "title": "Outcome"
+        },
+        "proposition": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Proposition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The SPOQ proposition (VBC subject / predicate / MDE object). Present on the top-level classification; omitted on nested evidence-line Statements (0..1 per VA-Spec 1.1.0)."
+        },
+        "provisional": {
+          "default": false,
+          "description": "SVCv4 profile extension: True when `code` is a provisional SVCv4 code/subcode (combination-cap or deeper method-level) not yet in the official code list.",
+          "title": "Provisional",
+          "type": "boolean"
+        },
+        "score": {
+          "description": "The composed (top level) or produced (line level) SVCv4 points. VA-Spec core deprecates `score`; SVCv4 retains it as its Bayesian point value.",
+          "title": "Score",
+          "type": "number"
+        },
+        "specifiedBy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Method"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VA-Spec `specifiedBy`: the Method this Statement was produced by. At top level, the applied SVCv4 specification version (baseline or VCEP-specialised, resolving into CSpec); at line level, the CSpec method/rule invoked."
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VA-Spec strength (0..1, Mappable Concept; open vocabulary) \u2014 e.g. `supporting`, `moderate`, `strong`.",
+          "title": "Strength"
+        }
+      },
+      "required": [
+        "score",
+        "direction"
+      ],
+      "title": "Statement",
+      "type": "object"
+    },
     "VBC": {
       "additionalProperties": false,
       "description": "Variant Being Considered \u2014 the germline variant under evaluation.\n\nEventually typed via a GA4GH VRS `Variation`. Today this is a\nplaceholder accepting any VRS-shaped payload as a dict; wiring\nthrough to `ga4gh.vrs.models.Variation` is a follow-up once the\nSVCv4 VA-Spec community profile is locked.",
@@ -332,104 +352,7 @@
       ],
       "title": "VBC",
       "type": "object"
-    },
-    "VariantPathogenicityClassification": {
-      "description": "Categorical classification of a variant's pathogenicity.\n\nMaps the Statement's final score onto a position on the\n**Benign \u2194 Pathogenic** spectrum.\n\nThis enum is a *placeholder* using the familiar five-tier vocabulary\n(Benign / Likely Benign / Variant of Uncertain Significance /\nLikely Pathogenic / Pathogenic). The SVCv4 working group is\nexpected to confirm the canonical labels \u2014 and the score \u2192 label\nbands \u2014 before publication. The values are stable lowercase\nsnake_case strings so JSON Schema consumers see a predictable\nenum.",
-      "enum": [
-        "benign",
-        "likely_benign",
-        "variant_of_uncertain_significance",
-        "likely_pathogenic",
-        "pathogenic"
-      ],
-      "title": "VariantPathogenicityClassification",
-      "type": "string"
     }
   },
-  "additionalProperties": false,
-  "description": "A SVCv4 Variant Pathogenicity Classification expressed as a VA-Spec Statement.\n\nThe Statement is the canonical entry point into the model. It carries:\n\n- a `Proposition` (the SPOQ-structured assertion about a VBC and an\n  MDE);\n- the `score` and `outcome` for the curation;\n- a `method` reference identifying the **applied SVCv4\n  specification version** \u2014 baseline SVCv4 or a VCEP-specialised\n  version selected via gene-disease-MOI scoping (resolves into\n  CSpec); and\n- the collection of `evidence_lines` whose scores compose into\n  `score`.\n\nWorked examples in `examples/` validate against `Statement`.",
-  "properties": {
-    "contribution": {
-      "anyOf": [
-        {
-          "type": "number"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Reserved VA-Spec slot; currently unused at the Statement level. Retained for forward compatibility.",
-      "title": "Contribution"
-    },
-    "description": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional prose summary of the classification.",
-      "title": "Description"
-    },
-    "direction": {
-      "description": "VA-Spec direction of the evidence relative to the proposition (required, 1..1 per 1.1.0-ballot.2026-09): `supports` when `score` > 0, `neutral` when `score` == 0, `disputes` when `score` < 0.",
-      "enum": [
-        "supports",
-        "neutral",
-        "disputes"
-      ],
-      "title": "Direction",
-      "type": "string"
-    },
-    "evidence_lines": {
-      "description": "Evidence Lines whose scores compose into `score`. Each Evidence Line is the artifact of one CSpec method/rule invocation.",
-      "items": {
-        "$ref": "#/$defs/EvidenceLine"
-      },
-      "title": "Evidence Lines",
-      "type": "array"
-    },
-    "method": {
-      "$ref": "#/$defs/Method",
-      "description": "Reference identifying the **applied SVCv4 specification version** \u2014 baseline SVCv4 or a VCEP-specialised version selected for this (VBC, MDE) curation. Resolves into CSpec."
-    },
-    "outcome": {
-      "$ref": "#/$defs/VariantPathogenicityClassification",
-      "description": "Categorical classification produced by mapping `score` to the Benign \u2194 Pathogenic spectrum."
-    },
-    "proposition": {
-      "$ref": "#/$defs/Proposition"
-    },
-    "score": {
-      "description": "The Statement's final composed score.",
-      "title": "Score",
-      "type": "number"
-    },
-    "strength": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional strength label for the score (e.g. `strong`, `supporting`).",
-      "title": "Strength"
-    }
-  },
-  "required": [
-    "proposition",
-    "method",
-    "score",
-    "outcome",
-    "direction"
-  ],
-  "title": "Statement",
-  "type": "object"
+  "$ref": "#/$defs/Statement"
 }

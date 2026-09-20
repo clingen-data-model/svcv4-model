@@ -38,8 +38,8 @@ An SVCv4 classification of MYOC c.719A>G (p.Glu240Gly) against open-angle glauco
         predicate:     is_causal_for
         object (MDE):  MONDO:0005338 (open-angle glaucoma)
         qualifiers:    moi=AD; note=Loss of function is NOT an established mechanism for MYOC-related open-angle glaucoma.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - MIS                      score   0.0
           - MIS_PRD                  score   0.0

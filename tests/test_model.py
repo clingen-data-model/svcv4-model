@@ -9,12 +9,10 @@ from svcv4_model import (
     VBC,
     EvidenceData,
     EvidenceItem,
-    EvidenceLine,
     Method,
     Predicate,
     Proposition,
     Statement,
-    VariantPathogenicityClassification,
 )
 
 
@@ -24,14 +22,15 @@ def _make_statement() -> Statement:
             subject=VBC(variation={"id": "ga4gh:VA.test", "type": "Allele"}),
             object=MDE(curie="MONDO:0007254", label="Test disease"),
         ),
-        method=Method(code="svcv4:baseline", version="test"),
+        specified_by=Method(code="svcv4:baseline", version="test"),
         score=4.0,
         direction="supports",
-        outcome=VariantPathogenicityClassification.LIKELY_PATHOGENIC,
-        evidence_lines=[
-            EvidenceLine(
-                method=Method(code="svcv4:CLN_AFF"),
-                evidence=[EvidenceItem(type="clinical_observation", data={"n": 4})],
+        outcome="likely_pathogenic",
+        has_evidence_lines=[
+            Statement(
+                code="CLN_AFF",
+                specified_by=Method(code="svcv4:CLN_AFF"),
+                has_evidence_items=[EvidenceItem(type="clinical_observation", data={"n": 4})],
                 score=2.0,
                 direction="supports",
             ),
@@ -42,15 +41,17 @@ def _make_statement() -> Statement:
 def test_statement_instantiates() -> None:
     statement = _make_statement()
     assert statement.score == 4.0
-    assert statement.outcome is VariantPathogenicityClassification.LIKELY_PATHOGENIC
+    assert statement.outcome == "likely_pathogenic"
     assert statement.proposition.predicate is Predicate.IS_CAUSAL_FOR
-    assert len(statement.evidence_lines) == 1
-    assert statement.evidence_lines[0].score == 2.0
+    assert len(statement.has_evidence_lines) == 1
+    assert statement.has_evidence_lines[0].score == 2.0
+    assert statement.has_evidence_lines[0].code == "CLN_AFF"
 
 
 def test_statement_round_trips_json() -> None:
     original = _make_statement()
-    payload = original.model_dump(mode="json")
+    payload = original.model_dump(mode="json", by_alias=True)
+    assert "hasEvidenceLines" in payload and "specifiedBy" in payload
     rehydrated = Statement.model_validate(payload)
     assert rehydrated == original
 
@@ -62,7 +63,7 @@ def test_evidence_data_is_evidence_item_alias() -> None:
 
 def test_extra_fields_are_forbidden_on_statement() -> None:
     """`extra='forbid'` keeps the JSON Schema strict — typos fail loudly."""
-    payload = _make_statement().model_dump(mode="json")
+    payload = _make_statement().model_dump(mode="json", by_alias=True)
     payload["unexpected_field"] = "should fail"
     with pytest.raises(ValueError):
         Statement.model_validate(payload)

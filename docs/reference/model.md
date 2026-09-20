@@ -28,10 +28,6 @@ its fields with their types, defaults, and descriptions.
 
 ---
 
-::: svcv4_model.EvidenceLine
-
----
-
 ::: svcv4_model.EvidenceItem
 
 ---

@@ -38,8 +38,8 @@ An SVCv4 classification of ATXN7L3 c.332del (p.Asn111ThrfsTer16) against complex
         predicate:     is_causal_for
         object (MDE):  MONDO:0100038 (complex neurodevelopmental disorder (ATXN7L3-related; MONDO pending))
         qualifiers:    moi=AD; note=Loss of function is the SUSPECTED (not established) mechanism (GenCC LoF framework).
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   2.0
         - NUL                      score   0.0

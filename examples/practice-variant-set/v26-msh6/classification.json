@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "neutral",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v26-MSH6 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v26: MSH6'. A CLN_ALTV example: the proband's colorectal cancer is explained by an in-trans Pathogenic truncating variant, so it gives the VBC no positive clinical credit.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v26-MSH6-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs from the tab."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_ALTV",
+      "score": -1.0,
+      "strength": "supporting",
+      "direction": "disputes",
+      "outcome": null,
+      "contribution": -1.0,
+      "description": "Alternate cause \u2014 variant (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_ALTV",
         "label": "Affected with an alternate cause \u2014 variant (CLN_ALTV)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_ALTV",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v26-MSH6-alt-001",
           "type": "clinical_observation",
@@ -81,22 +88,22 @@
           "references": [],
           "description": "The affected phenotype is explained by an in-trans Pathogenic variant, so this proband is an alternate-cause (variant) observation \u2014 it does not credit the VBC."
         }
-      ],
-      "score": -1.0,
-      "strength": "supporting",
-      "direction": "disputes",
-      "outcome": null,
-      "contribution": -1.0,
-      "description": "Alternate cause \u2014 variant (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "MIS",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Predictive missense evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v26-MSH6-mis-001",
           "type": "computational_prediction",
@@ -109,36 +116,38 @@
           "description": "BayesDel -0.20 is mildly benign-leaning; no same-codon informative variants."
         }
       ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Predictive missense evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
-            "code": "svcv4:MIS_PRD",
-            "label": "Predictive missense (MIS_PRD)",
-            "version": "draft-2026-pre-release"
-          },
           "code": "MIS_PRD",
-          "evidence": [],
           "score": 0.0,
           "strength": null,
           "direction": "neutral",
           "outcome": null,
           "contribution": null,
           "provisional": false,
-          "evidence_lines": [
+          "description": "In-silico predictive missense assessment.",
+          "specifiedBy": {
+            "code": "svcv4:MIS_PRD",
+            "label": "Predictive missense (MIS_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "hasEvidenceItems": [],
+          "hasEvidenceLines": [
             {
-              "method": {
+              "code": "MIS_PRD_INIT_BAYESDEL",
+              "score": 0.0,
+              "strength": null,
+              "direction": "neutral",
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "description": "BayesDel -0.20 is mildly benign-leaning; no same-codon informative variants.",
+              "specifiedBy": {
                 "code": "svcv4:MIS_PRD_INIT_BAYESDEL",
                 "label": "Predictor initial points (BAYESDEL)",
                 "version": "draft-2026-pre-release"
               },
-              "code": "MIS_PRD_INIT_BAYESDEL",
-              "evidence": [
+              "hasEvidenceItems": [
                 {
                   "id": "PVS-v26-MSH6-mis-001",
                   "type": "computational_prediction",
@@ -151,20 +160,11 @@
                   "description": "BayesDel -0.20 is mildly benign-leaning; no same-codon informative variants."
                 }
               ],
-              "score": 0.0,
-              "strength": null,
-              "direction": "neutral",
-              "outcome": null,
-              "contribution": null,
-              "provisional": true,
-              "evidence_lines": [],
-              "description": "BayesDel -0.20 is mildly benign-leaning; no same-codon informative variants."
+              "hasEvidenceLines": []
             }
-          ],
-          "description": "In-silico predictive missense assessment."
+          ]
         }
       ]
     }
-  ],
-  "description": "PVS-v26-MSH6 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v26: MSH6'. A CLN_ALTV example: the proband's colorectal cancer is explained by an in-trans Pathogenic truncating variant, so it gives the VBC no positive clinical credit."
+  ]
 }

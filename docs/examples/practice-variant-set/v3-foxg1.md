@@ -38,8 +38,8 @@ An SVCv4 classification of FOXG1 c.234_236delGCC (p.Pro79del) against FOXG1-rela
         predicate:     is_causal_for
         object (MDE):  MONDO:0100040 (FOXG1-related disorder)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   1.0
         - MIS                      score  -1.0

@@ -37,8 +37,8 @@ An SVCv4 classification of DICER1 c.2T>C (p.Met1Thr, start-loss) against DICER1-
         predicate:     is_causal_for
         object (MDE):  MONDO:0100216 (DICER1-related tumor predisposition)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - NUL                      score   0.0
           - NUL_PRD                  score   0.0
