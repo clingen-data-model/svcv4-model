@@ -1,0 +1,75 @@
+{
+  "additionalProperties": false,
+  "description": "A specific registered ruleset \u2014 one node of a pathway. Its id is never reused.",
+  "properties": {
+    "code": {
+      "description": "The SVCv4 code this node produces, e.g. `MIS_PRD_EXON`.",
+      "title": "Code",
+      "type": "string"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "id": {
+      "description": "`svcv4-<scope>:<CODE>:<version>` \u2014 value of `specifiedBy.id`.",
+      "title": "Id",
+      "type": "string"
+    },
+    "label": {
+      "description": "Human method name for this exact pathway node.",
+      "title": "Label",
+      "type": "string"
+    },
+    "method_type": {
+      "description": "The AssessmentType (pattern) this instantiates.",
+      "title": "Method Type",
+      "type": "string"
+    },
+    "params": {
+      "additionalProperties": true,
+      "title": "Params",
+      "type": "object"
+    },
+    "parent": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Parent ruleset id (hierarchy).",
+      "title": "Parent"
+    },
+    "scope": {
+      "description": "`baseline` or a specialisation scope, e.g. `gene-MYH7`.",
+      "title": "Scope",
+      "type": "string"
+    },
+    "version": {
+      "default": "1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "code",
+    "label",
+    "method_type",
+    "scope"
+  ],
+  "title": "Ruleset",
+  "type": "object"
+}

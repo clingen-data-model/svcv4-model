@@ -11,10 +11,10 @@ distinct, namespaced id.
 
 | Field | Purpose | Example |
 |---|---|---|
-| `specifiedBy.methodType` | *What kind of rule this is* — stable across baseline and every specialization; this is what makes results **comparable**. | `insilico-missense-predictor-assessment` |
-| `specifiedBy.id` | *Which configured ruleset actually ran* — namespaced + versioned; this is what makes results **reproducible**. | `svcv4-baseline:insilico-missense-predictor-assessment:1.0` |
+| `specifiedBy.methodType` | *What kind of rule this is* — stable across baseline and every specialization; this is what makes results **comparable**. | `insilico-predictor-assessment` |
+| `specifiedBy.id` | *Which configured ruleset actually ran* — namespaced + versioned; this is what makes results **reproducible**. | `svcv4-baseline:MIS_PRD_INIT_REVEL:1.0` |
 
-The id scheme is **`svcv4-<scope>:<method_type>:<version>`**. Scope is `baseline`
+The id scheme is **`svcv4-<scope>:<CODE>:<version>`**. Scope is `baseline`
 or a specialization scope (e.g. `gene-MYH7`, `vcep-cardiomyopathy`). All scopes
 live under the `svcv4` registry umbrella.
 
@@ -33,8 +33,8 @@ configured threshold, different score.
       "type": "Statement",
       "code": "MIS_PRD_INIT_REVEL",
       "specifiedBy": {
-        "id": "svcv4-baseline:insilico-missense-predictor-assessment:1.0",
-        "methodType": "insilico-missense-predictor-assessment",
+        "id": "svcv4-baseline:MIS_PRD_INIT_REVEL:1.0",
+        "methodType": "insilico-predictor-assessment",
         "version": "1.0"
       },
       "score": 3.0,
@@ -54,8 +54,8 @@ configured threshold, different score.
       "type": "Statement",
       "code": "MIS_PRD_INIT_REVEL",
       "specifiedBy": {
-        "id": "svcv4-gene-MYH7:insilico-missense-predictor-assessment:1.0",
-        "methodType": "insilico-missense-predictor-assessment",
+        "id": "svcv4-gene-MYH7:MIS_PRD_INIT_REVEL:1.0",
+        "methodType": "insilico-predictor-assessment",
         "version": "1.0"
       },
       "score": 4.0,
@@ -81,7 +81,7 @@ of the SVCv4 framework; it does **not** mint new codes. Examples:
 
 | Assessment (`methodType`) | Reconfigurable parameters |
 |---|---|
-| `insilico-missense-predictor-assessment` | predictor · calibration thresholds |
+| `insilico-predictor-assessment` | predictor · calibration thresholds |
 | `mechanism-exon-relevance-assessment` | matrix fractions · gene-disease-validity gate |
 | `informative-variants-assessment` | point values · relatedness rule · added granularity |
 | `population-frequency-assessment` | fold thresholds & point tiers |
@@ -89,6 +89,6 @@ of the SVCv4 framework; it does **not** mint new codes. Examples:
 ## In the model
 
 The registry lives in `svcv4_model.assessment`:
-`AssessmentType` (the stable shape) and `MethodConfig` (a configured instance),
-with `make_method_id` / `parse_method_id` / `resolve` helpers. Baseline configs
-are seeded for every assessment type; specializations register alongside them.
+`AssessmentType` (the pattern) and `Ruleset` (a pathway node),
+with `make_ruleset_id` / `parse_ruleset_id` / `resolve` / `children` helpers. Baseline rulesets are seeded for the whole method tree; specializations override
+individual nodes by id.

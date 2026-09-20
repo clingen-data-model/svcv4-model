@@ -1,6 +1,6 @@
 {
   "additionalProperties": false,
-  "description": "One evidence data item an assessment consumes.",
+  "description": "One evidence data item a pattern consumes.",
   "properties": {
     "description": {
       "anyOf": [
@@ -24,16 +24,13 @@
         }
       ],
       "default": null,
-      "description": "A concrete example value, for docs.",
       "title": "Example"
     },
     "key": {
-      "description": "Stable key for the data item (a DataItem subtype).",
       "title": "Key",
       "type": "string"
     },
     "role": {
-      "description": "Why it's needed: input (scored), gate, router, or provenance.",
       "enum": [
         "input",
         "gate",
