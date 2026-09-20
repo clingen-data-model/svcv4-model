@@ -38,8 +38,8 @@ An SVCv4 classification of ADA c.219-2A>G against severe combined immunodeficien
         predicate:     is_causal_for
         object (MDE):  MONDO:0007064 (severe combined immunodeficiency due to adenosine deaminase deficiency)
         qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   2.0
         - SPL                      score   6.0

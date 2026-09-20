@@ -39,8 +39,8 @@ An SVCv4 classification of SCN2A c.1108T>C (p.Phe370Leu) against complex neurode
         predicate:     is_causal_for
         object (MDE):  MONDO:0100038 (complex neurodevelopmental disorder)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_DNV                  score   2.0
         - MIS                      score   4.0

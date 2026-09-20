@@ -39,8 +39,8 @@ An SVCv4 classification of FBN1 c.7003C>T (p.Arg2335Trp) against Marfan syndrome
         predicate:     is_causal_for
         object (MDE):  MONDO:0007947 (Marfan syndrome)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   3.0
         - MIS                      score   2.0

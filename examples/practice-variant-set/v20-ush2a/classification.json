@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 5.0,
   "outcome": "likely_pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v20-USH2A rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v20: USH2A'. A structural (multi-exon deletion) biallelic example with three affected probands.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v20-USH2A-pop-001",
           "type": "population_frequency",
@@ -56,22 +63,22 @@
           ],
           "description": "POP inputs from the tab (biallelic threshold; inverse-AF calculation)."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 3.0,
+      "strength": "strong",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 3.0,
+      "description": "Affected biallelic probands (illustrative). LOC_PHE (~60% yield) also applicable.",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v20-USH2A-cln-001",
           "type": "clinical_observation",
@@ -86,22 +93,22 @@
           "references": [],
           "description": "Three biallelic probands with a USH2A-specific dual sensory phenotype."
         }
-      ],
-      "score": 3.0,
-      "strength": "strong",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 3.0,
-      "description": "Affected biallelic probands (illustrative). LOC_PHE (~60% yield) also applicable."
+      ]
     },
     {
-      "method": {
+      "code": "CDS",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Coding-alteration evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CDS",
         "label": "RNA / coding alteration (CDS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CDS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v20-USH2A-cds-001",
           "type": "structural",
@@ -114,21 +121,22 @@
           "description": "In-frame multi-exon deletion removing >10% of the protein, outside a known critical domain."
         }
       ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Coding-alteration evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "CDS_PRD",
+          "score": 2.0,
+          "strength": null,
+          "direction": "supports",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "Structural coding-sequence assessment.",
+          "specifiedBy": {
             "code": "svcv4:CDS_PRD",
             "label": "Coding-sequence predictive (CDS_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "CDS_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v20-USH2A-cds-001",
               "type": "structural",
@@ -141,17 +149,9 @@
               "description": "In-frame multi-exon deletion removing >10% of the protein, outside a known critical domain."
             }
           ],
-          "score": 2.0,
-          "strength": null,
-          "direction": "supports",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "Structural coding-sequence assessment."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v20-USH2A rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v20: USH2A'. A structural (multi-exon deletion) biallelic example with three affected probands."
+  ]
 }

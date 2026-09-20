@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 7.0,
   "outcome": "pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v29-RS1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v29: RS1'. An X-linked example: a hemizygous male proband plus an out-of-frame exon-2 deletion in a LoF gene.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v29-RS1-pop-001",
           "type": "population_frequency",
@@ -52,22 +59,22 @@
           "references": [],
           "description": "POP inputs via the binning approach; variant absent from gnomAD."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Affected hemizygous proband (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v29-RS1-cln-001",
           "type": "clinical_observation",
@@ -81,22 +88,22 @@
           "references": [],
           "description": "One hemizygous male proband with an RS1-specific phenotype."
         }
-      ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Affected hemizygous proband (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "NUL",
+      "score": 4.0,
+      "strength": "strong",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 4.0,
+      "description": "Loss-of-function evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:NUL",
         "label": "Absent protein / loss of function (NUL)",
         "version": "draft-2026-pre-release"
       },
-      "code": "NUL",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v29-RS1-nul-001",
           "type": "structural",
@@ -108,21 +115,22 @@
           "description": "Out-of-frame single-exon deletion \u2192 LoF; multiple P/LP LoF variants in the same exon."
         }
       ],
-      "score": 4.0,
-      "strength": "strong",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 4.0,
-      "description": "Loss-of-function evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "NUL_PRD",
+          "score": 4.0,
+          "strength": null,
+          "direction": "supports",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "Predicted-LoF / structural nonsense assessment.",
+          "specifiedBy": {
             "code": "svcv4:NUL_PRD",
             "label": "Predicted loss of function (NUL_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "NUL_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v29-RS1-nul-001",
               "type": "structural",
@@ -134,17 +142,9 @@
               "description": "Out-of-frame single-exon deletion \u2192 LoF; multiple P/LP LoF variants in the same exon."
             }
           ],
-          "score": 4.0,
-          "strength": null,
-          "direction": "supports",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "Predicted-LoF / structural nonsense assessment."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v29-RS1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v29: RS1'. An X-linked example: a hemizygous male proband plus an out-of-frame exon-2 deletion in a LoF gene."
+  ]
 }

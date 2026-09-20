@@ -40,8 +40,8 @@ An SVCv4 classification of AIPL1 c.150C>T (p.Asp50=) against AIPL1-related retin
         predicate:     is_causal_for
         object (MDE):  MONDO:0100438 (AIPL1-related retinopathy)
         qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - POP_HMZ                  score  -2.0
         - MIS                      score  -2.0

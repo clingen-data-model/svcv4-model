@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 5.0,
   "outcome": "likely_pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v19-TP53 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v19: TP53'. Evidence-driven: strong functional data plus a same-residue Pathogenic comparator. The single proband is unaffected (family history only), so contributes no clinical points.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v19-TP53-pop-001",
           "type": "population_frequency",
@@ -55,22 +62,22 @@
           ],
           "description": "POP inputs from the tab; variant absent from gnomAD."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "FNC",
+      "score": 4.0,
+      "strength": "strong",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 4.0,
+      "description": "Functional assays (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:FNC",
         "label": "Functional assay (FNC)",
         "version": "draft-2026-pre-release"
       },
-      "code": "FNC",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v19-TP53-fnc-001",
           "type": "functional_assay",
@@ -86,21 +93,22 @@
           "description": "Multiple assays show loss of transactivation and growth suppression \u2192 strong functional impact."
         }
       ],
-      "score": 4.0,
-      "strength": "strong",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 4.0,
-      "description": "Functional assays (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "FNC_ASY",
+          "score": 4.0,
+          "strength": null,
+          "direction": "supports",
+          "outcome": null,
+          "contribution": null,
+          "provisional": true,
+          "description": "Functional assay result.",
+          "specifiedBy": {
             "code": "svcv4:FNC_ASY",
             "label": "Functional assay (FNC_ASY)",
             "version": "draft-2026-pre-release"
           },
-          "code": "FNC_ASY",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v19-TP53-fnc-001",
               "type": "functional_assay",
@@ -116,25 +124,24 @@
               "description": "Multiple assays show loss of transactivation and growth suppression \u2192 strong functional impact."
             }
           ],
-          "score": 4.0,
-          "strength": null,
-          "direction": "supports",
-          "outcome": null,
-          "contribution": null,
-          "provisional": true,
-          "evidence_lines": [],
-          "description": "Functional assay result."
+          "hasEvidenceLines": []
         }
       ]
     },
     {
-      "method": {
+      "code": "MIS",
+      "score": 1.0,
+      "strength": "supporting",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 1.0,
+      "description": "Same-residue (PM5-type) evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v19-TP53-mis-001",
           "type": "same_residue_variant",
@@ -152,36 +159,38 @@
           "description": "A different missense at the same residue (p.His214Arg) is Pathogenic (PM5-type); the VBC change is less conservative (Grantham 99 vs 29)."
         }
       ],
-      "score": 1.0,
-      "strength": "supporting",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 1.0,
-      "description": "Same-residue (PM5-type) evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
-            "code": "svcv4:MIS_INF",
-            "label": "Missense inference (MIS_INF)",
-            "version": "draft-2026-pre-release"
-          },
           "code": "MIS_INF",
-          "evidence": [],
           "score": 1.0,
           "strength": null,
           "direction": "supports",
           "outcome": null,
           "contribution": null,
           "provisional": false,
-          "evidence_lines": [
+          "description": "Same-residue comparator evidence.",
+          "specifiedBy": {
+            "code": "svcv4:MIS_INF",
+            "label": "Missense inference (MIS_INF)",
+            "version": "draft-2026-pre-release"
+          },
+          "hasEvidenceItems": [],
+          "hasEvidenceLines": [
             {
-              "method": {
+              "code": "INF_SAMEAA",
+              "score": 1.0,
+              "strength": null,
+              "direction": "supports",
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "description": "Same-amino-acid change comparator (PS1-type; illustrative).",
+              "specifiedBy": {
                 "code": "svcv4:INF_SAMEAA",
                 "label": "Same-amino-acid tally (INF_SAMEAA)",
                 "version": "draft-2026-pre-release"
               },
-              "code": "INF_SAMEAA",
-              "evidence": [
+              "hasEvidenceItems": [
                 {
                   "id": "PVS-v19-TP53-mis-001",
                   "type": "same_residue_variant",
@@ -199,20 +208,11 @@
                   "description": "A different missense at the same residue (p.His214Arg) is Pathogenic (PM5-type); the VBC change is less conservative (Grantham 99 vs 29)."
                 }
               ],
-              "score": 1.0,
-              "strength": null,
-              "direction": "supports",
-              "outcome": null,
-              "contribution": null,
-              "provisional": true,
-              "evidence_lines": [],
-              "description": "Same-amino-acid change comparator (PS1-type; illustrative)."
+              "hasEvidenceLines": []
             }
-          ],
-          "description": "Same-residue comparator evidence."
+          ]
         }
       ]
     }
-  ],
-  "description": "PVS-v19-TP53 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v19: TP53'. Evidence-driven: strong functional data plus a same-residue Pathogenic comparator. The single proband is unaffected (family history only), so contributes no clinical points."
+  ]
 }

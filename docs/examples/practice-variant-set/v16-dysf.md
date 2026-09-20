@@ -41,8 +41,8 @@ An SVCv4 classification of DYSF c.5626G>A (p.Asp1876Asn) against autosomal reces
         predicate:     is_causal_for
         object (MDE):  MONDO:0015152 (autosomal recessive limb-girdle muscular dystrophy)
         qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   2.0
         - FNC                      score   2.0

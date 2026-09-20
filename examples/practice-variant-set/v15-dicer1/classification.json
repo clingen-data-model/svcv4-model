@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "neutral",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v15-DICER1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v15: DICER1'. A 'why nothing counts' example: proband 1 is unaffected and DICER1 penetrance is low (no CLN_UAF), and proband 2's breast cancer is non-specific with a Pathogenic BRCA1 variant and high genetic heterogeneity (no CLN_AFF, no CLN_ALT). VUS.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v15-DICER1-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs from the tab; note low penetrance (0.10)."
         }
-      ],
+      ]
+    },
+    {
+      "code": "NUL",
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
-    },
-    {
-      "method": {
+      "description": "Start-loss with uncertain LoF (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:NUL",
         "label": "Absent protein / loss of function (NUL)",
         "version": "draft-2026-pre-release"
       },
-      "code": "NUL",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v15-DICER1-nul-001",
           "type": "predicted_lof",
@@ -83,21 +90,22 @@
           "description": "Start-loss with plausible downstream alternate start codons, so the LoF effect is uncertain."
         }
       ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Start-loss with uncertain LoF (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "NUL_PRD",
+          "score": 0.0,
+          "strength": null,
+          "direction": "neutral",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "Predicted-LoF / structural nonsense assessment.",
+          "specifiedBy": {
             "code": "svcv4:NUL_PRD",
             "label": "Predicted loss of function (NUL_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "NUL_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v15-DICER1-nul-001",
               "type": "predicted_lof",
@@ -111,17 +119,9 @@
               "description": "Start-loss with plausible downstream alternate start codons, so the LoF effect is uncertain."
             }
           ],
-          "score": 0.0,
-          "strength": null,
-          "direction": "neutral",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "Predicted-LoF / structural nonsense assessment."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v15-DICER1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v15: DICER1'. A 'why nothing counts' example: proband 1 is unaffected and DICER1 penetrance is low (no CLN_UAF), and proband 2's breast cancer is non-specific with a Pathogenic BRCA1 variant and high genetic heterogeneity (no CLN_AFF, no CLN_ALT). VUS."
+  ]
 }

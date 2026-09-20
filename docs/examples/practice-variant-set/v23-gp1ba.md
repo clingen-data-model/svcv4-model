@@ -38,8 +38,8 @@ An SVCv4 classification of GP1BA c.334G>A (p.Gly112Arg) against Bernard-Soulier 
         predicate:     is_causal_for
         object (MDE):  MONDO:0009276 (Bernard-Soulier syndrome)
         qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - MIS                      score   0.0
           - MIS_PRD                  score   0.0

@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "neutral",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-PKP2 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'PKP2'. No clinical points: the single proband has only suspected (not clinically diagnosed) ARVC, so is not counted in CLN_AFF (nor LOC_PHE). A genuine VUS driven by transcript context.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-PKP2-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs from the tab."
         }
-      ],
+      ]
+    },
+    {
+      "code": "NUL",
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
-    },
-    {
-      "method": {
+      "description": "Transcript-context-limited LoF evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:NUL",
         "label": "Absent protein / loss of function (NUL)",
         "version": "draft-2026-pre-release"
       },
-      "code": "NUL",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-PKP2-nul-001",
           "type": "predicted_lof",
@@ -82,21 +89,22 @@
           "description": "Nonsense change in an exon absent from the clinically relevant transcript, so the LoF mechanism does not clearly apply."
         }
       ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Transcript-context-limited LoF evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "NUL_PRD",
+          "score": 0.0,
+          "strength": null,
+          "direction": "neutral",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "Predicted-LoF / structural nonsense assessment.",
+          "specifiedBy": {
             "code": "svcv4:NUL_PRD",
             "label": "Predicted loss of function (NUL_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "NUL_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-PKP2-nul-001",
               "type": "predicted_lof",
@@ -109,17 +117,9 @@
               "description": "Nonsense change in an exon absent from the clinically relevant transcript, so the LoF mechanism does not clearly apply."
             }
           ],
-          "score": 0.0,
-          "strength": null,
-          "direction": "neutral",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "Predicted-LoF / structural nonsense assessment."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-PKP2 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'PKP2'. No clinical points: the single proband has only suspected (not clinically diagnosed) ARVC, so is not counted in CLN_AFF (nor LOC_PHE). A genuine VUS driven by transcript context."
+  ]
 }

@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 5.0,
   "outcome": "likely_pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v4-HNF4A rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v4: HNF4A'. LOC_SEG (3 affected relatives) and LOC_PHE also applicable.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v4-HNF4A-pop-001",
           "type": "population_frequency",
@@ -55,22 +62,22 @@
           ],
           "description": "POP inputs from the tab; variant absent from gnomAD."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 1.0,
+      "strength": "supporting",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 1.0,
+      "description": "Affected proband (illustrative). Note: LOC_SEG also applicable \u2014 variant segregated with MODY in 3 affected relatives \u2014 but is captured separately.",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v4-HNF4A-cln-001",
           "type": "clinical_observation",
@@ -84,22 +91,22 @@
           "references": [],
           "description": "One proband with HNF4A-MODY phenotype and negative testing of other MODY genes."
         }
-      ],
-      "score": 1.0,
-      "strength": "supporting",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 1.0,
-      "description": "Affected proband (illustrative). Note: LOC_SEG also applicable \u2014 variant segregated with MODY in 3 affected relatives \u2014 but is captured separately."
+      ]
     },
     {
-      "method": {
+      "code": "NUL",
+      "score": 4.0,
+      "strength": "strong",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 4.0,
+      "description": "Predicted null / LoF evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:NUL",
         "label": "Absent protein / loss of function (NUL)",
         "version": "draft-2026-pre-release"
       },
-      "code": "NUL",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v4-HNF4A-nul-001",
           "type": "predicted_lof",
@@ -112,21 +119,22 @@
           "description": "Frameshift predicted to undergo NMD in a gene where LoF is the mechanism."
         }
       ],
-      "score": 4.0,
-      "strength": "strong",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 4.0,
-      "description": "Predicted null / LoF evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "NUL_PRD",
+          "score": 4.0,
+          "strength": null,
+          "direction": "supports",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "Predicted-LoF / structural nonsense assessment.",
+          "specifiedBy": {
             "code": "svcv4:NUL_PRD",
             "label": "Predicted loss of function (NUL_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "NUL_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v4-HNF4A-nul-001",
               "type": "predicted_lof",
@@ -139,17 +147,9 @@
               "description": "Frameshift predicted to undergo NMD in a gene where LoF is the mechanism."
             }
           ],
-          "score": 4.0,
-          "strength": null,
-          "direction": "supports",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "Predicted-LoF / structural nonsense assessment."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v4-HNF4A rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v4: HNF4A'. LOC_SEG (3 affected relatives) and LOC_PHE also applicable."
+  ]
 }

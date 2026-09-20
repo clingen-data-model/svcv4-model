@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 6.0,
   "outcome": "likely_pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v10-SCN2A rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v10: SCN2A'. A de novo occurrence (CLN_DNV) plus strong in-silico missense support.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v10-SCN2A-pop-001",
           "type": "population_frequency",
@@ -53,22 +60,22 @@
           "references": [],
           "description": "POP inputs from the tab; variant absent from gnomAD."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_DNV",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "De novo occurrence (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_DNV",
         "label": "De novo occurrence (CLN_DNV)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_DNV",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v10-SCN2A-dnv-001",
           "type": "clinical_observation",
@@ -81,22 +88,22 @@
           "references": [],
           "description": "De novo occurrence (unconfirmed parentage) in a phenotype-consistent proband."
         }
-      ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "De novo occurrence (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "MIS",
+      "score": 4.0,
+      "strength": "strong",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 4.0,
+      "description": "Predictive missense evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v10-SCN2A-mis-001",
           "type": "computational_prediction",
@@ -110,36 +117,38 @@
           "description": "REVEL 0.977 and BayesDel 0.52 \u2014 strong in-silico missense support."
         }
       ],
-      "score": 4.0,
-      "strength": "strong",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 4.0,
-      "description": "Predictive missense evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
-            "code": "svcv4:MIS_PRD",
-            "label": "Predictive missense (MIS_PRD)",
-            "version": "draft-2026-pre-release"
-          },
           "code": "MIS_PRD",
-          "evidence": [],
           "score": 4.0,
           "strength": null,
           "direction": "supports",
           "outcome": null,
           "contribution": null,
           "provisional": false,
-          "evidence_lines": [
+          "description": "In-silico predictive missense assessment.",
+          "specifiedBy": {
+            "code": "svcv4:MIS_PRD",
+            "label": "Predictive missense (MIS_PRD)",
+            "version": "draft-2026-pre-release"
+          },
+          "hasEvidenceItems": [],
+          "hasEvidenceLines": [
             {
-              "method": {
+              "code": "MIS_PRD_INIT_REVEL",
+              "score": 4.0,
+              "strength": null,
+              "direction": "supports",
+              "outcome": null,
+              "contribution": null,
+              "provisional": true,
+              "description": "REVEL 0.977 and BayesDel 0.52 \u2014 strong in-silico missense support.",
+              "specifiedBy": {
                 "code": "svcv4:MIS_PRD_INIT_REVEL",
                 "label": "Predictor initial points (REVEL)",
                 "version": "draft-2026-pre-release"
               },
-              "code": "MIS_PRD_INIT_REVEL",
-              "evidence": [
+              "hasEvidenceItems": [
                 {
                   "id": "PVS-v10-SCN2A-mis-001",
                   "type": "computational_prediction",
@@ -153,20 +162,11 @@
                   "description": "REVEL 0.977 and BayesDel 0.52 \u2014 strong in-silico missense support."
                 }
               ],
-              "score": 4.0,
-              "strength": null,
-              "direction": "supports",
-              "outcome": null,
-              "contribution": null,
-              "provisional": true,
-              "evidence_lines": [],
-              "description": "REVEL 0.977 and BayesDel 0.52 \u2014 strong in-silico missense support."
+              "hasEvidenceLines": []
             }
-          ],
-          "description": "In-silico predictive missense assessment."
+          ]
         }
       ]
     }
-  ],
-  "description": "PVS-v10-SCN2A rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v10: SCN2A'. A de novo occurrence (CLN_DNV) plus strong in-silico missense support."
+  ]
 }

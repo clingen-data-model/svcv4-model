@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 0.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "neutral",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v3-FOXG1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v3: FOXG1'. A deliberately borderline example: the variant sits in a polymorphic GCC-repeat region, so clinical support is offset by benign-leaning context.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v3-FOXG1-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs from the tab."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 1.0,
+      "strength": "supporting",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 1.0,
+      "description": "Affected proband (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v3-FOXG1-cln-001",
           "type": "clinical_observation",
@@ -82,22 +89,22 @@
           "references": [],
           "description": "One proband with severe ID and microcephaly."
         }
-      ],
-      "score": 1.0,
-      "strength": "supporting",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 1.0,
-      "description": "Affected proband (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "MIS",
+      "score": -1.0,
+      "strength": "supporting",
+      "direction": "disputes",
+      "outcome": null,
+      "contribution": -1.0,
+      "description": "Polymorphic-repeat context (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:MIS",
         "label": "Single-amino-acid change (MIS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "MIS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v3-FOXG1-mis-001",
           "type": "repeat_context",
@@ -110,21 +117,22 @@
           "description": "Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic \u2014 a benign-leaning caveat that makes this a genuine VUS."
         }
       ],
-      "score": -1.0,
-      "strength": "supporting",
-      "direction": "disputes",
-      "outcome": null,
-      "contribution": -1.0,
-      "description": "Polymorphic-repeat context (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "MIS_PRD",
+          "score": -1.0,
+          "strength": null,
+          "direction": "disputes",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic \u2014 a benign-leaning caveat that makes this a genuine VUS.",
+          "specifiedBy": {
             "code": "svcv4:MIS_PRD",
             "label": "Predictive missense (MIS_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "MIS_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v3-FOXG1-mis-001",
               "type": "repeat_context",
@@ -137,17 +145,9 @@
               "description": "Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic \u2014 a benign-leaning caveat that makes this a genuine VUS."
             }
           ],
-          "score": -1.0,
-          "strength": null,
-          "direction": "disputes",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic \u2014 a benign-leaning caveat that makes this a genuine VUS."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v3-FOXG1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v3: FOXG1'. A deliberately borderline example: the variant sits in a polymorphic GCC-repeat region, so clinical support is offset by benign-leaning context."
+  ]
 }

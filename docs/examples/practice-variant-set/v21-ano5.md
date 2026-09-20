@@ -37,8 +37,8 @@ An SVCv4 classification of ANO5 c.139-1del (splice acceptor) against autosomal r
         predicate:     is_causal_for
         object (MDE):  MONDO:0015152 (autosomal recessive limb-girdle muscular dystrophy)
         qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - SPL                      score   2.0
           - SPL_PRD                  score   2.0

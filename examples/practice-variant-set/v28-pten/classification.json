@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": -3.0,
   "outcome": "likely_benign",
   "strength": null,
   "direction": "disputes",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v28-PTEN rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v28: PTEN'. A benign example: a splice-region variant whose RNA assay confirms no abnormal splicing; the single proband is unaffected with low disease penetrance.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v28-PTEN-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs from the tab; note low penetrance (0.10)."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "SPL",
+      "score": -3.0,
+      "strength": "strong",
+      "direction": "disputes",
+      "outcome": null,
+      "contribution": -3.0,
+      "description": "Splicing assay, benign (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:SPL",
         "label": "Splicing (SPL)",
         "version": "draft-2026-pre-release"
       },
-      "code": "SPL",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v28-PTEN-spl-001",
           "type": "functional_assay",
@@ -81,21 +88,22 @@
           "description": "A splice-region variant where both prediction and an RNA assay show no splicing effect \u2014 benign-leaning."
         }
       ],
-      "score": -3.0,
-      "strength": "strong",
-      "direction": "disputes",
-      "outcome": null,
-      "contribution": -3.0,
-      "description": "Splicing assay, benign (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "SPL_SPA",
+          "score": -3.0,
+          "strength": null,
+          "direction": "disputes",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "RNA / splicing functional assay.",
+          "specifiedBy": {
             "code": "svcv4:SPL_SPA",
             "label": "Splicing assay (SPL_SPA)",
             "version": "draft-2026-pre-release"
           },
-          "code": "SPL_SPA",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v28-PTEN-spl-001",
               "type": "functional_assay",
@@ -107,17 +115,9 @@
               "description": "A splice-region variant where both prediction and an RNA assay show no splicing effect \u2014 benign-leaning."
             }
           ],
-          "score": -3.0,
-          "strength": null,
-          "direction": "disputes",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "RNA / splicing functional assay."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v28-PTEN rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v28: PTEN'. A benign example: a splice-region variant whose RNA assay confirms no abnormal splicing; the single proband is unaffected with low disease penetrance."
+  ]
 }

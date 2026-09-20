@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 1.0,
   "outcome": "variant_of_uncertain_significance",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v1-ACTC1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v1: ACTC1'. A multi-workflow example: an affected proband (CLN_AFF) plus an unaffected carrier (CLN_UAF) and low locus specificity (LOC_PHE); a third proband is an alternate cause (MYBPC3 LoF). LoF is not the ACTC1-HCM mechanism, so the frameshift does not count. VUS.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v1-ACTC1-pop-001",
           "type": "population_frequency",
@@ -54,22 +61,22 @@
           ],
           "description": "POP inputs from the tab."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 1.0,
+      "strength": "supporting",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 1.0,
+      "description": "Affected proband (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v1-ACTC1-cln-001",
           "type": "clinical_observation",
@@ -82,22 +89,22 @@
           "references": [],
           "description": "Proband 1 with HCM (all HCM genes tested)."
         }
-      ],
-      "score": 1.0,
-      "strength": "supporting",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 1.0,
-      "description": "Affected proband (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_UAF",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Unaffected carrier (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_UAF",
         "label": "Clinical observation in unaffected individual(s) (CLN_UAF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_UAF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v1-ACTC1-uaf-001",
           "type": "clinical_observation",
@@ -108,22 +115,22 @@
           "references": [],
           "description": "An unaffected carrier (proband 2)."
         }
-      ],
+      ]
+    },
+    {
+      "code": "LOC_PHE",
       "score": 0.0,
       "strength": null,
       "direction": "neutral",
       "outcome": null,
       "contribution": 0.0,
-      "description": "Unaffected carrier (illustrative)."
-    },
-    {
-      "method": {
+      "description": "Locus specificity for phenotype (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:LOC_PHE",
         "label": "Locus specificity \u2014 phenotype (LOC_PHE)",
         "version": "draft-2026-pre-release"
       },
-      "code": "LOC_PHE",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v1-ACTC1-loc-001",
           "type": "locus_specificity",
@@ -134,14 +141,7 @@
           "references": [],
           "description": "ACTC1 is a minor HCM gene, so locus specificity for the phenotype is low."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Locus specificity for phenotype (illustrative)."
+      ]
     }
-  ],
-  "description": "PVS-v1-ACTC1 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v1: ACTC1'. A multi-workflow example: an affected proband (CLN_AFF) plus an unaffected carrier (CLN_UAF) and low locus specificity (LOC_PHE); a third proband is an alternate cause (MYBPC3 LoF). LoF is not the ACTC1-HCM mechanism, so the frameshift does not count. VUS."
+  ]
 }

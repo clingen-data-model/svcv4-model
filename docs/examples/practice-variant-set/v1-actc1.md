@@ -38,8 +38,8 @@ An SVCv4 classification of ACTC1 c.488dup (p.His163GlnfsTer7) against hypertroph
         predicate:     is_causal_for
         object (MDE):  MONDO:0005045 (hypertrophic cardiomyopathy)
         qualifiers:    moi=AD; note=Loss of function is NOT an established mechanism for ACTC1-related HCM.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   1.0
         - CLN_UAF                  score   0.0

@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 5.0,
   "outcome": "likely_pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v2-ATM rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v2: ATM'. LOC_PHE also applicable (diagnostic yield >90%) but not scored here.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v2-ATM-pop-001",
           "type": "population_frequency",
@@ -55,22 +62,22 @@
           ],
           "description": "POP inputs from the tab (biallelic threshold)."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Affected biallelic proband (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v2-ATM-cln-001",
           "type": "clinical_observation",
@@ -86,22 +93,22 @@
           "references": [],
           "description": "One biallelic proband meeting classic A-T criteria; second LoF confirmed in trans."
         }
-      ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Affected biallelic proband (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "SPL",
+      "score": 3.0,
+      "strength": "strong",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 3.0,
+      "description": "Splicing/critical-domain evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:SPL",
         "label": "Splicing (SPL)",
         "version": "draft-2026-pre-release"
       },
-      "code": "SPL",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v2-ATM-spl-001",
           "type": "computational_prediction",
@@ -118,21 +125,22 @@
           "description": "Splice +1 variant \u2192 in-frame exon skip removing part of a critical domain; same-position LP comparator."
         }
       ],
-      "score": 3.0,
-      "strength": "strong",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 3.0,
-      "description": "Splicing/critical-domain evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "SPL_PRD",
+          "score": 3.0,
+          "strength": null,
+          "direction": "supports",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "In-silico splice prediction.",
+          "specifiedBy": {
             "code": "svcv4:SPL_PRD",
             "label": "Predictive splicing (SPL_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "SPL_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v2-ATM-spl-001",
               "type": "computational_prediction",
@@ -149,17 +157,9 @@
               "description": "Splice +1 variant \u2192 in-frame exon skip removing part of a critical domain; same-position LP comparator."
             }
           ],
-          "score": 3.0,
-          "strength": null,
-          "direction": "supports",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "In-silico splice prediction."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v2-ATM rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v2: ATM'. LOC_PHE also applicable (diagnostic yield >90%) but not scored here."
+  ]
 }

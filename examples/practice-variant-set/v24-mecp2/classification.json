@@ -20,25 +20,32 @@
       }
     ]
   },
-  "method": {
-    "code": "svcv4:baseline",
-    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
-    "version": "draft-2026-pre-release"
-  },
   "score": 6.0,
   "outcome": "likely_pathogenic",
   "strength": null,
   "direction": "supports",
   "contribution": null,
-  "evidence_lines": [
+  "description": "PVS-v24-MECP2 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v24: MECP2'. An X-linked-dominant example: affected females plus an in-frame deletion removing a critical domain that contains two Pathogenic deletions.",
+  "specifiedBy": {
+    "code": "svcv4:baseline",
+    "label": "ACMG/AMP/CAP/ClinGen SVCv4 Standard (baseline)",
+    "version": "draft-2026-pre-release"
+  },
+  "hasEvidenceLines": [
     {
-      "method": {
+      "code": "POP_FRQ",
+      "score": 0.0,
+      "strength": null,
+      "direction": "neutral",
+      "outcome": null,
+      "contribution": 0.0,
+      "description": "Population frequency (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:POP_FRQ",
         "label": "Population allele frequency (POP_FRQ)",
         "version": "draft-2026-pre-release"
       },
-      "code": "POP_FRQ",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v24-MECP2-pop-001",
           "type": "population_frequency",
@@ -52,22 +59,22 @@
           "references": [],
           "description": "POP inputs via the binning approach; variant absent from gnomAD."
         }
-      ],
-      "score": 0.0,
-      "strength": null,
-      "direction": "neutral",
-      "outcome": null,
-      "contribution": 0.0,
-      "description": "Population frequency (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CLN_AFF",
+      "score": 2.0,
+      "strength": "moderate",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 2.0,
+      "description": "Affected XX probands (illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CLN_AFF",
         "label": "Clinical observation in affected individual(s) (CLN_AFF)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CLN_AFF",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v24-MECP2-cln-001",
           "type": "clinical_observation",
@@ -82,22 +89,22 @@
           "references": [],
           "description": "Two affected females with Rett/atypical-Rett features (exome; other genes cleared)."
         }
-      ],
-      "score": 2.0,
-      "strength": "moderate",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 2.0,
-      "description": "Affected XX probands (illustrative)."
+      ]
     },
     {
-      "method": {
+      "code": "CDS",
+      "score": 4.0,
+      "strength": "strong",
+      "direction": "supports",
+      "outcome": null,
+      "contribution": 4.0,
+      "description": "Coding-alteration / critical-domain evidence (PFD, illustrative).",
+      "specifiedBy": {
         "code": "svcv4:CDS",
         "label": "RNA / coding alteration (CDS)",
         "version": "draft-2026-pre-release"
       },
-      "code": "CDS",
-      "evidence": [
+      "hasEvidenceItems": [
         {
           "id": "PVS-v24-MECP2-cds-001",
           "type": "structural",
@@ -113,21 +120,22 @@
           "description": "In-frame deletion removing a critical functional domain; two smaller Pathogenic deletions are fully contained within it."
         }
       ],
-      "score": 4.0,
-      "strength": "strong",
-      "direction": "supports",
-      "outcome": null,
-      "contribution": 4.0,
-      "description": "Coding-alteration / critical-domain evidence (PFD, illustrative).",
-      "evidence_lines": [
+      "hasEvidenceLines": [
         {
-          "method": {
+          "code": "CDS_PRD",
+          "score": 4.0,
+          "strength": null,
+          "direction": "supports",
+          "outcome": null,
+          "contribution": null,
+          "provisional": false,
+          "description": "Structural coding-sequence assessment.",
+          "specifiedBy": {
             "code": "svcv4:CDS_PRD",
             "label": "Coding-sequence predictive (CDS_PRD)",
             "version": "draft-2026-pre-release"
           },
-          "code": "CDS_PRD",
-          "evidence": [
+          "hasEvidenceItems": [
             {
               "id": "PVS-v24-MECP2-cds-001",
               "type": "structural",
@@ -143,17 +151,9 @@
               "description": "In-frame deletion removing a critical functional domain; two smaller Pathogenic deletions are fully contained within it."
             }
           ],
-          "score": 4.0,
-          "strength": null,
-          "direction": "supports",
-          "outcome": null,
-          "contribution": null,
-          "provisional": false,
-          "evidence_lines": [],
-          "description": "Structural coding-sequence assessment."
+          "hasEvidenceLines": []
         }
       ]
     }
-  ],
-  "description": "PVS-v24-MECP2 rolled-up SVCv4 classification. Illustrative \u2014 scoring lives in CSpec. Source tab: 'v24: MECP2'. An X-linked-dominant example: affected females plus an in-frame deletion removing a critical domain that contains two Pathogenic deletions."
+  ]
 }

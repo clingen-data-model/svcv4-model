@@ -38,8 +38,8 @@ An SVCv4 classification of NF1 c.3496G>C (p.Gly1166Arg) against neurofibromatosi
         predicate:     is_causal_for
         object (MDE):  MONDO:0018975 (neurofibromatosis type 1)
         qualifiers:    moi=AD; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   2.0
         - SPL                      score   4.0

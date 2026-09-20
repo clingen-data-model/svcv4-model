@@ -38,8 +38,8 @@ An SVCv4 classification of TNNI3 c.236G>T (p.Arg79Leu) against hypertrophic card
         predicate:     is_causal_for
         object (MDE):  MONDO:0005045 (hypertrophic cardiomyopathy)
         qualifiers:    moi=AD; note=Loss of function is NOT an established mechanism for TNNI3-related HCM.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - MIS                      score   0.0
           - MIS_PRD                  score   0.0

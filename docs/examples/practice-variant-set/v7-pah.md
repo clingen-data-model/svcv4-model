@@ -39,8 +39,8 @@ An SVCv4 classification of PAH c.865G>A (p.Gly289Arg) against phenylketonuria, d
         predicate:     is_causal_for
         object (MDE):  MONDO:0009861 (phenylketonuria)
         qualifiers:    moi=AR; note=Loss of function is an established disease mechanism.
-      method:        svcv4:baseline
-      evidence_lines:
+      specifiedBy:   svcv4:baseline
+      hasEvidenceLines:
         - POP_FRQ                  score   0.0
         - CLN_AFF                  score   4.0
         - MIS                      score   4.0
