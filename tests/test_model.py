@@ -7,6 +7,7 @@ import pytest
 from svcv4_model import (
     MDE,
     VBC,
+    DataItem,
     EvidenceData,
     EvidenceItem,
     Method,
@@ -30,7 +31,7 @@ def _make_statement() -> Statement:
             Statement(
                 code="CLN_AFF",
                 specified_by=Method(code="svcv4:CLN_AFF"),
-                has_evidence_items=[EvidenceItem(type="clinical_observation", data={"n": 4})],
+                has_evidence_items=[DataItem(subtype="clinical_observation", value={"n": 4})],
                 score=2.0,
                 direction="supports",
             ),
@@ -58,7 +59,7 @@ def test_statement_round_trips_json() -> None:
 
 def test_evidence_data_is_evidence_item_alias() -> None:
     """`EvidenceData` is the VA-Spec umbrella name; should be the same class."""
-    assert EvidenceData is EvidenceItem
+    assert EvidenceData is DataItem and EvidenceItem is DataItem
 
 
 def test_extra_fields_are_forbidden_on_statement() -> None:

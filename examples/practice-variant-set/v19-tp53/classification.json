@@ -48,19 +48,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v19-TP53-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/region/17-7674870-7674910?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab; variant absent from gnomAD.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 3000",
             "allelic_heterogeneity": 0.4,
             "genetic_heterogeneity": 1.0,
             "penetrance": 0.3,
             "gnomad": "absent",
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/region/17-7674870-7674910?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab; variant absent from gnomAD."
+          }
         }
       ]
     },
@@ -80,17 +80,17 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v19-TP53-fnc-001",
-          "type": "functional_assay",
-          "data": {
-            "assays": "yeast and human cell lines: non-functional transactivation and loss of growth suppression",
-            "vcep": "TP53 VCEP combines the 3 LoF assay outputs \u2192 +4 functional points"
-          },
           "references": [
             "PMID:12826609",
             "PMID:30224644",
             "PMID:29979965"
           ],
-          "description": "Multiple assays show loss of transactivation and growth suppression \u2192 strong functional impact."
+          "description": "Multiple assays show loss of transactivation and growth suppression \u2192 strong functional impact.",
+          "subtype": "functional_assay",
+          "value": {
+            "assays": "yeast and human cell lines: non-functional transactivation and loss of growth suppression",
+            "vcep": "TP53 VCEP combines the 3 LoF assay outputs \u2192 +4 functional points"
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -111,17 +111,17 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v19-TP53-fnc-001",
-              "type": "functional_assay",
-              "data": {
-                "assays": "yeast and human cell lines: non-functional transactivation and loss of growth suppression",
-                "vcep": "TP53 VCEP combines the 3 LoF assay outputs \u2192 +4 functional points"
-              },
               "references": [
                 "PMID:12826609",
                 "PMID:30224644",
                 "PMID:29979965"
               ],
-              "description": "Multiple assays show loss of transactivation and growth suppression \u2192 strong functional impact."
+              "description": "Multiple assays show loss of transactivation and growth suppression \u2192 strong functional impact.",
+              "subtype": "functional_assay",
+              "value": {
+                "assays": "yeast and human cell lines: non-functional transactivation and loss of growth suppression",
+                "vcep": "TP53 VCEP combines the 3 LoF assay outputs \u2192 +4 functional points"
+              }
             }
           ],
           "hasEvidenceLines": []
@@ -144,19 +144,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v19-TP53-mis-001",
-          "type": "same_residue_variant",
-          "data": {
+          "references": [
+            "https://www.ncbi.nlm.nih.gov/clinvar/variation/376615/"
+          ],
+          "description": "A different missense at the same residue (p.His214Arg) is Pathogenic (PM5-type); the VBC change is less conservative (Grantham 99 vs 29).",
+          "subtype": "same_residue_variant",
+          "value": {
             "residue": "p.His214",
             "bayesdel": 0.32,
             "grantham_vbc": 99,
             "other_variant": "ClinVar:376615 (c.641A>G, p.His214Arg)",
             "other_variant_classification": "Pathogenic (TP53 VCEP)",
             "grantham_other": 29
-          },
-          "references": [
-            "https://www.ncbi.nlm.nih.gov/clinvar/variation/376615/"
-          ],
-          "description": "A different missense at the same residue (p.His214Arg) is Pathogenic (PM5-type); the VBC change is less conservative (Grantham 99 vs 29)."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -193,19 +193,19 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v19-TP53-mis-001",
-                  "type": "same_residue_variant",
-                  "data": {
+                  "references": [
+                    "https://www.ncbi.nlm.nih.gov/clinvar/variation/376615/"
+                  ],
+                  "description": "A different missense at the same residue (p.His214Arg) is Pathogenic (PM5-type); the VBC change is less conservative (Grantham 99 vs 29).",
+                  "subtype": "same_residue_variant",
+                  "value": {
                     "residue": "p.His214",
                     "bayesdel": 0.32,
                     "grantham_vbc": 99,
                     "other_variant": "ClinVar:376615 (c.641A>G, p.His214Arg)",
                     "other_variant_classification": "Pathogenic (TP53 VCEP)",
                     "grantham_other": 29
-                  },
-                  "references": [
-                    "https://www.ncbi.nlm.nih.gov/clinvar/variation/376615/"
-                  ],
-                  "description": "A different missense at the same residue (p.His214Arg) is Pathogenic (PM5-type); the VBC change is less conservative (Grantham 99 vs 29)."
+                  }
                 }
               ],
               "hasEvidenceLines": []

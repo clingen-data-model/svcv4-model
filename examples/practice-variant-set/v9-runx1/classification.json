@@ -48,17 +48,17 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v9-RUNX1-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [],
+          "description": "POP inputs from the tab; variant absent from gnomAD.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 40",
             "allelic_heterogeneity": 0.1,
             "genetic_heterogeneity": 0.1,
             "penetrance": 0.85,
             "gnomad": "absent",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "POP inputs from the tab; variant absent from gnomAD."
+          }
         }
       ]
     },
@@ -78,15 +78,15 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v9-RUNX1-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "Proband with thrombocytopenia + AML.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 1,
             "pheno_specificity_for_mde": "CONSISTENT",
             "phenotype": "thrombocytopenia and acute myeloid leukemia; all relevant genes tested",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "Proband with thrombocytopenia + AML."
+          }
         }
       ]
     },
@@ -106,13 +106,13 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v9-RUNX1-seg-001",
-          "type": "segregation",
-          "data": {
+          "references": [],
+          "description": "Segregates with the FPD/AML phenotype in seven affected relatives.",
+          "subtype": "segregation",
+          "value": {
             "affected_relatives_segregating": 7,
             "phenotype": "FPD/AML"
-          },
-          "references": [],
-          "description": "Segregates with the FPD/AML phenotype in seven affected relatives."
+          }
         }
       ]
     },
@@ -132,14 +132,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v9-RUNX1-cds-001",
-          "type": "structural",
-          "data": {
+          "references": [],
+          "description": "Frameshift escaping NMD that removes/alters the critical VWRPY motif.",
+          "subtype": "structural",
+          "value": {
             "consequence": "frameshift at Leu472 (exon 9/9); NMD NOT predicted (past the c.917 boundary)",
             "domain": "alters aa 472-480 including the VWRPY motif \u2014 a critical functional domain",
             "elongation": "new stop >100 codons past the native stop (481)"
-          },
-          "references": [],
-          "description": "Frameshift escaping NMD that removes/alters the critical VWRPY motif."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -160,14 +160,14 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v9-RUNX1-cds-001",
-              "type": "structural",
-              "data": {
+              "references": [],
+              "description": "Frameshift escaping NMD that removes/alters the critical VWRPY motif.",
+              "subtype": "structural",
+              "value": {
                 "consequence": "frameshift at Leu472 (exon 9/9); NMD NOT predicted (past the c.917 boundary)",
                 "domain": "alters aa 472-480 including the VWRPY motif \u2014 a critical functional domain",
                 "elongation": "new stop >100 codons past the native stop (481)"
-              },
-              "references": [],
-              "description": "Frameshift escaping NMD that removes/alters the critical VWRPY motif."
+              }
             }
           ],
           "hasEvidenceLines": []

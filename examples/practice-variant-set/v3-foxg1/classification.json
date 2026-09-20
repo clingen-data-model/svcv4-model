@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v3-FOXG1-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr14-28767497-AGCC-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 40000",
             "allelic_heterogeneity": 0.1,
             "genetic_heterogeneity": 0.5,
             "penetrance": 0.5,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr14-28767497-AGCC-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab."
+          }
         }
       ]
     },
@@ -79,15 +79,15 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v3-FOXG1-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "One proband with severe ID and microcephaly.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 1,
             "pheno_specificity_for_mde": "CONSISTENT",
             "phenotype": "severe intellectual disability and microcephaly",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "One proband with severe ID and microcephaly."
+          }
         }
       ]
     },
@@ -107,14 +107,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v3-FOXG1-mis-001",
-          "type": "repeat_context",
-          "data": {
+          "references": [],
+          "description": "Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic \u2014 a benign-leaning caveat that makes this a genuine VUS.",
+          "subtype": "repeat_context",
+          "value": {
             "variant": "in-frame deletion of one GCC repeat",
             "context": "6 GCC repeats in this region; region can be considered polymorphic based on gnomAD",
             "splice_impact": "none"
-          },
-          "references": [],
-          "description": "Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic \u2014 a benign-leaning caveat that makes this a genuine VUS."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -135,14 +135,14 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v3-FOXG1-mis-001",
-              "type": "repeat_context",
-              "data": {
+              "references": [],
+              "description": "Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic \u2014 a benign-leaning caveat that makes this a genuine VUS.",
+              "subtype": "repeat_context",
+              "value": {
                 "variant": "in-frame deletion of one GCC repeat",
                 "context": "6 GCC repeats in this region; region can be considered polymorphic based on gnomAD",
                 "splice_impact": "none"
-              },
-              "references": [],
-              "description": "Variant removes one of several GCC repeats in a region gnomAD suggests is polymorphic \u2014 a benign-leaning caveat that makes this a genuine VUS."
+              }
             }
           ],
           "hasEvidenceLines": []

@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v17-LDLR-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr19-11113307-C-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 200",
             "allelic_heterogeneity": 0.05,
             "genetic_heterogeneity": 0.8,
             "penetrance": 0.8,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr19-11113307-C-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab."
+          }
         }
       ]
     },
@@ -79,16 +79,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v17-LDLR-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "Two AD probands meeting FH criteria (all FH genes tested); a third biallelic proband adds LOC_PHE.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 2,
             "pheno_specificity_for_mde": "SPECIFIC",
             "phenotype": "clinical diagnostic criteria for FH; FH panel negative for other genes",
             "biallelic_proband": "a third proband is homozygous/AR FH (LDLc 704 mg/dl) with p.Gln254Ter (P) in trans \u2192 LOC_PHE ~60% yield",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "Two AD probands meeting FH criteria (all FH genes tested); a third biallelic proband adds LOC_PHE."
+          }
         }
       ]
     },
@@ -108,17 +108,17 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v17-LDLR-spl-001",
-          "type": "functional_assay",
-          "data": {
-            "prediction": "natural exon-9 acceptor lost (1.0\u21920.57); new acceptor gained (0.00\u21921.00) \u2192 r.1189_1219del, p.Ser397ThrfsTer6",
-            "assays": "minigene and RT-PCR confirm the acceptor gain",
-            "concordance": "splicing data and PRD concordant; near-complete alternative transcript"
-          },
           "references": [
             "PMID:19371225",
             "PMID:17335829"
           ],
-          "description": "Synonymous-appearing change that creates a new splice acceptor \u2192 frameshift; confirmed by minigene and RT-PCR."
+          "description": "Synonymous-appearing change that creates a new splice acceptor \u2192 frameshift; confirmed by minigene and RT-PCR.",
+          "subtype": "functional_assay",
+          "value": {
+            "prediction": "natural exon-9 acceptor lost (1.0\u21920.57); new acceptor gained (0.00\u21921.00) \u2192 r.1189_1219del, p.Ser397ThrfsTer6",
+            "assays": "minigene and RT-PCR confirm the acceptor gain",
+            "concordance": "splicing data and PRD concordant; near-complete alternative transcript"
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -139,17 +139,17 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v17-LDLR-spl-001",
-              "type": "functional_assay",
-              "data": {
-                "prediction": "natural exon-9 acceptor lost (1.0\u21920.57); new acceptor gained (0.00\u21921.00) \u2192 r.1189_1219del, p.Ser397ThrfsTer6",
-                "assays": "minigene and RT-PCR confirm the acceptor gain",
-                "concordance": "splicing data and PRD concordant; near-complete alternative transcript"
-              },
               "references": [
                 "PMID:19371225",
                 "PMID:17335829"
               ],
-              "description": "Synonymous-appearing change that creates a new splice acceptor \u2192 frameshift; confirmed by minigene and RT-PCR."
+              "description": "Synonymous-appearing change that creates a new splice acceptor \u2192 frameshift; confirmed by minigene and RT-PCR.",
+              "subtype": "functional_assay",
+              "value": {
+                "prediction": "natural exon-9 acceptor lost (1.0\u21920.57); new acceptor gained (0.00\u21921.00) \u2192 r.1189_1219del, p.Ser397ThrfsTer6",
+                "assays": "minigene and RT-PCR confirm the acceptor gain",
+                "concordance": "splicing data and PRD concordant; near-complete alternative transcript"
+              }
             }
           ],
           "hasEvidenceLines": []

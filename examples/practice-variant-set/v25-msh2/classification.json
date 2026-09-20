@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v25-MSH2-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr2-47410357-G-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 14",
             "allelic_heterogeneity": 0.1,
             "genetic_heterogeneity": 0.01,
             "penetrance": 0.4,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr2-47410357-G-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab."
+          }
         }
       ]
     },
@@ -79,16 +79,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v25-MSH2-fnc-001",
-          "type": "functional_assay",
-          "data": {
-            "assay": "MAVE: massively parallel functional testing of MSH2 missense variants (Jia et al.)",
-            "functional_score": -3.662,
-            "calibration": "functional score <0 \u2192 OddsPath 0.04 \u2192 -4 points (benign)"
-          },
           "references": [
             "https://www.mavedb.org/variants/CA039549"
           ],
-          "description": "Calibrated MAVE assay places this variant in the functionally-normal (benign) range."
+          "description": "Calibrated MAVE assay places this variant in the functionally-normal (benign) range.",
+          "subtype": "functional_assay",
+          "value": {
+            "assay": "MAVE: massively parallel functional testing of MSH2 missense variants (Jia et al.)",
+            "functional_score": -3.662,
+            "calibration": "functional score <0 \u2192 OddsPath 0.04 \u2192 -4 points (benign)"
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -109,16 +109,16 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v25-MSH2-fnc-001",
-              "type": "functional_assay",
-              "data": {
-                "assay": "MAVE: massively parallel functional testing of MSH2 missense variants (Jia et al.)",
-                "functional_score": -3.662,
-                "calibration": "functional score <0 \u2192 OddsPath 0.04 \u2192 -4 points (benign)"
-              },
               "references": [
                 "https://www.mavedb.org/variants/CA039549"
               ],
-              "description": "Calibrated MAVE assay places this variant in the functionally-normal (benign) range."
+              "description": "Calibrated MAVE assay places this variant in the functionally-normal (benign) range.",
+              "subtype": "functional_assay",
+              "value": {
+                "assay": "MAVE: massively parallel functional testing of MSH2 missense variants (Jia et al.)",
+                "functional_score": -3.662,
+                "calibration": "functional score <0 \u2192 OddsPath 0.04 \u2192 -4 points (benign)"
+              }
             }
           ],
           "hasEvidenceLines": []
@@ -141,14 +141,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v25-MSH2-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "REVEL 0.40 is low; no same-codon informative variants.",
+          "subtype": "computational_prediction",
+          "value": {
             "tool": "REVEL",
             "score": 0.4,
             "splice_impact": "none"
-          },
-          "references": [],
-          "description": "REVEL 0.40 is low; no same-codon informative variants."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -185,14 +185,14 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v25-MSH2-mis-001",
-                  "type": "computational_prediction",
-                  "data": {
+                  "references": [],
+                  "description": "REVEL 0.40 is low; no same-codon informative variants.",
+                  "subtype": "computational_prediction",
+                  "value": {
                     "tool": "REVEL",
                     "score": 0.4,
                     "splice_impact": "none"
-                  },
-                  "references": [],
-                  "description": "REVEL 0.40 is low; no same-codon informative variants."
+                  }
                 }
               ],
               "hasEvidenceLines": []

@@ -1,14 +1,16 @@
 {
   "$defs": {
-    "EvidenceItem": {
+    "DataItem": {
       "additionalProperties": false,
-      "description": "A single structured datum captured by the curator for a (VBC, MDE) curation.\n\n**Evidence Items are inputs** that the Classification Model provides\nto CSpec methods/rules under the chosen specification version. After\nCSpec evaluates them, the resulting `EvidenceLine` records which\nItems were used and the score that was produced.\n\nThe `data` payload is intentionally generic in this scaffold so that\nthe model can carry arbitrary VA-Spec-conformant evidence\nstructures; the SVCv4 VA-Spec community profile will constrain it\nper Evidence Code over time.",
+      "description": "A VA-Spec 1.1.0 ``Data Item`` \u2014 one structured datum a Statement consumes.\n\nA curator captures Data Items for a (VBC, MDE) curation; a Statement points at\nthem via ``hasEvidenceItems``. Per 1.1.0-ballot.2026-09 the entity ``type`` is\nalways ``\"DataItem\"`` and the datum itself lives in ``value``.\n\nVA-Spec Data Item has no ``subtype``; SVCv4 adds ``subtype`` as a profile\nextension to carry the evidence *kind* (e.g. ``computational_prediction``).",
       "properties": {
-        "data": {
-          "additionalProperties": true,
-          "description": "The structured datum itself. Shape is intentionally open in the scaffold and will be constrained by the SVCv4 VA-Spec community profile per Evidence Code.",
-          "title": "Data",
-          "type": "object"
+        "aliases": {
+          "description": "VA-Spec `aliases` (0..m).",
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
         },
         "description": {
           "anyOf": [
@@ -23,6 +25,15 @@
           "description": "Optional prose description.",
           "title": "Description"
         },
+        "extensions": {
+          "description": "VA-Spec `extensions` (0..m).",
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Extensions",
+          "type": "array"
+        },
         "id": {
           "anyOf": [
             {
@@ -33,18 +44,10 @@
             }
           ],
           "default": null,
-          "description": "Stable identifier for the item, when one exists.",
+          "description": "VA-Spec `id` (0..1): stable identifier for the item.",
           "title": "Id"
         },
-        "references": {
-          "description": "CURIEs / URLs sourcing the evidence (e.g. PMIDs).",
-          "items": {
-            "type": "string"
-          },
-          "title": "References",
-          "type": "array"
-        },
-        "type": {
+        "name": {
           "anyOf": [
             {
               "type": "string"
@@ -54,11 +57,45 @@
             }
           ],
           "default": null,
-          "description": "Kind of evidence (e.g. `clinical_observation`, `functional_assay`). Vocabulary TBD.",
-          "title": "Type"
+          "description": "VA-Spec `name` (0..1): short human-readable label.",
+          "title": "Name"
+        },
+        "references": {
+          "description": "CURIEs / URLs sourcing the evidence (e.g. PMIDs).",
+          "items": {
+            "type": "string"
+          },
+          "title": "References",
+          "type": "array"
+        },
+        "subtype": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "SVCv4 profile extension: the evidence *kind* (e.g. `computational_prediction`, `functional_assay`). VA-Spec Data Item has no subtype of its own.",
+          "title": "Subtype"
+        },
+        "type": {
+          "const": "DataItem",
+          "default": "DataItem",
+          "description": "VA-Spec entity `type` (1..1); always `DataItem`.",
+          "title": "Type",
+          "type": "string"
+        },
+        "value": {
+          "additionalProperties": true,
+          "description": "VA-Spec `value` (0..1): the structured datum. Shape is open in the scaffold and constrained by the SVCv4 profile per Evidence Code.",
+          "title": "Value",
+          "type": "object"
         }
       },
-      "title": "EvidenceItem",
+      "title": "DataItem",
       "type": "object"
     },
     "MDE": {
@@ -321,7 +358,7 @@
         "hasEvidenceItems": {
           "description": "VA-Spec `hasEvidenceItems` (0..m): the Data Items / Study Results consumed by this Statement.",
           "items": {
-            "$ref": "#/$defs/EvidenceItem"
+            "$ref": "#/$defs/DataItem"
           },
           "title": "Hasevidenceitems",
           "type": "array"

@@ -48,16 +48,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v24-MECP2-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [],
+          "description": "POP inputs via the binning approach; variant absent from gnomAD.",
+          "subtype": "population_frequency",
+          "value": {
             "approach": "binning (X-linked dominant combined table)",
             "prevalence_estimate": "1 in 10000",
             "penetrance": 0.8,
             "gnomad": "absent",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "POP inputs via the binning approach; variant absent from gnomAD."
+          }
         }
       ]
     },
@@ -77,17 +77,17 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v24-MECP2-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "Two affected females with Rett/atypical-Rett features (exome; other genes cleared).",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 2,
             "sex": "female (XX)",
             "pheno_specificity_for_mde": "CONSISTENT",
             "phenotype": "case 1: seizures, left-hemisphere atrophy, intellectual disability, dysmorphism; case 2: atypical Rett",
             "note": "X-linked dominant \u2192 affected XX and XY count under the monoallelic section",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "Two affected females with Rett/atypical-Rett features (exome; other genes cleared)."
+          }
         }
       ]
     },
@@ -107,17 +107,17 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v24-MECP2-cds-001",
-          "type": "structural",
-          "data": {
+          "references": [],
+          "description": "In-frame deletion removing a critical functional domain; two smaller Pathogenic deletions are fully contained within it.",
+          "subtype": "structural",
+          "value": {
             "consequence": "in-frame deletion of 58 aa (~11% of protein) in the last exon",
             "domain": "overlaps the Transcriptional Repression Domain (285-313), including the VCEP critical minimal region (NM_001110792 residues 314-318)",
             "contained_pathogenic": [
               "c.954_962del (p.Lys319_Arg321del) \u2014 Pathogenic",
               "c.933_968del (p.Leu313_Val324del) \u2014 Pathogenic"
             ]
-          },
-          "references": [],
-          "description": "In-frame deletion removing a critical functional domain; two smaller Pathogenic deletions are fully contained within it."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -138,17 +138,17 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v24-MECP2-cds-001",
-              "type": "structural",
-              "data": {
+              "references": [],
+              "description": "In-frame deletion removing a critical functional domain; two smaller Pathogenic deletions are fully contained within it.",
+              "subtype": "structural",
+              "value": {
                 "consequence": "in-frame deletion of 58 aa (~11% of protein) in the last exon",
                 "domain": "overlaps the Transcriptional Repression Domain (285-313), including the VCEP critical minimal region (NM_001110792 residues 314-318)",
                 "contained_pathogenic": [
                   "c.954_962del (p.Lys319_Arg321del) \u2014 Pathogenic",
                   "c.933_968del (p.Leu313_Val324del) \u2014 Pathogenic"
                 ]
-              },
-              "references": [],
-              "description": "In-frame deletion removing a critical functional domain; two smaller Pathogenic deletions are fully contained within it."
+              }
             }
           ],
           "hasEvidenceLines": []

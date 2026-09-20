@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v14-ATXN7L3-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/region/17-44197233-44197273?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs via the binning approach; variant absent from gnomAD.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 1000",
             "penetrance": 0.5,
             "approach": "binning (new gene-disease; heterogeneity estimates unavailable)",
             "threshold": 0.001,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/region/17-44197233-44197273?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs via the binning approach; variant absent from gnomAD."
+          }
         }
       ]
     },
@@ -79,17 +79,17 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v14-ATXN7L3-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "One exome proband, phenotype consistent; also a confirmed de novo (scoreable under CLN_DNV).",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 1,
             "pheno_specificity_for_mde": "CONSISTENT",
             "phenotype": "global developmental delay, expressive language disorder, hypotonia",
             "testing": "exome; no other candidate variant",
             "de_novo": "confirmed (neither parent carries; parental relationships confirmed)",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "One exome proband, phenotype consistent; also a confirmed de novo (scoreable under CLN_DNV)."
+          }
         }
       ]
     },
@@ -109,14 +109,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v14-ATXN7L3-nul-001",
-          "type": "predicted_lof",
-          "data": {
+          "references": [],
+          "description": "Frameshift predicted to undergo NMD, but LoF is only a suspected mechanism, so weight is reduced.",
+          "subtype": "predicted_lof",
+          "value": {
             "consequence": "frameshift in exon 4 (coding exon 3), predicted NMD",
             "mechanism_confidence": "LoF only SUSPECTED (GenCC)",
             "informative_variants": "two other LoF variants in this exon are VUS"
-          },
-          "references": [],
-          "description": "Frameshift predicted to undergo NMD, but LoF is only a suspected mechanism, so weight is reduced."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -137,14 +137,14 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v14-ATXN7L3-nul-001",
-              "type": "predicted_lof",
-              "data": {
+              "references": [],
+              "description": "Frameshift predicted to undergo NMD, but LoF is only a suspected mechanism, so weight is reduced.",
+              "subtype": "predicted_lof",
+              "value": {
                 "consequence": "frameshift in exon 4 (coding exon 3), predicted NMD",
                 "mechanism_confidence": "LoF only SUSPECTED (GenCC)",
                 "informative_variants": "two other LoF variants in this exon are VUS"
-              },
-              "references": [],
-              "description": "Frameshift predicted to undergo NMD, but LoF is only a suspected mechanism, so weight is reduced."
+              }
             }
           ],
           "hasEvidenceLines": []

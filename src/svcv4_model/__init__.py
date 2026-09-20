@@ -43,7 +43,7 @@ from svcv4_model.critical_amino_acid import (
     CriticalAminoAcidEvidence,
     CriticalityKind,
 )
-from svcv4_model.evidence_item import EvidenceData, EvidenceItem
+from svcv4_model.data_item import DataItem, EvidenceData, EvidenceItem
 from svcv4_model.exon_deletion import (
     ExonDeletionAssessment,
     ExonDeletionOutcome,
@@ -157,6 +157,7 @@ __all__ = [
     "CriticalityKind",
     "DaftCalculatorInputs",
     "DaftMethod",
+    "DataItem",
     "EvidenceData",
     "EvidenceItem",
     "ExonDeletionAssessment",

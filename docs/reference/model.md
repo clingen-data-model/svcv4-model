@@ -28,7 +28,7 @@ its fields with their types, defaults, and descriptions.
 
 ---
 
-::: svcv4_model.EvidenceItem
+::: svcv4_model.DataItem
 
 ---
 

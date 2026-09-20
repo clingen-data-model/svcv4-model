@@ -48,17 +48,17 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v10-SCN2A-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [],
+          "description": "POP inputs from the tab; variant absent from gnomAD.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 200",
             "allelic_heterogeneity": 0.2,
             "genetic_heterogeneity": 0.02,
             "penetrance": 0.5,
             "gnomad": "absent",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "POP inputs from the tab; variant absent from gnomAD."
+          }
         }
       ]
     },
@@ -78,15 +78,15 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v10-SCN2A-dnv-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "De novo occurrence (unconfirmed parentage) in a phenotype-consistent proband.",
+          "subtype": "clinical_observation",
+          "value": {
             "de_novo": "one individual (parental relationships unconfirmed)",
             "pheno_specificity_for_mde": "CONSISTENT",
             "phenotype": "early infantile developmental and epileptic encephalopathy; exome, no other variants",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "De novo occurrence (unconfirmed parentage) in a phenotype-consistent proband."
+          }
         }
       ]
     },
@@ -106,15 +106,15 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v10-SCN2A-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "REVEL 0.977 and BayesDel 0.52 \u2014 strong in-silico missense support.",
+          "subtype": "computational_prediction",
+          "value": {
             "tool": "REVEL",
             "score": 0.977,
             "bayesdel": 0.52,
             "splice_impact": "none"
-          },
-          "references": [],
-          "description": "REVEL 0.977 and BayesDel 0.52 \u2014 strong in-silico missense support."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -151,15 +151,15 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v10-SCN2A-mis-001",
-                  "type": "computational_prediction",
-                  "data": {
+                  "references": [],
+                  "description": "REVEL 0.977 and BayesDel 0.52 \u2014 strong in-silico missense support.",
+                  "subtype": "computational_prediction",
+                  "value": {
                     "tool": "REVEL",
                     "score": 0.977,
                     "bayesdel": 0.52,
                     "splice_impact": "none"
-                  },
-                  "references": [],
-                  "description": "REVEL 0.977 and BayesDel 0.52 \u2014 strong in-silico missense support."
+                  }
                 }
               ],
               "hasEvidenceLines": []

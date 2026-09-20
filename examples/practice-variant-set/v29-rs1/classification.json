@@ -48,16 +48,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v29-RS1-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [],
+          "description": "POP inputs via the binning approach; variant absent from gnomAD.",
+          "subtype": "population_frequency",
+          "value": {
             "approach": "binning (X-linked, male sex-specific table)",
             "prevalence_estimate": "1 in 5000",
             "penetrance": 0.8,
             "gnomad": "absent",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "POP inputs via the binning approach; variant absent from gnomAD."
+          }
         }
       ]
     },
@@ -77,16 +77,16 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v29-RS1-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "One hemizygous male proband with an RS1-specific phenotype.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 1,
             "sex": "male (hemizygous)",
             "pheno_specificity_for_mde": "SPECIFIC",
             "phenotype": "retinoschisis by age 13 with visual acuity impairment, schisis, retinal detachment; exome, no other candidate variants",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "One hemizygous male proband with an RS1-specific phenotype."
+          }
         }
       ]
     },
@@ -106,13 +106,13 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v29-RS1-nul-001",
-          "type": "structural",
-          "data": {
+          "references": [],
+          "description": "Out-of-frame single-exon deletion \u2192 LoF; multiple P/LP LoF variants in the same exon.",
+          "subtype": "structural",
+          "value": {
             "consequence": "deletion of out-of-frame exon 2 \u2192 p.(Ala18GlyfsTer2); removes the exon-2 acceptor and donor (also exon skipping)",
             "informative_variants": "2 Pathogenic + 1 Likely pathogenic LoF variants in this exon (VCEP)"
-          },
-          "references": [],
-          "description": "Out-of-frame single-exon deletion \u2192 LoF; multiple P/LP LoF variants in the same exon."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -133,13 +133,13 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v29-RS1-nul-001",
-              "type": "structural",
-              "data": {
+              "references": [],
+              "description": "Out-of-frame single-exon deletion \u2192 LoF; multiple P/LP LoF variants in the same exon.",
+              "subtype": "structural",
+              "value": {
                 "consequence": "deletion of out-of-frame exon 2 \u2192 p.(Ala18GlyfsTer2); removes the exon-2 acceptor and donor (also exon skipping)",
                 "informative_variants": "2 Pathogenic + 1 Likely pathogenic LoF variants in this exon (VCEP)"
-              },
-              "references": [],
-              "description": "Out-of-frame single-exon deletion \u2192 LoF; multiple P/LP LoF variants in the same exon."
+              }
             }
           ],
           "hasEvidenceLines": []

@@ -48,19 +48,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v13-AIPL1-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr17-6434045-G-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab (biallelic threshold).",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 6000",
             "allelic_heterogeneity": 0.15,
             "genetic_heterogeneity": 0.2,
             "penetrance": 1.0,
             "inheritance": "biallelic",
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr17-6434045-G-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab (biallelic threshold)."
+          }
         }
       ]
     },
@@ -80,14 +80,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v13-AIPL1-hmz-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [],
+          "description": "Two homozygous individuals in gnomAD for a fully penetrant early-onset recessive disease \u2014 benign-leaning population evidence.",
+          "subtype": "population_frequency",
+          "value": {
             "homozygotes_in_gnomad": 2,
             "expectation": "for a near-100%-penetrant, early-onset recessive disease, homozygotes are not expected in gnomAD",
             "counted": "2 hom minus 1 observation per the POP_HMZ recommendation"
-          },
-          "references": [],
-          "description": "Two homozygous individuals in gnomAD for a fully penetrant early-onset recessive disease \u2014 benign-leaning population evidence."
+          }
         }
       ]
     },
@@ -107,14 +107,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v13-AIPL1-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "Synonymous change with no predicted splicing impact \u2014 benign-leaning.",
+          "subtype": "computational_prediction",
+          "value": {
             "consequence": "synonymous (p.Asp50=)",
             "splice_impact": "none",
             "exon_context": "exon present in clinically relevant transcripts"
-          },
-          "references": [],
-          "description": "Synonymous change with no predicted splicing impact \u2014 benign-leaning."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -151,14 +151,14 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v13-AIPL1-mis-001",
-                  "type": "computational_prediction",
-                  "data": {
+                  "references": [],
+                  "description": "Synonymous change with no predicted splicing impact \u2014 benign-leaning.",
+                  "subtype": "computational_prediction",
+                  "value": {
                     "consequence": "synonymous (p.Asp50=)",
                     "splice_impact": "none",
                     "exon_context": "exon present in clinically relevant transcripts"
-                  },
-                  "references": [],
-                  "description": "Synonymous change with no predicted splicing impact \u2014 benign-leaning."
+                  }
                 }
               ],
               "hasEvidenceLines": []

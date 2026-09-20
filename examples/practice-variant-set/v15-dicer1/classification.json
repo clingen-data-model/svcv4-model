@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v15-DICER1-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr14-95133457-A-G?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab; note low penetrance (0.10).",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 800",
             "allelic_heterogeneity": 0.07,
             "genetic_heterogeneity": 1.0,
             "penetrance": 0.1,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr14-95133457-A-G?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab; note low penetrance (0.10)."
+          }
         }
       ]
     },
@@ -79,15 +79,15 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v15-DICER1-nul-001",
-          "type": "predicted_lof",
-          "data": {
+          "references": [],
+          "description": "Start-loss with plausible downstream alternate start codons, so the LoF effect is uncertain.",
+          "subtype": "predicted_lof",
+          "value": {
             "consequence": "start-loss (p.Met1Thr)",
             "alternate_starts": "p.Met11/Met17/Met24 present; p.M1 not highly conserved",
             "impact": "loss of first ~24 aa removes only ~1.2% of the protein; no critical domain there",
             "interpretation": "LoF weight is uncertain \u2014 alternative Met usage may rescue translation"
-          },
-          "references": [],
-          "description": "Start-loss with plausible downstream alternate start codons, so the LoF effect is uncertain."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -108,15 +108,15 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v15-DICER1-nul-001",
-              "type": "predicted_lof",
-              "data": {
+              "references": [],
+              "description": "Start-loss with plausible downstream alternate start codons, so the LoF effect is uncertain.",
+              "subtype": "predicted_lof",
+              "value": {
                 "consequence": "start-loss (p.Met1Thr)",
                 "alternate_starts": "p.Met11/Met17/Met24 present; p.M1 not highly conserved",
                 "impact": "loss of first ~24 aa removes only ~1.2% of the protein; no critical domain there",
                 "interpretation": "LoF weight is uncertain \u2014 alternative Met usage may rescue translation"
-              },
-              "references": [],
-              "description": "Start-loss with plausible downstream alternate start codons, so the LoF effect is uncertain."
+              }
             }
           ],
           "hasEvidenceLines": []

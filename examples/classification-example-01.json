@@ -44,15 +44,15 @@
       "hasEvidenceItems": [
         {
           "id": "evidence-item-001",
-          "type": "clinical_observation",
-          "data": {
-            "individuals_observed": 4,
-            "phenotype_match": "consistent"
-          },
           "references": [
             "PMID:12345678"
           ],
-          "description": "Placeholder: four affected individuals reported with consistent phenotype."
+          "description": "Placeholder: four affected individuals reported with consistent phenotype.",
+          "subtype": "clinical_observation",
+          "value": {
+            "individuals_observed": 4,
+            "phenotype_match": "consistent"
+          }
         }
       ]
     },
@@ -72,15 +72,15 @@
       "hasEvidenceItems": [
         {
           "id": "evidence-item-002",
-          "type": "functional_assay",
-          "data": {
-            "assay": "homology_directed_repair",
-            "result": "loss_of_function"
-          },
           "references": [
             "PMID:23456789"
           ],
-          "description": "Placeholder: HDR assay shows loss of function."
+          "description": "Placeholder: HDR assay shows loss of function.",
+          "subtype": "functional_assay",
+          "value": {
+            "assay": "homology_directed_repair",
+            "result": "loss_of_function"
+          }
         }
       ]
     }

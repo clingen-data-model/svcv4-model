@@ -48,19 +48,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v2-ATM-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr11-108297383-G-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab (biallelic threshold).",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 40000",
             "allelic_heterogeneity": 0.1,
             "genetic_heterogeneity": 1.0,
             "penetrance": 0.9,
             "inheritance": "biallelic",
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr11-108297383-G-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab (biallelic threshold)."
+          }
         }
       ]
     },
@@ -80,8 +80,10 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v2-ATM-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "One biallelic proband meeting classic A-T criteria; second LoF confirmed in trans.",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 1,
             "zygosity": "biallelic",
             "pheno_specificity_for_mde": "CONSISTENT",
@@ -89,9 +91,7 @@
             "compound_het_partner": "ATM LoF confirmed in trans (P)",
             "diagnostic_yield": ">90%",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "One biallelic proband meeting classic A-T criteria; second LoF confirmed in trans."
+          }
         }
       ]
     },
@@ -111,18 +111,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v2-ATM-spl-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [
+            "https://www.ncbi.nlm.nih.gov/clinvar/variation/371636/"
+          ],
+          "description": "Splice +1 variant \u2192 in-frame exon skip removing part of a critical domain; same-position LP comparator.",
+          "subtype": "computational_prediction",
+          "value": {
             "predicted_effect": "in-frame skipping of exon 33 (c.4910_5005)",
             "domain": "removes a portion of the HEAT repeat critical domain",
             "comparator_variant": "ClinVar:371636",
             "comparator_variant_classification": "LP",
             "comparator_note": "c.5005+1G>T, same position, equal SpliceAI, same predicted outcome"
-          },
-          "references": [
-            "https://www.ncbi.nlm.nih.gov/clinvar/variation/371636/"
-          ],
-          "description": "Splice +1 variant \u2192 in-frame exon skip removing part of a critical domain; same-position LP comparator."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -143,18 +143,18 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v2-ATM-spl-001",
-              "type": "computational_prediction",
-              "data": {
+              "references": [
+                "https://www.ncbi.nlm.nih.gov/clinvar/variation/371636/"
+              ],
+              "description": "Splice +1 variant \u2192 in-frame exon skip removing part of a critical domain; same-position LP comparator.",
+              "subtype": "computational_prediction",
+              "value": {
                 "predicted_effect": "in-frame skipping of exon 33 (c.4910_5005)",
                 "domain": "removes a portion of the HEAT repeat critical domain",
                 "comparator_variant": "ClinVar:371636",
                 "comparator_variant_classification": "LP",
                 "comparator_note": "c.5005+1G>T, same position, equal SpliceAI, same predicted outcome"
-              },
-              "references": [
-                "https://www.ncbi.nlm.nih.gov/clinvar/variation/371636/"
-              ],
-              "description": "Splice +1 variant \u2192 in-frame exon skip removing part of a critical domain; same-position LP comparator."
+              }
             }
           ],
           "hasEvidenceLines": []

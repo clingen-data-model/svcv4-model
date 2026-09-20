@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v27-MYOC-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr1-171638608-T-C?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 24",
             "allelic_heterogeneity": 0.04,
             "genetic_heterogeneity": 0.6,
             "penetrance": 0.56,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr1-171638608-T-C?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab."
+          }
         }
       ]
     },
@@ -79,14 +79,14 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v27-MYOC-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "REVEL 0.205 is low; no same-codon informative variants.",
+          "subtype": "computational_prediction",
+          "value": {
             "tool": "REVEL",
             "score": 0.205,
             "splice_impact": "none"
-          },
-          "references": [],
-          "description": "REVEL 0.205 is low; no same-codon informative variants."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -123,14 +123,14 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v27-MYOC-mis-001",
-                  "type": "computational_prediction",
-                  "data": {
+                  "references": [],
+                  "description": "REVEL 0.205 is low; no same-codon informative variants.",
+                  "subtype": "computational_prediction",
+                  "value": {
                     "tool": "REVEL",
                     "score": 0.205,
                     "splice_impact": "none"
-                  },
-                  "references": [],
-                  "description": "REVEL 0.205 is low; no same-codon informative variants."
+                  }
                 }
               ],
               "hasEvidenceLines": []

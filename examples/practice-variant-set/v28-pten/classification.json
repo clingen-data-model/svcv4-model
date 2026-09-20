@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v28-PTEN-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr10-87960891-T-A?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab; note low penetrance (0.10).",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 9000",
             "allelic_heterogeneity": 0.08,
             "genetic_heterogeneity": 1.0,
             "penetrance": 0.1,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr10-87960891-T-A?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab; note low penetrance (0.10)."
+          }
         }
       ]
     },
@@ -79,13 +79,13 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v28-PTEN-spl-001",
-          "type": "functional_assay",
-          "data": {
+          "references": [],
+          "description": "A splice-region variant where both prediction and an RNA assay show no splicing effect \u2014 benign-leaning.",
+          "subtype": "functional_assay",
+          "value": {
             "prediction": "no predicted impact on splicing",
             "rna_assay": "follow-up RNA study from a case with c.802-3T>A found NO abnormal splicing"
-          },
-          "references": [],
-          "description": "A splice-region variant where both prediction and an RNA assay show no splicing effect \u2014 benign-leaning."
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -106,13 +106,13 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v28-PTEN-spl-001",
-              "type": "functional_assay",
-              "data": {
+              "references": [],
+              "description": "A splice-region variant where both prediction and an RNA assay show no splicing effect \u2014 benign-leaning.",
+              "subtype": "functional_assay",
+              "value": {
                 "prediction": "no predicted impact on splicing",
                 "rna_assay": "follow-up RNA study from a case with c.802-3T>A found NO abnormal splicing"
-              },
-              "references": [],
-              "description": "A splice-region variant where both prediction and an RNA assay show no splicing effect \u2014 benign-leaning."
+              }
             }
           ],
           "hasEvidenceLines": []

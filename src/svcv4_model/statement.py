@@ -12,7 +12,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from svcv4_model.evidence_item import EvidenceItem
+from svcv4_model.data_item import DataItem
 from svcv4_model.method import Method
 from svcv4_model.proposition import Proposition
 
@@ -127,7 +127,7 @@ class Statement(BaseModel):
         default=None,
         description="Optional weighted contribution to the parent Statement's score.",
     )
-    has_evidence_items: list[EvidenceItem] = Field(
+    has_evidence_items: list[DataItem] = Field(
         default_factory=list,
         alias="hasEvidenceItems",
         description=(

@@ -48,18 +48,18 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v1-ACTC1-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr15-34792535-G-GT?dataset=gnomad_r4"
+          ],
+          "description": "POP inputs from the tab.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 200",
             "allelic_heterogeneity": 0.1,
             "genetic_heterogeneity": 0.05,
             "penetrance": 0.4,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr15-34792535-G-GT?dataset=gnomad_r4"
-          ],
-          "description": "POP inputs from the tab."
+          }
         }
       ]
     },
@@ -79,15 +79,15 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v1-ACTC1-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "Proband 1 with HCM (all HCM genes tested).",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 1,
             "pheno_specificity_for_mde": "CONSISTENT",
             "phenotype": "proband 1: clinical HCM; all HCM genes tested",
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "Proband 1 with HCM (all HCM genes tested)."
+          }
         }
       ]
     },
@@ -107,13 +107,13 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v1-ACTC1-uaf-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "An unaffected carrier (proband 2).",
+          "subtype": "clinical_observation",
+          "value": {
             "affected": false,
             "context": "proband 2: currently unaffected, family history of DCM"
-          },
-          "references": [],
-          "description": "An unaffected carrier (proband 2)."
+          }
         }
       ]
     },
@@ -133,13 +133,13 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v1-ACTC1-loc-001",
-          "type": "locus_specificity",
-          "data": {
+          "references": [],
+          "description": "ACTC1 is a minor HCM gene, so locus specificity for the phenotype is low.",
+          "subtype": "locus_specificity",
+          "value": {
             "gene_specificity_for_phenotypes": "~3% (ACTC1 accounts for <3% of HCM)",
             "all_genes_tested": true
-          },
-          "references": [],
-          "description": "ACTC1 is a minor HCM gene, so locus specificity for the phenotype is low."
+          }
         }
       ]
     }

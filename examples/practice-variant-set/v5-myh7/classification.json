@@ -49,19 +49,19 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v5-MYH7-pop-001",
-          "type": "population_frequency",
-          "data": {
+          "references": [
+            "https://gnomad.broadinstitute.org/variant/chr14-23416048-C-T?dataset=gnomad_r4",
+            "https://www.cardiodb.org/allelefrequencyapp/"
+          ],
+          "description": "Placeholder: POP inputs from the tab. The raw POP_FRQ score (which the -3.0 affecteds/de-novo gate uses) and the DAF Threshold are not modeled yet; only the capped pop_frq_points is carried, and it feeds the CLN methods as an input datum.",
+          "subtype": "population_frequency",
+          "value": {
             "prevalence_estimate": "1 in 200",
             "allelic_heterogeneity": 0.05,
             "genetic_heterogeneity": 0.4,
             "penetrance": 0.4,
             "pop_frq_points": 0
-          },
-          "references": [
-            "https://gnomad.broadinstitute.org/variant/chr14-23416048-C-T?dataset=gnomad_r4",
-            "https://www.cardiodb.org/allelefrequencyapp/"
-          ],
-          "description": "Placeholder: POP inputs from the tab. The raw POP_FRQ score (which the -3.0 affecteds/de-novo gate uses) and the DAF Threshold are not modeled yet; only the capped pop_frq_points is carried, and it feeds the CLN methods as an input datum."
+          }
         }
       ]
     },
@@ -81,8 +81,10 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v5-MYH7-cln-001",
-          "type": "clinical_observation",
-          "data": {
+          "references": [],
+          "description": "Placeholder: three probands from the tab. pop_frq_points is carried in as an input datum to the CLN_AFF method (per the deferred POP-scoring decision).",
+          "subtype": "clinical_observation",
+          "value": {
             "individuals_observed": 3,
             "probands": [
               {
@@ -99,9 +101,7 @@
               }
             ],
             "pop_frq_points": 0
-          },
-          "references": [],
-          "description": "Placeholder: three probands from the tab. pop_frq_points is carried in as an input datum to the CLN_AFF method (per the deferred POP-scoring decision)."
+          }
         }
       ]
     },
@@ -121,26 +121,26 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v5-MYH7-mis-001",
-          "type": "computational_prediction",
-          "data": {
+          "references": [],
+          "description": "Placeholder: REVEL 0.577 is intermediate; the threshold call is CSpec's.",
+          "subtype": "computational_prediction",
+          "value": {
             "tool": "REVEL",
             "score": 0.577
-          },
-          "references": [],
-          "description": "Placeholder: REVEL 0.577 is intermediate; the threshold call is CSpec's."
+          }
         },
         {
           "id": "PVS-v5-MYH7-mis-002",
-          "type": "same_residue_variant",
-          "data": {
-            "residue": "p.Ala1637",
-            "other_variant": "ClinVar:525029",
-            "other_variant_classification": "VUS"
-          },
           "references": [
             "https://www.ncbi.nlm.nih.gov/clinvar/variation/525029/"
           ],
-          "description": "Placeholder: another missense at the same codon, classified VUS. Classic PM5 needs a pathogenic comparator, so this likely carries little/no positive weight; captured as context."
+          "description": "Placeholder: another missense at the same codon, classified VUS. Classic PM5 needs a pathogenic comparator, so this likely carries little/no positive weight; captured as context.",
+          "subtype": "same_residue_variant",
+          "value": {
+            "residue": "p.Ala1637",
+            "other_variant": "ClinVar:525029",
+            "other_variant_classification": "VUS"
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -177,13 +177,13 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v5-MYH7-mis-001",
-                  "type": "computational_prediction",
-                  "data": {
+                  "references": [],
+                  "description": "Placeholder: REVEL 0.577 is intermediate; the threshold call is CSpec's.",
+                  "subtype": "computational_prediction",
+                  "value": {
                     "tool": "REVEL",
                     "score": 0.577
-                  },
-                  "references": [],
-                  "description": "Placeholder: REVEL 0.577 is intermediate; the threshold call is CSpec's."
+                  }
                 }
               ],
               "hasEvidenceLines": []
@@ -223,16 +223,16 @@
               "hasEvidenceItems": [
                 {
                   "id": "PVS-v5-MYH7-mis-002",
-                  "type": "same_residue_variant",
-                  "data": {
-                    "residue": "p.Ala1637",
-                    "other_variant": "ClinVar:525029",
-                    "other_variant_classification": "VUS"
-                  },
                   "references": [
                     "https://www.ncbi.nlm.nih.gov/clinvar/variation/525029/"
                   ],
-                  "description": "Placeholder: another missense at the same codon, classified VUS. Classic PM5 needs a pathogenic comparator, so this likely carries little/no positive weight; captured as context."
+                  "description": "Placeholder: another missense at the same codon, classified VUS. Classic PM5 needs a pathogenic comparator, so this likely carries little/no positive weight; captured as context.",
+                  "subtype": "same_residue_variant",
+                  "value": {
+                    "residue": "p.Ala1637",
+                    "other_variant": "ClinVar:525029",
+                    "other_variant_classification": "VUS"
+                  }
                 }
               ],
               "hasEvidenceLines": []
@@ -257,12 +257,12 @@
       "hasEvidenceItems": [
         {
           "id": "PVS-v5-MYH7-spl-001",
-          "type": "computational_prediction",
-          "data": {
-            "splice_impact": "none"
-          },
           "references": [],
-          "description": "Placeholder: no predicted splicing impact."
+          "description": "Placeholder: no predicted splicing impact.",
+          "subtype": "computational_prediction",
+          "value": {
+            "splice_impact": "none"
+          }
         }
       ],
       "hasEvidenceLines": [
@@ -283,12 +283,12 @@
           "hasEvidenceItems": [
             {
               "id": "PVS-v5-MYH7-spl-001",
-              "type": "computational_prediction",
-              "data": {
-                "splice_impact": "none"
-              },
               "references": [],
-              "description": "Placeholder: no predicted splicing impact."
+              "description": "Placeholder: no predicted splicing impact.",
+              "subtype": "computational_prediction",
+              "value": {
+                "splice_impact": "none"
+              }
             }
           ],
           "hasEvidenceLines": []
