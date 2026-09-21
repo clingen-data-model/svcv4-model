@@ -414,6 +414,24 @@ _pat(
     ("point_values", "relatedness_rule"),
     (_di("comparator_variant", "input"), _di("classification_tier", "input", "P⇒+4·LP⇒+2")),
 )
+_pat("coding-sequence-variant-assessment", "Coding-sequence variant (CDS)", "rollup", "points")
+_pat(
+    "coding-sequence-prediction-assessment",
+    "Coding-sequence prediction (CDS_PRD)",
+    "rollup",
+    "points",
+    -1.0,
+    6.0,
+)
+_pat("splice-variant-assessment", "Splice variant (SPL)", "rollup", "points")
+_pat(
+    "splice-predictive-assessment",
+    "Splice predictive roll-up (SPL_PRD)",
+    "rollup",
+    "points",
+    0.0,
+    6.0,
+)
 
 
 # --------------------------------------------------------------------------- #
@@ -467,6 +485,39 @@ ruleset(
 )
 ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL")
 ruleset("NUL_INF", "Null informative variants", "informative-variants-assessment", parent="NUL")
+# CDS (coding-sequence: alt-Met rescue / no-NMD truncated protein)
+ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment")
+ruleset(
+    "CDS_PRD", "Coding-sequence prediction", "coding-sequence-prediction-assessment", parent="CDS"
+)
+ruleset("CDS_PRD_INIT", "Protein-loss initial points", "protein-loss-assessment", parent="CDS_PRD")
+ruleset(
+    "CDS_PRD_MECH_EXON",
+    "Mechanism × exon (CDS)",
+    "mechanism-exon-relevance-assessment",
+    parent="CDS_PRD",
+)
+ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS")
+ruleset("CDS_INF", "CDS informative variants", "informative-variants-assessment", parent="CDS")
+# SPL (splice effect)
+ruleset("SPL", "Splice variant", "splice-variant-assessment")
+ruleset("SPL_PRD", "Splice predictive", "splice-predictive-assessment", parent="SPL")
+ruleset(
+    "SPL_PRD_INIT",
+    "Splice prediction initial points",
+    "splice-prediction-assessment",
+    parent="SPL_PRD",
+)
+ruleset(
+    "SPL_PRD_MECH_EXON",
+    "Mechanism × exon (splice)",
+    "mechanism-exon-relevance-assessment",
+    parent="SPL_PRD",
+)
+ruleset("SPL_SPA", "Splice assay", "splice-assay-assessment", parent="SPL")
+ruleset("SPL_FXN", "Splice functional assay", "functional-assay-assessment", parent="SPL")
+# Frameshift, exon del/dup, start/stop-lost route into the NUL / CDS trees above
+# (by nmd-prediction) — they add no new code families, only variant-type entry points.
 
 
 # --------------------------------------------------------------------------- #
