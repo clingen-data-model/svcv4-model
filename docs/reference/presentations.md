@@ -25,3 +25,9 @@ Community (CLGC)](https://www.ga4gh.org/community/clinical-genomics-laboratory-c
 Annual Scientific Meeting, Te Pae, Christchurch, New Zealand.
 
 - [SVCv4 · HGSA 2026 (Google Slides)](https://docs.google.com/presentation/d/1V4KUgyzukGv9mJGTz7Anl0CGjWcdNwOz3VycEMeJZmI/edit)
+
+## Earlier overview
+
+An earlier preview of the SVCv4 standards and data-model direction.
+
+- [Preview of the ACMG/AMP/CAP/ClinGen SVCv4 (Draft) Standards and Data Model (Google Slides)](https://docs.google.com/presentation/d/1oSfJMNxKpDhbG261zk9UzxCrqQvaRWxYv3aPl_KpGwg/edit)
