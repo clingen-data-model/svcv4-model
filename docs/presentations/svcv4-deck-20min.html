@@ -660,8 +660,8 @@
   });
   render();
 const TP53_JSON = `{
-  "classification": "TP53 c.641A>T (p.His214Leu)  —is_causal_for→  Li-Fraumeni syndrome",
-  "method": "svcv4:SVCV4:1.0",
+  "name": "TP53 c.641A>T (p.His214Leu) is likely pathogenic for Li-Fraumeni syndrome",
+  "method": "svc:SVCV4:4.0",
   "moi": "AD",
   "direction": "supports",
   "strength": "likely",
@@ -673,7 +673,7 @@ const TP53_JSON = `{
     "HOD  (Human Observational Data)": {
       "score": 0.0, "outcome": "HOD_+0",
       "POP": {
-        "score": 0.0,
+        "score": 0.0, "outcome": "POP_+0",
         "POP_FRQ": {
           "score": 0.0, "outcome": "POP_FRQ_+0",
           "faf": 0.0000041, "daft": 0.0000125, "fold": 0.33, "band": "NONE"
@@ -685,22 +685,27 @@ const TP53_JSON = `{
       "MIS": {
         "score": 5.0, "outcome": "MIS_+5",
         "MIS_PRD_FXN  (combination cap: +4, not +8)": {
-          "score": 4.0,
+          "score": 4.0, "outcome": "MIS_PRD_FXN_+4",
           "MIS_PRD": {
-            "score": 4.0,
+            "score": 4.0, "outcome": "MIS_PRD_+4",
+            "calc": "MIS_PRD_INIT (+4) × MIS_PRD_EXON (100%) = +4",
             "MIS_PRD_INIT_INSILICO": {
-              "tool": "REVEL", "raw": 0.86, "band": "PATH_STRONG", "score": 4.0
+              "tool": "REVEL", "raw": 0.86, "band": "PATH_STRONG",
+              "score": 4.0, "outcome": "MIS_PRD_INIT_INSILICO_+4"
             },
             "MIS_PRD_EXON_REL": {
-              "exon": "DNA-binding domain", "MANE": true, "multiplier": 1.0
+              "exon": "DNA-binding domain", "MANE": true,
+              "percent": "100%", "multiplier": 1.0, "outcome": "MIS_PRD_EXON_REL_x1.0"
             }
           },
           "MIS_FXN": {
-            "assay": "loss of transactivation + growth suppression", "score": 4.0
+            "assay": "loss of transactivation + growth suppression",
+            "score": 4.0, "outcome": "MIS_FXN_+4"
           }
         },
         "MIS_INF": {
-          "comparator": "p.His214Arg = Pathogenic (PM5-type)", "score": 1.0
+          "comparator": "p.His214Arg = Pathogenic (PM5-type)",
+          "score": 1.0, "outcome": "MIS_INF_+1"
         }
       }
     }
