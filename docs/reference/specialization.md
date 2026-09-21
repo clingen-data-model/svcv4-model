@@ -95,4 +95,4 @@ individual nodes by id.
 
 ## Top-level wiring
 
-The whole method is a single root ruleset — `svcv4:SVCV4:1.0` — that composes the seven code families (POP, CLN, LOC, MIS, NUL, CDS, SPL). The **top-level classification `Statement`** carries `specifiedBy.id = svcv4:SVCV4:1.0` (the applied SVCv4 method); each **evidence-line `Statement`** carries `specifiedBy.id` = its own ruleset node (e.g. `svcv4:MIS_PRD_EXON:1.0`). A specialization swaps the method root's version and/or individual node ids without changing any `methodType`.
+The whole method is a single root ruleset — `svcv4:SVCV4:1.0` — that composes two evidence categories — **HOD** (`svcv4:HOD:1.0`, rolling up POP + CLN + LOC) and **PRD** (`svcv4:PRD:1.0`, the selected variant-impact outcome across MIS/NUL/CDS/SPL). HOD + PRD roll up to the final `score`/`outcome`. The **top-level classification `Statement`** carries `specifiedBy.id = svcv4:SVCV4:1.0` (the applied SVCv4 method); each **evidence-line `Statement`** carries `specifiedBy.id` = its own ruleset node (e.g. `svcv4:MIS_PRD_EXON:1.0`). A specialization swaps the method root's version and/or individual node ids without changing any `methodType`.

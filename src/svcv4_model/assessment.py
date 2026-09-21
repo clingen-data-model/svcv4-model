@@ -180,6 +180,10 @@ def roots(scope: str = "baseline") -> list[Ruleset]:
 # --------------------------------------------------------------------------- #
 
 _pat("svcv4-method-assessment", "SVCv4 classification method", "rollup", "points")
+_pat("human-observational-data-assessment", "Human Observational Data (HOD)",
+     "rollup", "points")
+_pat("predictive-functional-data-assessment", "Predictive & Functional Data (PRD)",
+     "rollup", "points")
 # HOD — names as specified by the SVCv4 team
 _pat("population-observation-assessment", "Population observations (POP)", "rollup", "points")
 _pat(
@@ -441,8 +445,12 @@ _pat(
 
 # SVCV4 — the whole method: the top-level classification Statement's specifiedBy.
 ruleset("SVCV4", "SVCv4 classification method", "svcv4-method-assessment")
+ruleset("HOD", "Human Observational Data", "human-observational-data-assessment",
+        parent="SVCV4")
+ruleset("PRD", "Predictive & Functional Data", "predictive-functional-data-assessment",
+        parent="SVCV4")
 # POP
-ruleset("POP", "Population observations", "population-observation-assessment", parent="SVCV4")
+ruleset("POP", "Population observations", "population-observation-assessment", parent="HOD")
 ruleset("POP_FRQ", "Population allele frequency", "population-frequency-assessment", parent="POP")
 ruleset(
     "POP_HMZ",
@@ -451,18 +459,18 @@ ruleset(
     parent="POP",
 )
 # CLN
-ruleset("CLN", "Clinical observations", "clinical-observation-assessment", parent="SVCV4")
+ruleset("CLN", "Clinical observations", "clinical-observation-assessment", parent="HOD")
 ruleset("CLN_AFF", "Affected proband", "affected-observation-assessment", parent="CLN")
 ruleset("CLN_UAF", "Unaffected carrier", "unaffected-observation-assessment", parent="CLN")
 ruleset("CLN_ALT", "Alternative cause", "affected-alternative-observation-assessment", parent="CLN")
 ruleset("CLN_DNV", "De-novo occurrence", "affected-denovo-observation-assessment", parent="CLN")
 ruleset("CLN_CCS", "Case-control study", "case-control-observation-assessment", parent="CLN")
 # LOC
-ruleset("LOC", "Locus specificity", "locus-specificity-assessment", parent="SVCV4")
+ruleset("LOC", "Locus specificity", "locus-specificity-assessment", parent="HOD")
 ruleset("LOC_PHE", "Phenotype specificity", "specific-phenotype-assessment", parent="LOC")
 ruleset("LOC_SEG", "Co-segregation", "segregation-with-disease-assessment", parent="LOC")
 # MIS (amino-acid path)
-ruleset("MIS", "Missense variant", "missense-variant-assessment", parent="SVCV4")
+ruleset("MIS", "Missense variant", "missense-variant-assessment", parent="PRD")
 ruleset(
     "MIS_PRD", "Single-AA-change prediction", "single-aa-change-prediction-assessment", parent="MIS"
 )
@@ -477,7 +485,7 @@ ruleset("MIS_PRD_EXON", "Exon relevance (missense)", "exon-relevance-assessment"
 ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS")
 ruleset("MIS_INF", "Missense informative variants", "informative-variants-assessment", parent="MIS")
 # NUL (NMD path)
-ruleset("NUL", "Null / nonsense variant", "null-variant-assessment", parent="SVCV4")
+ruleset("NUL", "Null / nonsense variant", "null-variant-assessment", parent="PRD")
 ruleset("NUL_PRD", "Null predictive", "null-predictive-assessment", parent="NUL")
 ruleset("NUL_PRD_INIT", "NMD initial points", "fixed-initial-points-assessment", parent="NUL_PRD")
 ruleset(
@@ -489,7 +497,7 @@ ruleset(
 ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL")
 ruleset("NUL_INF", "Null informative variants", "informative-variants-assessment", parent="NUL")
 # CDS (coding-sequence: alt-Met rescue / no-NMD truncated protein)
-ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment", parent="SVCV4")
+ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment", parent="PRD")
 ruleset(
     "CDS_PRD", "Coding-sequence prediction", "coding-sequence-prediction-assessment", parent="CDS"
 )
@@ -503,7 +511,7 @@ ruleset(
 ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS")
 ruleset("CDS_INF", "CDS informative variants", "informative-variants-assessment", parent="CDS")
 # SPL (splice effect)
-ruleset("SPL", "Splice variant", "splice-variant-assessment", parent="SVCV4")
+ruleset("SPL", "Splice variant", "splice-variant-assessment", parent="PRD")
 ruleset("SPL_PRD", "Splice predictive", "splice-predictive-assessment", parent="SPL")
 ruleset(
     "SPL_PRD_INIT",
