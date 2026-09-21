@@ -14,12 +14,10 @@ Community (CLGC)](https://www.ga4gh.org/community/clinical-genomics-laboratory-c
 
 - **Lead deck** —
   [SVCv4 Data Model · September CLGC (Google Slides)](https://docs.google.com/presentation/d/139Mh8GJfu2MntflXKxIv62W3ua24eDzKMkRYQztmEp8/edit)
-- **Data-model component** — the technical "under the hood" walkthrough of the
-  Classification Model, presented by Larry Babb and interjected at slide 17 of
-  the lead deck.
-  [Open the data-model deck](https://clingen-data-model.github.io/svcv4-model/presentations/svcv4-deck-20min.html)
-  — a self-contained HTML slide deck (arrow keys to navigate, **S** for speaker
-  notes). This is the same deck linked from slide 17 of the lead Google Slides.
+- **Data-model component** — the "under the hood" walkthrough of the
+  Classification Model, interjected at slide 17 of the lead deck.
+  [Open the data-model deck](https://dataexchange.clinicalgenome.org/svcv4-model/presentations/svcv4-deck-20min.html)
+  — self-contained HTML slides (arrow keys to navigate, **S** for speaker notes).
 
 ## HGSA 49th Annual Scientific Meeting — 1–4 August 2026
 
