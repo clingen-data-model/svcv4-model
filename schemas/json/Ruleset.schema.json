@@ -52,6 +52,12 @@
       "description": "Parent ruleset id (hierarchy).",
       "title": "Parent"
     },
+    "provisional": {
+      "default": false,
+      "description": "True when this node's CODE is a provisional SVCv4 code/subcode (a combination-cap roll-up, or a deeper method-level subcode).",
+      "title": "Provisional",
+      "type": "boolean"
+    },
     "scope": {
       "description": "`baseline` or a specialisation scope, e.g. `gene-MYH7`.",
       "title": "Scope",

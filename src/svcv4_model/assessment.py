@@ -66,6 +66,11 @@ class Ruleset(BaseModel):
     version: str = Field(default="1.0")
     parent: str | None = Field(default=None, description="Parent ruleset id (hierarchy).")
     params: dict[str, Any] = Field(default_factory=dict)
+    provisional: bool = Field(
+        default=False,
+        description="True when this node's CODE is a provisional SVCv4 code/subcode "
+        "(a combination-cap roll-up, or a deeper method-level subcode).",
+    )
     description: str | None = None
 
     @field_validator("id")
@@ -140,6 +145,7 @@ def ruleset(
     scope: str = "baseline",
     version: str = "1.0",
     params: dict[str, Any] | None = None,
+    provisional: bool = False,
 ) -> Ruleset:
     if method_type not in ASSESSMENT_TYPES:
         raise ValueError(f"unknown method_type '{method_type}' for {code}")
@@ -158,6 +164,7 @@ def ruleset(
         version=version,
         parent=parent_id,
         params=params or {},
+        provisional=provisional,
     )
     RULESETS[rid] = r
     return r
@@ -180,10 +187,13 @@ def roots(scope: str = "baseline") -> list[Ruleset]:
 # --------------------------------------------------------------------------- #
 
 _pat("svcv4-method-assessment", "SVCv4 classification method", "rollup", "points")
-_pat("human-observational-data-assessment", "Human Observational Data (HOD)",
-     "rollup", "points")
-_pat("predictive-functional-data-assessment", "Predictive & Functional Data (PRD)",
-     "rollup", "points")
+_pat("human-observational-data-assessment", "Human Observational Data (HOD)", "rollup", "points")
+_pat(
+    "predictive-functional-data-assessment",
+    "Predictive & Functional Data (PRD)",
+    "rollup",
+    "points",
+)
 # HOD — names as specified by the SVCv4 team
 _pat("population-observation-assessment", "Population observations (POP)", "rollup", "points")
 _pat(
@@ -439,16 +449,30 @@ _pat(
 )
 
 
+_pat(
+    "predictive-functional-combination-assessment",
+    "Predictive + functional combination cap (x_PRD_FXN)",
+    "rollup",
+    "points",
+)
+_pat(
+    "predictive-spliceassay-combination-assessment",
+    "Splice prediction + assay combination cap (SPL_PRD_SPA)",
+    "rollup",
+    "points",
+)
+
+
 # --------------------------------------------------------------------------- #
 # baseline rulesets (the SVCv4 method as a hierarchy) — parent-first
 # --------------------------------------------------------------------------- #
 
 # SVCV4 — the whole method: the top-level classification Statement's specifiedBy.
 ruleset("SVCV4", "SVCv4 classification method", "svcv4-method-assessment")
-ruleset("HOD", "Human Observational Data", "human-observational-data-assessment",
-        parent="SVCV4")
-ruleset("PRD", "Predictive & Functional Data", "predictive-functional-data-assessment",
-        parent="SVCV4")
+ruleset("HOD", "Human Observational Data", "human-observational-data-assessment", parent="SVCV4")
+ruleset(
+    "PRD", "Predictive & Functional Data", "predictive-functional-data-assessment", parent="SVCV4"
+)
 # POP
 ruleset("POP", "Population observations", "population-observation-assessment", parent="HOD")
 ruleset("POP_FRQ", "Population allele frequency", "population-frequency-assessment", parent="POP")
@@ -469,10 +493,20 @@ ruleset("CLN_CCS", "Case-control study", "case-control-observation-assessment", 
 ruleset("LOC", "Locus specificity", "locus-specificity-assessment", parent="HOD")
 ruleset("LOC_PHE", "Phenotype specificity", "specific-phenotype-assessment", parent="LOC")
 ruleset("LOC_SEG", "Co-segregation", "segregation-with-disease-assessment", parent="LOC")
-# MIS (amino-acid path)
+# MIS: MIS = (MIS_PRD + MIS_FXN -> MIS_PRD_FXN) + MIS_INF
 ruleset("MIS", "Missense variant", "missense-variant-assessment", parent="PRD")
 ruleset(
-    "MIS_PRD", "Single-AA-change prediction", "single-aa-change-prediction-assessment", parent="MIS"
+    "MIS_PRD_FXN",
+    "Missense predictive + functional (combination cap)",
+    "predictive-functional-combination-assessment",
+    parent="MIS",
+    provisional=True,
+)
+ruleset(
+    "MIS_PRD",
+    "Single-AA-change prediction",
+    "single-aa-change-prediction-assessment",
+    parent="MIS_PRD_FXN",
 )
 ruleset(
     "MIS_PRD_INIT_REVEL",
@@ -480,53 +514,109 @@ ruleset(
     "insilico-predictor-assessment",
     parent="MIS_PRD",
     params={"predictor": "REVEL"},
+    provisional=True,
 )
-ruleset("MIS_PRD_EXON", "Exon relevance (missense)", "exon-relevance-assessment", parent="MIS_PRD")
-ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS")
+ruleset(
+    "MIS_PRD_EXON",
+    "Exon relevance (missense)",
+    "exon-relevance-assessment",
+    parent="MIS_PRD",
+    provisional=True,
+)
+ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS_PRD_FXN")
 ruleset("MIS_INF", "Missense informative variants", "informative-variants-assessment", parent="MIS")
-# NUL (NMD path)
+# NUL: NUL = (NUL_PRD + NUL_FXN -> NUL_PRD_FXN) + NUL_INF
 ruleset("NUL", "Null / nonsense variant", "null-variant-assessment", parent="PRD")
-ruleset("NUL_PRD", "Null predictive", "null-predictive-assessment", parent="NUL")
-ruleset("NUL_PRD_INIT", "NMD initial points", "fixed-initial-points-assessment", parent="NUL_PRD")
+ruleset(
+    "NUL_PRD_FXN",
+    "Null predictive + functional (combination cap)",
+    "predictive-functional-combination-assessment",
+    parent="NUL",
+    provisional=True,
+)
+ruleset("NUL_PRD", "Null predictive", "null-predictive-assessment", parent="NUL_PRD_FXN")
+ruleset(
+    "NUL_PRD_INIT",
+    "NMD initial points",
+    "fixed-initial-points-assessment",
+    parent="NUL_PRD",
+    provisional=True,
+)
 ruleset(
     "NUL_PRD_MECH_EXON",
-    "Mechanism × exon (null)",
+    "Mechanism x exon (null)",
     "mechanism-exon-relevance-assessment",
     parent="NUL_PRD",
+    provisional=True,
 )
-ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL")
+ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL_PRD_FXN")
 ruleset("NUL_INF", "Null informative variants", "informative-variants-assessment", parent="NUL")
-# CDS (coding-sequence: alt-Met rescue / no-NMD truncated protein)
+# CDS: CDS = (CDS_PRD + CDS_FXN -> CDS_PRD_FXN) + CDS_INF
 ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment", parent="PRD")
 ruleset(
-    "CDS_PRD", "Coding-sequence prediction", "coding-sequence-prediction-assessment", parent="CDS"
+    "CDS_PRD_FXN",
+    "CDS predictive + functional (combination cap)",
+    "predictive-functional-combination-assessment",
+    parent="CDS",
+    provisional=True,
 )
-ruleset("CDS_PRD_INIT", "Protein-loss initial points", "protein-loss-assessment", parent="CDS_PRD")
+ruleset(
+    "CDS_PRD",
+    "Coding-sequence prediction",
+    "coding-sequence-prediction-assessment",
+    parent="CDS_PRD_FXN",
+)
+ruleset(
+    "CDS_PRD_INIT",
+    "Protein-loss initial points",
+    "protein-loss-assessment",
+    parent="CDS_PRD",
+    provisional=True,
+)
 ruleset(
     "CDS_PRD_MECH_EXON",
-    "Mechanism × exon (CDS)",
+    "Mechanism x exon (CDS)",
     "mechanism-exon-relevance-assessment",
     parent="CDS_PRD",
+    provisional=True,
 )
-ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS")
+ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS_PRD_FXN")
 ruleset("CDS_INF", "CDS informative variants", "informative-variants-assessment", parent="CDS")
-# SPL (splice effect)
+# SPL: SPL = (SPL_PRD + SPL_SPA -> SPL_PRD_SPA) + SPL_FXN -> SPL_PRD_SPA_FXN
 ruleset("SPL", "Splice variant", "splice-variant-assessment", parent="PRD")
-ruleset("SPL_PRD", "Splice predictive", "splice-predictive-assessment", parent="SPL")
+ruleset(
+    "SPL_PRD_SPA_FXN",
+    "Splice (pred+assay) + functional (combination cap)",
+    "predictive-functional-combination-assessment",
+    parent="SPL",
+    provisional=True,
+)
+ruleset(
+    "SPL_PRD_SPA",
+    "Splice prediction + assay (combination cap)",
+    "predictive-spliceassay-combination-assessment",
+    parent="SPL_PRD_SPA_FXN",
+    provisional=True,
+)
+ruleset("SPL_PRD", "Splice predictive", "splice-predictive-assessment", parent="SPL_PRD_SPA")
 ruleset(
     "SPL_PRD_INIT",
     "Splice prediction initial points",
     "splice-prediction-assessment",
     parent="SPL_PRD",
+    provisional=True,
 )
 ruleset(
     "SPL_PRD_MECH_EXON",
-    "Mechanism × exon (splice)",
+    "Mechanism x exon (splice)",
     "mechanism-exon-relevance-assessment",
     parent="SPL_PRD",
+    provisional=True,
 )
-ruleset("SPL_SPA", "Splice assay", "splice-assay-assessment", parent="SPL")
-ruleset("SPL_FXN", "Splice functional assay", "functional-assay-assessment", parent="SPL")
+ruleset("SPL_SPA", "Splice assay", "splice-assay-assessment", parent="SPL_PRD_SPA")
+ruleset(
+    "SPL_FXN", "Splice functional assay", "functional-assay-assessment", parent="SPL_PRD_SPA_FXN"
+)
 # Frameshift, exon del/dup, start/stop-lost route into the NUL / CDS trees above
 # (by nmd-prediction) — they add no new code families, only variant-type entry points.
 

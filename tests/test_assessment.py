@@ -53,7 +53,7 @@ def test_hierarchy_is_navigable() -> None:
     mis_prd = "svcv4:MIS_PRD:1.0"
     kids = {c.code for c in children(mis_prd)}
     assert kids == {"MIS_PRD_INIT_REVEL", "MIS_PRD_EXON"}
-    assert resolve(mis_prd).parent == "svcv4:MIS:1.0"
+    assert resolve(mis_prd).parent == "svcv4:MIS_PRD_FXN:1.0"
 
 
 def test_specialization_overrides_one_node_by_id() -> None:
