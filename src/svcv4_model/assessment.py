@@ -463,6 +463,15 @@ _pat(
 )
 
 
+_pat("case-count-grouping-assessment",
+     "Case-count grouping (n x per-case)", "initial", "points", params=("per_case_points", "cap"),
+     data_items=(_di("case_group", "input", "the grouping cell (specificity x testing x ...)"),
+                 _di("count", "input", "n unrelated cases/observations in this group")))
+_pat("moi-table-subtotal-assessment", "MOI/config subtotal roll-up", "rollup", "points")
+_pat("band-selection-assessment", "Single-value band selection", "initial", "points",
+     params=("band_thresholds",), data_items=(_di("value", "input", "the banded value"),))
+
+
 # --------------------------------------------------------------------------- #
 # baseline rulesets (the SVCv4 method as a hierarchy) — parent-first
 # --------------------------------------------------------------------------- #
@@ -493,6 +502,47 @@ ruleset("CLN_CCS", "Case-control study", "case-control-observation-assessment", 
 ruleset("LOC", "Locus specificity", "locus-specificity-assessment", parent="HOD")
 ruleset("LOC_PHE", "Phenotype specificity", "specific-phenotype-assessment", parent="LOC")
 ruleset("LOC_SEG", "Co-segregation", "segregation-with-disease-assessment", parent="LOC")
+
+# --- HOD sub-assessments: group similar cases -> n x per-case multiplier (SM 3/4/5) ---
+# band-selection leaves (single value -> band)
+for _c, _p in [("POP_FRQ_NONE", "POP_FRQ"), ("POP_FRQ_SUPP", "POP_FRQ"),
+               ("POP_FRQ_MOD", "POP_FRQ"), ("POP_FRQ_STRG", "POP_FRQ"),
+               ("LOC_PHE_NONE", "LOC_PHE"), ("LOC_PHE_LOW", "LOC_PHE"),
+               ("LOC_PHE_MOD", "LOC_PHE"), ("LOC_PHE_HIGH", "LOC_PHE"),
+               ("LOC_PHE_FULL", "LOC_PHE")]:
+    ruleset(_c, _c.replace("_", " ").title(), "band-selection-assessment",
+            parent=_p, provisional=True)
+# subtotals (roll up their cells)
+for _c, _lab, _p in [("CLN_AFF_MONO", "Monoallelic subtotal (Table 1)", "CLN_AFF"),
+                     ("CLN_AFF_BIAL", "Biallelic subtotal (Table 2)", "CLN_AFF"),
+                     ("CLN_ALTV", "Alternative variant cause", "CLN_ALT"),
+                     ("CLN_ALTG", "Alternative gene cause", "CLN_ALT")]:
+    ruleset(_c, _lab, "moi-table-subtotal-assessment", parent=_p, provisional=True)
+# case-count grouping cells (n x per-case)
+for _c, _p in [
+    ("POP_HMZ_DOM", "POP_HMZ"), ("POP_HMZ_OTH", "POP_HMZ"),
+    ("CLN_AFF_MONO_SPEC_THOR", "CLN_AFF_MONO"), ("CLN_AFF_MONO_SPEC_LIM", "CLN_AFF_MONO"),
+    ("CLN_AFF_MONO_CONS_THOR", "CLN_AFF_MONO"), ("CLN_AFF_MONO_CONS_LIM", "CLN_AFF_MONO"),
+    ("CLN_AFF_MONO_ALT", "CLN_AFF_MONO"), ("CLN_AFF_MONO_UAF", "CLN_AFF_MONO"),
+    ("CLN_AFF_BIAL_RARE_CTP", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_RARE_CTV", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_RARE_ATP", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_INCP_CTP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_INCP_CTV", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_INCP_ATP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_INCP_HOM", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_UNCM_CTP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_UNCM_CTV", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_UNCM_ATP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_THOR_HOM", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_ALT", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_UAF", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_NON", "CLN_AFF_BIAL"),
+    ("CLN_DNV_SPEC_CONF", "CLN_DNV"), ("CLN_DNV_SPEC_UNCONF", "CLN_DNV"),
+    ("CLN_DNV_CONS_CONF", "CLN_DNV"), ("CLN_DNV_CONS_UNCONF", "CLN_DNV"),
+    ("CLN_DNV_INCON", "CLN_DNV"),
+    ("CLN_UAF_FULL_HIGH", "CLN_UAF"), ("CLN_UAF_FULL_NEAR", "CLN_UAF"),
+    ("CLN_UAF_LOW", "CLN_UAF"), ("CLN_UAF_NON", "CLN_UAF"),
+    ("CLN_ALTV_ONE", "CLN_ALTV"), ("CLN_ALTV_BOTH", "CLN_ALTV"), ("CLN_ALTV_REC", "CLN_ALTV"),
+    ("CLN_ALTG_ONE", "CLN_ALTG"), ("CLN_ALTG_BOTH", "CLN_ALTG"),
+    ("LOC_SEG_AFF", "LOC_SEG"), ("LOC_SEG_UAF", "LOC_SEG"),
+    ("LOC_SEG_UAF_AR", "LOC_SEG"), ("LOC_SEG_NONSEG", "LOC_SEG"),
+]:
+    ruleset(_c, _c.replace("_", " ").title(), "case-count-grouping-assessment",
+            parent=_p, provisional=True)
 # MIS: MIS = (MIS_PRD + MIS_FXN -> MIS_PRD_FXN) + MIS_INF
 ruleset("MIS", "Missense variant", "missense-variant-assessment", parent="PRD")
 ruleset(
