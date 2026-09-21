@@ -12,7 +12,7 @@ distinct, namespaced id.
 | Field | Purpose | Example |
 |---|---|---|
 | `specifiedBy.methodType` | *What kind of rule this is* — stable across baseline and every specialization; this is what makes results **comparable**. | `insilico-predictor-assessment` |
-| `specifiedBy.id` | *Which configured ruleset actually ran* — namespaced + versioned; this is what makes results **reproducible**. | `svcv4:MIS_PRD_INIT_REVEL:1.0` |
+| `specifiedBy.id` | *Which configured ruleset actually ran* — namespaced + versioned; this is what makes results **reproducible**. | `svcv4:MIS_PRD_INIT_INSILICO:1.0` |
 
 The id scheme is **`svcv4:<CODE>:<version>` (baseline) or `svcv4-<scope>:<CODE>:<version>`**. Scope is `baseline`
 or a specialization scope (e.g. `gene-MYH7`, `vcep-cardiomyopathy`). All scopes
@@ -21,25 +21,27 @@ live under the `svcv4` registry umbrella.
 ## Worked example — same evidence, two configurations
 
 A missense VBC in *MYH7* with an in-silico predictor **raw score of 0.91**. The
-baseline predictor calibration reaches `+4.0` only at `≥ 0.932`, so 0.91 lands in
-the next band down; the *MYH7* specialization was re-calibrated for the gene and
-reaches `+4.0` at `≥ 0.90`. Same evidence item, same assessment — different
-configured threshold, different score.
+subcode is the tool-agnostic `MIS_PRD_INIT_INSILICO` — the predictor tool (REVEL,
+here) is selected in the ruleset's params, not baked into the code. The baseline
+calibration reaches `+4.0` only at `≥ 0.932`, so 0.91 lands in the next band down;
+the *MYH7* specialization was re-calibrated for the gene and reaches `+4.0` at
+`≥ 0.90`. Same evidence item, same assessment — different configured threshold,
+different score.
 
 === "Baseline"
 
     ```jsonc
     {
       "type": "Statement",
-      "code": "MIS_PRD_INIT_REVEL",
+      "code": "MIS_PRD_INIT_INSILICO",
       "specifiedBy": {
-        "id": "svcv4:MIS_PRD_INIT_REVEL:1.0",
+        "id": "svcv4:MIS_PRD_INIT_INSILICO:1.0",
         "methodType": "insilico-predictor-assessment",
         "version": "1.0"
       },
       "score": 3.0,
       "direction": "supports",
-      "outcome": "MIS_PRD_INIT_REVEL_+3",
+      "outcome": "MIS_PRD_INIT_INSILICO_+3",
       "hasEvidenceItems": [
         { "type": "DataItem", "subtype": "computational_prediction",
           "value": { "predictor": "REVEL", "raw_score": 0.91 } }
@@ -52,15 +54,15 @@ configured threshold, different score.
     ```jsonc
     {
       "type": "Statement",
-      "code": "MIS_PRD_INIT_REVEL",
+      "code": "MIS_PRD_INIT_INSILICO",
       "specifiedBy": {
-        "id": "svcv4-gene-MYH7:MIS_PRD_INIT_REVEL:1.0",
+        "id": "svcv4-gene-MYH7:MIS_PRD_INIT_INSILICO:1.0",
         "methodType": "insilico-predictor-assessment",
         "version": "1.0"
       },
       "score": 4.0,
       "direction": "supports",
-      "outcome": "MIS_PRD_INIT_REVEL_+4",
+      "outcome": "MIS_PRD_INIT_INSILICO_+4",
       "hasEvidenceItems": [
         { "type": "DataItem", "subtype": "computational_prediction",
           "value": { "predictor": "REVEL(MYH7-recalibrated)", "raw_score": 0.91 } }
@@ -81,8 +83,8 @@ of the SVCv4 framework; it does **not** mint new codes. Examples:
 
 | Assessment (`methodType`) | Reconfigurable parameters |
 |---|---|
-| `insilico-predictor-assessment` | predictor · calibration thresholds |
-| `mechanism-exon-relevance-assessment` | matrix fractions · gene-disease-validity gate |
+| `insilico-predictor-assessment` | selectable tools · per-tool bands/points |
+| `exon-relevance-assessment` | tier multipliers · include_mechanism (with/without gene-disease mechanism) |
 | `informative-variants-assessment` | point values · relatedness rule · added granularity |
 | `population-frequency-assessment` | fold thresholds & point tiers |
 
@@ -95,4 +97,4 @@ individual nodes by id.
 
 ## Top-level wiring
 
-The whole method is a single root ruleset — `svcv4:SVCV4:1.0` — that composes two evidence categories — **HOD** (`svcv4:HOD:1.0`, rolling up POP + CLN + LOC) and **PRD** (`svcv4:PRD:1.0`, the selected variant-impact outcome across MIS/NUL/CDS/SPL). HOD + PRD roll up to the final `score`/`outcome`. The **top-level classification `Statement`** carries `specifiedBy.id = svcv4:SVCV4:1.0` (the applied SVCv4 method); each **evidence-line `Statement`** carries `specifiedBy.id` = its own ruleset node (e.g. `svcv4:MIS_PRD_EXON:1.0`). A specialization swaps the method root's version and/or individual node ids without changing any `methodType`.
+The whole method is a single root ruleset — `svcv4:SVCV4:1.0` — that composes two evidence categories — **HOD** (`svcv4:HOD:1.0`, rolling up POP + CLN + LOC) and **PRD** (`svcv4:PRD:1.0`, the selected variant-impact outcome across MIS/NUL/CDS/SPL). HOD + PRD roll up to the final `score`/`outcome`. The **top-level classification `Statement`** carries `specifiedBy.id = svcv4:SVCV4:1.0` (the applied SVCv4 method); each **evidence-line `Statement`** carries `specifiedBy.id` = its own ruleset node (e.g. `svcv4:MIS_PRD_EXON_REL:1.0`). A specialization swaps the method root's version and/or individual node ids without changing any `methodType`.

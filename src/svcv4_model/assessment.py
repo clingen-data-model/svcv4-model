@@ -59,7 +59,7 @@ class Ruleset(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     id: str = Field(description="`svcv4-<scope>:<CODE>:<version>` — value of `specifiedBy.id`.")
-    code: str = Field(description="The SVCv4 code this node produces, e.g. `MIS_PRD_EXON`.")
+    code: str = Field(description="The SVCv4 code this node produces, e.g. `MIS_PRD_EXON_REL`.")
     label: str = Field(description="Human method name for this exact pathway node.")
     method_type: str = Field(description="The AssessmentType (pattern) this instantiates.")
     scope: str = Field(description="`baseline` or a specialisation scope, e.g. `gene-MYH7`.")
@@ -320,74 +320,105 @@ _pat(
 _pat(
     "null-predictive-assessment", "Null predictive roll-up (NUL_PRD)", "rollup", "points", 0.0, 6.0
 )
+# ---- Predictive-initial SPECTRUM patterns (the OR branches under x_PRD_INIT_*) ---- #
+# For a given variant one spectrum is selected; it produces the initial predictive
+# points, which the exon-relevance adjuster then scales.
 _pat(
     "insilico-predictor-assessment",
-    "In-silico predictor",
+    "In-silico predictor spectrum (tool-agnostic)",
     "initial",
     "points",
     -4.0,
     4.0,
-    ("predictor", "calibration_thresholds"),
-    (_di("predictor", "input", "REVEL"), _di("raw_score", "input", "0.972 ⇒ +4.0")),
+    # the TOOL is not in the code; the ruleset params configure the selectable set
+    # of tools and each tool's band→points ranges.
+    ("selectable_tools", "per_tool_bands", "selected_tool"),
+    (_di("predictor", "input", "selected from configured set"), _di("raw_score", "input")),
 )
 _pat(
-    "exon-relevance-assessment",
-    "Exon / transcript relevance",
-    "adjuster",
-    "multiplier",
-    0.0,
-    1.0,
-    ("tier_multipliers",),
-    (_di("exon_relevance", "input", "All/Most/Few"), _di("mane_status", "gate")),
-)
-_pat(
-    "mechanism-exon-relevance-assessment",
-    "Mechanism × exon relevance (SM 18)",
-    "adjuster",
-    "multiplier",
-    0.0,
-    1.0,
-    ("matrix", "gdv_gate"),
+    "protein-impact-spectrum-assessment",
+    "VBC protein-impact spectrum (_PROT_IMP) — SM9 frameshift-initial common pattern",
+    "initial",
+    "points",
+    -1.0,
+    6.0,
+    # One common pattern spans all five SM9 (fig. 1) frameshift branches: the analyst
+    # selects a single decay_pathway and reads points from the matching sub-table.
+    #   NMD_NO_RESCUE (yellow)   → decay=nmd,            100% loss  → +6.0 (fixed)
+    #   NON_STOP_DECAY (green)   → decay=non_stop_decay, 100% loss  → +4.0 (fixed)
+    #   NO_NMD (violet)          → decay=no_nmd,         fraction   → 0..+6 (fraction_table)
+    #   NMD_WITH_RESCUE (orange) → decay=nmd + rescue               → −1..+6 (hands to alt-start)
+    #   PROTEIN_EXTENSION(green) → decay=extension,      length     → 0..+4 (extension_table)
+    # NMD-100% and non-stop-decay-100% are the same "removes 100% of protein" outcome,
+    # differing only by the configured per-pathway award.
+    ("pathway_awards", "fraction_table", "extension_table"),
     (
-        _di("gencc_mechanism", "input", "Established/Likely/Suspected/Uncertain"),
-        _di("gene_disease_validity", "gate"),
-        _di("exon_relevance", "input"),
+        _di("decay_pathway", "input", "nmd | non_stop_decay | no_nmd | extension"),
+        _di("protein_fraction_lost", "input", "1.0 ⇒ 100% removed (truncation axis)"),
+        _di("extension_length_aa", "input", "non-native C-terminal extension"),
+        _di("alt_met_rescue", "input", "routes NMD → with/without rescue"),
+        _di("critical_domain_loss", "input", "SM7 alternative axis (deferred)"),
     ),
 )
 _pat(
-    "nmd-prediction-assessment",
-    "NMD prediction (router)",
-    "router",
-    "route",
-    params=("nmd_upstream_nt",),
-    data_items=(_di("ptc_vs_last_junction", "router"), _di("exon_count", "router")),
-)
-_pat(
-    "alt-met-rescue-assessment",
-    "Alternative-Met rescue (router)",
-    "router",
-    "route",
-    data_items=(_di("alt_met_functional_rescue", "router"), _di("no_plp_between_starts", "router")),
-)
-_pat(
-    "fixed-initial-points-assessment",
-    "Fixed initial points",
+    "alt-start-impact-spectrum-assessment",
+    "Alternate start-codon impact spectrum (_ALT_START_IMP)",
     "initial",
     "points",
     0.0,
     6.0,
-    ("award",),
-    (_di("nmd_predicted", "input", "true ⇒ +6.0"),),
+    ("tier_points",),
+    (
+        _di("alt_start_present", "input"),
+        _di("alt_start_proven", "input", "proven | unproven"),
+        _di("position_downstream_of_vbc", "input"),
+    ),
 )
 _pat(
-    "protein-loss-assessment",
-    "Protein-loss / critical-domain",
+    "alt-start-rescue-assessment",
+    "Alternate in-frame-start functional rescue (_ALT_START_FXN)",
+    "initial",
+    "points",
+    -1.0,
+    0.0,
+    # one-off: functional data shows a shorter protein from a downstream in-frame
+    # start retains function vs full-length → benign-leaning.
+    ("award",),
+    (
+        _di("alt_met_functional_rescue", "input", "retains function vs full length"),
+        _di("no_plp_between_starts", "input"),
+    ),
+)
+_pat(
+    "molecular-mechanism-spectrum-assessment",
+    "Region alteration on molecular mechanism spectrum (_MECH_IMP)",
     "initial",
     "points",
     -1.0,
     6.0,
     ("tier_points",),
-    (_di("protein_fraction_reduced", "input"), _di("critical_domain_loss", "input")),
+    (
+        _di("gencc_mechanism", "input", "Established/Likely/Suspected/Uncertain"),
+        _di("region_alteration", "input"),
+        _di("mechanism_match", "input"),
+    ),
+)
+_pat(
+    "exon-relevance-assessment",
+    "Exon / transcript relevance adjuster (_EXON_REL)",
+    "adjuster",
+    "multiplier",
+    0.0,
+    1.0,
+    # configurable WITH or WITHOUT the gene-disease mechanism data depending on the
+    # workflow branch (include_mechanism); the mechanism data items are optional.
+    ("tier_multipliers", "include_mechanism"),
+    (
+        _di("exon_relevance", "input", "All/Most/Few"),
+        _di("mane_status", "gate"),
+        _di("gencc_mechanism", "input", "optional — used when include_mechanism"),
+        _di("gene_disease_validity", "gate", "optional — used when include_mechanism"),
+    ),
 )
 _pat(
     "splice-prediction-assessment",
@@ -463,13 +494,26 @@ _pat(
 )
 
 
-_pat("case-count-grouping-assessment",
-     "Case-count grouping (n x per-case)", "initial", "points", params=("per_case_points", "cap"),
-     data_items=(_di("case_group", "input", "the grouping cell (specificity x testing x ...)"),
-                 _di("count", "input", "n unrelated cases/observations in this group")))
+_pat(
+    "case-count-grouping-assessment",
+    "Case-count grouping (n x per-case)",
+    "initial",
+    "points",
+    params=("per_case_points", "cap"),
+    data_items=(
+        _di("case_group", "input", "the grouping cell (specificity x testing x ...)"),
+        _di("count", "input", "n unrelated cases/observations in this group"),
+    ),
+)
 _pat("moi-table-subtotal-assessment", "MOI/config subtotal roll-up", "rollup", "points")
-_pat("band-selection-assessment", "Single-value band selection", "initial", "points",
-     params=("band_thresholds",), data_items=(_di("value", "input", "the banded value"),))
+_pat(
+    "band-selection-assessment",
+    "Single-value band selection",
+    "initial",
+    "points",
+    params=("band_thresholds",),
+    data_items=(_di("value", "input", "the banded value"),),
+)
 
 
 # --------------------------------------------------------------------------- #
@@ -505,44 +549,78 @@ ruleset("LOC_SEG", "Co-segregation", "segregation-with-disease-assessment", pare
 
 # --- HOD sub-assessments: group similar cases -> n x per-case multiplier (SM 3/4/5) ---
 # band-selection leaves (single value -> band)
-for _c, _p in [("POP_FRQ_NONE", "POP_FRQ"), ("POP_FRQ_SUPP", "POP_FRQ"),
-               ("POP_FRQ_MOD", "POP_FRQ"), ("POP_FRQ_STRG", "POP_FRQ"),
-               ("LOC_PHE_NONE", "LOC_PHE"), ("LOC_PHE_LOW", "LOC_PHE"),
-               ("LOC_PHE_MOD", "LOC_PHE"), ("LOC_PHE_HIGH", "LOC_PHE"),
-               ("LOC_PHE_FULL", "LOC_PHE")]:
-    ruleset(_c, _c.replace("_", " ").title(), "band-selection-assessment",
-            parent=_p, provisional=True)
+for _c, _p in [
+    ("POP_FRQ_NONE", "POP_FRQ"),
+    ("POP_FRQ_SUPP", "POP_FRQ"),
+    ("POP_FRQ_MOD", "POP_FRQ"),
+    ("POP_FRQ_STRG", "POP_FRQ"),
+    ("LOC_PHE_NONE", "LOC_PHE"),
+    ("LOC_PHE_LOW", "LOC_PHE"),
+    ("LOC_PHE_MOD", "LOC_PHE"),
+    ("LOC_PHE_HIGH", "LOC_PHE"),
+    ("LOC_PHE_FULL", "LOC_PHE"),
+]:
+    ruleset(
+        _c, _c.replace("_", " ").title(), "band-selection-assessment", parent=_p, provisional=True
+    )
 # subtotals (roll up their cells)
-for _c, _lab, _p in [("CLN_AFF_MONO", "Monoallelic subtotal (Table 1)", "CLN_AFF"),
-                     ("CLN_AFF_BIAL", "Biallelic subtotal (Table 2)", "CLN_AFF"),
-                     ("CLN_ALTV", "Alternative variant cause", "CLN_ALT"),
-                     ("CLN_ALTG", "Alternative gene cause", "CLN_ALT")]:
+for _c, _lab, _p in [
+    ("CLN_AFF_MONO", "Monoallelic subtotal (Table 1)", "CLN_AFF"),
+    ("CLN_AFF_BIAL", "Biallelic subtotal (Table 2)", "CLN_AFF"),
+    ("CLN_ALTV", "Alternative variant cause", "CLN_ALT"),
+    ("CLN_ALTG", "Alternative gene cause", "CLN_ALT"),
+]:
     ruleset(_c, _lab, "moi-table-subtotal-assessment", parent=_p, provisional=True)
 # case-count grouping cells (n x per-case)
 for _c, _p in [
-    ("POP_HMZ_DOM", "POP_HMZ"), ("POP_HMZ_OTH", "POP_HMZ"),
-    ("CLN_AFF_MONO_SPEC_THOR", "CLN_AFF_MONO"), ("CLN_AFF_MONO_SPEC_LIM", "CLN_AFF_MONO"),
-    ("CLN_AFF_MONO_CONS_THOR", "CLN_AFF_MONO"), ("CLN_AFF_MONO_CONS_LIM", "CLN_AFF_MONO"),
-    ("CLN_AFF_MONO_ALT", "CLN_AFF_MONO"), ("CLN_AFF_MONO_UAF", "CLN_AFF_MONO"),
-    ("CLN_AFF_BIAL_RARE_CTP", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_RARE_CTV", "CLN_AFF_BIAL"),
-    ("CLN_AFF_BIAL_RARE_ATP", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_INCP_CTP", "CLN_AFF_BIAL"),
-    ("CLN_AFF_BIAL_INCP_CTV", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_INCP_ATP", "CLN_AFF_BIAL"),
-    ("CLN_AFF_BIAL_INCP_HOM", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_UNCM_CTP", "CLN_AFF_BIAL"),
-    ("CLN_AFF_BIAL_UNCM_CTV", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_UNCM_ATP", "CLN_AFF_BIAL"),
-    ("CLN_AFF_BIAL_THOR_HOM", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_ALT", "CLN_AFF_BIAL"),
-    ("CLN_AFF_BIAL_UAF", "CLN_AFF_BIAL"), ("CLN_AFF_BIAL_NON", "CLN_AFF_BIAL"),
-    ("CLN_DNV_SPEC_CONF", "CLN_DNV"), ("CLN_DNV_SPEC_UNCONF", "CLN_DNV"),
-    ("CLN_DNV_CONS_CONF", "CLN_DNV"), ("CLN_DNV_CONS_UNCONF", "CLN_DNV"),
+    ("POP_HMZ_DOM", "POP_HMZ"),
+    ("POP_HMZ_OTH", "POP_HMZ"),
+    ("CLN_AFF_MONO_SPEC_THOR", "CLN_AFF_MONO"),
+    ("CLN_AFF_MONO_SPEC_LIM", "CLN_AFF_MONO"),
+    ("CLN_AFF_MONO_CONS_THOR", "CLN_AFF_MONO"),
+    ("CLN_AFF_MONO_CONS_LIM", "CLN_AFF_MONO"),
+    ("CLN_AFF_MONO_ALT", "CLN_AFF_MONO"),
+    ("CLN_AFF_MONO_UAF", "CLN_AFF_MONO"),
+    ("CLN_AFF_BIAL_RARE_CTP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_RARE_CTV", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_RARE_ATP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_INCP_CTP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_INCP_CTV", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_INCP_ATP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_INCP_HOM", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_UNCM_CTP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_UNCM_CTV", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_UNCM_ATP", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_THOR_HOM", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_ALT", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_UAF", "CLN_AFF_BIAL"),
+    ("CLN_AFF_BIAL_NON", "CLN_AFF_BIAL"),
+    ("CLN_DNV_SPEC_CONF", "CLN_DNV"),
+    ("CLN_DNV_SPEC_UNCONF", "CLN_DNV"),
+    ("CLN_DNV_CONS_CONF", "CLN_DNV"),
+    ("CLN_DNV_CONS_UNCONF", "CLN_DNV"),
     ("CLN_DNV_INCON", "CLN_DNV"),
-    ("CLN_UAF_FULL_HIGH", "CLN_UAF"), ("CLN_UAF_FULL_NEAR", "CLN_UAF"),
-    ("CLN_UAF_LOW", "CLN_UAF"), ("CLN_UAF_NON", "CLN_UAF"),
-    ("CLN_ALTV_ONE", "CLN_ALTV"), ("CLN_ALTV_BOTH", "CLN_ALTV"), ("CLN_ALTV_REC", "CLN_ALTV"),
-    ("CLN_ALTG_ONE", "CLN_ALTG"), ("CLN_ALTG_BOTH", "CLN_ALTG"),
-    ("LOC_SEG_AFF", "LOC_SEG"), ("LOC_SEG_UAF", "LOC_SEG"),
-    ("LOC_SEG_UAF_AR", "LOC_SEG"), ("LOC_SEG_NONSEG", "LOC_SEG"),
+    ("CLN_UAF_FULL_HIGH", "CLN_UAF"),
+    ("CLN_UAF_FULL_NEAR", "CLN_UAF"),
+    ("CLN_UAF_LOW", "CLN_UAF"),
+    ("CLN_UAF_NON", "CLN_UAF"),
+    ("CLN_ALTV_ONE", "CLN_ALTV"),
+    ("CLN_ALTV_BOTH", "CLN_ALTV"),
+    ("CLN_ALTV_REC", "CLN_ALTV"),
+    ("CLN_ALTG_ONE", "CLN_ALTG"),
+    ("CLN_ALTG_BOTH", "CLN_ALTG"),
+    ("LOC_SEG_AFF", "LOC_SEG"),
+    ("LOC_SEG_UAF", "LOC_SEG"),
+    ("LOC_SEG_UAF_AR", "LOC_SEG"),
+    ("LOC_SEG_NONSEG", "LOC_SEG"),
 ]:
-    ruleset(_c, _c.replace("_", " ").title(), "case-count-grouping-assessment",
-            parent=_p, provisional=True)
+    ruleset(
+        _c,
+        _c.replace("_", " ").title(),
+        "case-count-grouping-assessment",
+        parent=_p,
+        provisional=True,
+    )
 # MIS: MIS = (MIS_PRD + MIS_FXN -> MIS_PRD_FXN) + MIS_INF
 ruleset("MIS", "Missense variant", "missense-variant-assessment", parent="PRD")
 ruleset(
@@ -558,19 +636,34 @@ ruleset(
     "single-aa-change-prediction-assessment",
     parent="MIS_PRD_FXN",
 )
+# MIS init spectrum: in-silico predictor only (tool selected in params, not the code).
+# Missense predictors already capture mechanism, so no _MECH_IMP here and EXON_REL is
+# configured WITHOUT the gene-disease mechanism data.
 ruleset(
-    "MIS_PRD_INIT_REVEL",
-    "REVEL predictor initial points",
+    "MIS_PRD_INIT_INSILICO",
+    "In-silico predictor initial points",
     "insilico-predictor-assessment",
     parent="MIS_PRD",
-    params={"predictor": "REVEL"},
+    params={
+        "selectable_tools": [
+            "AlphaMissense",
+            "BayesDel",
+            "ESM1b",
+            "MutPred2",
+            "REVEL",
+            "VARITY_R",
+            "VEST4",
+            "OTHER_CALIBRATED",
+        ]
+    },
     provisional=True,
 )
 ruleset(
-    "MIS_PRD_EXON",
+    "MIS_PRD_EXON_REL",
     "Exon relevance (missense)",
     "exon-relevance-assessment",
     parent="MIS_PRD",
+    params={"include_mechanism": False},
     provisional=True,
 )
 ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS_PRD_FXN")
@@ -585,18 +678,43 @@ ruleset(
     provisional=True,
 )
 ruleset("NUL_PRD", "Null predictive", "null-predictive-assessment", parent="NUL_PRD_FXN")
+# NUL init spectra (OR-selected): protein-impact, alt-start, alt-start functional
+# rescue, molecular-mechanism. PROT_IMP's decay_pathway spans the equivalent
+# 100%-loss cases (NMD-predicted and non-stop-decay-predicted).
 ruleset(
-    "NUL_PRD_INIT",
-    "NMD initial points",
-    "fixed-initial-points-assessment",
+    "NUL_PRD_INIT_PROT_IMP",
+    "Protein-impact spectrum (null)",
+    "protein-impact-spectrum-assessment",
     parent="NUL_PRD",
     provisional=True,
 )
 ruleset(
-    "NUL_PRD_MECH_EXON",
-    "Mechanism x exon (null)",
-    "mechanism-exon-relevance-assessment",
+    "NUL_PRD_INIT_ALT_START_IMP",
+    "Alternate start-codon impact (null)",
+    "alt-start-impact-spectrum-assessment",
     parent="NUL_PRD",
+    provisional=True,
+)
+ruleset(
+    "NUL_PRD_INIT_ALT_START_FXN",
+    "Alt in-frame-start functional rescue (null)",
+    "alt-start-rescue-assessment",
+    parent="NUL_PRD",
+    provisional=True,
+)
+ruleset(
+    "NUL_PRD_INIT_MECH_IMP",
+    "Molecular-mechanism impact spectrum (null)",
+    "molecular-mechanism-spectrum-assessment",
+    parent="NUL_PRD",
+    provisional=True,
+)
+ruleset(
+    "NUL_PRD_EXON_REL",
+    "Exon relevance (null)",
+    "exon-relevance-assessment",
+    parent="NUL_PRD",
+    params={"include_mechanism": True},
     provisional=True,
 )
 ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL_PRD_FXN")
@@ -616,18 +734,50 @@ ruleset(
     "coding-sequence-prediction-assessment",
     parent="CDS_PRD_FXN",
 )
+# CDS init spectra (OR-selected): in-frame indels carry an indel in-silico predictor;
+# start/stop-lost use protein-impact / alt-start / functional-rescue; plus mechanism.
 ruleset(
-    "CDS_PRD_INIT",
-    "Protein-loss initial points",
-    "protein-loss-assessment",
+    "CDS_PRD_INIT_INSILICO",
+    "In-silico indel predictor initial points (CDS)",
+    "insilico-predictor-assessment",
+    parent="CDS_PRD",
+    params={"selectable_tools": ["indel_predictor", "OTHER_CALIBRATED"]},
+    provisional=True,
+)
+ruleset(
+    "CDS_PRD_INIT_PROT_IMP",
+    "Protein-impact spectrum (CDS)",
+    "protein-impact-spectrum-assessment",
     parent="CDS_PRD",
     provisional=True,
 )
 ruleset(
-    "CDS_PRD_MECH_EXON",
-    "Mechanism x exon (CDS)",
-    "mechanism-exon-relevance-assessment",
+    "CDS_PRD_INIT_ALT_START_IMP",
+    "Alternate start-codon impact (CDS)",
+    "alt-start-impact-spectrum-assessment",
     parent="CDS_PRD",
+    provisional=True,
+)
+ruleset(
+    "CDS_PRD_INIT_ALT_START_FXN",
+    "Alt in-frame-start functional rescue (CDS)",
+    "alt-start-rescue-assessment",
+    parent="CDS_PRD",
+    provisional=True,
+)
+ruleset(
+    "CDS_PRD_INIT_MECH_IMP",
+    "Molecular-mechanism impact spectrum (CDS)",
+    "molecular-mechanism-spectrum-assessment",
+    parent="CDS_PRD",
+    provisional=True,
+)
+ruleset(
+    "CDS_PRD_EXON_REL",
+    "Exon relevance (CDS)",
+    "exon-relevance-assessment",
+    parent="CDS_PRD",
+    params={"include_mechanism": True},
     provisional=True,
 )
 ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS_PRD_FXN")
@@ -649,26 +799,36 @@ ruleset(
     provisional=True,
 )
 ruleset("SPL_PRD", "Splice predictive", "splice-predictive-assessment", parent="SPL_PRD_SPA")
+# SPL init spectra (OR-selected): splice predictor + molecular-mechanism.
 ruleset(
-    "SPL_PRD_INIT",
-    "Splice prediction initial points",
+    "SPL_PRD_INIT_SPLICE",
+    "Splice-prediction spectrum",
     "splice-prediction-assessment",
     parent="SPL_PRD",
     provisional=True,
 )
 ruleset(
-    "SPL_PRD_MECH_EXON",
-    "Mechanism x exon (splice)",
-    "mechanism-exon-relevance-assessment",
+    "SPL_PRD_INIT_MECH_IMP",
+    "Molecular-mechanism impact spectrum (splice)",
+    "molecular-mechanism-spectrum-assessment",
     parent="SPL_PRD",
+    provisional=True,
+)
+ruleset(
+    "SPL_PRD_EXON_REL",
+    "Exon relevance (splice)",
+    "exon-relevance-assessment",
+    parent="SPL_PRD",
+    params={"include_mechanism": True},
     provisional=True,
 )
 ruleset("SPL_SPA", "Splice assay", "splice-assay-assessment", parent="SPL_PRD_SPA")
 ruleset(
     "SPL_FXN", "Splice functional assay", "functional-assay-assessment", parent="SPL_PRD_SPA_FXN"
 )
-# Frameshift, exon del/dup, start/stop-lost route into the NUL / CDS trees above
-# (by nmd-prediction) — they add no new code families, only variant-type entry points.
+# Frameshift, exon del/dup, start/stop-lost route into the NUL / CDS trees above —
+# they add no new code families, only variant-type entry points, and select among the
+# x_PRD_INIT_* spectra (protein-impact, alt-start, mechanism) per pathway.
 
 
 # --------------------------------------------------------------------------- #
@@ -676,9 +836,12 @@ ruleset(
 # --------------------------------------------------------------------------- #
 
 ruleset(
-    "MIS_PRD_INIT_REVEL",
-    "REVEL predictor initial points (MYH7-recalibrated)",
+    "MIS_PRD_INIT_INSILICO",
+    "In-silico predictor initial points (MYH7-recalibrated)",
     "insilico-predictor-assessment",
     scope="gene-MYH7",
-    params={"predictor": "REVEL(MYH7-recalibrated)", "calibration_thresholds": {"+4.0": ">=0.90"}},
+    params={
+        "selected_tool": "REVEL",
+        "per_tool_bands": {"REVEL": [{"range": ">=0.90", "points": 4.0}]},
+    },
 )
