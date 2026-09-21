@@ -96,3 +96,13 @@ def test_two_statements_same_methodtype_different_specifiedby() -> None:
     assert base.specified_by.id != spec.specified_by.id
     assert resolve(base.specified_by.id).scope == "baseline"
     assert resolve(spec.specified_by.id).scope == "gene-MYH7"
+
+
+def test_hod_count_grouping_cells() -> None:
+    """HOD codes group similar cases into cells (n x per-case) under the code."""
+    mono = {c.code for c in children("svcv4:CLN_AFF_MONO:1.0")}
+    assert "CLN_AFF_MONO_CONS_THOR" in mono
+    assert resolve("svcv4:CLN_AFF_MONO_CONS_THOR:1.0").method_type == (
+        "case-count-grouping-assessment"
+    )
+    assert {c.code for c in children("svcv4:POP_HMZ:1.0")} == {"POP_HMZ_DOM", "POP_HMZ_OTH"}
