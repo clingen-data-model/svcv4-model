@@ -29,8 +29,10 @@ def test_every_ruleset_parent_exists() -> None:
             assert r.parent in RULESETS
 
 
-def test_roots_are_the_code_families() -> None:
-    assert {r.code for r in roots()} == {"POP", "CLN", "LOC", "MIS", "NUL", "CDS", "SPL"}
+def test_svcv4_method_root_composes_the_code_families() -> None:
+    assert {r.code for r in roots()} == {"SVCV4"}
+    kids = {c.code for c in children("svcv4:SVCV4:1.0")}
+    assert kids == {"POP", "CLN", "LOC", "MIS", "NUL", "CDS", "SPL"}
 
 
 def test_id_round_trips() -> None:
