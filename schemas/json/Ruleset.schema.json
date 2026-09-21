@@ -3,7 +3,7 @@
   "description": "A specific registered ruleset \u2014 one node of a pathway. Its id is never reused.",
   "properties": {
     "code": {
-      "description": "The SVCv4 code this node produces, e.g. `MIS_PRD_EXON`.",
+      "description": "The SVCv4 code this node produces, e.g. `MIS_PRD_EXON_REL`.",
       "title": "Code",
       "type": "string"
     },

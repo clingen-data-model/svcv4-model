@@ -1,0 +1,253 @@
+{
+  "_format": "SVCv4 bundled classification envelope (illustrative). Statements and methods are declared ONCE in the `method` and `assessment` dictionaries (keyed by id) and referenced everywhere else by JSON-pointer (e.g. \"#/assessment/pvs-pkp2:NUL_PRD\"). This deduplicates the recursive VA-Spec 1.1.0 Statement tree into a flat, addressable graph.",
+  "_variant": "PVS-PKP2 — PKP2 c.1481C>A (p.Ser494Ter, alt transcript NM_004572.4). Source tab: 'PKP2'.",
+  "_why_this_variant": "This is the practice set's transcript-relevance gating exemplar. A nonsense change would normally read 100% protein loss via the protein-impact spectrum (+6.0). Here the nonsense-bearing exon is ABSENT from MANE Select, so the exon-relevance multiplier (NUL_PRD_EXON_REL, mane_status not_met) scales those points to 0, and an otherwise-PVS null collapses to a VUS. Scoring is illustrative; authority lives in CSpec.",
+  "_outcome_suffixes": "Outcome suffix convention: `_+N` / `_-N` = a produced score; `_NA` = Not Applicable (the subcode's gating or required values aren't met — the would-be inputs are still shown so a downstream observer can verify the determination); `_ND` = No Data (scoring can't happen because the required data is absent). This variant's predictive lane is `_NA` (exon not in MANE); its population lane scored a real neutral `_+0`.",
+  "method": {
+    "svcv4:SVCV4": {
+      "methodType": "svcv4-method-assessment",
+      "name": "SVCv4 classification method",
+      "version": "draft-2026-pre-release"
+    },
+    "svcv4:HOD": {
+      "methodType": "human-observational-data-assessment",
+      "name": "SVCv4 Human Observational Data roll-up"
+    },
+    "svcv4:PFD": {
+      "methodType": "predictive-functional-data-assessment",
+      "name": "SVCv4 Predictive & Functional Data roll-up",
+      "_note": "The registry currently exposes this same node under CODE `PRD` (its label/methodType already read 'Predictive & Functional Data'). Recommend aligning the code to `PFD` to match the Summary Table categories (HOD + PFD)."
+    },
+    "svcv4:POP": {
+      "methodType": "population-observation-assessment",
+      "name": "SVCv4 Population observation roll-up"
+    },
+    "svcv4:POP_FRQ": {
+      "methodType": "population-frequency-assessment",
+      "name": "SVCv4 Population allele frequency"
+    },
+    "svcv4:NUL": {
+      "methodType": "null-variant-assessment",
+      "name": "SVCv4 Null / loss-of-function variant roll-up"
+    },
+    "svcv4:NUL_PRD": {
+      "methodType": "null-predictive-assessment",
+      "name": "SVCv4 Null predictive (structural LoF) assessment"
+    },
+    "svcv4:NUL_PRD_INIT_PROT_IMP": {
+      "methodType": "protein-impact-spectrum-assessment",
+      "name": "SVCv4 protein-impact spectrum (null) — nonsense = 100% loss when relevant"
+    },
+    "svcv4:NUL_PRD_EXON_REL": {
+      "methodType": "exon-relevance-assessment",
+      "name": "SVCv4 exon relevance (null) — MANE/transcript relevance multiplier",
+      "_role": "GATE/ADJUSTER — the exon-relevance multiplier (0..1). Its mane_status data item carries the met/not_met transcript-relevance decision; a not-in-MANE exon multiplies the initial protein-impact points by 0, which is how this variant's LoF points are withheld."
+    }
+  },
+  "assessment": {
+    "pvs-pkp2:NUL_PRD_INIT_PROT_IMP": {
+      "id": "pvs-pkp2:NUL_PRD_INIT_PROT_IMP",
+      "specifiedBy": "#/method/svcv4:NUL_PRD_INIT_PROT_IMP",
+      "direction": "neutral",
+      "outcome": "NUL_PRD_INIT_PROT_IMP_NA",
+      "description": "Protein-impact spectrum for the nonsense p.Ser494Ter. NOT APPLICABLE (_NA): a PTC in a clinically relevant transcript would read 100% protein loss -> +6.0, but the exon-relevance gate (#/assessment/pvs-pkp2:NUL_PRD_EXON_REL) is not met (nonsense-bearing exon absent from MANE Select). The would-be inputs are shown below so a downstream observer can verify the _NA determination.",
+      "hasEvidenceItems": [
+        {
+          "type": "DataItem",
+          "id": "pvs-pkp2-prot-imp-001",
+          "description": "Protein-impact inputs for the nonsense change.",
+          "value": {
+            "decay_pathway": "nmd",
+            "protein_fraction_lost": 1.0,
+            "consequence": "nonsense p.Ser494Ter (100% loss if in the relevant transcript)"
+          }
+        }
+      ]
+    },
+    "pvs-pkp2:NUL_PRD_EXON_REL": {
+      "id": "pvs-pkp2:NUL_PRD_EXON_REL",
+      "specifiedBy": "#/method/svcv4:NUL_PRD_EXON_REL",
+      "direction": "neutral",
+      "outcome": "NUL_PRD_EXON_REL_x0",
+      "description": "Exon / transcript-relevance multiplier for the null lane. The mane_status data item is the transcript-relevance gate: the nonsense-bearing exon is ABSENT from MANE Select -> not relevant -> multiplier 0, which zeroes the protein-impact initial points. This is what demotes an otherwise-PVS null to a VUS.",
+      "hasEvidenceItems": [
+        {
+          "type": "DataItem",
+          "id": "pvs-pkp2-exon-rel-001",
+          "description": "Transcript-relevance inputs (the multiplier / gate value).",
+          "value": {
+            "affected_transcript": "NM_004572.4 (alt), exon 6/10",
+            "mane_select_transcript": "deep intronic (c.1379-2006C>A)",
+            "mane_status": "not_met — nonsense-bearing exon ABSENT from MANE Select",
+            "exon_relevance": "Few / not relevant",
+            "multiplier": 0.0
+          }
+        }
+      ]
+    },
+    "pvs-pkp2:NUL_PRD": {
+      "id": "pvs-pkp2:NUL_PRD",
+      "specifiedBy": "#/method/svcv4:NUL_PRD",
+      "direction": "neutral",
+      "outcome": "NUL_PRD_NA",
+      "description": "Predicted loss-of-function (structural nonsense) assessment. NOT APPLICABLE (_NA): its only initial spectrum (protein-impact) is _NA because the exon-relevance gate is not met, so no predictive score is produced.",
+      "hasEvidenceLines": [
+        "#/assessment/pvs-pkp2:NUL_PRD_INIT_PROT_IMP",
+        "#/assessment/pvs-pkp2:NUL_PRD_EXON_REL"
+      ]
+    },
+    "pvs-pkp2:NUL": {
+      "id": "pvs-pkp2:NUL",
+      "specifiedBy": "#/method/svcv4:NUL",
+      "direction": "neutral",
+      "outcome": "NUL_NA",
+      "description": "Selected predictive lane for this variant: transcript-context-limited LoF evidence. NOT APPLICABLE (_NA): the predictive lane is _NA (exon not relevant) and no functional or informative-variant evidence was supplied.",
+      "hasEvidenceLines": [
+        "#/assessment/pvs-pkp2:NUL_PRD"
+      ]
+    },
+    "pvs-pkp2:PFD": {
+      "id": "pvs-pkp2:PFD",
+      "specifiedBy": "#/method/svcv4:PFD",
+      "direction": "neutral",
+      "outcome": "PFD_NA",
+      "description": "Predictive & Functional Data roll-up (the selected PRD family). NOT APPLICABLE (_NA): its only applicable family (NUL) is _NA. Always shown as the parent even so — the roll-up node is structural, not conditional.",
+      "hasEvidenceLines": [
+        "#/assessment/pvs-pkp2:NUL"
+      ]
+    },
+    "pvs-pkp2:POP_FRQ": {
+      "id": "pvs-pkp2:POP_FRQ",
+      "specifiedBy": "#/method/svcv4:POP_FRQ",
+      "direction": "neutral",
+      "score": 0.0,
+      "outcome": "POP_FRQ_+0",
+      "description": "Population allele frequency (POP_FRQ) assessed as the observed filtering allele frequency (FAF) against the disease allele-frequency threshold (DAFT). FAF/DAFT fold = 0.061 lands in the NONE band — FAF is well below DAFT, so there is no benign-frequency evidence and no rarity adjustment. Neutral (POP_FRQ_+0).",
+      "hasEvidenceItems": [
+        {
+          "type": "DataItem",
+          "id": "pvs-pkp2-pop-faf",
+          "reportedIn": [
+            "https://gnomad.broadinstitute.org/variant/chr12-32843211-G-T?dataset=gnomad_r4"
+          ],
+          "description": "Filtering allele frequency (FAF) — the observed population frequency input.",
+          "value": {
+            "faf": 6.1e-05,
+            "source": "gnomAD v4.1 joint — popmax filtering allele frequency (95% CI upper bound)"
+          }
+        },
+        {
+          "type": "DataItem",
+          "id": "pvs-pkp2-pop-daft",
+          "description": "Disease allele-frequency threshold (DAFT) — the max credible population AF this disease/gene could tolerate.",
+          "value": {
+            "daft": 0.001,
+            "method": "max credible population AF (Whiffin/Ware)",
+            "calculator_inputs": {
+              "prevalence_denominator": 1000,
+              "penetrance": 0.3,
+              "allelic_heterogeneity": 1.0,
+              "locus_heterogeneity": 0.6
+            }
+          }
+        },
+        {
+          "type": "DataItem",
+          "id": "pvs-pkp2-pop-fold-band",
+          "description": "Computed FAF/DAFT fold and the band it selects (fold value + band choice combined).",
+          "value": {
+            "fold": 0.061,
+            "fold_definition": "FAF / DAFT — observed filtering AF relative to the disease allele-frequency threshold",
+            "band_selected": "NONE",
+            "selected_range": "fold < 1.0",
+            "bands": [
+              {
+                "band": "NONE",
+                "range": "fold < 1.0",
+                "points": 0
+              },
+              {
+                "band": "BEN_SUPPORTING",
+                "range": "1.0 <= fold < 2.0",
+                "points": -1.0
+              },
+              {
+                "band": "BEN_MODERATE",
+                "range": "2.0 <= fold < 5.0",
+                "points": -4.0
+              },
+              {
+                "band": "BEN_STRONG",
+                "range": "fold >= 5.0",
+                "points": -8.0
+              }
+            ],
+            "pop_frq_points": 0,
+            "_note": "Illustrative band ranges/points — authoritative thresholds live in CSpec. FAF below DAFT (fold < 1.0) selects NONE: too rare to be benign-frequency evidence, so 0 points."
+          }
+        }
+      ]
+    },
+    "pvs-pkp2:POP": {
+      "id": "pvs-pkp2:POP",
+      "specifiedBy": "#/method/svcv4:POP",
+      "direction": "neutral",
+      "score": 0.0,
+      "outcome": "POP_+0",
+      "description": "Population observation roll-up (POP_FRQ + POP_HMZ). Only POP_FRQ applies here.",
+      "hasEvidenceLines": [
+        "#/assessment/pvs-pkp2:POP_FRQ"
+      ]
+    },
+    "pvs-pkp2:HOD": {
+      "id": "pvs-pkp2:HOD",
+      "specifiedBy": "#/method/svcv4:HOD",
+      "direction": "neutral",
+      "score": 0.0,
+      "outcome": "HOD_+0",
+      "description": "Human Observational Data roll-up (POP + CLN + LOC). The single proband has only suspected (not clinically diagnosed) ARVC, so is not counted in CLN_AFF or LOC_PHE — no clinical or locus points. HOD = POP = 0.",
+      "hasEvidenceLines": [
+        "#/assessment/pvs-pkp2:POP"
+      ]
+    }
+  },
+  "classification": {
+    "pvs-pkp2": {
+      "id": "pvs-pkp2",
+      "specifiedBy": "#/method/svcv4:SVCV4",
+      "proposition": {
+        "type": "VariantPathogenicityProposition",
+        "subject": {
+          "variation": {
+            "id": "CAID:CA384368604",
+            "type": "Allele",
+            "_note": "Placeholder VRS Variation. Source: ClinGen Allele ID CA384368604."
+          },
+          "label": "PKP2 c.1481C>A (p.Ser494Ter, alt transcript NM_004572.4) — PVS-PKP2 VBC"
+        },
+        "predicate": "is_causal_for",
+        "object": {
+          "curie": "MONDO:0016587",
+          "label": "arrhythmogenic right ventricular cardiomyopathy"
+        },
+        "geneQualifier": "PKP2",
+        "moiQualifier": "AD"
+      },
+      "direction": "neutral",
+      "score": 0.0,
+      "outcome": "variant_of_uncertain_significance",
+      "contribution": [
+        {
+          "activityType": "evaluator",
+          "date": "2026-09-21T12:30:15",
+          "contributor": "ClinGen Practice VCEP (illustrative)"
+        }
+      ],
+      "description": "Final SVCv4 classification. HOD (human observational data) + the selected PRD (NUL) lane both roll up to 0. A genuine VUS driven by transcript context: the NMD/LoF-relevance gate was not met, so the strong predicted-LoF points that a constitutive-exon nonsense would earn were never awarded.",
+      "hasEvidenceLines": [
+        "#/assessment/pvs-pkp2:HOD",
+        "#/assessment/pvs-pkp2:PFD"
+      ]
+    }
+  }
+}
