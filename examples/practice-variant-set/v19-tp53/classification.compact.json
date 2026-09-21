@@ -1,0 +1,47 @@
+{
+  "classification": "TP53 c.641A>T (p.His214Leu)  —is_causal_for→  Li-Fraumeni syndrome",
+  "method": "svcv4:SVCV4:1.0",
+  "moi": "AD",
+  "direction": "supports",
+  "strength": "likely",
+  "score": 5.0,
+  "outcome": "Likely Pathogenic",
+  "contribution": "ClinGen TP53 VCEP · evaluator · 2026-09-21",
+  "gate": { "GDV": "gene-disease validity = met (TP53–LFS Definitive)" },
+  "evidence": {
+    "HOD  (Human Observational Data)": {
+      "score": 0.0, "outcome": "HOD_+0",
+      "POP": {
+        "score": 0.0,
+        "POP_FRQ": {
+          "score": 0.0, "outcome": "POP_FRQ_+0",
+          "faf": 0.0000041, "daft": 0.0000125, "fold": 0.33, "band": "NONE"
+        }
+      }
+    },
+    "PFD  (Predictive and Functional Data)": {
+      "score": 5.0, "outcome": "PFD_+5",
+      "MIS": {
+        "score": 5.0, "outcome": "MIS_+5",
+        "MIS_PRD_FXN  (combination cap: +4, not +8)": {
+          "score": 4.0,
+          "MIS_PRD": {
+            "score": 4.0,
+            "MIS_PRD_INIT_INSILICO": {
+              "tool": "REVEL", "raw": 0.86, "band": "PATH_STRONG", "score": 4.0
+            },
+            "MIS_PRD_EXON_REL": {
+              "exon": "DNA-binding domain", "MANE": true, "multiplier": 1.0
+            }
+          },
+          "MIS_FXN": {
+            "assay": "loss of transactivation + growth suppression", "score": 4.0
+          }
+        },
+        "MIS_INF": {
+          "comparator": "p.His214Arg = Pathogenic (PM5-type)", "score": 1.0
+        }
+      }
+    }
+  }
+}
