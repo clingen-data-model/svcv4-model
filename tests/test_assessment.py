@@ -40,21 +40,21 @@ def test_id_round_trips() -> None:
 
 def test_a_pattern_is_reused_across_distinct_rulesets() -> None:
     """methodType (pattern) recurs; ruleset ids do not."""
-    mis_fxn = resolve("svcv4-baseline:MIS_FXN:1.0")
-    nul_fxn = resolve("svcv4-baseline:NUL_FXN:1.0")
+    mis_fxn = resolve("svcv4:MIS_FXN:1.0")
+    nul_fxn = resolve("svcv4:NUL_FXN:1.0")
     assert mis_fxn.method_type == nul_fxn.method_type == "functional-assay-assessment"
     assert mis_fxn.id != nul_fxn.id
 
 
 def test_hierarchy_is_navigable() -> None:
-    mis_prd = "svcv4-baseline:MIS_PRD:1.0"
+    mis_prd = "svcv4:MIS_PRD:1.0"
     kids = {c.code for c in children(mis_prd)}
     assert kids == {"MIS_PRD_INIT_REVEL", "MIS_PRD_EXON"}
-    assert resolve(mis_prd).parent == "svcv4-baseline:MIS:1.0"
+    assert resolve(mis_prd).parent == "svcv4:MIS:1.0"
 
 
 def test_specialization_overrides_one_node_by_id() -> None:
-    base = resolve("svcv4-baseline:MIS_PRD_INIT_REVEL:1.0")
+    base = resolve("svcv4:MIS_PRD_INIT_REVEL:1.0")
     spec = resolve("svcv4-gene-MYH7:MIS_PRD_INIT_REVEL:1.0")
     assert base.method_type == spec.method_type  # same pattern
     assert base.id != spec.id and base.scope != spec.scope  # distinct ruleset id
@@ -74,7 +74,7 @@ def test_bad_id_is_rejected() -> None:
 
 def test_two_statements_same_methodtype_different_specifiedby() -> None:
     """A ruleset drives specifiedBy: same methodType, distinct code-based id."""
-    base_id = "svcv4-baseline:MIS_PRD_INIT_REVEL:1.0"
+    base_id = "svcv4:MIS_PRD_INIT_REVEL:1.0"
     spec_id = "svcv4-gene-MYH7:MIS_PRD_INIT_REVEL:1.0"
     mt = resolve(base_id).method_type
     base = Statement(

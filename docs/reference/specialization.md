@@ -12,9 +12,9 @@ distinct, namespaced id.
 | Field | Purpose | Example |
 |---|---|---|
 | `specifiedBy.methodType` | *What kind of rule this is* — stable across baseline and every specialization; this is what makes results **comparable**. | `insilico-predictor-assessment` |
-| `specifiedBy.id` | *Which configured ruleset actually ran* — namespaced + versioned; this is what makes results **reproducible**. | `svcv4-baseline:MIS_PRD_INIT_REVEL:1.0` |
+| `specifiedBy.id` | *Which configured ruleset actually ran* — namespaced + versioned; this is what makes results **reproducible**. | `svcv4:MIS_PRD_INIT_REVEL:1.0` |
 
-The id scheme is **`svcv4-<scope>:<CODE>:<version>`**. Scope is `baseline`
+The id scheme is **`svcv4:<CODE>:<version>` (baseline) or `svcv4-<scope>:<CODE>:<version>`**. Scope is `baseline`
 or a specialization scope (e.g. `gene-MYH7`, `vcep-cardiomyopathy`). All scopes
 live under the `svcv4` registry umbrella.
 
@@ -33,7 +33,7 @@ configured threshold, different score.
       "type": "Statement",
       "code": "MIS_PRD_INIT_REVEL",
       "specifiedBy": {
-        "id": "svcv4-baseline:MIS_PRD_INIT_REVEL:1.0",
+        "id": "svcv4:MIS_PRD_INIT_REVEL:1.0",
         "methodType": "insilico-predictor-assessment",
         "version": "1.0"
       },
