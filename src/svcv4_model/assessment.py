@@ -71,8 +71,11 @@ class Ruleset(BaseModel):
     @field_validator("id")
     @classmethod
     def _id_shape(cls, v: str) -> str:
-        if not v.startswith("svcv4-") or v.count(":") != 2:
-            raise ValueError("Ruleset id must be 'svcv4-<scope>:<CODE>:<version>'")
+        if not v.startswith("svcv4") or v.count(":") != 2:
+            raise ValueError(
+                "Ruleset id must be 'svcv4:<CODE>:<version>' (baseline) or "
+                "'svcv4-<scope>:<CODE>:<version>' (specialisation)"
+            )
         return v
 
 
@@ -82,12 +85,16 @@ class Ruleset(BaseModel):
 
 
 def make_ruleset_id(scope: str, code: str, version: str = "1.0") -> str:
-    return f"svcv4-{scope}:{code}:{version}"
+    """Baseline ids are ``svcv4:<CODE>:<version>``; specialisations
+    ``svcv4-<scope>:<CODE>:<version>``."""
+    ns = "svcv4" if scope == "baseline" else f"svcv4-{scope}"
+    return f"{ns}:{code}:{version}"
 
 
 def parse_ruleset_id(rid: str) -> tuple[str, str, str]:
     ns, code, version = rid.split(":")
-    return ns.removeprefix("svcv4-"), code, version
+    scope = "baseline" if ns == "svcv4" else ns.removeprefix("svcv4-")
+    return scope, code, version
 
 
 # --------------------------------------------------------------------------- #
