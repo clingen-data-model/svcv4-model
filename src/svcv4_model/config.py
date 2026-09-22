@@ -243,8 +243,20 @@ class ExonRelevanceConfig(BaseModel):
         return bool(self.mechanism_bands)
 
     def tiers(self) -> list[str]:
-        """The configured relevance tiers, in order."""
+        """The valid relevance tiers, in order (e.g. ['All', 'Most', 'Few'])."""
         return [t.tier for t in self.tier_multipliers]
+
+    def mechanism_types(self) -> list[str]:
+        """The valid mechanism-classification types (empty if none configured)."""
+        return [b.mechanism_type for b in self.mechanism_bands]
+
+    def classifications(self, mechanism_type: str) -> list[str]:
+        """The valid classification values for a mechanism type; raises UnknownMechanism."""
+        for band in self.mechanism_bands:
+            if band.mechanism_type.casefold() == mechanism_type.casefold():
+                return [c.classification for c in band.classifications]
+        known = ", ".join(b.mechanism_type for b in self.mechanism_bands) or "(none configured)"
+        raise UnknownMechanism(f"unknown mechanism type {mechanism_type!r}; configured: {known}")
 
     def multiplier_for(self, tier: str) -> float:
         """The fraction for ``tier`` (case-insensitive); raises UnknownTier."""
@@ -441,12 +453,28 @@ EXON_RELEVANCE_TIERS = [
 ]
 
 
+def mechanism_band(mechanism_type: str, *pairs: tuple[str, float]) -> MechanismBand:
+    """Build a **reusable** mechanism band from ``(classification, weight)`` pairs.
+
+    Define a band once and pass it into any number of exon-relevance configs::
+
+        LOF = mechanism_band("LOF", ("Established", 1.0), ("Likely", 0.5), ...)
+        cfg = ExonRelevanceConfig(tier_multipliers=..., mechanism_bands=[LOF])
+    """
+    return MechanismBand(
+        mechanism_type=mechanism_type,
+        classifications=[MechanismClassification(classification=c, weight=w) for c, w in pairs],
+    )
+
+
 # Baseline exon-relevance config. All four families share the tier matrix.
 # MIS configures NO mechanism; the null / in-frame / splice families (NUL, CDS,
-# SPL) each configure a "LOF" mechanism-classification type.
+# SPL) each configure a "LOF" mechanism-classification type. Because a band is a
+# reusable component, they share ONE LOF_MECHANISM_BAND — but a family may pass a
+# different band if its mechanism weights need to differ.
 
-# One mechanism-classification TYPE, "LOF" (loss-of-function): how well the
-# established gene-disease molecular mechanism supports LoF for this VBC.
+# One reusable mechanism-classification TYPE, "LOF" (loss-of-function): how well
+# the established gene-disease molecular mechanism supports LoF for this VBC.
 LOF_MECHANISM_BAND = MechanismBand(
     mechanism_type="LOF",
     classifications=[
@@ -475,18 +503,19 @@ LOF_MECHANISM_BAND = MechanismBand(
 
 
 def exon_relevance_baseline(
-    only_positive: bool, *, with_lof_mechanism: bool = False
+    only_positive: bool, mechanism_bands: list[MechanismBand] | None = None
 ) -> ExonRelevanceConfig:
-    """Baseline exon-relevance config: SM 6 Fig 2 tier matrix, optional LOF mechanism."""
+    """Baseline exon-relevance config: SM 6 Fig 2 tier matrix + any reusable bands passed in."""
     return ExonRelevanceConfig(
         tier_multipliers=EXON_RELEVANCE_TIERS,
         only_positive=only_positive,
-        mechanism_bands=[LOF_MECHANISM_BAND] if with_lof_mechanism else [],
+        mechanism_bands=list(mechanism_bands) if mechanism_bands else [],
     )
 
 
 # Convenience baseline (missense — no mechanism). Per-family flags live in the registry.
 MIS_PRD_EXON_REL_V4 = exon_relevance_baseline(only_positive=True)
 
-# Convenience baseline for the LOF families (null / in-frame / splice) — LOF mechanism.
-EXON_REL_LOF_V4 = exon_relevance_baseline(only_positive=True, with_lof_mechanism=True)
+# Convenience baseline for the LOF families (null / in-frame / splice) — the reusable
+# LOF band passed in. Each family could instead pass its own band if weights diverge.
+EXON_REL_LOF_V4 = exon_relevance_baseline(only_positive=True, mechanism_bands=[LOF_MECHANISM_BAND])

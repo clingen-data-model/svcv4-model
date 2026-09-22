@@ -22,6 +22,7 @@ from svcv4_model.config import (
     exon_relevance_config,
     insilico_config,
     ladder,
+    mechanism_band,
 )
 
 BASELINE_ID = "svc:MIS_PRD_INIT_INSILICO:4.0"
@@ -270,6 +271,57 @@ class TestExonRelevanceConfig:
     def test_weight_must_be_0_to_1(self):
         with pytest.raises(ValueError):
             MechanismClassification(classification="X", weight=1.5)
+
+    def test_introspection_lists(self):
+        # each subcode reports valid tiers, mech types, and classes per type
+        assert MIS_PRD_EXON_REL_V4.tiers() == ["All", "Most", "Few"]
+        assert MIS_PRD_EXON_REL_V4.mechanism_types() == []
+        assert EXON_REL_LOF_V4.mechanism_types() == ["LOF"]
+        assert EXON_REL_LOF_V4.classifications("LOF") == [
+            "Established",
+            "Likely",
+            "Suspected",
+            "Uncertain or Not LOF",
+        ]
+        assert EXON_REL_LOF_V4.classifications("lof") == EXON_REL_LOF_V4.classifications("LOF")
+
+    def test_classifications_unknown_type_raises(self):
+        with pytest.raises(UnknownMechanism, match="mechanism type"):
+            EXON_REL_LOF_V4.classifications("GOF")
+
+    def test_subcode_introspection_from_registry(self):
+        for rid in EXON_REL_IDS[1:]:  # NUL / CDS / SPL
+            cfg = exon_relevance_config(RULESETS[rid].params)
+            assert cfg.mechanism_types() == ["LOF"]
+            assert "Established" in cfg.classifications("LOF")
+
+
+class TestReusableMechanismBand:
+    def test_builder_makes_a_band(self):
+        band = mechanism_band("LOF", ("Established", 1.0), ("Uncertain", 0.0))
+        assert band.mechanism_type == "LOF"
+        assert band.weight_for("Established") == 1.0
+        assert band.weight_for("Uncertain") == 0.0
+
+    def test_one_band_shared_across_configs(self):
+        # define once, pass into several exon-relevance configs
+        lof = mechanism_band("LOF", ("Established", 1.0), ("Suspected", 0.25))
+        nul = ExonRelevanceConfig(
+            tier_multipliers=MIS_PRD_EXON_REL_V4.tier_multipliers, mechanism_bands=[lof]
+        )
+        cds = ExonRelevanceConfig(
+            tier_multipliers=MIS_PRD_EXON_REL_V4.tier_multipliers, mechanism_bands=[lof]
+        )
+        assert nul.evaluate(2.0, "All", "LOF", "Suspected") == 0.25
+        assert cds.evaluate(2.0, "All", "LOF", "Suspected") == 0.25
+
+    def test_a_family_may_pass_a_different_band(self):
+        strict = mechanism_band("LOF", ("Established", 1.0), ("Suspected", 0.0))
+        cfg = ExonRelevanceConfig(
+            tier_multipliers=MIS_PRD_EXON_REL_V4.tier_multipliers, mechanism_bands=[strict]
+        )
+        # same type, re-weighted for this variant-impact family
+        assert cfg.evaluate(2.0, "All", "LOF", "Suspected") == 0.0
 
 
 class TestExonRelevanceApi:

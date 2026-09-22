@@ -179,11 +179,27 @@ class ExonRelevanceConfig:
 - if a **mechanism type** is configured, the `mechanism_type` + `mechanism_class`
   are required and the result is `tier_fraction × mechanism_weight`.
 
+Each subcode also **introspects** its valid inputs — `tiers()`,
+`mechanism_types()`, and `classifications(mechanism_type)` — so a caller can
+discover the allowed tiers and the allowed classification values for a type.
+
 The four families share the tier matrix. Baseline **missense** configures **no
 mechanism** (its predictors already capture mechanism); **null / in-frame /
 splice** each configure a **`LOF`** mechanism type (the gene-disease
-molecular-mechanism cross-reference). A specialization may re-weight the tiers,
-set `only_positive`, or add / re-weight mechanism types.
+molecular-mechanism cross-reference), whose classifications are **Established**
+(100%), **Likely** (50%), **Suspected** (25%), and **Uncertain or Not LOF** (0%).
+
+A mechanism band is a **reusable component**: define it once and pass it into any
+number of exon-relevance configs (the null/in-frame/splice families share one
+`LOF` band today), or pass a different band to a family whose weights must
+differ. A specialization may re-weight the tiers, set `only_positive`, or add /
+re-weight mechanism types.
+
+```python
+LOF = mechanism_band("LOF", ("Established", 1.0), ("Likely", 0.5),
+                     ("Suspected", 0.25), ("Uncertain or Not LOF", 0.0))
+cfg = ExonRelevanceConfig(tier_multipliers=..., mechanism_bands=[LOF])
+```
 
 ## In the model
 
