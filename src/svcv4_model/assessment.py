@@ -21,6 +21,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from svcv4_model.config import MIS_PRD_INIT_INSILICO_V4
+
 GROUP = Literal["rollup", "router", "initial", "adjuster", "module"]
 DATA_ROLE = Literal["input", "gate", "router", "provenance"]
 OUTPUT_KIND = Literal["points", "multiplier", "route"]
@@ -146,6 +148,7 @@ def ruleset(
     version: str = "4.0",
     params: dict[str, Any] | None = None,
     provisional: bool = False,
+    description: str | None = None,
 ) -> Ruleset:
     if method_type not in ASSESSMENT_TYPES:
         raise ValueError(f"unknown method_type '{method_type}' for {code}")
@@ -165,6 +168,7 @@ def ruleset(
         parent=parent_id,
         params=params or {},
         provisional=provisional,
+        description=description,
     )
     RULESETS[rid] = r
     return r
@@ -644,19 +648,16 @@ ruleset(
     "In-silico predictor initial points",
     "insilico-predictor-assessment",
     parent="MIS_PRD",
-    params={
-        "selectable_tools": [
-            "AlphaMissense",
-            "BayesDel",
-            "ESM1b",
-            "MutPred2",
-            "REVEL",
-            "VARITY_R",
-            "VEST4",
-            "OTHER_CALIBRATED",
-        ]
-    },
+    params=MIS_PRD_INIT_INSILICO_V4.model_dump(exclude_none=True),
     provisional=True,
+    description=(
+        "Missense in-silico predictor — initial predictive points (SM 6, Fig 2). For a "
+        "missense VBC the analyst selects one ClinGen-approved calibrated predictor in "
+        "advance; its raw score maps through that tool's calibration table (per_tool_bands) "
+        "to an initial point value (−4 benign … +4 pathogenic). These points feed MIS_PRD "
+        "and are then scaled by MIS_PRD_EXON_REL. Missense only. A specialisation may "
+        "recalibrate a tool's bands, narrow selectable_tools, or pin selected_tool."
+    ),
 )
 ruleset(
     "MIS_PRD_EXON_REL",
@@ -841,7 +842,23 @@ ruleset(
     "insilico-predictor-assessment",
     scope="gene-MYH7",
     params={
+        # narrow the menu to the gene's validated predictor and pin it,
+        "selectable_tools": ["REVEL"],
         "selected_tool": "REVEL",
-        "per_tool_bands": {"REVEL": [{"range": ">=0.90", "points": 4.0}]},
+        # then recalibrate REVEL's bands for MYH7 (illustrative thresholds).
+        "per_tool_bands": {
+            "REVEL": [
+                {"points": -1.0, "min": None, "max": 0.500},
+                {"points": 0.0, "min": 0.501, "max": 0.699},
+                {"points": 2.0, "min": 0.700, "max": 0.899},
+                {"points": 4.0, "min": 0.900, "max": None},
+            ]
+        },
     },
+    description=(
+        "Gene-MYH7 recalibration of the missense in-silico initial-points code: same "
+        "code and methodType as the baseline, but the selectable set is narrowed to REVEL "
+        "and REVEL's bands are re-thresholded for MYH7. Demonstrates modifying a baseline "
+        "configuration in a separate namespace without minting a new code."
+    ),
 )
