@@ -23,14 +23,14 @@ def _make_statement() -> Statement:
             subject=VBC(variation={"id": "ga4gh:VA.test", "type": "Allele"}),
             object=MDE(curie="MONDO:0007254", label="Test disease"),
         ),
-        specified_by=Method(code="svcv4:baseline", version="test"),
+        specified_by=Method(code="svc:baseline", version="test"),
         score=4.0,
         direction="supports",
         outcome="likely_pathogenic",
         has_evidence_lines=[
             Statement(
                 code="CLN_AFF",
-                specified_by=Method(code="svcv4:CLN_AFF"),
+                specified_by=Method(code="svc:CLN_AFF"),
                 has_evidence_items=[DataItem(subtype="clinical_observation", value={"n": 4})],
                 score=2.0,
                 direction="supports",

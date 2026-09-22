@@ -20,7 +20,7 @@
       "title": "Description"
     },
     "id": {
-      "description": "`svcv4-<scope>:<CODE>:<version>` \u2014 value of `specifiedBy.id`.",
+      "description": "`svc-<scope>:<CODE>:<version>` \u2014 value of `specifiedBy.id`.",
       "title": "Id",
       "type": "string"
     },
@@ -64,7 +64,7 @@
       "type": "string"
     },
     "version": {
-      "default": "1.0",
+      "default": "4.0",
       "title": "Version",
       "type": "string"
     }
