@@ -1,6 +1,6 @@
 {
   "additionalProperties": false,
-  "description": "One ``(points, score-interval)`` row of a predictor's calibration table.\n\nThe interval is ``min``..``max``; ``None`` means unbounded (\u2212\u221e / +\u221e).\n``min_incl`` / ``max_incl`` select closed ``[ ]`` vs open ``( )`` at each end.\nIntervals are stored **as printed** in SM 6 Fig 2 (``\u2264T`` \u2192 ``(\u2212\u221e, T]``;\n``\u2265T`` \u2192 ``[T, +\u221e)``; ``L to U`` \u2192 ``[L, U]``), so a band may cover a\npredictor whose scale is inverted (ESM1b: higher score \u21d2 more benign).",
+  "description": "One ``(points, score-interval)`` row of a predictor's calibration table.\n\nThe interval is ``min``..``max``; ``None`` means unbounded (\u2212\u221e / +\u221e).\n``min_incl`` / ``max_incl`` select closed ``[ ]`` vs open ``( )`` at each end.\nBands default to the half-open form ``[min, max)`` \u2014 lower-inclusive,\nupper-exclusive \u2014 so that adjacent bands tile a tool's domain without gaps or\noverlaps (a boundary value belongs to exactly one band). A tool whose scale is\ninverted (ESM1b: higher score \u21d2 more benign) is handled the same way \u2014 the\nintervals still tile the score axis, only the point labels run the other way.",
   "properties": {
     "max": {
       "anyOf": [
@@ -16,7 +16,7 @@
       "title": "Max"
     },
     "max_incl": {
-      "default": true,
+      "default": false,
       "description": "Upper bound inclusive (]) vs exclusive ()).",
       "title": "Max Incl",
       "type": "boolean"

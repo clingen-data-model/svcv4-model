@@ -857,11 +857,12 @@ ruleset(
         "selectable_tools": ["REVEL"],
         "selected_tool": "REVEL",
         # then recalibrate REVEL's bands for MYH7 (illustrative thresholds).
+        # Contiguous half-open bands — must cover [-inf, +inf] with no gap/overlap.
         "per_tool_bands": {
             "REVEL": [
                 {"points": -1.0, "min": None, "max": 0.500},
-                {"points": 0.0, "min": 0.501, "max": 0.699},
-                {"points": 2.0, "min": 0.700, "max": 0.899},
+                {"points": 0.0, "min": 0.500, "max": 0.700},
+                {"points": 2.0, "min": 0.700, "max": 0.900},
                 {"points": 4.0, "min": 0.900, "max": None},
             ]
         },

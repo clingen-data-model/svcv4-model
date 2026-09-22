@@ -56,6 +56,8 @@ from svcv4_model.config import (
     InsilicoPredictorConfig,
     RelevanceTier,
     ScoreBand,
+    ScoreOutOfRange,
+    UnknownTool,
 )
 from svcv4_model.critical_amino_acid import (
     CriticalAminoAcidEvidence,
@@ -242,6 +244,7 @@ __all__ = [
     "ProteinFunctionalAssay",
     "RelevanceTier",
     "ScoreBand",
+    "ScoreOutOfRange",
     "Sex",
     "SimilarityBasis",
     "SpliceAssayEvidence",
@@ -258,6 +261,7 @@ __all__ = [
     "StopLostOutcome",
     "StopLostPredictiveEvidence",
     "TriState",
+    "UnknownTool",
     "VariantClassification",
     "VariantPathogenicityClassification",
     "Workflow",
