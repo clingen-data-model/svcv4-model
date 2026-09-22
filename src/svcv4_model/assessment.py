@@ -6,7 +6,7 @@ Two layers, deliberately separated:
   is the ``methodType`` on an evidence-line ``Statement``. A pattern is **reusable**:
   the same pattern (e.g. ``functional-assay-assessment``) appears in many pathways.
 - ``Ruleset`` — a **specific, registered ruleset**: one node of a workflow pathway,
-  with a unique id ``svcv4-<scope>:<CODE>:<version>`` named for its SVCv4 code, its
+  with a unique id ``svc-<scope>:<CODE>:<version>`` named for its SVCv4 code, its
   own configured ``params``, and a ``parent`` (its place in the hierarchy). A
   registered ruleset is **never reused** — each pathway node is its own id, even when
   two nodes share a ``method_type`` pattern (they may carry different values).
@@ -58,12 +58,12 @@ class Ruleset(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    id: str = Field(description="`svcv4-<scope>:<CODE>:<version>` — value of `specifiedBy.id`.")
+    id: str = Field(description="`svc-<scope>:<CODE>:<version>` — value of `specifiedBy.id`.")
     code: str = Field(description="The SVCv4 code this node produces, e.g. `MIS_PRD_EXON_REL`.")
     label: str = Field(description="Human method name for this exact pathway node.")
     method_type: str = Field(description="The AssessmentType (pattern) this instantiates.")
     scope: str = Field(description="`baseline` or a specialisation scope, e.g. `gene-MYH7`.")
-    version: str = Field(default="1.0")
+    version: str = Field(default="4.0")
     parent: str | None = Field(default=None, description="Parent ruleset id (hierarchy).")
     params: dict[str, Any] = Field(default_factory=dict)
     provisional: bool = Field(
@@ -76,10 +76,10 @@ class Ruleset(BaseModel):
     @field_validator("id")
     @classmethod
     def _id_shape(cls, v: str) -> str:
-        if not v.startswith("svcv4") or v.count(":") != 2:
+        if not (v.startswith("svc:") or v.startswith("svc-")) or v.count(":") != 2:
             raise ValueError(
-                "Ruleset id must be 'svcv4:<CODE>:<version>' (baseline) or "
-                "'svcv4-<scope>:<CODE>:<version>' (specialisation)"
+                "Ruleset id must be 'svc:<CODE>:<version>' (baseline) or "
+                "'svc-<scope>:<CODE>:<version>' (specialisation)"
             )
         return v
 
@@ -89,16 +89,16 @@ class Ruleset(BaseModel):
 # --------------------------------------------------------------------------- #
 
 
-def make_ruleset_id(scope: str, code: str, version: str = "1.0") -> str:
-    """Baseline ids are ``svcv4:<CODE>:<version>``; specialisations
-    ``svcv4-<scope>:<CODE>:<version>``."""
-    ns = "svcv4" if scope == "baseline" else f"svcv4-{scope}"
+def make_ruleset_id(scope: str, code: str, version: str = "4.0") -> str:
+    """Baseline ids are ``svc:<CODE>:<version>``; specialisations
+    ``svc-<scope>:<CODE>:<version>``."""
+    ns = "svc" if scope == "baseline" else f"svc-{scope}"
     return f"{ns}:{code}:{version}"
 
 
 def parse_ruleset_id(rid: str) -> tuple[str, str, str]:
     ns, code, version = rid.split(":")
-    scope = "baseline" if ns == "svcv4" else ns.removeprefix("svcv4-")
+    scope = "baseline" if ns == "svc" else ns.removeprefix("svc-")
     return scope, code, version
 
 
@@ -143,7 +143,7 @@ def ruleset(
     *,
     parent: str | None = None,
     scope: str = "baseline",
-    version: str = "1.0",
+    version: str = "4.0",
     params: dict[str, Any] | None = None,
     provisional: bool = False,
 ) -> Ruleset:
@@ -524,7 +524,7 @@ _pat(
 ruleset("SVCV4", "SVCv4 classification method", "svcv4-method-assessment")
 ruleset("HOD", "Human Observational Data", "human-observational-data-assessment", parent="SVCV4")
 ruleset(
-    "PRD", "Predictive & Functional Data", "predictive-functional-data-assessment", parent="SVCV4"
+    "PFD", "Predictive & Functional Data", "predictive-functional-data-assessment", parent="SVCV4"
 )
 # POP
 ruleset("POP", "Population observations", "population-observation-assessment", parent="HOD")
@@ -622,7 +622,7 @@ for _c, _p in [
         provisional=True,
     )
 # MIS: MIS = (MIS_PRD + MIS_FXN -> MIS_PRD_FXN) + MIS_INF
-ruleset("MIS", "Missense variant", "missense-variant-assessment", parent="PRD")
+ruleset("MIS", "Missense variant", "missense-variant-assessment", parent="PFD")
 ruleset(
     "MIS_PRD_FXN",
     "Missense predictive + functional (combination cap)",
@@ -669,7 +669,7 @@ ruleset(
 ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS_PRD_FXN")
 ruleset("MIS_INF", "Missense informative variants", "informative-variants-assessment", parent="MIS")
 # NUL: NUL = (NUL_PRD + NUL_FXN -> NUL_PRD_FXN) + NUL_INF
-ruleset("NUL", "Null / nonsense variant", "null-variant-assessment", parent="PRD")
+ruleset("NUL", "Null / nonsense variant", "null-variant-assessment", parent="PFD")
 ruleset(
     "NUL_PRD_FXN",
     "Null predictive + functional (combination cap)",
@@ -720,7 +720,7 @@ ruleset(
 ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL_PRD_FXN")
 ruleset("NUL_INF", "Null informative variants", "informative-variants-assessment", parent="NUL")
 # CDS: CDS = (CDS_PRD + CDS_FXN -> CDS_PRD_FXN) + CDS_INF
-ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment", parent="PRD")
+ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment", parent="PFD")
 ruleset(
     "CDS_PRD_FXN",
     "CDS predictive + functional (combination cap)",
@@ -783,7 +783,7 @@ ruleset(
 ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS_PRD_FXN")
 ruleset("CDS_INF", "CDS informative variants", "informative-variants-assessment", parent="CDS")
 # SPL: SPL = (SPL_PRD + SPL_SPA -> SPL_PRD_SPA) + SPL_FXN -> SPL_PRD_SPA_FXN
-ruleset("SPL", "Splice variant", "splice-variant-assessment", parent="PRD")
+ruleset("SPL", "Splice variant", "splice-variant-assessment", parent="PFD")
 ruleset(
     "SPL_PRD_SPA_FXN",
     "Splice (pred+assay) + functional (combination cap)",

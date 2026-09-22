@@ -3,58 +3,58 @@
   "_variant": "PVS-v19-TP53 — TP53 c.641A>T (p.His214Leu). Source tab: 'TP53'. Companion to pkp2 (the null/NMD-gating exemplar); this one showcases the MISSENSE (MIS) workflow.",
   "_why_this_variant": "Missense with BOTH in-silico (REVEL) and functional evidence, so it exercises the full MIS sub-tree: REVEL initial points x exon-relevance multiplier -> MIS_PRD, functional assay -> MIS_FXN, the MIS_PRD_FXN combination CAP (predictive and functional both point damaging, so they corroborate and are capped at +4 rather than summed to +8), plus MIS_INF same-residue comparator (+1). The gene-disease-validity gate is MET here (TP53-Li-Fraumeni = Definitive), the opposite of pkp2's not_met gate. Final: HOD 0 + PFD (MIS +5) -> Likely Pathogenic. Scoring is illustrative; authority lives in CSpec.",
   "method": {
-    "svcv4:SVCV4": {
-      "methodType": "svcv4-method-assessment",
+    "svc:SVCV4": {
+      "methodType": "svc-method-assessment",
       "name": "SVCv4 classification method",
       "version": "draft-2026-pre-release"
     },
-    "svcv4:HOD": {
+    "svc:HOD": {
       "methodType": "human-observational-data-assessment",
       "name": "SVCv4 Human Observational Data roll-up"
     },
-    "svcv4:POP": {
+    "svc:POP": {
       "methodType": "population-observation-assessment",
       "name": "SVCv4 Population observation roll-up"
     },
-    "svcv4:POP_FRQ": {
+    "svc:POP_FRQ": {
       "methodType": "population-frequency-assessment",
       "name": "SVCv4 Population allele frequency"
     },
-    "svcv4:PFD": {
+    "svc:PFD": {
       "methodType": "predictive-functional-data-assessment",
       "name": "SVCv4 Predictive & Functional Data roll-up",
       "_note": "The registry currently exposes this same node under CODE `PRD`; recommend aligning the code to `PFD`."
     },
-    "svcv4:MIS": {
+    "svc:MIS": {
       "methodType": "missense-variant-assessment",
       "name": "SVCv4 Missense variant roll-up (selected PFD lane)"
     },
-    "svcv4:MIS_PRD_FXN": {
+    "svc:MIS_PRD_FXN": {
       "methodType": "predictive-functional-combination-assessment",
       "name": "SVCv4 Missense predictive + functional (combination cap)",
       "_role": "COMBINATION CAP — predictive and functional evidence corroborate the same effect, so their combined weight is capped rather than summed (prevents double-counting one biological signal)."
     },
-    "svcv4:MIS_PRD": {
+    "svc:MIS_PRD": {
       "methodType": "single-aa-change-prediction-assessment",
       "name": "SVCv4 Single-amino-acid change prediction (REVEL x exon relevance)"
     },
-    "svcv4:MIS_PRD_INIT_INSILICO": {
+    "svc:MIS_PRD_INIT_INSILICO": {
       "methodType": "insilico-predictor-assessment",
       "name": "SVCv4 in-silico predictor initial points (tool selected in params)"
     },
-    "svcv4:MIS_PRD_EXON_REL": {
+    "svc:MIS_PRD_EXON_REL": {
       "methodType": "exon-relevance-assessment",
       "name": "SVCv4 Exon relevance (missense) — multiplier on predictor points"
     },
-    "svcv4:MIS_FXN": {
+    "svc:MIS_FXN": {
       "methodType": "functional-assay-assessment",
       "name": "SVCv4 Missense functional assay"
     },
-    "svcv4:MIS_INF": {
+    "svc:MIS_INF": {
       "methodType": "informative-variants-assessment",
       "name": "SVCv4 Missense informative variants (same-residue comparators)"
     },
-    "svcv4:GDV": {
+    "svc:GDV": {
       "methodType": "gene-disease-validity-gate",
       "name": "SVCv4 Gene-disease validity gate",
       "_role": "GATE — a standalone met/not_met assessment. The predictive lane is only counted when the gene-disease relationship is at least Moderate. Referenced by the scored line as one of its `hasEvidenceItems`; its outcome (met/not_met) signals whether that line counts. (Proposed gate methodType — pending the gate-model registry work.)",
@@ -67,7 +67,7 @@
   "assessment": {
     "pvs-v19-tp53:POP_FRQ": {
       "id": "pvs-v19-tp53:POP_FRQ",
-      "specifiedBy": "#/method/svcv4:POP_FRQ",
+      "specifiedBy": "#/method/svc:POP_FRQ",
       "direction": "neutral",
       "score": 0.0,
       "outcome": "POP_FRQ_+0",
@@ -139,7 +139,7 @@
     },
     "pvs-v19-tp53:POP": {
       "id": "pvs-v19-tp53:POP",
-      "specifiedBy": "#/method/svcv4:POP",
+      "specifiedBy": "#/method/svc:POP",
       "direction": "neutral",
       "score": 0.0,
       "outcome": "POP_+0",
@@ -150,7 +150,7 @@
     },
     "pvs-v19-tp53:HOD": {
       "id": "pvs-v19-tp53:HOD",
-      "specifiedBy": "#/method/svcv4:HOD",
+      "specifiedBy": "#/method/svc:HOD",
       "direction": "neutral",
       "score": 0.0,
       "outcome": "HOD_+0",
@@ -161,7 +161,7 @@
     },
     "pvs-v19-tp53:GDV": {
       "id": "pvs-v19-tp53:GDV",
-      "specifiedBy": "#/method/svcv4:GDV",
+      "specifiedBy": "#/method/svc:GDV",
       "direction": "neutral",
       "outcome": "met",
       "description": "Gene-disease validity gate for the predictive lane. MET: TP53-Li-Fraumeni syndrome is a Definitive gene-disease relationship (ClinGen), so predictive missense evidence is eligible to be counted.",
@@ -181,7 +181,7 @@
     },
     "pvs-v19-tp53:MIS_PRD_INIT_INSILICO": {
       "id": "pvs-v19-tp53:MIS_PRD_INIT_INSILICO",
-      "specifiedBy": "#/method/svcv4:MIS_PRD_INIT_INSILICO",
+      "specifiedBy": "#/method/svc:MIS_PRD_INIT_INSILICO",
       "direction": "supports",
       "strength": "strong",
       "score": 4.0,
@@ -231,7 +231,7 @@
     },
     "pvs-v19-tp53:MIS_PRD_EXON_REL": {
       "id": "pvs-v19-tp53:MIS_PRD_EXON_REL",
-      "specifiedBy": "#/method/svcv4:MIS_PRD_EXON_REL",
+      "specifiedBy": "#/method/svc:MIS_PRD_EXON_REL",
       "direction": "supports",
       "outcome": "MIS_PRD_EXON_REL_x1.0",
       "description": "Exon-relevance multiplier applied to the REVEL initial points. p.His214 sits in the TP53 DNA-binding domain (a mutational hotspot, high clinical relevance) and is in MANE Select -> full weight, multiplier 1.0. Gated on gene-disease validity (#/assessment/pvs-v19-tp53:GDV = met).",
@@ -265,7 +265,7 @@
     },
     "pvs-v19-tp53:MIS_PRD": {
       "id": "pvs-v19-tp53:MIS_PRD",
-      "specifiedBy": "#/method/svcv4:MIS_PRD",
+      "specifiedBy": "#/method/svc:MIS_PRD",
       "direction": "supports",
       "strength": "strong",
       "score": 4.0,
@@ -278,7 +278,7 @@
     },
     "pvs-v19-tp53:MIS_FXN": {
       "id": "pvs-v19-tp53:MIS_FXN",
-      "specifiedBy": "#/method/svcv4:MIS_FXN",
+      "specifiedBy": "#/method/svc:MIS_FXN",
       "direction": "supports",
       "strength": "strong",
       "score": 4.0,
@@ -304,7 +304,7 @@
     },
     "pvs-v19-tp53:MIS_PRD_FXN": {
       "id": "pvs-v19-tp53:MIS_PRD_FXN",
-      "specifiedBy": "#/method/svcv4:MIS_PRD_FXN",
+      "specifiedBy": "#/method/svc:MIS_PRD_FXN",
       "direction": "supports",
       "strength": "strong",
       "score": 4.0,
@@ -317,7 +317,7 @@
     },
     "pvs-v19-tp53:MIS_INF": {
       "id": "pvs-v19-tp53:MIS_INF",
-      "specifiedBy": "#/method/svcv4:MIS_INF",
+      "specifiedBy": "#/method/svc:MIS_INF",
       "direction": "supports",
       "strength": "supporting",
       "score": 1.0,
@@ -344,7 +344,7 @@
     },
     "pvs-v19-tp53:MIS": {
       "id": "pvs-v19-tp53:MIS",
-      "specifiedBy": "#/method/svcv4:MIS",
+      "specifiedBy": "#/method/svc:MIS",
       "direction": "supports",
       "strength": "moderate",
       "score": 5.0,
@@ -357,7 +357,7 @@
     },
     "pvs-v19-tp53:PFD": {
       "id": "pvs-v19-tp53:PFD",
-      "specifiedBy": "#/method/svcv4:PFD",
+      "specifiedBy": "#/method/svc:PFD",
       "direction": "supports",
       "strength": "moderate",
       "score": 5.0,
@@ -371,7 +371,7 @@
   "classification": {
     "pvs-v19-tp53": {
       "id": "pvs-v19-tp53",
-      "specifiedBy": "#/method/svcv4:SVCV4",
+      "specifiedBy": "#/method/svc:SVCV4",
       "proposition": {
         "type": "VariantPathogenicityProposition",
         "subject": {

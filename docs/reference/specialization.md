@@ -12,9 +12,9 @@ distinct, namespaced id.
 | Field | Purpose | Example |
 |---|---|---|
 | `specifiedBy.methodType` | *What kind of rule this is* — stable across baseline and every specialization; this is what makes results **comparable**. | `insilico-predictor-assessment` |
-| `specifiedBy.id` | *Which configured ruleset actually ran* — namespaced + versioned; this is what makes results **reproducible**. | `svcv4:MIS_PRD_INIT_INSILICO:1.0` |
+| `specifiedBy.id` | *Which configured ruleset actually ran* — namespaced + versioned; this is what makes results **reproducible**. | `svc:MIS_PRD_INIT_INSILICO:4.0` |
 
-The id scheme is **`svcv4:<CODE>:<version>` (baseline) or `svcv4-<scope>:<CODE>:<version>`**. Scope is `baseline`
+The id scheme is **`svc:<CODE>:<version>` (baseline) or `svc-<scope>:<CODE>:<version>`**. Scope is `baseline`
 or a specialization scope (e.g. `gene-MYH7`, `vcep-cardiomyopathy`). All scopes
 live under the `svcv4` registry umbrella.
 
@@ -35,7 +35,7 @@ different score.
       "type": "Statement",
       "code": "MIS_PRD_INIT_INSILICO",
       "specifiedBy": {
-        "id": "svcv4:MIS_PRD_INIT_INSILICO:1.0",
+        "id": "svc:MIS_PRD_INIT_INSILICO:4.0",
         "methodType": "insilico-predictor-assessment",
         "version": "1.0"
       },
@@ -56,7 +56,7 @@ different score.
       "type": "Statement",
       "code": "MIS_PRD_INIT_INSILICO",
       "specifiedBy": {
-        "id": "svcv4-gene-MYH7:MIS_PRD_INIT_INSILICO:1.0",
+        "id": "svc-gene-MYH7:MIS_PRD_INIT_INSILICO:4.0",
         "methodType": "insilico-predictor-assessment",
         "version": "1.0"
       },
@@ -97,4 +97,4 @@ individual nodes by id.
 
 ## Top-level wiring
 
-The whole method is a single root ruleset — `svcv4:SVCV4:1.0` — that composes two evidence categories — **HOD** (`svcv4:HOD:1.0`, rolling up POP + CLN + LOC) and **PRD** (`svcv4:PRD:1.0`, the selected variant-impact outcome across MIS/NUL/CDS/SPL). HOD + PRD roll up to the final `score`/`outcome`. The **top-level classification `Statement`** carries `specifiedBy.id = svcv4:SVCV4:1.0` (the applied SVCv4 method); each **evidence-line `Statement`** carries `specifiedBy.id` = its own ruleset node (e.g. `svcv4:MIS_PRD_EXON_REL:1.0`). A specialization swaps the method root's version and/or individual node ids without changing any `methodType`.
+The whole method is a single root ruleset — `svc:SVCV4:4.0` — that composes two evidence categories — **HOD** (`svc:HOD:4.0`, rolling up POP + CLN + LOC) and **PFD** (`svc:PFD:4.0`, the selected variant-impact outcome across MIS/NUL/CDS/SPL). HOD + PRD roll up to the final `score`/`outcome`. The **top-level classification `Statement`** carries `specifiedBy.id = svc:SVCV4:4.0` (the applied SVCv4 method); each **evidence-line `Statement`** carries `specifiedBy.id` = its own ruleset node (e.g. `svc:MIS_PRD_EXON_REL:4.0`). A specialization swaps the method root's version and/or individual node ids without changing any `methodType`.
