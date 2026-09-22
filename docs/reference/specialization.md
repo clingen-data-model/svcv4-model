@@ -91,10 +91,15 @@ of the SVCv4 framework; it does **not** mint new codes. Examples:
 ## The configuration model
 
 A code is only a name; the numbers behind it live in the ruleset's typed
-**configuration** (`svcv4_model.config`). The first configured family is the
-in-silico predictor initial-points code, whose model is a dictionary keyed by
-predictor tool — each an ordered list of `(points, score-interval)` **bands**,
-transcribed faithfully from SM 6, Figure 2.
+**configuration** (`svcv4_model.config`). Each assessment family has its own
+config shape — an initial-points code carries score→points bands, an adjuster
+carries a multiplier matrix — but all share the same rule: the baseline stores
+the values, a specialization overrides them in its own namespace.
+
+### In-silico predictor initial points
+
+The model is a dictionary keyed by predictor tool — each an ordered list of
+`(points, score-interval)` **bands**, transcribed faithfully from SM 6, Figure 2.
 
 ```python
 class ScoreBand:                       # one calibration row
@@ -126,6 +131,34 @@ only what it needs — e.g. `svc-gene-MYH7:MIS_PRD_INIT_INSILICO:4.0` narrows
 `selectable_tools` to `["REVEL"]`, pins `selected_tool`, and re-thresholds
 REVEL's bands so `+4.0` begins at `≥ 0.900`. The config validates the same way
 in either namespace, so a reader can diff two configurations field-for-field.
+
+### Exon relevance
+
+The `*_PRD_EXON_REL` codes output a **multiplier**, not points, so their model is
+a tier → fraction matrix (SM 6, Figure 2, right box) rather than score bands.
+
+```python
+class RelevanceTier:                   # one row of the matrix
+    tier: str                          # "All" | "Most" | "Few"
+    multiplier: float                  # 1.0 | 0.5 | 0.0
+
+class ExonRelevanceConfig:
+    tier_multipliers: list[RelevanceTier]
+    include_mechanism: bool            # fold in the gene-disease mechanism cross-reference
+    def multiplier_for(tier) -> float
+```
+
+| tier | multiplier | exon(s) present in… |
+|---|--:|---|
+| All | 1.0 | all clinically-relevant transcripts |
+| Most | 0.5 | most clinically-relevant transcripts |
+| Few | 0.0 | few / no clinically-relevant transcripts |
+
+`MIS_PRD = MIS_PRD_INIT × multiplier`. The four families share the matrix but
+differ on `include_mechanism`: baseline **missense** leaves it `False` (its
+predictors already capture mechanism), while **null / in-frame / splice** set it
+`True`, folding the gene-disease molecular-mechanism cross-reference into this
+node. A specialization may re-weight the tiers or flip the toggle.
 
 ## In the model
 
