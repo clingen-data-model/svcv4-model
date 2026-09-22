@@ -84,7 +84,7 @@ of the SVCv4 framework; it does **not** mint new codes. Examples:
 | Assessment (`methodType`) | Reconfigurable parameters |
 |---|---|
 | `insilico-predictor-assessment` | selectable tools · per-tool bands/points |
-| `exon-relevance-assessment` | tier multipliers · include_mechanism (with/without gene-disease mechanism) |
+| `exon-relevance-assessment` | tier multipliers · only_positive · mechanism-classification types & weights |
 | `informative-variants-assessment` | point values · relatedness rule · added granularity |
 | `population-frequency-assessment` | fold thresholds & point tiers |
 
@@ -144,17 +144,25 @@ in either namespace, so a reader can diff two configurations field-for-field.
 ### Exon relevance
 
 The `*_PRD_EXON_REL` codes output a **multiplier**, not points, so their model is
-a tier → fraction matrix (SM 6, Figure 2, right box) rather than score bands.
+a tier → fraction matrix (SM 6, Figure 2, right box), optionally combined with a
+gene-disease **mechanism-classification** weight. Like the predictor code it is an
+API — `evaluate` takes the initial points plus the tier (and, when a mechanism
+type is configured, the mechanism type + classification) and returns the factor.
 
 ```python
 class RelevanceTier:                   # one row of the matrix
     tier: str                          # "All" | "Most" | "Few"
     multiplier: float                  # 1.0 | 0.5 | 0.0
 
+class MechanismBand:                    # one mechanism-classification TYPE (e.g. "LOF")
+    mechanism_type: str
+    classifications: list[MechanismClassification]   # each a value + 0–100% weight
+
 class ExonRelevanceConfig:
     tier_multipliers: list[RelevanceTier]
-    include_mechanism: bool            # fold in the gene-disease mechanism cross-reference
-    def multiplier_for(tier) -> float
+    only_positive: bool                # weight positive initial points only
+    mechanism_bands: list[MechanismBand]
+    def evaluate(initial_points, tier=None, mechanism_type=None, mechanism_class=None) -> float
 ```
 
 | tier | multiplier | exon(s) present in… |
@@ -163,11 +171,35 @@ class ExonRelevanceConfig:
 | Most | 0.5 | most clinically-relevant transcripts |
 | Few | 0.0 | few / no clinically-relevant transcripts |
 
-`MIS_PRD = MIS_PRD_INIT × multiplier`. The four families share the matrix but
-differ on `include_mechanism`: baseline **missense** leaves it `False` (its
-predictors already capture mechanism), while **null / in-frame / splice** set it
-`True`, folding the gene-disease molecular-mechanism cross-reference into this
-node. A specialization may re-weight the tiers or flip the toggle.
+`evaluate` applies these conditions in order:
+
+- **`only_positive`** — if set and `initial_points ≤ 0`, return `1.0` (no impact:
+  benign/neutral points pass through untouched); no tier or mechanism needed.
+- otherwise the **tier** is required and gives the tier fraction;
+- if a **mechanism type** is configured, the `mechanism_type` + `mechanism_class`
+  are required and the result is `tier_fraction × mechanism_weight`.
+
+Each subcode also **introspects** its valid inputs — `tiers()`,
+`mechanism_types()`, and `classifications(mechanism_type)` — so a caller can
+discover the allowed tiers and the allowed classification values for a type.
+
+The four families share the tier matrix. Baseline **missense** configures **no
+mechanism** (its predictors already capture mechanism); **null / in-frame /
+splice** each configure a **`LOF`** mechanism type (the gene-disease
+molecular-mechanism cross-reference), whose classifications are **Established**
+(100%), **Likely** (50%), **Suspected** (25%), and **Uncertain or Not LOF** (0%).
+
+A mechanism band is a **reusable component**: define it once and pass it into any
+number of exon-relevance configs (the null/in-frame/splice families share one
+`LOF` band today), or pass a different band to a family whose weights must
+differ. A specialization may re-weight the tiers, set `only_positive`, or add /
+re-weight mechanism types.
+
+```python
+LOF = mechanism_band("LOF", ("Established", 1.0), ("Likely", 0.5),
+                     ("Suspected", 0.25), ("Uncertain or Not LOF", 0.0))
+cfg = ExonRelevanceConfig(tier_multipliers=..., mechanism_bands=[LOF])
+```
 
 ## In the model
 

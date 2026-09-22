@@ -130,6 +130,10 @@ class InsilicoPredictorConfig(BaseModel):
         hi_s = "+inf" if hi is None else f"{hi:g}"
         raise ScoreOutOfRange(f"{tool} score {score:g} outside covered domain [{lo_s}, {hi_s}]")
 
+    def tools(self) -> list[str]:
+        """The list of predictor tools valid for this configuration (the selectable menu)."""
+        return list(self.selectable_tools)
+
     # backward-compatible alias
     def points_for(self, tool: str, score: float) -> float:
         """Alias for :meth:`evaluate`."""
@@ -141,14 +145,62 @@ def insilico_config(params: dict) -> InsilicoPredictorConfig:
     return InsilicoPredictorConfig.model_validate(params)
 
 
+class UnknownTier(ValueError):
+    """Raised when a relevance tier is not in the configured matrix."""
+
+
+class UnknownMechanism(ValueError):
+    """Raised when a mechanism type or classification is not configured."""
+
+
+class MissingInput(ValueError):
+    """Raised when ``evaluate`` is called without a required argument."""
+
+
 class RelevanceTier(BaseModel):
     """One row of the exon-relevance matrix — a tier and the fraction it applies."""
 
     model_config = ConfigDict(extra="forbid")
 
     tier: str = Field(description="Relevance tier, e.g. 'All' | 'Most' | 'Few'.")
-    multiplier: float = Field(description="Fraction the initial points are scaled by (0.0–1.0).")
+    multiplier: float = Field(
+        ge=0.0, le=1.0, description="Fraction the initial points are scaled by (0.0–1.0)."
+    )
     criterion: str | None = Field(default=None, description="What the tier means, in words.")
+
+
+class MechanismClassification(BaseModel):
+    """One ``(classification, weight)`` value of a mechanism-classification type."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    classification: str = Field(description="The classification value, e.g. 'Consistent'.")
+    weight: float = Field(ge=0.0, le=1.0, description="Its weight, 0.0–1.0 (0–100%).")
+    description: str | None = Field(default=None, description="What the value means, in words.")
+
+
+class MechanismBand(BaseModel):
+    """One mechanism-classification **type** — a named set of classifications + weights.
+
+    A rule may configure several types (e.g. molecular mechanism, functional
+    mechanism), each with its own value set. ``evaluate`` selects a type by name.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    mechanism_type: str = Field(description="Name of this classification type.")
+    classifications: list[MechanismClassification]
+
+    def weight_for(self, classification: str) -> float:
+        """Weight for ``classification`` (case-insensitive); raises UnknownMechanism."""
+        for value in self.classifications:
+            if value.classification.casefold() == classification.casefold():
+                return value.weight
+        known = ", ".join(v.classification for v in self.classifications)
+        raise UnknownMechanism(
+            f"unknown classification {classification!r} for mechanism type "
+            f"{self.mechanism_type!r}; expected one of: {known}"
+        )
 
 
 class ExonRelevanceConfig(BaseModel):
@@ -156,25 +208,96 @@ class ExonRelevanceConfig(BaseModel):
 
     The code outputs a **multiplier** (not points): the initial predictive points
     are scaled by how many clinically-relevant transcripts contain the exon(s)
-    harbouring the VBC. ``tier_multipliers`` is that matrix. ``include_mechanism``
-    folds the gene-disease molecular-mechanism cross-reference into this node —
-    baseline missense leaves it ``False`` (predictors already capture mechanism);
-    the null / in-frame / splice families set it ``True``. A specialisation may
-    re-weight the tiers or flip the mechanism toggle without changing the code.
+    harbouring the VBC (``tier_multipliers``), optionally combined with a
+    gene-disease **mechanism classification** weight (``mechanism_bands`` — zero or
+    more classification *types*, each a set of classifications with 0–100% weights).
+
+    **The API.** ``evaluate(initial_points, tier, mechanism_type, mechanism_class)``:
+
+    - *Input 1* is the initial points being adjusted.
+    - If ``only_positive`` is set and ``initial_points <= 0`` → returns ``1.0``
+      (no impact — benign/neutral points pass through); no other input is needed.
+    - Otherwise ``tier`` is required (``MissingInput`` if absent) and gives the
+      tier fraction.
+    - If any ``mechanism_bands`` are configured, ``mechanism_type`` and
+      ``mechanism_class`` are also required, and the output is
+      ``tier_fraction × mechanism_weight``; otherwise it is just ``tier_fraction``.
+
+    A specialisation re-weights the tiers, sets ``only_positive``, or adds /
+    re-weights mechanism types — the code is unchanged.
     """
 
     model_config = ConfigDict(extra="forbid")
 
     tier_multipliers: list[RelevanceTier]
-    include_mechanism: bool = False
+    only_positive: bool = Field(
+        default=False,
+        description="If True, the weighting applies only to positive initial points; "
+        "non-positive points return a 1.0 (no-impact) factor.",
+    )
+    mechanism_bands: list[MechanismBand] = Field(default_factory=list)
+
+    @property
+    def has_mechanism(self) -> bool:
+        """True when at least one mechanism-classification type is configured."""
+        return bool(self.mechanism_bands)
+
+    def tiers(self) -> list[str]:
+        """The valid relevance tiers, in order (e.g. ['All', 'Most', 'Few'])."""
+        return [t.tier for t in self.tier_multipliers]
+
+    def mechanism_types(self) -> list[str]:
+        """The valid mechanism-classification types (empty if none configured)."""
+        return [b.mechanism_type for b in self.mechanism_bands]
+
+    def classifications(self, mechanism_type: str) -> list[str]:
+        """The valid classification values for a mechanism type; raises UnknownMechanism."""
+        for band in self.mechanism_bands:
+            if band.mechanism_type.casefold() == mechanism_type.casefold():
+                return [c.classification for c in band.classifications]
+        known = ", ".join(b.mechanism_type for b in self.mechanism_bands) or "(none configured)"
+        raise UnknownMechanism(f"unknown mechanism type {mechanism_type!r}; configured: {known}")
 
     def multiplier_for(self, tier: str) -> float:
-        """The fraction for ``tier`` (case-insensitive); raises on an unknown tier."""
+        """The fraction for ``tier`` (case-insensitive); raises UnknownTier."""
         for row in self.tier_multipliers:
             if row.tier.casefold() == tier.casefold():
                 return row.multiplier
         known = ", ".join(r.tier for r in self.tier_multipliers)
-        raise ValueError(f"unknown relevance tier {tier!r}; expected one of: {known}")
+        raise UnknownTier(f"unknown relevance tier {tier!r}; expected one of: {known}")
+
+    def mechanism_weight(self, mechanism_type: str, classification: str) -> float:
+        """Weight for a ``(type, classification)`` pair; raises UnknownMechanism."""
+        for band in self.mechanism_bands:
+            if band.mechanism_type.casefold() == mechanism_type.casefold():
+                return band.weight_for(classification)
+        known = ", ".join(b.mechanism_type for b in self.mechanism_bands) or "(none configured)"
+        raise UnknownMechanism(f"unknown mechanism type {mechanism_type!r}; configured: {known}")
+
+    def evaluate(
+        self,
+        initial_points: float,
+        tier: str | None = None,
+        mechanism_type: str | None = None,
+        mechanism_class: str | None = None,
+    ) -> float:
+        """The exon-relevance weighting factor to apply to ``initial_points``.
+
+        See the class docstring for the input/condition contract.
+        """
+        if self.only_positive and initial_points <= 0:
+            return 1.0
+        if tier is None:
+            raise MissingInput("tier is required to compute the exon-relevance weighting")
+        factor = self.multiplier_for(tier)
+        if self.mechanism_bands:
+            if mechanism_type is None or mechanism_class is None:
+                raise MissingInput(
+                    "a mechanism type is configured — mechanism_type and "
+                    "mechanism_class are both required"
+                )
+            factor *= self.mechanism_weight(mechanism_type, mechanism_class)
+        return factor
 
 
 def exon_relevance_config(params: dict) -> ExonRelevanceConfig:
@@ -329,16 +452,70 @@ EXON_RELEVANCE_TIERS = [
     ),
 ]
 
-# Baseline missense: predictors already capture mechanism, so the gene-disease
-# mechanism cross-reference is NOT folded in here.
-MIS_PRD_EXON_REL_V4 = ExonRelevanceConfig(
-    tier_multipliers=EXON_RELEVANCE_TIERS,
-    include_mechanism=False,
+
+def mechanism_band(mechanism_type: str, *pairs: tuple[str, float]) -> MechanismBand:
+    """Build a **reusable** mechanism band from ``(classification, weight)`` pairs.
+
+    Define a band once and pass it into any number of exon-relevance configs::
+
+        LOF = mechanism_band("LOF", ("Established", 1.0), ("Likely", 0.5), ...)
+        cfg = ExonRelevanceConfig(tier_multipliers=..., mechanism_bands=[LOF])
+    """
+    return MechanismBand(
+        mechanism_type=mechanism_type,
+        classifications=[MechanismClassification(classification=c, weight=w) for c, w in pairs],
+    )
+
+
+# Baseline exon-relevance config. All four families share the tier matrix.
+# MIS configures NO mechanism; the null / in-frame / splice families (NUL, CDS,
+# SPL) each configure a "LOF" mechanism-classification type. Because a band is a
+# reusable component, they share ONE LOF_MECHANISM_BAND — but a family may pass a
+# different band if its mechanism weights need to differ.
+
+# One reusable mechanism-classification TYPE, "LOF" (loss-of-function): how well
+# the established gene-disease molecular mechanism supports LoF for this VBC.
+LOF_MECHANISM_BAND = MechanismBand(
+    mechanism_type="LOF",
+    classifications=[
+        MechanismClassification(
+            classification="Established",
+            weight=1.0,
+            description="LOF is the established gene-disease mechanism",
+        ),
+        MechanismClassification(
+            classification="Likely",
+            weight=0.5,
+            description="LOF is the likely gene-disease mechanism",
+        ),
+        MechanismClassification(
+            classification="Suspected",
+            weight=0.25,
+            description="LOF is a suspected gene-disease mechanism",
+        ),
+        MechanismClassification(
+            classification="Uncertain or Not LOF",
+            weight=0.0,
+            description="mechanism uncertain, or not loss-of-function",
+        ),
+    ],
 )
 
-# Null / in-frame / splice families: same matrix, but the gene-disease molecular
-# mechanism cross-reference is folded into this node.
-EXON_REL_WITH_MECHANISM_V4 = ExonRelevanceConfig(
-    tier_multipliers=EXON_RELEVANCE_TIERS,
-    include_mechanism=True,
-)
+
+def exon_relevance_baseline(
+    only_positive: bool, mechanism_bands: list[MechanismBand] | None = None
+) -> ExonRelevanceConfig:
+    """Baseline exon-relevance config: SM 6 Fig 2 tier matrix + any reusable bands passed in."""
+    return ExonRelevanceConfig(
+        tier_multipliers=EXON_RELEVANCE_TIERS,
+        only_positive=only_positive,
+        mechanism_bands=list(mechanism_bands) if mechanism_bands else [],
+    )
+
+
+# Convenience baseline (missense — no mechanism). Per-family flags live in the registry.
+MIS_PRD_EXON_REL_V4 = exon_relevance_baseline(only_positive=True)
+
+# Convenience baseline for the LOF families (null / in-frame / splice) — the reusable
+# LOF band passed in. Each family could instead pass its own band if weights diverge.
+EXON_REL_LOF_V4 = exon_relevance_baseline(only_positive=True, mechanism_bands=[LOF_MECHANISM_BAND])

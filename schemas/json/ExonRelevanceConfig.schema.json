@@ -1,5 +1,66 @@
 {
   "$defs": {
+    "MechanismBand": {
+      "additionalProperties": false,
+      "description": "One mechanism-classification **type** \u2014 a named set of classifications + weights.\n\nA rule may configure several types (e.g. molecular mechanism, functional\nmechanism), each with its own value set. ``evaluate`` selects a type by name.",
+      "properties": {
+        "classifications": {
+          "items": {
+            "$ref": "#/$defs/MechanismClassification"
+          },
+          "title": "Classifications",
+          "type": "array"
+        },
+        "mechanism_type": {
+          "description": "Name of this classification type.",
+          "title": "Mechanism Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mechanism_type",
+        "classifications"
+      ],
+      "title": "MechanismBand",
+      "type": "object"
+    },
+    "MechanismClassification": {
+      "additionalProperties": false,
+      "description": "One ``(classification, weight)`` value of a mechanism-classification type.",
+      "properties": {
+        "classification": {
+          "description": "The classification value, e.g. 'Consistent'.",
+          "title": "Classification",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What the value means, in words.",
+          "title": "Description"
+        },
+        "weight": {
+          "description": "Its weight, 0.0\u20131.0 (0\u2013100%).",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "classification",
+        "weight"
+      ],
+      "title": "MechanismClassification",
+      "type": "object"
+    },
     "RelevanceTier": {
       "additionalProperties": false,
       "description": "One row of the exon-relevance matrix \u2014 a tier and the fraction it applies.",
@@ -19,6 +80,8 @@
         },
         "multiplier": {
           "description": "Fraction the initial points are scaled by (0.0\u20131.0).",
+          "maximum": 1.0,
+          "minimum": 0.0,
           "title": "Multiplier",
           "type": "number"
         },
@@ -37,11 +100,19 @@
     }
   },
   "additionalProperties": false,
-  "description": "Configuration behind an ``exon-relevance-assessment`` code.\n\nThe code outputs a **multiplier** (not points): the initial predictive points\nare scaled by how many clinically-relevant transcripts contain the exon(s)\nharbouring the VBC. ``tier_multipliers`` is that matrix. ``include_mechanism``\nfolds the gene-disease molecular-mechanism cross-reference into this node \u2014\nbaseline missense leaves it ``False`` (predictors already capture mechanism);\nthe null / in-frame / splice families set it ``True``. A specialisation may\nre-weight the tiers or flip the mechanism toggle without changing the code.",
+  "description": "Configuration behind an ``exon-relevance-assessment`` code.\n\nThe code outputs a **multiplier** (not points): the initial predictive points\nare scaled by how many clinically-relevant transcripts contain the exon(s)\nharbouring the VBC (``tier_multipliers``), optionally combined with a\ngene-disease **mechanism classification** weight (``mechanism_bands`` \u2014 zero or\nmore classification *types*, each a set of classifications with 0\u2013100% weights).\n\n**The API.** ``evaluate(initial_points, tier, mechanism_type, mechanism_class)``:\n\n- *Input 1* is the initial points being adjusted.\n- If ``only_positive`` is set and ``initial_points <= 0`` \u2192 returns ``1.0``\n  (no impact \u2014 benign/neutral points pass through); no other input is needed.\n- Otherwise ``tier`` is required (``MissingInput`` if absent) and gives the\n  tier fraction.\n- If any ``mechanism_bands`` are configured, ``mechanism_type`` and\n  ``mechanism_class`` are also required, and the output is\n  ``tier_fraction \u00d7 mechanism_weight``; otherwise it is just ``tier_fraction``.\n\nA specialisation re-weights the tiers, sets ``only_positive``, or adds /\nre-weights mechanism types \u2014 the code is unchanged.",
   "properties": {
-    "include_mechanism": {
+    "mechanism_bands": {
+      "items": {
+        "$ref": "#/$defs/MechanismBand"
+      },
+      "title": "Mechanism Bands",
+      "type": "array"
+    },
+    "only_positive": {
       "default": false,
-      "title": "Include Mechanism",
+      "description": "If True, the weighting applies only to positive initial points; non-positive points return a 1.0 (no-impact) factor.",
+      "title": "Only Positive",
       "type": "boolean"
     },
     "tier_multipliers": {

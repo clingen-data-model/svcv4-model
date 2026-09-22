@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "description": "One ``(classification, weight)`` value of a mechanism-classification type.",
+  "properties": {
+    "classification": {
+      "description": "The classification value, e.g. 'Consistent'.",
+      "title": "Classification",
+      "type": "string"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "What the value means, in words.",
+      "title": "Description"
+    },
+    "weight": {
+      "description": "Its weight, 0.0\u20131.0 (0\u2013100%).",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Weight",
+      "type": "number"
+    }
+  },
+  "required": [
+    "classification",
+    "weight"
+  ],
+  "title": "MechanismClassification",
+  "type": "object"
+}

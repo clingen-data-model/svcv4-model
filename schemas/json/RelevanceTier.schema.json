@@ -17,6 +17,8 @@
     },
     "multiplier": {
       "description": "Fraction the initial points are scaled by (0.0\u20131.0).",
+      "maximum": 1.0,
+      "minimum": 0.0,
       "title": "Multiplier",
       "type": "number"
     },
