@@ -1,7 +1,7 @@
 {
   "_format": "SVCv4 bundled classification envelope (illustrative). Statements and methods are declared ONCE in the `method` and `assessment` dictionaries (keyed by id) and referenced everywhere else by JSON-pointer (e.g. \"#/assessment/pvs-v19-tp53:MIS_PRD\"). This deduplicates the recursive VA-Spec 1.1.0 Statement tree into a flat, addressable graph.",
   "_variant": "PVS-v19-TP53 — TP53 c.641A>T (p.His214Leu). Source tab: 'TP53'. Companion to pkp2 (the null/NMD-gating exemplar); this one showcases the MISSENSE (MIS) workflow.",
-  "_why_this_variant": "Missense with BOTH in-silico (REVEL) and functional evidence, so it exercises the full MIS sub-tree: REVEL initial points x exon-relevance multiplier -> MIS_PRD, functional assay -> MIS_FXN, the MIS_PRD_FXN combination CAP (predictive and functional both point damaging, so they corroborate and are capped at +4 rather than summed to +8), plus MIS_INF same-residue comparator (+1). The gene-disease-validity gate is MET here (TP53-Li-Fraumeni = Definitive), the opposite of pkp2's not_met gate. Final: HOD 0 + PFD (MIS +5) -> Likely Pathogenic. Scoring is illustrative; authority lives in CSpec.",
+  "_why_this_variant": "Missense with BOTH in-silico (BayesDel) and functional evidence, so it exercises the full MIS sub-tree: BayesDel initial points x exon-relevance multiplier -> MIS_PRD, functional assay -> MIS_FXN, the MIS_PRD_FXN combination CAP (predictive +2 and functional +4 both point damaging, so they corroborate and are capped at +4 rather than summed to +6), plus MIS_INF same-residue comparator (+1). The gene-disease-validity gate is MET here (TP53-Li-Fraumeni = Definitive), the opposite of pkp2's not_met gate. Final: HOD 0 + PFD (MIS +5) -> Likely Pathogenic. Scoring is illustrative; authority lives in CSpec.",
   "method": {
     "svc:SVCV4": {
       "methodType": "svc-method-assessment",
@@ -36,7 +36,7 @@
     },
     "svc:MIS_PRD": {
       "methodType": "single-aa-change-prediction-assessment",
-      "name": "SVCv4 Single-amino-acid change prediction (REVEL x exon relevance)"
+      "name": "SVCv4 Single-amino-acid change prediction (BayesDel x exon relevance)"
     },
     "svc:MIS_PRD_INIT_INSILICO": {
       "methodType": "insilico-predictor-assessment",
@@ -183,48 +183,31 @@
       "id": "pvs-v19-tp53:MIS_PRD_INIT_INSILICO",
       "specifiedBy": "#/method/svc:MIS_PRD_INIT_INSILICO",
       "direction": "supports",
-      "strength": "strong",
-      "score": 4.0,
-      "outcome": "MIS_PRD_INIT_INSILICO_+4",
-      "description": "REVEL predictor initial points. REVEL 0.86 lands in the PATH_STRONG band -> +4 initial predictive points (before exon-relevance scaling).",
+      "strength": "moderate",
+      "score": 2.0,
+      "outcome": "MIS_PRD_INIT_INSILICO_+2",
+      "description": "BayesDel predictor initial points. BayesDel 0.32 lands in the +2 (PATH_MODERATE) band -> +2 initial predictive points (before exon-relevance scaling).",
       "hasEvidenceItems": [
         {
           "type": "DataItem",
-          "id": "pvs-v19-tp53-revel-001",
+          "id": "pvs-v19-tp53-bayesdel-001",
           "description": "In-silico predictor score and the band it selects.",
           "value": {
-            "predictor": "REVEL",
-            "raw_score": 0.86,
-            "band_selected": "PATH_STRONG",
-            "selected_range": "0.85 <= REVEL <= 1.0",
+            "predictor": "BayesDel",
+            "raw_score": 0.32,
+            "band_selected": "+2 (PATH_MODERATE)",
+            "selected_range": "0.270 <= BayesDel <= 0.409",
             "bands": [
-              {
-                "band": "BEN_SUPPORTING",
-                "range": "REVEL <= 0.290",
-                "points": -1.0
-              },
-              {
-                "band": "INDETERMINATE",
-                "range": "0.290 < REVEL < 0.644",
-                "points": 0
-              },
-              {
-                "band": "PATH_SUPPORTING",
-                "range": "0.644 <= REVEL < 0.773",
-                "points": 1.0
-              },
-              {
-                "band": "PATH_MODERATE",
-                "range": "0.773 <= REVEL < 0.85",
-                "points": 2.0
-              },
-              {
-                "band": "PATH_STRONG",
-                "range": "0.85 <= REVEL <= 1.0",
-                "points": 4.0
-              }
+              { "points": -3.0, "range": "BayesDel <= -0.520" },
+              { "points": -2.0, "range": "-0.519 to -0.360" },
+              { "points": -1.0, "range": "-0.359 to -0.180" },
+              { "points": 0.0, "range": "-0.179 to 0.129" },
+              { "points": 1.0, "range": "0.130 to 0.269" },
+              { "points": 2.0, "range": "0.270 to 0.409" },
+              { "points": 3.0, "range": "0.410 to 0.499" },
+              { "points": 4.0, "range": "BayesDel >= 0.50" }
             ],
-            "_note": "Illustrative REVEL band cut-points/points — authoritative thresholds live in CSpec."
+            "_note": "BayesDel band cut-points from SM 6 Fig 2; authoritative thresholds live in CSpec."
           }
         }
       ]
@@ -234,7 +217,7 @@
       "specifiedBy": "#/method/svc:MIS_PRD_EXON_REL",
       "direction": "supports",
       "outcome": "MIS_PRD_EXON_REL_x1.0",
-      "description": "Exon-relevance multiplier applied to the REVEL initial points. p.His214 sits in the TP53 DNA-binding domain (a mutational hotspot, high clinical relevance) and is in MANE Select -> full weight, multiplier 1.0. Gated on gene-disease validity (#/assessment/pvs-v19-tp53:GDV = met).",
+      "description": "Exon-relevance multiplier applied to the BayesDel initial points. p.His214 sits in the TP53 DNA-binding domain (a mutational hotspot, high clinical relevance) and is in MANE Select -> full weight, multiplier 1.0. Gated on gene-disease validity (#/assessment/pvs-v19-tp53:GDV = met).",
       "hasEvidenceItems": [
         "#/assessment/pvs-v19-tp53:GDV",
         {
@@ -267,10 +250,10 @@
       "id": "pvs-v19-tp53:MIS_PRD",
       "specifiedBy": "#/method/svc:MIS_PRD",
       "direction": "supports",
-      "strength": "strong",
-      "score": 4.0,
-      "outcome": "MIS_PRD_+4",
-      "description": "Single-amino-acid change prediction = REVEL initial points (+4) x exon-relevance multiplier (1.0) = +4.0.",
+      "strength": "moderate",
+      "score": 2.0,
+      "outcome": "MIS_PRD_+2",
+      "description": "Single-amino-acid change prediction = BayesDel initial points (+2) x exon-relevance multiplier (1.0) = +2.0.",
       "hasEvidenceLines": [
         "#/assessment/pvs-v19-tp53:MIS_PRD_INIT_INSILICO",
         "#/assessment/pvs-v19-tp53:MIS_PRD_EXON_REL"
@@ -309,7 +292,7 @@
       "strength": "strong",
       "score": 4.0,
       "outcome": "MIS_PRD_FXN_+4",
-      "description": "Predictive + functional COMBINATION CAP. Predictive (MIS_PRD +4) and functional (MIS_FXN +4) both indicate a damaging effect — one biological signal corroborated two ways. Rather than summing to +8, the combined weight is capped at the strong ceiling of +4. This is why the two lanes roll into one capped node before the informative tally is added.",
+      "description": "Predictive + functional COMBINATION CAP. Predictive (MIS_PRD +2) and functional (MIS_FXN +4) both indicate a damaging effect — one biological signal corroborated two ways. Rather than summing to +6, the combined weight is capped at the strong ceiling of +4 (set by the functional lane). This is why the two lanes roll into one capped node before the informative tally is added.",
       "hasEvidenceLines": [
         "#/assessment/pvs-v19-tp53:MIS_PRD",
         "#/assessment/pvs-v19-tp53:MIS_FXN"
@@ -401,7 +384,7 @@
           "contributor": "ClinGen TP53 VCEP (illustrative)"
         }
       ],
-      "description": "Final SVCv4 classification. HOD (0.0) + the selected PFD lane MIS (+5.0) = +5.0 -> Likely Pathogenic. The MIS workflow carried the call: strong REVEL prediction and strong functional data corroborated (capped at +4), plus a same-residue Pathogenic comparator (+1), all downstream of a met gene-disease-validity gate.",
+      "description": "Final SVCv4 classification. HOD (0.0) + the selected PFD lane MIS (+5.0) = +5.0 -> Likely Pathogenic. The MIS workflow carried the call: moderate BayesDel prediction (+2) and strong functional data (+4) corroborated (capped at +4), plus a same-residue Pathogenic comparator (+1), all downstream of a met gene-disease-validity gate.",
       "hasEvidenceLines": [
         "#/assessment/pvs-v19-tp53:HOD",
         "#/assessment/pvs-v19-tp53:PFD"
