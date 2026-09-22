@@ -51,7 +51,12 @@ from svcv4_model.case import (
 )
 from svcv4_model.case_control import CaseControlStudyEvidence
 from svcv4_model.classification import VariantPathogenicityClassification
-from svcv4_model.config import InsilicoPredictorConfig, ScoreBand
+from svcv4_model.config import (
+    ExonRelevanceConfig,
+    InsilicoPredictorConfig,
+    RelevanceTier,
+    ScoreBand,
+)
 from svcv4_model.critical_amino_acid import (
     CriticalAminoAcidEvidence,
     CriticalityKind,
@@ -190,6 +195,7 @@ __all__ = [
     "ExonDuplicationOutcome",
     "ExonDuplicationPredictiveEvidence",
     "ExonRelevance",
+    "ExonRelevanceConfig",
     "FrameshiftAssessment",
     "FrameshiftPredictionOutcome",
     "FrameshiftPredictiveEvidence",
@@ -234,6 +240,7 @@ __all__ = [
     "Proposition",
     "ProteinAssayType",
     "ProteinFunctionalAssay",
+    "RelevanceTier",
     "ScoreBand",
     "Sex",
     "SimilarityBasis",

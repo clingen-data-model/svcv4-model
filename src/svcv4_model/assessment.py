@@ -21,7 +21,11 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from svcv4_model.config import MIS_PRD_INIT_INSILICO_V4
+from svcv4_model.config import (
+    EXON_REL_WITH_MECHANISM_V4,
+    MIS_PRD_EXON_REL_V4,
+    MIS_PRD_INIT_INSILICO_V4,
+)
 
 GROUP = Literal["rollup", "router", "initial", "adjuster", "module"]
 DATA_ROLE = Literal["input", "gate", "router", "provenance"]
@@ -664,8 +668,15 @@ ruleset(
     "Exon relevance (missense)",
     "exon-relevance-assessment",
     parent="MIS_PRD",
-    params={"include_mechanism": False},
+    params=MIS_PRD_EXON_REL_V4.model_dump(),
     provisional=True,
+    description=(
+        "Exon relevance (missense) — a multiplier (SM 6, Fig 2 matrix) scaling the initial "
+        "predictive points by how many clinically-relevant transcripts contain the exon(s) "
+        "harbouring the VBC: All=1.0, Most=0.5, Few=0.0. MIS_PRD = MIS_PRD_INIT × this "
+        "multiplier. Baseline missense leaves include_mechanism False (predictors already "
+        "capture mechanism); a specialisation may re-weight the tiers."
+    ),
 )
 ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS_PRD_FXN")
 ruleset("MIS_INF", "Missense informative variants", "informative-variants-assessment", parent="MIS")
@@ -715,7 +726,7 @@ ruleset(
     "Exon relevance (null)",
     "exon-relevance-assessment",
     parent="NUL_PRD",
-    params={"include_mechanism": True},
+    params=EXON_REL_WITH_MECHANISM_V4.model_dump(),
     provisional=True,
 )
 ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL_PRD_FXN")
@@ -778,7 +789,7 @@ ruleset(
     "Exon relevance (CDS)",
     "exon-relevance-assessment",
     parent="CDS_PRD",
-    params={"include_mechanism": True},
+    params=EXON_REL_WITH_MECHANISM_V4.model_dump(),
     provisional=True,
 )
 ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS_PRD_FXN")
@@ -820,7 +831,7 @@ ruleset(
     "Exon relevance (splice)",
     "exon-relevance-assessment",
     parent="SPL_PRD",
-    params={"include_mechanism": True},
+    params=EXON_REL_WITH_MECHANISM_V4.model_dump(),
     provisional=True,
 )
 ruleset("SPL_SPA", "Splice assay", "splice-assay-assessment", parent="SPL_PRD_SPA")

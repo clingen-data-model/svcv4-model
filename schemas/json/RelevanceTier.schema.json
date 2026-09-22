@@ -1,0 +1,35 @@
+{
+  "additionalProperties": false,
+  "description": "One row of the exon-relevance matrix \u2014 a tier and the fraction it applies.",
+  "properties": {
+    "criterion": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "What the tier means, in words.",
+      "title": "Criterion"
+    },
+    "multiplier": {
+      "description": "Fraction the initial points are scaled by (0.0\u20131.0).",
+      "title": "Multiplier",
+      "type": "number"
+    },
+    "tier": {
+      "description": "Relevance tier, e.g. 'All' | 'Most' | 'Few'.",
+      "title": "Tier",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tier",
+    "multiplier"
+  ],
+  "title": "RelevanceTier",
+  "type": "object"
+}

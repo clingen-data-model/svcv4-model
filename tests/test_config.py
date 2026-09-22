@@ -6,9 +6,12 @@ import pytest
 
 from svcv4_model.assessment import RULESETS
 from svcv4_model.config import (
+    MIS_PRD_EXON_REL_V4,
     MIS_PRD_INIT_INSILICO_V4,
+    ExonRelevanceConfig,
     InsilicoPredictorConfig,
     ScoreBand,
+    exon_relevance_config,
     insilico_config,
 )
 
@@ -109,3 +112,67 @@ class TestRegistryWiring:
 def test_invalid_config_rejects_unknown_field():
     with pytest.raises(ValueError):
         InsilicoPredictorConfig.model_validate({"selectable_tools": ["REVEL"], "bogus": 1})
+
+
+EXON_REL_IDS = [
+    "svc:MIS_PRD_EXON_REL:4.0",
+    "svc:NUL_PRD_EXON_REL:4.0",
+    "svc:CDS_PRD_EXON_REL:4.0",
+    "svc:SPL_PRD_EXON_REL:4.0",
+]
+
+
+class TestExonRelevanceConfig:
+    def test_baseline_matrix(self):
+        cfg = MIS_PRD_EXON_REL_V4
+        assert [(t.tier, t.multiplier) for t in cfg.tier_multipliers] == [
+            ("All", 1.0),
+            ("Most", 0.5),
+            ("Few", 0.0),
+        ]
+        assert cfg.include_mechanism is False
+
+    @pytest.mark.parametrize(
+        ("tier", "expected"),
+        [("All", 1.0), ("Most", 0.5), ("Few", 0.0), ("all", 1.0), ("FEW", 0.0)],
+    )
+    def test_multiplier_for(self, tier, expected):
+        assert MIS_PRD_EXON_REL_V4.multiplier_for(tier) == expected
+
+    def test_unknown_tier_raises(self):
+        with pytest.raises(ValueError, match="unknown relevance tier"):
+            MIS_PRD_EXON_REL_V4.multiplier_for("Some")
+
+    def test_round_trips_through_params(self):
+        dumped = MIS_PRD_EXON_REL_V4.model_dump()
+        assert exon_relevance_config(dumped) == MIS_PRD_EXON_REL_V4
+
+    def test_all_exon_rel_rulesets_carry_the_matrix(self):
+        for rid in EXON_REL_IDS:
+            cfg = exon_relevance_config(RULESETS[rid].params)
+            # every family shares the same tier fractions
+            assert cfg.multiplier_for("All") == 1.0
+            assert cfg.multiplier_for("Few") == 0.0
+
+    def test_mechanism_toggle_by_family(self):
+        # missense leaves mechanism out; null/inframe/splice fold it in
+        assert (
+            exon_relevance_config(RULESETS["svc:MIS_PRD_EXON_REL:4.0"].params).include_mechanism
+            is False
+        )
+        for rid in EXON_REL_IDS[1:]:
+            assert exon_relevance_config(RULESETS[rid].params).include_mechanism is True
+
+    def test_specialisation_can_reweight_tiers(self):
+        spec = ExonRelevanceConfig.model_validate(
+            {
+                "tier_multipliers": [
+                    {"tier": "All", "multiplier": 1.0},
+                    {"tier": "Most", "multiplier": 0.75},  # re-weighted
+                    {"tier": "Few", "multiplier": 0.0},
+                ],
+                "include_mechanism": False,
+            }
+        )
+        assert spec.multiplier_for("Most") == 0.75
+        assert MIS_PRD_EXON_REL_V4.multiplier_for("Most") == 0.5

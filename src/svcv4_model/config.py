@@ -82,6 +82,47 @@ def insilico_config(params: dict) -> InsilicoPredictorConfig:
     return InsilicoPredictorConfig.model_validate(params)
 
 
+class RelevanceTier(BaseModel):
+    """One row of the exon-relevance matrix — a tier and the fraction it applies."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    tier: str = Field(description="Relevance tier, e.g. 'All' | 'Most' | 'Few'.")
+    multiplier: float = Field(description="Fraction the initial points are scaled by (0.0–1.0).")
+    criterion: str | None = Field(default=None, description="What the tier means, in words.")
+
+
+class ExonRelevanceConfig(BaseModel):
+    """Configuration behind an ``exon-relevance-assessment`` code.
+
+    The code outputs a **multiplier** (not points): the initial predictive points
+    are scaled by how many clinically-relevant transcripts contain the exon(s)
+    harbouring the VBC. ``tier_multipliers`` is that matrix. ``include_mechanism``
+    folds the gene-disease molecular-mechanism cross-reference into this node —
+    baseline missense leaves it ``False`` (predictors already capture mechanism);
+    the null / in-frame / splice families set it ``True``. A specialisation may
+    re-weight the tiers or flip the mechanism toggle without changing the code.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    tier_multipliers: list[RelevanceTier]
+    include_mechanism: bool = False
+
+    def multiplier_for(self, tier: str) -> float:
+        """The fraction for ``tier`` (case-insensitive); raises on an unknown tier."""
+        for row in self.tier_multipliers:
+            if row.tier.casefold() == tier.casefold():
+                return row.multiplier
+        known = ", ".join(r.tier for r in self.tier_multipliers)
+        raise ValueError(f"unknown relevance tier {tier!r}; expected one of: {known}")
+
+
+def exon_relevance_config(params: dict) -> ExonRelevanceConfig:
+    """Read a ruleset's ``params`` dict back into the typed config."""
+    return ExonRelevanceConfig.model_validate(params)
+
+
 def _bands(*rows: tuple[float, float | None, float | None]) -> list[ScoreBand]:
     """``(points, min, max)`` → bands. Both ends inclusive (SM 6 Fig 2 printed form)."""
     return [ScoreBand(points=p, min=lo, max=hi) for p, lo, hi in rows]
@@ -185,4 +226,46 @@ MIS_PRD_INIT_INSILICO_V4 = InsilicoPredictorConfig(
         ),
         # OTHER_CALIBRATED carries no baseline bands — a specialisation supplies them.
     },
+)
+
+
+# --------------------------------------------------------------------------- #
+# Baseline configuration for the exon-relevance codes (svc:*_PRD_EXON_REL:4.0)
+#
+# The tier → fraction matrix from SM 6, Figure 2 (right box, "Exon Relevance
+# Matrix. Multiply Number From Prior Box by this Fraction."). The exon(s)
+# containing the VBC (and affected region, if applicable) are present in
+# All / Most / Few clinically-relevant transcripts.
+# --------------------------------------------------------------------------- #
+
+EXON_RELEVANCE_TIERS = [
+    RelevanceTier(
+        tier="All",
+        multiplier=1.0,
+        criterion="exon(s) present in ALL clinically-relevant transcripts",
+    ),
+    RelevanceTier(
+        tier="Most",
+        multiplier=0.5,
+        criterion="present in MOST clinically-relevant transcripts",
+    ),
+    RelevanceTier(
+        tier="Few",
+        multiplier=0.0,
+        criterion="present in FEW / no clinically-relevant transcripts",
+    ),
+]
+
+# Baseline missense: predictors already capture mechanism, so the gene-disease
+# mechanism cross-reference is NOT folded in here.
+MIS_PRD_EXON_REL_V4 = ExonRelevanceConfig(
+    tier_multipliers=EXON_RELEVANCE_TIERS,
+    include_mechanism=False,
+)
+
+# Null / in-frame / splice families: same matrix, but the gene-disease molecular
+# mechanism cross-reference is folded into this node.
+EXON_REL_WITH_MECHANISM_V4 = ExonRelevanceConfig(
+    tier_multipliers=EXON_RELEVANCE_TIERS,
+    include_mechanism=True,
 )
