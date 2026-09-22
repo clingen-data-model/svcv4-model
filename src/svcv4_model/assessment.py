@@ -22,7 +22,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from svcv4_model.config import (
-    EXON_REL_WITH_MECHANISM_V4,
+    EXON_REL_LOF_V4,
     MIS_PRD_EXON_REL_V4,
     MIS_PRD_INIT_INSILICO_V4,
 )
@@ -418,14 +418,15 @@ _pat(
     "multiplier",
     0.0,
     1.0,
-    # configurable WITH or WITHOUT the gene-disease mechanism data depending on the
-    # workflow branch (include_mechanism); the mechanism data items are optional.
-    ("tier_multipliers", "include_mechanism"),
+    # tier matrix; only_positive (apply weighting to positive points only); and zero
+    # or more mechanism-classification types (e.g. LOF) each with weighted values.
+    ("tier_multipliers", "only_positive", "mechanism_bands"),
     (
+        _di("initial_points", "input", "the points being scaled"),
         _di("exon_relevance", "input", "All/Most/Few"),
         _di("mane_status", "gate"),
-        _di("gencc_mechanism", "input", "optional — used when include_mechanism"),
-        _di("gene_disease_validity", "gate", "optional — used when include_mechanism"),
+        _di("mechanism_type", "input", "optional — required when a mechanism type is configured"),
+        _di("mechanism_class", "input", "optional — the classification value for that type"),
     ),
 )
 _pat(
@@ -674,8 +675,9 @@ ruleset(
         "Exon relevance (missense) — a multiplier (SM 6, Fig 2 matrix) scaling the initial "
         "predictive points by how many clinically-relevant transcripts contain the exon(s) "
         "harbouring the VBC: All=1.0, Most=0.5, Few=0.0. MIS_PRD = MIS_PRD_INIT × this "
-        "multiplier. Baseline missense leaves include_mechanism False (predictors already "
-        "capture mechanism); a specialisation may re-weight the tiers."
+        "multiplier. Missense configures NO mechanism type (predictors already capture "
+        "mechanism); only_positive scales positive points only. A specialisation may "
+        "re-weight the tiers."
     ),
 )
 ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS_PRD_FXN")
@@ -726,7 +728,7 @@ ruleset(
     "Exon relevance (null)",
     "exon-relevance-assessment",
     parent="NUL_PRD",
-    params=EXON_REL_WITH_MECHANISM_V4.model_dump(),
+    params=EXON_REL_LOF_V4.model_dump(),
     provisional=True,
 )
 ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL_PRD_FXN")
@@ -789,7 +791,7 @@ ruleset(
     "Exon relevance (CDS)",
     "exon-relevance-assessment",
     parent="CDS_PRD",
-    params=EXON_REL_WITH_MECHANISM_V4.model_dump(),
+    params=EXON_REL_LOF_V4.model_dump(),
     provisional=True,
 )
 ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS_PRD_FXN")
@@ -831,7 +833,7 @@ ruleset(
     "Exon relevance (splice)",
     "exon-relevance-assessment",
     parent="SPL_PRD",
-    params=EXON_REL_WITH_MECHANISM_V4.model_dump(),
+    params=EXON_REL_LOF_V4.model_dump(),
     provisional=True,
 )
 ruleset("SPL_SPA", "Splice assay", "splice-assay-assessment", parent="SPL_PRD_SPA")

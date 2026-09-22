@@ -47,9 +47,10 @@ def test_a_pattern_is_reused_across_distinct_rulesets() -> None:
     nul_er = resolve("svc:NUL_PRD_EXON_REL:4.0")
     assert mis_er.method_type == nul_er.method_type == "exon-relevance-assessment"
     assert mis_er.id != nul_er.id
-    # same pattern, different config: missense excludes gene-disease mechanism
-    assert mis_er.params["include_mechanism"] is False
-    assert nul_er.params["include_mechanism"] is True
+    # same pattern, different config: missense configures no mechanism type;
+    # the null family configures a "LOF" mechanism-classification type
+    assert mis_er.params["mechanism_bands"] == []
+    assert [b["mechanism_type"] for b in nul_er.params["mechanism_bands"]] == ["LOF"]
 
 
 def test_hierarchy_is_navigable() -> None:
