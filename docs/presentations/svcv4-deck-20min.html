@@ -504,14 +504,14 @@ const GA4GH_LOGO = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9Ij
 
     { k:"Worked · MIS_PRD", tsize:"3.8cqh", top:true,
       title:"From the workflow to two backed evidence lines",
-      body:`<style>.wprd{display:flex;flex-direction:column;gap:.9cqh;margin-top:.5cqh}.wprd .prdtop{align-self:center;background:var(--accent-soft);border:1.6px solid var(--accent);border-radius:10px;padding:.6cqh 2.2cqw;text-align:center}.wprd .prdtop b{font-size:2.4cqh;color:var(--ink)}.wprd .prdtop .sub{font-family:var(--mono);font-size:1.5cqh;color:var(--muted);margin-left:.6cqw}.wprd .wfig img{width:100%;height:auto;display:block;border:1px solid var(--hair);border-radius:8px;background:#fff}.wprd .wfig .cap{font-family:var(--mono);font-size:1.3cqh;color:var(--accent);margin-top:.4cqh;display:flex;justify-content:space-around;font-weight:600}.wprd .wboxes{display:grid;grid-template-columns:1fr 1fr;gap:2.2cqw}.wprd .wboxes .leaf{margin:0;padding:.8cqh 1cqw}.wprd .wboxes .lb{font-size:1.7cqh}</style><div class="wprd"><div class="prdtop"><b>MIS_PRD = +4.0</b><span class="sub">( INIT +4.0 × EXON 100% )</span></div><div class="wfig"><img src="${SM6}" alt="SM 6 Figure 2 — Initial Evidence Points, then Exon Relevance Matrix"><div class="cap"><span>▲ Initial Evidence Points</span><span>▲ Exon Relevance Matrix</span></div></div><div class="wboxes"><div class="leaf"><div class="lh">MIS_PRD_INIT_INSILICO · initial points <span class="tag prov" style="font-size:.75em">provisional subcode</span></div><div class="lb">predictor score → points</div><span class="chip"><b>tool</b> REVEL</span><span class="chip"><b>score</b> 0.86</span><span class="chip">→ <b>+4.0</b></span></div><div class="leaf amber"><div class="lh">MIS_PRD_EXON_REL · exon relevance <span class="tag prov" style="font-size:.8em">provisional subcode</span></div><div class="lb">VBC exon in clinically-relevant transcripts</div><span class="chip"><b>All</b> transcripts</span><span class="chip">→ <b>×100%</b></span></div></div></div>`,
-      notes:"Grounded in the TP53 practice example: its EvidenceItem carries tool=REVEL, score=0.86, which maps through SM 6 Figure 2 to +4.0 initial points; the VBC exon (the DNA-binding domain) is present in all clinically-relevant transcripts, so exon relevance is x100 percent. MIS_PRD = +4.0. Two leaf evidence lines, each backed by its own data points — the predictor tool and score for one, the exon assessment for the other. This is applied evidence at the leaf, which makes the assessment verifiable and reusable." },
+      body:`<style>.wprd{display:flex;flex-direction:column;gap:.9cqh;margin-top:.5cqh}.wprd .prdtop{align-self:center;background:var(--accent-soft);border:1.6px solid var(--accent);border-radius:10px;padding:.6cqh 2.2cqw;text-align:center}.wprd .prdtop b{font-size:2.4cqh;color:var(--ink)}.wprd .prdtop .sub{font-family:var(--mono);font-size:1.5cqh;color:var(--muted);margin-left:.6cqw}.wprd .wfig img{width:100%;height:auto;display:block;border:1px solid var(--hair);border-radius:8px;background:#fff}.wprd .wfig .cap{font-family:var(--mono);font-size:1.3cqh;color:var(--accent);margin-top:.4cqh;display:flex;justify-content:space-around;font-weight:600}.wprd .wboxes{display:grid;grid-template-columns:1fr 1fr;gap:2.2cqw}.wprd .wboxes .leaf{margin:0;padding:.8cqh 1cqw}.wprd .wboxes .lb{font-size:1.7cqh}</style><div class="wprd"><div class="prdtop"><b>MIS_PRD = +2.0</b><span class="sub">( INIT +2.0 × EXON 100% )</span></div><div class="wfig"><img src="${SM6}" alt="SM 6 Figure 2 — Initial Evidence Points, then Exon Relevance Matrix"><div class="cap"><span>▲ Initial Evidence Points</span><span>▲ Exon Relevance Matrix</span></div></div><div class="wboxes"><div class="leaf"><div class="lh">MIS_PRD_INIT_INSILICO · initial points <span class="tag prov" style="font-size:.75em">provisional subcode</span></div><div class="lb">predictor score → points</div><span class="chip"><b>tool</b> BayesDel</span><span class="chip"><b>score</b> 0.32</span><span class="chip">→ <b>+2.0</b></span></div><div class="leaf amber"><div class="lh">MIS_PRD_EXON_REL · exon relevance <span class="tag prov" style="font-size:.8em">provisional subcode</span></div><div class="lb">VBC exon in clinically-relevant transcripts</div><span class="chip"><b>All</b> transcripts</span><span class="chip">→ <b>×100%</b></span></div></div></div>`,
+      notes:"Grounded in the TP53 practice example: its EvidenceItem carries tool=BayesDel, score=0.32, which maps through SM 6 Figure 2 to +2.0 initial points; the VBC exon (the DNA-binding domain) is present in all clinically-relevant transcripts, so exon relevance is x100 percent. MIS_PRD = +2.0. Two leaf evidence lines, each backed by its own data points — the predictor tool and score for one, the exon assessment for the other. This is applied evidence at the leaf, which makes the assessment verifiable and reusable." },
 
     { k:"Why the codes matter", tsize:"4.4cqh", top:true,
       title:"Each code is the method — so you can show the work at any depth",
       body:`<div class="tree small" style="font-size:1.82cqh">line · method = <span class="code">MIS</span>                     → concept total
-└─ line · method = <span class="code">MIS_PRD</span>              → +4.0
-   ├─ line · method = <span class="held">MIS_PRD_INIT_INSILICO</span>  → +4.0   ← the actual method, at the leaf
+└─ line · method = <span class="code">MIS_PRD</span>              → +2.0
+   ├─ line · method = <span class="held">MIS_PRD_INIT_INSILICO</span>  → +2.0   ← the actual method, at the leaf
    └─ line · method = <span class="held">MIS_PRD_EXON_REL</span>      → ×100%</div>
       <p class="lead" style="margin-top:2.2cqh;font-size:2.0cqh">Every code — official, a <span class="held">provisional code</span>, or a <span class="held">provisional subcode</span> — is the <strong>method</strong> on its evidence line: the rule that produced that assessment. Codes carry the concept prefix (<span class="code">MIS_</span>) so a specialization can diverge one flow's rule from another's; rules that share inputs, results, and change together may be generic — <strong>the WG finalizes which.</strong> Either way, the record can <strong>show the work as deep as you want.</strong></p>
       <div class="result" style="margin-top:1.8cqh;font-size:2.0cqh">The data-modeling goal: <strong>faithfully represent the framework's rules as defined.</strong> A big ask — and the shared goal that makes every result verifiable.</div>`,
@@ -702,14 +702,15 @@ const TP53_JSON = `{
           "evidence lines": {
             "MIS_PRD_FXN": {
               "direction": "supports", "score": 4.0, "outcome": "MIS_PRD_FXN_+4",
+              "calc": "cap(MIS_PRD +2, MIS_FXN +4) = +4 (both damaging → corroborate, capped not summed)",
               "evidence lines": {
                 "MIS_PRD": {
-                  "direction": "supports", "score": 4.0, "outcome": "MIS_PRD_+4",
-                  "calc": "MIS_PRD_INIT (+4) × MIS_PRD_EXON (100%) = +4",
+                  "direction": "supports", "score": 2.0, "outcome": "MIS_PRD_+2",
+                  "calc": "MIS_PRD_INIT (+2) × MIS_PRD_EXON (100%) = +2",
                   "evidence lines": {
                     "MIS_PRD_INIT_INSILICO": {
-                      "direction": "supports", "score": 4.0, "outcome": "MIS_PRD_INIT_INSILICO_+4",
-                      "evidence items": { "tool": "REVEL", "raw": 0.86, "band": "PATH_STRONG" }
+                      "direction": "supports", "score": 2.0, "outcome": "MIS_PRD_INIT_INSILICO_+2",
+                      "evidence items": { "tool": "BayesDel", "raw": 0.32, "band": "PATH_MODERATE" }
                     },
                     "MIS_PRD_EXON_REL": {
                       "direction": "supports", "multiplier": 1.0, "percent": "100%", "outcome": "MIS_PRD_EXON_REL_x1.0",
@@ -787,21 +788,22 @@ evidence lines:
             direction: supports
             score: 4.0
             outcome: MIS_PRD_FXN_+4
+            calc: cap(MIS_PRD +2, MIS_FXN +4) = +4 (both damaging → corroborate, capped not summed)
             evidence lines:
               MIS_PRD:
                 direction: supports
-                score: 4.0
-                outcome: MIS_PRD_+4
-                calc: MIS_PRD_INIT (+4) × MIS_PRD_EXON (100%) = +4
+                score: 2.0
+                outcome: MIS_PRD_+2
+                calc: MIS_PRD_INIT (+2) × MIS_PRD_EXON (100%) = +2
                 evidence lines:
                   MIS_PRD_INIT_INSILICO:      # in-silico predictor (tool in params)
                     direction: supports
-                    score: 4.0
-                    outcome: MIS_PRD_INIT_INSILICO_+4
+                    score: 2.0
+                    outcome: MIS_PRD_INIT_INSILICO_+2
                     evidence items:
-                      tool: REVEL
-                      raw: 0.86
-                      band: PATH_STRONG
+                      tool: BayesDel
+                      raw: 0.32
+                      band: PATH_MODERATE
                   MIS_PRD_EXON_REL:           # exon relevance + gene-disease mechanism cross-reference
                     direction: supports
                     multiplier: 1.0
