@@ -1,0 +1,96 @@
+{
+  "$defs": {
+    "ScoreBand": {
+      "additionalProperties": false,
+      "description": "One ``(points, score-interval)`` row of a predictor's calibration table.\n\nThe interval is ``min``..``max``; ``None`` means unbounded (\u2212\u221e / +\u221e).\n``min_incl`` / ``max_incl`` select closed ``[ ]`` vs open ``( )`` at each end.\nIntervals are stored **as printed** in SM 6 Fig 2 (``\u2264T`` \u2192 ``(\u2212\u221e, T]``;\n``\u2265T`` \u2192 ``[T, +\u221e)``; ``L to U`` \u2192 ``[L, U]``), so a band may cover a\npredictor whose scale is inverted (ESM1b: higher score \u21d2 more benign).",
+      "properties": {
+        "max": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Upper bound; None = +\u221e.",
+          "title": "Max"
+        },
+        "max_incl": {
+          "default": true,
+          "description": "Upper bound inclusive (]) vs exclusive ()).",
+          "title": "Max Incl",
+          "type": "boolean"
+        },
+        "min": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Lower bound; None = \u2212\u221e.",
+          "title": "Min"
+        },
+        "min_incl": {
+          "default": true,
+          "description": "Lower bound inclusive ([) vs exclusive (().",
+          "title": "Min Incl",
+          "type": "boolean"
+        },
+        "points": {
+          "description": "Initial evidence points for scores in this band.",
+          "title": "Points",
+          "type": "number"
+        }
+      },
+      "required": [
+        "points"
+      ],
+      "title": "ScoreBand",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Configuration behind an ``insilico-predictor-assessment`` code.\n\n``per_tool_bands[tool]`` is the ordered calibration table for one approved\npredictor. ``selectable_tools`` is the menu an analyst may choose from;\n``selected_tool`` records the choice on an instance (``None`` on the baseline\nregistry entry). A specialisation overrides a tool's bands, narrows\n``selectable_tools``, or pins ``selected_tool`` \u2014 the code is unchanged.",
+  "properties": {
+    "per_tool_bands": {
+      "additionalProperties": {
+        "items": {
+          "$ref": "#/$defs/ScoreBand"
+        },
+        "type": "array"
+      },
+      "title": "Per Tool Bands",
+      "type": "object"
+    },
+    "selectable_tools": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Selectable Tools",
+      "type": "array"
+    },
+    "selected_tool": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selected Tool"
+    }
+  },
+  "required": [
+    "selectable_tools"
+  ],
+  "title": "InsilicoPredictorConfig",
+  "type": "object"
+}

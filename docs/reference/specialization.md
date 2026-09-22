@@ -16,7 +16,7 @@ distinct, namespaced id.
 
 The id scheme is **`svc:<CODE>:<version>` (baseline) or `svc-<scope>:<CODE>:<version>`**. Scope is `baseline`
 or a specialization scope (e.g. `gene-MYH7`, `vcep-cardiomyopathy`). All scopes
-live under the `svcv4` registry umbrella.
+live under the `svc` registry umbrella.
 
 ## Worked example — same evidence, two configurations
 
@@ -37,7 +37,7 @@ different score.
       "specifiedBy": {
         "id": "svc:MIS_PRD_INIT_INSILICO:4.0",
         "methodType": "insilico-predictor-assessment",
-        "version": "1.0"
+        "version": "4.0"
       },
       "score": 3.0,
       "direction": "supports",
@@ -58,7 +58,7 @@ different score.
       "specifiedBy": {
         "id": "svc-gene-MYH7:MIS_PRD_INIT_INSILICO:4.0",
         "methodType": "insilico-predictor-assessment",
-        "version": "1.0"
+        "version": "4.0"
       },
       "score": 4.0,
       "direction": "supports",
@@ -87,6 +87,45 @@ of the SVCv4 framework; it does **not** mint new codes. Examples:
 | `exon-relevance-assessment` | tier multipliers · include_mechanism (with/without gene-disease mechanism) |
 | `informative-variants-assessment` | point values · relatedness rule · added granularity |
 | `population-frequency-assessment` | fold thresholds & point tiers |
+
+## The configuration model
+
+A code is only a name; the numbers behind it live in the ruleset's typed
+**configuration** (`svcv4_model.config`). The first configured family is the
+in-silico predictor initial-points code, whose model is a dictionary keyed by
+predictor tool — each an ordered list of `(points, score-interval)` **bands**,
+transcribed faithfully from SM 6, Figure 2.
+
+```python
+class ScoreBand:                       # one calibration row
+    points: float
+    min | max: float | None            # None = unbounded (−∞ / +∞)
+    min_incl | max_incl: bool          # closed [ ] vs open ( )
+
+class InsilicoPredictorConfig:         # the configuration behind the code
+    selectable_tools: list[str]        # menu the analyst may choose from
+    per_tool_bands: dict[str, list[ScoreBand]]
+    selected_tool: str | None          # the choice on an instance
+    def points_for(tool, score) -> float
+```
+
+The baseline `svc:MIS_PRD_INIT_INSILICO:4.0` carries all seven ClinGen-approved
+tools (four reach `−3.0`, three reach `−4.0`; ESM1b's scale is inverted). For
+example REVEL:
+
+| points | interval | points | interval |
+|--:|---|--:|---|
+| −4 | (−∞, 0.016] | +1 | [0.644, 0.772] |
+| −3 | [0.017, 0.052] | +2 | [0.773, 0.878] |
+| −2 | [0.053, 0.183] | +3 | [0.879, 0.931] |
+| −1 | [0.184, 0.290] | +4 | [0.932, +∞) |
+| 0 | [0.291, 0.643] | | |
+
+A specialization stores the **same** shape under its namespaced id, overriding
+only what it needs — e.g. `svc-gene-MYH7:MIS_PRD_INIT_INSILICO:4.0` narrows
+`selectable_tools` to `["REVEL"]`, pins `selected_tool`, and re-thresholds
+REVEL's bands so `+4.0` begins at `≥ 0.900`. The config validates the same way
+in either namespace, so a reader can diff two configurations field-for-field.
 
 ## In the model
 

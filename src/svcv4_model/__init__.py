@@ -51,6 +51,7 @@ from svcv4_model.case import (
 )
 from svcv4_model.case_control import CaseControlStudyEvidence
 from svcv4_model.classification import VariantPathogenicityClassification
+from svcv4_model.config import InsilicoPredictorConfig, ScoreBand
 from svcv4_model.critical_amino_acid import (
     CriticalAminoAcidEvidence,
     CriticalityKind,
@@ -198,6 +199,7 @@ __all__ = [
     "GeneDiseaseValidity",
     "InformativeVariant",
     "InformativeVariantsEvidence",
+    "InsilicoPredictorConfig",
     "InframeIndelAssessment",
     "InframeIndelBranch",
     "InframeIndelPredictiveEvidence",
@@ -232,6 +234,7 @@ __all__ = [
     "Proposition",
     "ProteinAssayType",
     "ProteinFunctionalAssay",
+    "ScoreBand",
     "Sex",
     "SimilarityBasis",
     "SpliceAssayEvidence",
