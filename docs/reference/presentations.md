@@ -26,8 +26,11 @@ Annual Scientific Meeting, Te Pae, Christchurch, New Zealand.
 
 - [SVCv4 · HGSA 2026 (Google Slides)](https://docs.google.com/presentation/d/1V4KUgyzukGv9mJGTz7Anl0CGjWcdNwOz3VycEMeJZmI/edit)
 
-## Earlier overview
+## SVCv4 Software Developer Session — 25 September 2025
 
-An earlier preview of the SVCv4 standards and data-model direction.
+A session for software platform developers building support for the forthcoming
+ACMG/AMP/CAP/ClinGen SVCv4 Standards — an overview of the draft standards (key v3 → v4
+changes), a demo of the ClinGen Pilot Calculator, and an introduction to the draft SVCv4
+Data Model (aligned with GA4GH GKS).
 
 - [Preview of the ACMG/AMP/CAP/ClinGen SVCv4 (Draft) Standards and Data Model (Google Slides)](https://docs.google.com/presentation/d/1oSfJMNxKpDhbG261zk9UzxCrqQvaRWxYv3aPl_KpGwg/edit)
