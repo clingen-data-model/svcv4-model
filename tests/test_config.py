@@ -11,8 +11,11 @@ from svcv4_model.config import (
     ExonRelevanceConfig,
     InsilicoPredictorConfig,
     ScoreBand,
+    ScoreOutOfRange,
+    UnknownTool,
     exon_relevance_config,
     insilico_config,
+    ladder,
 )
 
 BASELINE_ID = "svc:MIS_PRD_INIT_INSILICO:4.0"
@@ -21,14 +24,16 @@ MYH7_ID = "svc-gene-MYH7:MIS_PRD_INIT_INSILICO:4.0"
 
 class TestScoreBand:
     def test_interval_notation(self):
-        assert ScoreBand(points=-3, max=0.070).interval == "[-inf, 0.07]"
-        assert ScoreBand(points=4, min=0.990).interval == "[0.99, +inf]"
-        assert ScoreBand(points=0, min=0.1, max=0.2, min_incl=False).interval == "(0.1, 0.2]"
+        # default is half-open [min, max)
+        assert ScoreBand(points=-3, max=0.070).interval == "[-inf, 0.07)"
+        assert ScoreBand(points=4, min=0.990).interval == "[0.99, +inf)"
+        assert ScoreBand(points=0, min=0.1, max=0.2, max_incl=True).interval == "[0.1, 0.2]"
 
-    def test_contains_bounds(self):
-        b = ScoreBand(points=0, min=0.170, max=0.791)  # both inclusive
-        assert b.contains(0.170) and b.contains(0.791) and b.contains(0.5)
-        assert not b.contains(0.169) and not b.contains(0.792)
+    def test_contains_half_open_default(self):
+        b = ScoreBand(points=0, min=0.170, max=0.791)  # [0.170, 0.791)
+        assert b.contains(0.170) and b.contains(0.5)
+        assert not b.contains(0.791)  # upper exclusive
+        assert not b.contains(0.169)
 
     def test_contains_exclusive(self):
         b = ScoreBand(points=0, min=0.1, max=0.2, min_incl=False, max_incl=False)
@@ -38,6 +43,14 @@ class TestScoreBand:
     def test_unbounded(self):
         assert ScoreBand(points=-3, max=0.07).contains(-999)
         assert ScoreBand(points=4, min=0.99).contains(999)
+
+
+class TestLadder:
+    def test_builds_contiguous_covering_bands(self):
+        bands = ladder((-1, None), (0, 0.5), (1, 0.9))
+        assert [b.interval for b in bands] == ["[-inf, 0.5)", "[0.5, 0.9)", "[0.9, +inf)"]
+        # a cut value belongs to the higher band
+        assert [b.contains(0.5) for b in bands] == [False, True, False]
 
 
 class TestBaselineConfig:
@@ -79,15 +92,81 @@ class TestBaselineConfig:
     def test_points_for(self, tool, score, expected):
         assert MIS_PRD_INIT_INSILICO_V4.points_for(tool, score) == expected
 
-    def test_bands_are_ordered_and_monotonic_in_points(self):
+    def test_every_tool_covers_the_real_line(self):
+        cfg = MIS_PRD_INIT_INSILICO_V4
+        for tool in cfg.per_tool_bands:
+            lo, hi = cfg.domain(tool)
+            assert lo is None and hi is None, f"{tool} should span -inf..+inf"
+            # +4 is reachable for every tool
+            assert 4.0 in {b.points for b in cfg.per_tool_bands[tool]}
+
+    def test_bands_are_contiguous(self):
+        # constructing already validated coverage; assert no gaps explicitly too
         for tool, bands in MIS_PRD_INIT_INSILICO_V4.per_tool_bands.items():
-            pts = [b.points for b in bands]
-            assert pts == sorted(pts), f"{tool} points not ascending"
-            assert pts[-1] == 4.0, f"{tool} must reach +4.0"
+            ordered = sorted(bands, key=lambda b: float("-inf") if b.min is None else b.min)
+            for lower, upper in zip(ordered, ordered[1:], strict=False):
+                assert lower.max == upper.min, f"{tool} gap/overlap"
+                assert lower.max_incl != upper.min_incl, f"{tool} boundary not clean"
 
     def test_round_trips_through_params(self):
         dumped = MIS_PRD_INIT_INSILICO_V4.model_dump(exclude_none=True)
         assert insilico_config(dumped) == MIS_PRD_INIT_INSILICO_V4
+
+
+class TestInsilicoApi:
+    def test_evaluate_returns_points(self):
+        assert MIS_PRD_INIT_INSILICO_V4.evaluate("REVEL", 0.86) == 2.0
+
+    def test_unknown_tool_raises(self):
+        with pytest.raises(UnknownTool, match="unknown tool"):
+            MIS_PRD_INIT_INSILICO_V4.evaluate("SIFT", 0.5)
+
+    def test_tool_without_bands_raises(self):
+        # OTHER_CALIBRATED is selectable but has no baseline bands
+        with pytest.raises(UnknownTool, match="no configured bands"):
+            MIS_PRD_INIT_INSILICO_V4.evaluate("OTHER_CALIBRATED", 0.5)
+
+    def test_score_out_of_range_raises(self):
+        # a bounded tool: only covers [0.0, 1.0)
+        cfg = InsilicoPredictorConfig(
+            selectable_tools=["Bounded"],
+            per_tool_bands={
+                "Bounded": [
+                    ScoreBand(points=0.0, min=0.0, max=0.5),
+                    ScoreBand(points=1.0, min=0.5, max=1.0),
+                ]
+            },
+        )
+        assert cfg.evaluate("Bounded", 0.25) == 0.0
+        assert cfg.domain("Bounded") == (0.0, 1.0)
+        with pytest.raises(ScoreOutOfRange, match="outside covered domain"):
+            cfg.evaluate("Bounded", 1.5)
+        with pytest.raises(ScoreOutOfRange):
+            cfg.evaluate("Bounded", -0.1)
+
+    def test_coverage_validator_rejects_gap(self):
+        with pytest.raises(ValueError, match="not contiguous"):
+            InsilicoPredictorConfig(
+                selectable_tools=["Gappy"],
+                per_tool_bands={
+                    "Gappy": [
+                        ScoreBand(points=0.0, min=None, max=0.4),
+                        ScoreBand(points=1.0, min=0.5, max=None),  # gap 0.4–0.5
+                    ]
+                },
+            )
+
+    def test_coverage_validator_rejects_overlap(self):
+        with pytest.raises(ValueError, match="not contiguous|double-covers"):
+            InsilicoPredictorConfig(
+                selectable_tools=["Over"],
+                per_tool_bands={
+                    "Over": [
+                        ScoreBand(points=0.0, min=None, max=0.6),
+                        ScoreBand(points=1.0, min=0.4, max=None),  # overlap 0.4–0.6
+                    ]
+                },
+            )
 
 
 class TestRegistryWiring:

@@ -8,12 +8,23 @@ configuration can be validated, documented, and **modified** by a specialisation
 
 The first configured family is the in-silico predictor initial-points code. Its
 model is a dictionary keyed by predictor tool, each holding an ordered list of
-``(points, score-interval)`` bands — a faithful encoding of SM 6, Figure 2.
+``(points, score-interval)`` bands transcribed from SM 6, Figure 2. Each tool's
+bands are **contiguous and cover 100%** of its ``[min, max]`` domain, so the code
+behaves like a small API: given a tool and a score it returns exactly one point
+value, or raises if the tool is unknown or the score is out of range.
 """
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+
+class UnknownTool(ValueError):
+    """Raised when a score is requested for a tool that is not configured."""
+
+
+class ScoreOutOfRange(ValueError):
+    """Raised when a score falls outside a tool's covered ``[min, max]`` domain."""
 
 
 class ScoreBand(BaseModel):
@@ -21,9 +32,11 @@ class ScoreBand(BaseModel):
 
     The interval is ``min``..``max``; ``None`` means unbounded (−∞ / +∞).
     ``min_incl`` / ``max_incl`` select closed ``[ ]`` vs open ``( )`` at each end.
-    Intervals are stored **as printed** in SM 6 Fig 2 (``≤T`` → ``(−∞, T]``;
-    ``≥T`` → ``[T, +∞)``; ``L to U`` → ``[L, U]``), so a band may cover a
-    predictor whose scale is inverted (ESM1b: higher score ⇒ more benign).
+    Bands default to the half-open form ``[min, max)`` — lower-inclusive,
+    upper-exclusive — so that adjacent bands tile a tool's domain without gaps or
+    overlaps (a boundary value belongs to exactly one band). A tool whose scale is
+    inverted (ESM1b: higher score ⇒ more benign) is handled the same way — the
+    intervals still tile the score axis, only the point labels run the other way.
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -32,7 +45,7 @@ class ScoreBand(BaseModel):
     min: float | None = Field(default=None, description="Lower bound; None = −∞.")
     max: float | None = Field(default=None, description="Upper bound; None = +∞.")
     min_incl: bool = Field(default=True, description="Lower bound inclusive ([) vs exclusive (().")
-    max_incl: bool = Field(default=True, description="Upper bound inclusive (]) vs exclusive ()).")
+    max_incl: bool = Field(default=False, description="Upper bound inclusive (]) vs exclusive ()).")
 
     def contains(self, score: float) -> bool:
         lo_ok = self.min is None or score > self.min or (score == self.min and self.min_incl)
@@ -54,6 +67,13 @@ class InsilicoPredictorConfig(BaseModel):
     ``selected_tool`` records the choice on an instance (``None`` on the baseline
     registry entry). A specialisation overrides a tool's bands, narrows
     ``selectable_tools``, or pins ``selected_tool`` — the code is unchanged.
+
+    **The API.** ``evaluate(tool, score)`` is the code's call: the *inputs* are a
+    configured tool name and a numeric score; the *output* is the point value of
+    the band the score falls in. *Conditions*: the tool must be configured
+    (else ``UnknownTool``) and the score must lie within the tool's covered
+    ``[min, max]`` domain (else ``ScoreOutOfRange``). Each tool's bands are
+    validated on construction to be contiguous and cover that domain 100%.
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -62,19 +82,58 @@ class InsilicoPredictorConfig(BaseModel):
     per_tool_bands: dict[str, list[ScoreBand]] = Field(default_factory=dict)
     selected_tool: str | None = None
 
-    def points_for(self, tool: str, score: float) -> float:
-        """Initial points for ``score`` under ``tool`` (nearest band on a sub-precision gap)."""
-        bands = self.per_tool_bands[tool]
+    @model_validator(mode="after")
+    def _check_full_coverage(self) -> InsilicoPredictorConfig:
+        """Every tool's bands must be contiguous and cover [min, max] with no gap/overlap."""
+        for tool, bands in self.per_tool_bands.items():
+            if not bands:  # a tool with no baseline bands (e.g. OTHER_CALIBRATED) is allowed
+                continue
+            ordered = sorted(bands, key=lambda b: float("-inf") if b.min is None else b.min)
+            for lower, upper in zip(ordered, ordered[1:], strict=False):
+                lo_max = float("inf") if lower.max is None else lower.max
+                up_min = float("-inf") if upper.min is None else upper.min
+                if lo_max != up_min:
+                    raise ValueError(
+                        f"{tool}: not contiguous — {lower.interval} then {upper.interval} "
+                        f"(gap or overlap between bands)"
+                    )
+                if lower.max_incl == upper.min_incl:
+                    kind = "double-covers" if lower.max_incl else "leaves a gap at"
+                    raise ValueError(
+                        f"{tool}: boundary {lo_max:g} {kind} — {lower.interval} vs {upper.interval}"
+                    )
+        return self
+
+    def domain(self, tool: str) -> tuple[float | None, float | None]:
+        """The covered ``(min, max)`` for ``tool`` (None = unbounded). Raises UnknownTool."""
+        bands = self.per_tool_bands.get(tool)
+        if not bands:
+            raise UnknownTool(f"tool {tool!r} has no configured bands")
+        ordered = sorted(bands, key=lambda b: float("-inf") if b.min is None else b.min)
+        return ordered[0].min, ordered[-1].max
+
+    def evaluate(self, tool: str, score: float) -> float:
+        """Points for ``score`` under ``tool``. Raises UnknownTool / ScoreOutOfRange."""
+        bands = self.per_tool_bands.get(tool)
+        if not bands:
+            if tool in self.selectable_tools:
+                raise UnknownTool(
+                    f"tool {tool!r} is selectable but has no configured bands "
+                    "(a specialisation must supply them)"
+                )
+            raise UnknownTool(f"unknown tool {tool!r}; configured: {sorted(self.per_tool_bands)}")
         for band in bands:
             if band.contains(score):
                 return band.points
+        lo, hi = self.domain(tool)
+        lo_s = "-inf" if lo is None else f"{lo:g}"
+        hi_s = "+inf" if hi is None else f"{hi:g}"
+        raise ScoreOutOfRange(f"{tool} score {score:g} outside covered domain [{lo_s}, {hi_s}]")
 
-        def _distance(band: ScoreBand) -> float:
-            lo = band.min if band.min is not None else float("-inf")
-            hi = band.max if band.max is not None else float("inf")
-            return 0.0 if lo <= score <= hi else min(abs(score - lo), abs(score - hi))
-
-        return min(bands, key=_distance).points
+    # backward-compatible alias
+    def points_for(self, tool: str, score: float) -> float:
+        """Alias for :meth:`evaluate`."""
+        return self.evaluate(tool, score)
 
 
 def insilico_config(params: dict) -> InsilicoPredictorConfig:
@@ -123,17 +182,31 @@ def exon_relevance_config(params: dict) -> ExonRelevanceConfig:
     return ExonRelevanceConfig.model_validate(params)
 
 
-def _bands(*rows: tuple[float, float | None, float | None]) -> list[ScoreBand]:
-    """``(points, min, max)`` → bands. Both ends inclusive (SM 6 Fig 2 printed form)."""
-    return [ScoreBand(points=p, min=lo, max=hi) for p, lo, hi in rows]
+def ladder(*rows: tuple[float, float | None]) -> list[ScoreBand]:
+    """Build contiguous, 100%-covering bands from ``(points, lower_bound)`` rows.
+
+    Rows are given in ascending score order; ``lower_bound=None`` marks the
+    bottom band (−∞). Each band spans ``[lower, next_lower)`` (half-open,
+    lower-inclusive); the top band runs to ``+∞``. So the whole real line is
+    tiled with no gaps or overlaps. The cut points are the SM 6 Fig 2 band
+    lower thresholds; a score of exactly a cut belongs to the higher band.
+    """
+    out: list[ScoreBand] = []
+    for i, (points, lower) in enumerate(rows):
+        upper = rows[i + 1][1] if i + 1 < len(rows) else None
+        out.append(ScoreBand(points=points, min=lower, max=upper))
+    return out
 
 
 # --------------------------------------------------------------------------- #
 # Baseline configuration for svc:MIS_PRD_INIT_INSILICO:4.0
 #
 # Transcribed from SM 6, Figure 2 ("Initial evidence points for missense variants
-# based on in-silico prediction"). Four tools reach −3.0, three reach −4.0 for
-# benignity; every tool reaches +4.0 for pathogenicity. ESM1b's scale is inverted.
+# based on in-silico prediction"), as contiguous bands (each band's lower = the
+# figure's stated band-start; upper = the next band's start). Four tools reach
+# −3.0, three reach −4.0 for benignity; every tool reaches +4.0. Rows are in
+# ascending SCORE order — so ESM1b (inverted: higher score ⇒ more benign) runs
+# from +4 up to −3. All tools span −∞…+∞, so any real score maps to a band.
 # --------------------------------------------------------------------------- #
 
 MIS_PRD_INIT_INSILICO_V4 = InsilicoPredictorConfig(
@@ -149,80 +222,80 @@ MIS_PRD_INIT_INSILICO_V4 = InsilicoPredictorConfig(
     ],
     per_tool_bands={
         # ---- reach −3.0 ----
-        "AlphaMissense": _bands(
-            (-3, None, 0.070),
-            (-2, 0.071, 0.099),
-            (-1, 0.100, 0.169),
-            (0, 0.170, 0.791),
-            (1, 0.792, 0.905),
-            (2, 0.906, 0.971),
-            (3, 0.972, 0.989),
-            (4, 0.990, None),
+        "AlphaMissense": ladder(
+            (-3, None),
+            (-2, 0.071),
+            (-1, 0.100),
+            (0, 0.170),
+            (1, 0.792),
+            (2, 0.906),
+            (3, 0.972),
+            (4, 0.990),
         ),
-        "BayesDel": _bands(
-            (-3, None, -0.520),
-            (-2, -0.519, -0.360),
-            (-1, -0.359, -0.180),
-            (0, -0.179, 0.129),
-            (1, 0.130, 0.269),
-            (2, 0.270, 0.409),
-            (3, 0.410, 0.499),
-            (4, 0.50, None),
+        "BayesDel": ladder(
+            (-3, None),
+            (-2, -0.519),
+            (-1, -0.359),
+            (0, -0.179),
+            (1, 0.130),
+            (2, 0.270),
+            (3, 0.410),
+            (4, 0.50),
         ),
-        # ESM1b: inverted — higher score ⇒ more benign, so intervals descend.
-        "ESM1b": _bands(
-            (-3, 8.8, None),
-            (-2, -3.1, 8.7),
-            (-1, -6.3, -3.2),
-            (0, -10.6, -6.4),
-            (1, -12.1, -10.7),
-            (2, -13.9, -12.2),
-            (3, -23.9, -14.0),
-            (4, None, -24.0),
+        # ESM1b inverted — ascending score runs from most-pathogenic (+4) to benign (−3).
+        "ESM1b": ladder(
+            (4, None),
+            (3, -23.9),
+            (2, -13.9),
+            (1, -12.1),
+            (0, -10.6),
+            (-1, -6.3),
+            (-2, -3.1),
+            (-3, 8.8),
         ),
-        "VEST4": _bands(
-            (-3, None, 0.077),
-            (-2, 0.078, 0.302),
-            (-1, 0.303, 0.449),
-            (0, 0.450, 0.763),
-            (1, 0.764, 0.860),
-            (2, 0.861, 0.908),
-            (3, 0.909, 0.964),
-            (4, 0.965, None),
+        "VEST4": ladder(
+            (-3, None),
+            (-2, 0.078),
+            (-1, 0.303),
+            (0, 0.450),
+            (1, 0.764),
+            (2, 0.861),
+            (3, 0.909),
+            (4, 0.965),
         ),
         # ---- reach −4.0 ----
-        "MutPred2": _bands(
-            (-4, None, 0.010),
-            (-3, 0.011, 0.031),
-            (-2, 0.032, 0.197),
-            (-1, 0.198, 0.391),
-            (0, 0.392, 0.736),
-            (1, 0.737, 0.828),
-            (2, 0.829, 0.894),
-            (3, 0.895, 0.931),
-            (4, 0.932, None),
+        "MutPred2": ladder(
+            (-4, None),
+            (-3, 0.011),
+            (-2, 0.032),
+            (-1, 0.198),
+            (0, 0.392),
+            (1, 0.737),
+            (2, 0.829),
+            (3, 0.895),
+            (4, 0.932),
         ),
-        "REVEL": _bands(
-            (-4, None, 0.016),
-            (-3, 0.017, 0.052),
-            (-2, 0.053, 0.183),
-            (-1, 0.184, 0.290),
-            (0, 0.291, 0.643),
-            (1, 0.644, 0.772),
-            (2, 0.773, 0.878),
-            (3, 0.879, 0.931),
-            (4, 0.932, None),
+        "REVEL": ladder(
+            (-4, None),
+            (-3, 0.017),
+            (-2, 0.053),
+            (-1, 0.184),
+            (0, 0.291),
+            (1, 0.644),
+            (2, 0.773),
+            (3, 0.879),
+            (4, 0.932),
         ),
-        "VARITY_R": _bands(
-            (-4, None, 0.036),
-            (-3, 0.037, 0.062),
-            (-2, 0.063, 0.116),
-            (-1, 0.117, 0.251),
-            (0, 0.252, 0.674),
-            (1, 0.675, 0.841),
-            (2, 0.842, 0.914),
-            (3, 0.915, 0.965),
-            (4, 0.966, None),
+        "VARITY_R": ladder(
+            (-4, None),
+            (-3, 0.037),
+            (-2, 0.063),
+            (-1, 0.117),
+            (0, 0.252),
+            (1, 0.675),
+            (2, 0.842),
+            (3, 0.915),
+            (4, 0.966),
         ),
         # OTHER_CALIBRATED carries no baseline bands — a specialisation supplies them.
     },

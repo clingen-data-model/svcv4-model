@@ -99,32 +99,41 @@ the values, a specialization overrides them in its own namespace.
 ### In-silico predictor initial points
 
 The model is a dictionary keyed by predictor tool — each an ordered list of
-`(points, score-interval)` **bands**, transcribed faithfully from SM 6, Figure 2.
+`(points, score-interval)` **bands**, transcribed from SM 6, Figure 2. A code
+behaves like a small **API**: `evaluate(tool, score)` takes a configured tool and
+a numeric score and returns the one point value of the band the score lands in.
+The *conditions* are enforced — an unconfigured tool raises `UnknownTool`, and a
+score outside the tool's covered domain raises `ScoreOutOfRange`.
 
 ```python
 class ScoreBand:                       # one calibration row
     points: float
     min | max: float | None            # None = unbounded (−∞ / +∞)
-    min_incl | max_incl: bool          # closed [ ] vs open ( )
+    min_incl | max_incl: bool          # default [min, max): lower-incl, upper-excl
 
 class InsilicoPredictorConfig:         # the configuration behind the code
     selectable_tools: list[str]        # menu the analyst may choose from
     per_tool_bands: dict[str, list[ScoreBand]]
     selected_tool: str | None          # the choice on an instance
-    def points_for(tool, score) -> float
+    def evaluate(tool, score) -> float  # UnknownTool / ScoreOutOfRange
+    def domain(tool) -> (min, max)      # the covered range
 ```
 
-The baseline `svc:MIS_PRD_INIT_INSILICO:4.0` carries all seven ClinGen-approved
-tools (four reach `−3.0`, three reach `−4.0`; ESM1b's scale is inverted). For
-example REVEL:
+Each tool's bands are **contiguous and cover 100%** of its `[min, max]` domain —
+adjacent bands meet exactly (a boundary value belongs to the higher band), with
+no gaps or overlaps. This is checked on construction, so a specialization that
+leaves a hole is rejected. The baseline `svc:MIS_PRD_INIT_INSILICO:4.0` carries
+all seven ClinGen-approved tools (four reach `−3.0`, three reach `−4.0`; ESM1b's
+scale is inverted, so its intervals run the other way). For example REVEL, whose
+bands tile the whole real line:
 
 | points | interval | points | interval |
 |--:|---|--:|---|
-| −4 | (−∞, 0.016] | +1 | [0.644, 0.772] |
-| −3 | [0.017, 0.052] | +2 | [0.773, 0.878] |
-| −2 | [0.053, 0.183] | +3 | [0.879, 0.931] |
-| −1 | [0.184, 0.290] | +4 | [0.932, +∞) |
-| 0 | [0.291, 0.643] | | |
+| −4 | [−∞, 0.017) | +1 | [0.644, 0.773) |
+| −3 | [0.017, 0.053) | +2 | [0.773, 0.879) |
+| −2 | [0.053, 0.184) | +3 | [0.879, 0.932) |
+| −1 | [0.184, 0.291) | +4 | [0.932, +∞) |
+| 0 | [0.291, 0.644) | | |
 
 A specialization stores the **same** shape under its namespaced id, overriding
 only what it needs — e.g. `svc-gene-MYH7:MIS_PRD_INIT_INSILICO:4.0` narrows
