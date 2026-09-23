@@ -1,65 +1,94 @@
 {
   "$defs": {
-    "PointSchedule": {
+    "InfDirection": {
+      "description": "Which classifications a scoring path counts, and the sign of its points.",
+      "enum": [
+        "PATHOGENIC",
+        "BENIGN"
+      ],
+      "title": "InfDirection",
+      "type": "string"
+    },
+    "InfPath": {
       "additionalProperties": false,
-      "description": "SM 19 informative-variants point schedule (a reusable component).\n\nFirst distinct P \u2192 ``first_pathogenic``; each additional P \u2192\n``additional_pathogenic``. With no P, LP variants \u2192 ``first_lp_only`` then\n``additional_lp`` each. The benign side (B / LB) mirrors these magnitudes as\nnegatives. The running total is capped to ``[cap_min, cap_max]``.",
+      "description": "One informative-variants scoring path \u2014 a criterion plus its schedule (SM 19).\n\nA variant is assigned to the FIRST path whose ``direction`` includes its\nclassification and whose ``match`` constraints it satisfies. ``match`` is a\nsubset test against the variant's ``attributes`` \u2014 e.g. ``{\"aa\": \"same\"}`` or\n``{\"aa\": \"distinct\", \"grantham_vs_vbc\": \"le\"}`` for missense. A variant matching\nno path scores 0 (the diagram's \"none of the above\" branch).",
       "properties": {
-        "additional_lp": {
-          "default": 1.0,
-          "title": "Additional Lp",
+        "direction": {
+          "$ref": "#/$defs/InfDirection"
+        },
+        "match": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Match",
+          "type": "object"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "schedule": {
+          "$ref": "#/$defs/InfPointSchedule"
+        }
+      },
+      "required": [
+        "name",
+        "direction",
+        "schedule"
+      ],
+      "title": "InfPath",
+      "type": "object"
+    },
+    "InfPointSchedule": {
+      "additionalProperties": false,
+      "description": "One path's SM 19 schedule: the first strong (P/B), the first weak (LP/LB),\nand each additional in-direction variant. Benign paths carry negatives.",
+      "properties": {
+        "additional": {
+          "title": "Additional",
           "type": "number"
         },
-        "additional_pathogenic": {
-          "default": 1.0,
-          "title": "Additional Pathogenic",
+        "first_strong": {
+          "title": "First Strong",
           "type": "number"
         },
-        "cap_max": {
-          "default": 8.0,
-          "title": "Cap Max",
-          "type": "number"
-        },
-        "cap_min": {
-          "default": -8.0,
-          "title": "Cap Min",
-          "type": "number"
-        },
-        "first_lp_only": {
-          "default": 1.0,
-          "title": "First Lp Only",
-          "type": "number"
-        },
-        "first_pathogenic": {
-          "default": 2.0,
-          "title": "First Pathogenic",
+        "first_weak": {
+          "title": "First Weak",
           "type": "number"
         }
       },
-      "title": "PointSchedule",
-      "type": "object"
-    },
-    "SimilarityBasis": {
-      "description": "Why a variant is informative for the VBC (SM 19) \u2014 variant-type dependent.",
-      "enum": [
-        "SIMILAR_POSITION",
-        "SAME_EXON",
-        "SIMILAR_EFFECT",
-        "GENE_DELETION"
+      "required": [
+        "first_strong",
+        "first_weak",
+        "additional"
       ],
-      "title": "SimilarityBasis",
-      "type": "string"
+      "title": "InfPointSchedule",
+      "type": "object"
     }
   },
   "additionalProperties": false,
-  "description": "Configuration behind an ``informative-variants-assessment`` code (SM 19).\n\n``similarity_bases`` is the **per-path** axis \u2014 which bases make a variant\ninformative for this variant-impact family (missense \u2192 similar position;\nnull \u2192 same exon; splice \u2192 similar effect; \u2026). ``point_schedule`` is the\n**shared** SM 19 schedule. The gates (``require_distinct_evidence``,\n``min_star_rating_for_external``, ``require_circularity_check``) filter which\nvariants count, reading the fields on each :class:`InformativeVariant`.\n\n**API.** ``evaluate(variants)`` counts the distinct P/LP (and B/LB) variants\nthat pass the gates and whose ``similarity_basis`` is accepted, applies the\nschedule (benign mirrored negative), and caps. ``valid_bases()`` lists the\naccepted similarity bases.",
+  "description": "Configuration behind an ``informative-variants-assessment`` code (SM 19).\n\n``paths`` is the ordered set of scoring criteria \u2014 the **per-family**,\nmodifiable axis. Missense keys on same-vs-distinct amino-acid change and the\nGrantham relation to the VBC; other families key on their own attributes.\nMultiple informative variants **distribute across the paths**; within each path\nthe first-strong / first-weak / additional schedule applies; the path sums are\nadded and capped to ``[cap_min, cap_max]``. The gates\n(``require_distinct_evidence`` / ``min_star_rating_for_external`` /\n``require_circularity_check``) filter which variants count.\n\n**API.** ``evaluate(variants)`` \u2192 points. ``classify(variant)`` \u2192 the matched\npath name (or None). ``path_names()`` lists the configured paths.",
   "properties": {
+    "cap_max": {
+      "default": 8.0,
+      "title": "Cap Max",
+      "type": "number"
+    },
+    "cap_min": {
+      "default": -8.0,
+      "title": "Cap Min",
+      "type": "number"
+    },
     "min_star_rating_for_external": {
       "default": 3,
       "title": "Min Star Rating For External",
       "type": "integer"
     },
-    "point_schedule": {
-      "$ref": "#/$defs/PointSchedule"
+    "paths": {
+      "items": {
+        "$ref": "#/$defs/InfPath"
+      },
+      "title": "Paths",
+      "type": "array"
     },
     "require_circularity_check": {
       "default": true,
@@ -70,17 +99,10 @@
       "default": true,
       "title": "Require Distinct Evidence",
       "type": "boolean"
-    },
-    "similarity_bases": {
-      "items": {
-        "$ref": "#/$defs/SimilarityBasis"
-      },
-      "title": "Similarity Bases",
-      "type": "array"
     }
   },
   "required": [
-    "similarity_bases"
+    "paths"
   ],
   "title": "InformativeVariantsConfig",
   "type": "object"

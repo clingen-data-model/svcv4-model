@@ -203,39 +203,41 @@ cfg = ExonRelevanceConfig(tier_multipliers=..., mechanism_bands=[LOF])
 
 ### Informative variants
 
-The `*_INF` codes (SM 19) share **one** config shape across all four families,
-split into a shared component and a per-path axis:
+The `*_INF` codes (SM 19) score by **scoring paths** — a variant is assigned to the
+first path whose criteria it meets, and each path has its own point schedule:
 
 ```python
-class PointSchedule:                    # the shared, reusable SM 19 schedule
-    first_pathogenic = 2.0; additional_pathogenic = 1.0
-    first_lp_only = 1.0;    additional_lp = 1.0
-    cap_min = -8.0;         cap_max = 8.0
+class InfPath:                          # one criterion + its schedule
+    name: str
+    direction: PATHOGENIC | BENIGN      # P/LP add + ; B/LB subtract
+    match: dict[str, str]               # attribute constraints on the variant
+    schedule: InfPointSchedule          # first_strong · first_weak · additional
 
 class InformativeVariantsConfig:
-    similarity_bases: list[SimilarityBasis]   # ← per-path (what counts as informative)
-    point_schedule: PointSchedule             # ← shared component, passed into all four
+    paths: list[InfPath]                # ← per-family, ordered (the modifiable axis)
+    cap_min = -8.0; cap_max = 8.0
     require_distinct_evidence · min_star_rating_for_external · require_circularity_check
-    def evaluate(variants) -> float           # count distinct P/LP (B/LB mirrored), cap ±8
-    def valid_bases() -> list[str]
+    def evaluate(variants) -> float     # distribute across paths, sum, cap ±8
+    def classify(variant) -> str | None # the matched path; def path_names()
 ```
 
-The **schedule is one reusable component** (`INF_POINT_SCHEDULE`) shared by every
-family; each path differs only in its **similarity bases** — the SM 19
-"variant-type dependent" criterion for what makes a variant informative:
+**Missense** (`MIS_INF`) has the SM 19 five-branch schedule, keyed on the variant's
+`attributes` — `aa` (same/distinct amino-acid change vs the VBC) and
+`grantham_vs_vbc` (`le`/`ge`):
 
-| code | similarity bases |
-|---|---|
-| `MIS_INF` | `SIMILAR_POSITION` (same / nearby residue) |
-| `NUL_INF` | `SAME_EXON` |
-| `CDS_INF` | `SAME_EXON`, `GENE_DELETION` |
-| `SPL_INF` | `SIMILAR_EFFECT` (e.g. `c.123+1G>A` informs `c.123+2T>A`) |
+| path | criterion | first P/B | first LP/LB | addl |
+|---|---|--:|--:|--:|
+| `same_aa_pathogenic` | same AA, P/LP | +4 | +2 | +2 |
+| `distinct_aa_pathogenic` | distinct AA, P/LP, Grantham ≤ VBC | +2 | +1 | +1 |
+| `distinct_aa_benign` | distinct AA, B/LB, Grantham ≥ VBC | −2 | −1 | −1 |
+| `same_aa_benign` | same AA, B/LB | −4 | −2 | −2 |
+| *(none)* | matches no path | 0 | | |
 
-`evaluate` counts only **distinct** variants that pass the gates (distinct
-evidence from the VBC, circularity checked, external ≥ 3-star) and whose basis the
-path accepts: first distinct P → +2, each additional → +1 (LP-only → +1 each);
-benign mirrored negative; capped ±8. A specialization can re-weight the schedule
-or change a path's accepted bases.
+Multiple informative variants **distribute across the paths**; within a path the
+first-strong / first-weak / additional schedule applies; the path sums add and cap
+±8. `NUL_INF` / `CDS_INF` / `SPL_INF` currently carry a **provisional** generic
+pathogenic (+2/+1) and benign (−2/−1) path pair, pending each family's own branch
+diagram. A specialization re-weights a path's schedule or swaps in its own paths.
 
 ## In the model
 

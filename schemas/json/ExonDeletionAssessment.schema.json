@@ -254,6 +254,14 @@
       "additionalProperties": false,
       "description": "A single distinct variant (not the VBC) informative for the VBC's\nclassification. Only distinct variants count; observation counts are\nirrelevant (SM 19).",
       "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Path-matching attributes for SM 19 INF scoring \u2014 the criteria the variant satisfies relative to the VBC. Missense uses `aa` (same|distinct amino-acid change) and `grantham_vs_vbc` (le|ge); other families use their own keys.",
+          "title": "Attributes",
+          "type": "object"
+        },
         "circularity_checked": {
           "anyOf": [
             {

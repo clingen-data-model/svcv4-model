@@ -395,95 +395,121 @@ class TestExonRelevanceApi:
 
 
 class TestInformativeVariantsConfig:
-    def _v(self, cls, basis, **kw):
+    """MIS_INF five-branch path model (SM 19)."""
+
+    def _v(self, cls, aa=None, grantham=None, **kw):
         from svcv4_model.informative import InformativeVariant
 
+        attrs = {}
+        if aa is not None:
+            attrs["aa"] = aa
+        if grantham is not None:
+            attrs["grantham_vs_vbc"] = grantham
         kw.setdefault("distinct_evidence_from_vbc", True)
         kw.setdefault("circularity_checked", True)
-        return InformativeVariant(classification=cls, similarity_basis=basis, **kw)
+        return InformativeVariant(classification=cls, attributes=attrs, **kw)
 
-    def test_per_path_bases(self):
-        from svcv4_model.config import (
-            CDS_INF_V4,
-            MIS_INF_V4,
-            NUL_INF_V4,
-            SPL_INF_V4,
-        )
-
-        assert MIS_INF_V4.valid_bases() == ["SIMILAR_POSITION"]
-        assert NUL_INF_V4.valid_bases() == ["SAME_EXON"]
-        assert set(CDS_INF_V4.valid_bases()) == {"SAME_EXON", "GENE_DELETION"}
-        assert SPL_INF_V4.valid_bases() == ["SIMILAR_EFFECT"]
-
-    def test_shared_schedule_is_one_component(self):
-        from svcv4_model.config import CDS_INF_V4, MIS_INF_V4
-
-        # the SM19 schedule is shared across paths (a reusable component)
-        assert MIS_INF_V4.point_schedule == CDS_INF_V4.point_schedule
-
-    def test_point_schedule(self):
+    def test_mis_paths(self):
         from svcv4_model.config import MIS_INF_V4
-        from svcv4_model.informative import SimilarityBasis as S
+
+        assert MIS_INF_V4.path_names() == [
+            "same_aa_pathogenic",
+            "distinct_aa_pathogenic",
+            "distinct_aa_benign",
+            "same_aa_benign",
+        ]
+
+    def test_classify_and_score_per_path(self):
+        from svcv4_model.config import MIS_INF_V4
         from svcv4_model.informative import VariantClassification as C
 
-        P, LP, B, LB = C.PATHOGENIC, C.LIKELY_PATHOGENIC, C.BENIGN, C.LIKELY_BENIGN
-        pos = S.SIMILAR_POSITION
         e = MIS_INF_V4.evaluate
-        assert e([self._v(P, pos)]) == 2.0  # first P
-        assert e([self._v(P, pos), self._v(P, pos)]) == 3.0  # +1 additional
-        assert e([self._v(P, pos), self._v(LP, pos)]) == 3.0  # P + LP
-        assert e([self._v(LP, pos)]) == 1.0  # LP only
-        assert e([self._v(LP, pos), self._v(LP, pos)]) == 2.0
-        assert e([self._v(B, pos)]) == -2.0  # benign mirror
-        assert e([self._v(LB, pos)]) == -1.0
+        # same-AA P/LP → +4/+2
+        assert e([self._v(C.PATHOGENIC, "same")]) == 4.0
+        assert e([self._v(C.LIKELY_PATHOGENIC, "same")]) == 2.0
+        # distinct-AA P, Grantham ≤ VBC → +2 (the TP53 comparator path)
+        tp53 = self._v(C.PATHOGENIC, "distinct", "le")
+        assert MIS_INF_V4.classify(tp53) == "distinct_aa_pathogenic"
+        assert e([tp53]) == 2.0
+        # distinct-AA B, Grantham ≥ VBC → −2 ; same-AA B → −4
+        assert e([self._v(C.BENIGN, "distinct", "ge")]) == -2.0
+        assert e([self._v(C.BENIGN, "same")]) == -4.0
+
+    def test_none_of_the_above_scores_zero(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import VariantClassification as C
+
+        # distinct-AA pathogenic but Grantham ≥ VBC matches no path
+        v = self._v(C.PATHOGENIC, "distinct", "ge")
+        assert MIS_INF_V4.classify(v) is None
+        assert MIS_INF_V4.evaluate([v]) == 0.0
+        # VUS never matches a direction
+        assert MIS_INF_V4.evaluate([self._v(C.VUS, "same")]) == 0.0
+
+    def test_multiple_variants_distribute_across_paths(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import VariantClassification as C
+
+        # 1 same-AA P (+4) + 1 distinct-AA P le (+2) = +6
+        assert (
+            MIS_INF_V4.evaluate(
+                [self._v(C.PATHOGENIC, "same"), self._v(C.PATHOGENIC, "distinct", "le")]
+            )
+            == 6.0
+        )
+        # within a path: first + additional  (2 same-AA P → +4 + 2 = +6)
+        assert MIS_INF_V4.evaluate([self._v(C.PATHOGENIC, "same")] * 2) == 6.0
+        # opposing directions net out: same-AA P (+4) + same-AA B (−4) = 0
+        assert (
+            MIS_INF_V4.evaluate([self._v(C.PATHOGENIC, "same"), self._v(C.BENIGN, "same")]) == 0.0
+        )
 
     def test_cap(self):
         from svcv4_model.config import MIS_INF_V4
-        from svcv4_model.informative import SimilarityBasis as S
         from svcv4_model.informative import VariantClassification as C
 
-        many = [self._v(C.PATHOGENIC, S.SIMILAR_POSITION) for _ in range(20)]
-        assert MIS_INF_V4.evaluate(many) == 8.0  # capped
+        assert MIS_INF_V4.evaluate([self._v(C.PATHOGENIC, "same")] * 5) == 8.0  # +12 → cap +8
+        assert MIS_INF_V4.evaluate([self._v(C.BENIGN, "same")] * 5) == -8.0
 
     def test_gates_exclude(self):
         from svcv4_model.config import MIS_INF_V4
-        from svcv4_model.informative import SimilarityBasis as S
         from svcv4_model.informative import VariantClassification as C
 
-        P, pos = C.PATHOGENIC, S.SIMILAR_POSITION
-        # wrong basis for this path
-        assert MIS_INF_V4.evaluate([self._v(P, S.SAME_EXON)]) == 0.0
-        # not distinct evidence
-        assert MIS_INF_V4.evaluate([self._v(P, pos, distinct_evidence_from_vbc=False)]) == 0.0
-        # circularity not checked
-        assert MIS_INF_V4.evaluate([self._v(P, pos, circularity_checked=False)]) == 0.0
-        # external below 3-star
-        assert MIS_INF_V4.evaluate([self._v(P, pos, star_rating=2)]) == 0.0
-        assert MIS_INF_V4.evaluate([self._v(P, pos, star_rating=3)]) == 2.0
-        # VUS never counts
-        assert MIS_INF_V4.evaluate([self._v(C.VUS, pos)]) == 0.0
+        P = C.PATHOGENIC
+        assert MIS_INF_V4.evaluate([self._v(P, "same", distinct_evidence_from_vbc=False)]) == 0.0
+        assert MIS_INF_V4.evaluate([self._v(P, "same", circularity_checked=False)]) == 0.0
+        assert MIS_INF_V4.evaluate([self._v(P, "same", star_rating=2)]) == 0.0
+        assert MIS_INF_V4.evaluate([self._v(P, "same", star_rating=3)]) == 4.0
 
-    def test_registry_wiring_all_four(self):
+    def test_generic_families_and_registry(self):
         from svcv4_model.assessment import RULESETS
         from svcv4_model.config import informative_config
 
-        for code, exp in [
-            ("MIS_INF", ["SIMILAR_POSITION"]),
-            ("NUL_INF", ["SAME_EXON"]),
-            ("SPL_INF", ["SIMILAR_EFFECT"]),
-        ]:
+        for code in ("NUL_INF", "CDS_INF", "SPL_INF"):
             cfg = informative_config(RULESETS[f"svc:{code}:4.0"].params)
-            assert cfg.valid_bases() == exp
-        # SPL_INF now exists under SPL
+            assert cfg.path_names() == ["pathogenic", "benign"]
         assert "svc:SPL_INF:4.0" in RULESETS
+        # MIS carries the five-branch paths
+        mis = informative_config(RULESETS["svc:MIS_INF:4.0"].params)
+        assert "same_aa_pathogenic" in mis.path_names()
 
-    def test_specialisation_can_reweight_schedule(self):
-        from svcv4_model.config import InformativeVariantsConfig, PointSchedule
-        from svcv4_model.informative import SimilarityBasis as S
+    def test_specialisation_can_reweight_a_path(self):
+        from svcv4_model.config import (
+            InfDirection,
+            InformativeVariantsConfig,
+            InfPath,
+            InfPointSchedule,
+        )
         from svcv4_model.informative import VariantClassification as C
 
         spec = InformativeVariantsConfig(
-            similarity_bases=[S.SIMILAR_POSITION],
-            point_schedule=PointSchedule(first_pathogenic=4.0),  # gene-specific
+            paths=[
+                InfPath(
+                    name="same_aa_pathogenic",
+                    direction=InfDirection.PATHOGENIC,
+                    match={"aa": "same"},
+                    schedule=InfPointSchedule(first_strong=6.0, first_weak=3.0, additional=3.0),
+                )
+            ]
         )
-        assert spec.evaluate([self._v(C.PATHOGENIC, S.SIMILAR_POSITION)]) == 4.0
+        assert spec.evaluate([self._v(C.PATHOGENIC, "same")]) == 6.0

@@ -1,0 +1,66 @@
+{
+  "$defs": {
+    "InfDirection": {
+      "description": "Which classifications a scoring path counts, and the sign of its points.",
+      "enum": [
+        "PATHOGENIC",
+        "BENIGN"
+      ],
+      "title": "InfDirection",
+      "type": "string"
+    },
+    "InfPointSchedule": {
+      "additionalProperties": false,
+      "description": "One path's SM 19 schedule: the first strong (P/B), the first weak (LP/LB),\nand each additional in-direction variant. Benign paths carry negatives.",
+      "properties": {
+        "additional": {
+          "title": "Additional",
+          "type": "number"
+        },
+        "first_strong": {
+          "title": "First Strong",
+          "type": "number"
+        },
+        "first_weak": {
+          "title": "First Weak",
+          "type": "number"
+        }
+      },
+      "required": [
+        "first_strong",
+        "first_weak",
+        "additional"
+      ],
+      "title": "InfPointSchedule",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One informative-variants scoring path \u2014 a criterion plus its schedule (SM 19).\n\nA variant is assigned to the FIRST path whose ``direction`` includes its\nclassification and whose ``match`` constraints it satisfies. ``match`` is a\nsubset test against the variant's ``attributes`` \u2014 e.g. ``{\"aa\": \"same\"}`` or\n``{\"aa\": \"distinct\", \"grantham_vs_vbc\": \"le\"}`` for missense. A variant matching\nno path scores 0 (the diagram's \"none of the above\" branch).",
+  "properties": {
+    "direction": {
+      "$ref": "#/$defs/InfDirection"
+    },
+    "match": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Match",
+      "type": "object"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "schedule": {
+      "$ref": "#/$defs/InfPointSchedule"
+    }
+  },
+  "required": [
+    "name",
+    "direction",
+    "schedule"
+  ],
+  "title": "InfPath",
+  "type": "object"
+}

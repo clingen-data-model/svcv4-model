@@ -480,15 +480,15 @@ _pat(
     -8.0,
     8.0,
     (
-        "point_schedule",
-        "similarity_bases",
+        "paths",
         "require_distinct_evidence",
+        "min_star_rating_for_external",
         "require_circularity_check",
     ),
     (
         _di("informative_variant", "input", "a distinct variant, not the VBC"),
         _di("classification", "input", "P/LP (+) or B/LB (−); VUS ignored"),
-        _di("similarity_basis", "input", "why it's informative — per-path (SM 19)"),
+        _di("attributes", "router", "criteria that select a scoring path, e.g. aa=same|distinct"),
         _di("distinct_evidence_from_vbc", "gate", "must differ from the VBC's evidence"),
         _di("star_rating", "input", "external classifications usable at 3–4 star"),
         _di("circularity_checked", "gate", "VBC not used to classify the informative variant"),
@@ -746,9 +746,11 @@ ruleset(
     parent="MIS",
     params=MIS_INF_V4.model_dump(),
     description=(
-        "Informative variants for a missense VBC (SM 19): distinct P/LP (or B/LB) "
-        "variants at a SIMILAR_POSITION (same / nearby residue). First distinct P +2, "
-        "each additional +1 (LP-only: +1 each); benign mirrored; cap ±8."
+        "Informative variants for a missense VBC (SM 19, five-branch diagram). Distinct "
+        "variants distribute across scoring paths: same amino-acid change (distinct nt) "
+        "P/LP → +4/+2; distinct AA P/LP with Grantham(inf) ≤ VBC → +2/+1; the benign "
+        "mirrors (Grantham ≥ VBC → −2/−1; same AA → −4/−2); anything else → 0. Path sums "
+        "add, cap ±8."
     ),
 )
 # NUL: NUL = (NUL_PRD + NUL_FXN -> NUL_PRD_FXN) + NUL_INF
@@ -807,7 +809,11 @@ ruleset(
     "informative-variants-assessment",
     parent="NUL",
     params=NUL_INF_V4.model_dump(),
-    description="Informative variants for a null VBC (SM 19): distinct variants in the SAME_EXON.",
+    description=(
+        "Informative variants for a null VBC (SM 19). Provisional: one P/LP path (+2/+1) "
+        "and one B/LB path (−2/−1) matching any distinct variant, cap ±8 — the null "
+        "branch diagram would supply this family's own criteria/schedules."
+    ),
 )
 # CDS: CDS = (CDS_PRD + CDS_FXN -> CDS_PRD_FXN) + CDS_INF
 ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment", parent="PFD_ROUTER")
@@ -878,8 +884,9 @@ ruleset(
     parent="CDS",
     params=CDS_INF_V4.model_dump(),
     description=(
-        "Informative variants for a coding-sequence VBC (SM 19): SAME_EXON or "
-        "GENE_DELETION (whole-gene events with distinct breakpoints still count)."
+        "Informative variants for a coding-sequence VBC (SM 19). Provisional generic "
+        "P/LP (+2/+1) and B/LB (−2/−1) paths, cap ±8 — the CDS branch diagram would "
+        "supply this family's own criteria/schedules."
     ),
 )
 # SPL: SPL = (SPL_PRD + SPL_SPA -> SPL_PRD_SPA) + SPL_FXN -> SPL_PRD_SPA_FXN
@@ -933,8 +940,9 @@ ruleset(
     parent="SPL",
     params=SPL_INF_V4.model_dump(),
     description=(
-        "Informative variants for a splice VBC (SM 19): distinct variants of SIMILAR_EFFECT "
-        "(e.g. c.123+1G>A informs a c.123+2T>A VBC). First distinct P +2, additional +1; cap ±8."
+        "Informative variants for a splice VBC (SM 19). Provisional generic P/LP (+2/+1) "
+        "and B/LB (−2/−1) paths, cap ±8 — the splice branch diagram (e.g. c.123+1G>A "
+        "informs a c.123+2T>A VBC) would supply this family's own criteria."
     ),
 )
 # Frameshift, exon del/dup, start/stop-lost route into the NUL / CDS trees above —
