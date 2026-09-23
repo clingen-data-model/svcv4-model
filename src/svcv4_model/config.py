@@ -620,23 +620,43 @@ class InformativeVariantsConfig(BaseModel):
         # external classifications are only usable at 3–4 star (SM 19)
         return not (v.star_rating is not None and v.star_rating < self.min_star_rating_for_external)
 
-    def classify(self, v: InformativeVariant) -> str | None:
+    @staticmethod
+    def _match_attributes(v: InformativeVariant, vbc_grantham: float | None) -> dict[str, str]:
+        """The attributes a variant is matched on: its ``attributes`` plus the derived
+        ``aa`` and (from raw Grantham vs the VBC's) ``grantham_vs_vbc``."""
+        attrs = dict(v.attributes)
+        if v.aa is not None:
+            attrs.setdefault("aa", v.aa.value)
+        if "grantham_vs_vbc" not in attrs and v.grantham is not None and vbc_grantham is not None:
+            attrs["grantham_vs_vbc"] = "le" if v.grantham <= vbc_grantham else "ge"
+        return attrs
+
+    def classify(self, v: InformativeVariant, vbc_grantham: float | None = None) -> str | None:
         """The name of the first path this variant matches, or None."""
+        attrs = self._match_attributes(v, vbc_grantham)
         for p in self.paths:
             strong, weak = _INF_STRONG_WEAK[p.direction]
             if v.classification in (strong, weak) and all(
-                v.attributes.get(k) == val for k, val in p.match.items()
+                attrs.get(k) == val for k, val in p.match.items()
             ):
                 return p.name
         return None
 
-    def evaluate(self, variants: list[InformativeVariant]) -> float:
-        """Informative-variants points: distribute variants across paths, then cap."""
+    def evaluate(
+        self, variants: list[InformativeVariant], vbc_grantham: float | None = None
+    ) -> float:
+        """Informative-variants points: distribute variants across paths, then cap.
+
+        Each variant supplies its own ``classification``, ``aa`` (same/distinct),
+        ``grantham`` difference, ``star_rating`` (quality), and the two gates. The
+        VBC's Grantham difference is passed as ``vbc_grantham`` so the distinct-AA
+        paths can compare informative ≤/≥ VBC.
+        """
         groups: dict[str, list[InformativeVariant]] = {}
         for v in variants:
             if not self._passes_gates(v):
                 continue
-            name = self.classify(v)
+            name = self.classify(v, vbc_grantham)
             if name is not None:
                 groups.setdefault(name, []).append(v)
 

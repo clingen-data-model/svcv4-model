@@ -1,5 +1,14 @@
 {
   "$defs": {
+    "AminoAcidRelation": {
+      "description": "An informative missense variant's amino-acid change relative to the VBC (SM 19).",
+      "enum": [
+        "same",
+        "distinct"
+      ],
+      "title": "AminoAcidRelation",
+      "type": "string"
+    },
     "AnimalModelEvidence": {
       "additionalProperties": false,
       "description": "Whole-animal-model functional evidence (SM 20); range *_FXN_0.0 to +4.0.",
@@ -168,6 +177,18 @@
       "additionalProperties": false,
       "description": "A single distinct variant (not the VBC) informative for the VBC's\nclassification. Only distinct variants count; observation counts are\nirrelevant (SM 19).",
       "properties": {
+        "aa": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AminoAcidRelation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Amino-acid change relative to the VBC: same or distinct (SM 19 missense)."
+        },
         "attributes": {
           "additionalProperties": {
             "type": "string"
@@ -213,6 +234,19 @@
           "default": null,
           "description": "Whether it reached its classification via different evidence codes/weights than the VBC \u2014 required for it to count (SM 19).",
           "title": "Distinct Evidence From Vbc"
+        },
+        "grantham": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Grantham difference of this variant's amino-acid change; compared to the VBC's Grantham (passed to evaluate) on the distinct-AA scoring paths.",
+          "title": "Grantham"
         },
         "id": {
           "anyOf": [
