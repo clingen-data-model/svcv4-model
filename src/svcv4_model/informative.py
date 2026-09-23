@@ -73,6 +73,15 @@ class InformativeVariant(BaseModel):
             "this variant's classification (circularity avoided)."
         ),
     )
+    attributes: dict[str, str] = Field(
+        default_factory=dict,
+        description=(
+            "Path-matching attributes for SM 19 INF scoring — the criteria the "
+            "variant satisfies relative to the VBC. Missense uses `aa` (same|"
+            "distinct amino-acid change) and `grantham_vs_vbc` (le|ge); other "
+            "families use their own keys."
+        ),
+    )
 
 
 class InformativeVariantsEvidence(BaseModel):

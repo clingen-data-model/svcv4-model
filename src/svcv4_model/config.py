@@ -16,13 +16,11 @@ value, or raises if the tool is unknown or the score is out of range.
 
 from __future__ import annotations
 
+from enum import StrEnum
+
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from svcv4_model.informative import (
-    InformativeVariant,
-    SimilarityBasis,
-    VariantClassification,
-)
+from svcv4_model.informative import InformativeVariant, VariantClassification
 
 
 class UnknownTool(ValueError):
@@ -536,66 +534,85 @@ EXON_REL_LOF_V4 = exon_relevance_baseline(only_positive=True, mechanism_bands=[L
 # dependent" per SM 19).
 # --------------------------------------------------------------------------- #
 
-_INF_COUNTING = {
-    VariantClassification.PATHOGENIC,
-    VariantClassification.LIKELY_PATHOGENIC,
-    VariantClassification.BENIGN,
-    VariantClassification.LIKELY_BENIGN,
+
+class InfDirection(StrEnum):
+    """Which classifications a scoring path counts, and the sign of its points."""
+
+    PATHOGENIC = "PATHOGENIC"  # strong = P, weak = LP (positive)
+    BENIGN = "BENIGN"  # strong = B, weak = LB (negative)
+
+
+_INF_STRONG_WEAK = {
+    InfDirection.PATHOGENIC: (
+        VariantClassification.PATHOGENIC,
+        VariantClassification.LIKELY_PATHOGENIC,
+    ),
+    InfDirection.BENIGN: (
+        VariantClassification.BENIGN,
+        VariantClassification.LIKELY_BENIGN,
+    ),
 }
 
 
-class PointSchedule(BaseModel):
-    """SM 19 informative-variants point schedule (a reusable component).
+class InfPointSchedule(BaseModel):
+    """One path's SM 19 schedule: the first strong (P/B), the first weak (LP/LB),
+    and each additional in-direction variant. Benign paths carry negatives."""
 
-    First distinct P → ``first_pathogenic``; each additional P →
-    ``additional_pathogenic``. With no P, LP variants → ``first_lp_only`` then
-    ``additional_lp`` each. The benign side (B / LB) mirrors these magnitudes as
-    negatives. The running total is capped to ``[cap_min, cap_max]``.
+    model_config = ConfigDict(extra="forbid")
+
+    first_strong: float
+    first_weak: float
+    additional: float
+
+
+class InfPath(BaseModel):
+    """One informative-variants scoring path — a criterion plus its schedule (SM 19).
+
+    A variant is assigned to the FIRST path whose ``direction`` includes its
+    classification and whose ``match`` constraints it satisfies. ``match`` is a
+    subset test against the variant's ``attributes`` — e.g. ``{"aa": "same"}`` or
+    ``{"aa": "distinct", "grantham_vs_vbc": "le"}`` for missense. A variant matching
+    no path scores 0 (the diagram's "none of the above" branch).
     """
 
     model_config = ConfigDict(extra="forbid")
 
-    first_pathogenic: float = 2.0
-    additional_pathogenic: float = 1.0
-    first_lp_only: float = 1.0
-    additional_lp: float = 1.0
-    cap_min: float = -8.0
-    cap_max: float = 8.0
+    name: str
+    direction: InfDirection
+    schedule: InfPointSchedule
+    match: dict[str, str] = Field(default_factory=dict)
 
 
 class InformativeVariantsConfig(BaseModel):
     """Configuration behind an ``informative-variants-assessment`` code (SM 19).
 
-    ``similarity_bases`` is the **per-path** axis — which bases make a variant
-    informative for this variant-impact family (missense → similar position;
-    null → same exon; splice → similar effect; …). ``point_schedule`` is the
-    **shared** SM 19 schedule. The gates (``require_distinct_evidence``,
-    ``min_star_rating_for_external``, ``require_circularity_check``) filter which
-    variants count, reading the fields on each :class:`InformativeVariant`.
+    ``paths`` is the ordered set of scoring criteria — the **per-family**,
+    modifiable axis. Missense keys on same-vs-distinct amino-acid change and the
+    Grantham relation to the VBC; other families key on their own attributes.
+    Multiple informative variants **distribute across the paths**; within each path
+    the first-strong / first-weak / additional schedule applies; the path sums are
+    added and capped to ``[cap_min, cap_max]``. The gates
+    (``require_distinct_evidence`` / ``min_star_rating_for_external`` /
+    ``require_circularity_check``) filter which variants count.
 
-    **API.** ``evaluate(variants)`` counts the distinct P/LP (and B/LB) variants
-    that pass the gates and whose ``similarity_basis`` is accepted, applies the
-    schedule (benign mirrored negative), and caps. ``valid_bases()`` lists the
-    accepted similarity bases.
+    **API.** ``evaluate(variants)`` → points. ``classify(variant)`` → the matched
+    path name (or None). ``path_names()`` lists the configured paths.
     """
 
     model_config = ConfigDict(extra="forbid")
 
-    similarity_bases: list[SimilarityBasis]
-    point_schedule: PointSchedule = Field(default_factory=PointSchedule)
+    paths: list[InfPath]
+    cap_min: float = -8.0
+    cap_max: float = 8.0
     require_distinct_evidence: bool = True
     min_star_rating_for_external: int = 3
     require_circularity_check: bool = True
 
-    def valid_bases(self) -> list[str]:
-        """The similarity bases this path accepts as informative."""
-        return [b.value for b in self.similarity_bases]
+    def path_names(self) -> list[str]:
+        """The configured scoring paths, in match order."""
+        return [p.name for p in self.paths]
 
-    def _counts(self, v: InformativeVariant) -> bool:
-        if v.classification not in _INF_COUNTING:
-            return False
-        if v.similarity_basis is None or v.similarity_basis not in self.similarity_bases:
-            return False
+    def _passes_gates(self, v: InformativeVariant) -> bool:
         if self.require_distinct_evidence and not v.distinct_evidence_from_vbc:
             return False
         if self.require_circularity_check and not v.circularity_checked:
@@ -603,26 +620,40 @@ class InformativeVariantsConfig(BaseModel):
         # external classifications are only usable at 3–4 star (SM 19)
         return not (v.star_rating is not None and v.star_rating < self.min_star_rating_for_external)
 
+    def classify(self, v: InformativeVariant) -> str | None:
+        """The name of the first path this variant matches, or None."""
+        for p in self.paths:
+            strong, weak = _INF_STRONG_WEAK[p.direction]
+            if v.classification in (strong, weak) and all(
+                v.attributes.get(k) == val for k, val in p.match.items()
+            ):
+                return p.name
+        return None
+
     def evaluate(self, variants: list[InformativeVariant]) -> float:
-        """Informative-variants points for a set of distinct variants (SM 19)."""
-        counting = [v for v in variants if self._counts(v)]
-        s = self.point_schedule
+        """Informative-variants points: distribute variants across paths, then cap."""
+        groups: dict[str, list[InformativeVariant]] = {}
+        for v in variants:
+            if not self._passes_gates(v):
+                continue
+            name = self.classify(v)
+            if name is not None:
+                groups.setdefault(name, []).append(v)
 
-        def side(strong: VariantClassification, weak: VariantClassification, sign: float) -> float:
-            n_s = sum(1 for v in counting if v.classification == strong)
-            n_w = sum(1 for v in counting if v.classification == weak)
+        total = 0.0
+        for p in self.paths:
+            members = groups.get(p.name, [])
+            if not members:
+                continue
+            strong, weak = _INF_STRONG_WEAK[p.direction]
+            n_s = sum(1 for v in members if v.classification == strong)
+            n_w = sum(1 for v in members if v.classification == weak)
+            s = p.schedule
             if n_s >= 1:
-                return sign * (
-                    s.first_pathogenic + s.additional_pathogenic * (n_s - 1) + s.additional_lp * n_w
-                )
-            if n_w >= 1:
-                return sign * (s.first_lp_only + s.additional_lp * (n_w - 1))
-            return 0.0
-
-        total = side(
-            VariantClassification.PATHOGENIC, VariantClassification.LIKELY_PATHOGENIC, 1.0
-        ) + side(VariantClassification.BENIGN, VariantClassification.LIKELY_BENIGN, -1.0)
-        return max(s.cap_min, min(s.cap_max, total))
+                total += s.first_strong + s.additional * (n_s - 1) + s.additional * n_w
+            elif n_w >= 1:
+                total += s.first_weak + s.additional * (n_w - 1)
+        return max(self.cap_min, min(self.cap_max, total))
 
 
 def informative_config(params: dict) -> InformativeVariantsConfig:
@@ -630,17 +661,59 @@ def informative_config(params: dict) -> InformativeVariantsConfig:
     return InformativeVariantsConfig.model_validate(params)
 
 
-# The SM 19 point schedule is shared across all four families (a reusable component).
-INF_POINT_SCHEDULE = PointSchedule()
+def _sched(strong: float, weak: float, additional: float) -> InfPointSchedule:
+    return InfPointSchedule(first_strong=strong, first_weak=weak, additional=additional)
 
 
-def _inf(*bases: SimilarityBasis) -> InformativeVariantsConfig:
+# --- MIS_INF: the five-branch missense diagram (SM 19) ---------------------- #
+# Variant attributes: "aa" = same|distinct (amino-acid change vs the VBC);
+# "grantham_vs_vbc" = le|ge (informative variant's Grantham difference vs the VBC).
+MIS_INF_V4 = InformativeVariantsConfig(
+    paths=[
+        InfPath(  # distinct nucleotide, SAME amino-acid change, P/LP → strongest
+            name="same_aa_pathogenic",
+            direction=InfDirection.PATHOGENIC,
+            match={"aa": "same"},
+            schedule=_sched(4.0, 2.0, 2.0),
+        ),
+        InfPath(  # DISTINCT amino acid, P/LP, Grantham(inf) ≤ VBC
+            name="distinct_aa_pathogenic",
+            direction=InfDirection.PATHOGENIC,
+            match={"aa": "distinct", "grantham_vs_vbc": "le"},
+            schedule=_sched(2.0, 1.0, 1.0),
+        ),
+        InfPath(  # DISTINCT amino acid, B/LB, Grantham(inf) ≥ VBC
+            name="distinct_aa_benign",
+            direction=InfDirection.BENIGN,
+            match={"aa": "distinct", "grantham_vs_vbc": "ge"},
+            schedule=_sched(-2.0, -1.0, -1.0),
+        ),
+        InfPath(  # distinct nucleotide, SAME amino-acid change, B/LB → strongest benign
+            name="same_aa_benign",
+            direction=InfDirection.BENIGN,
+            match={"aa": "same"},
+            schedule=_sched(-4.0, -2.0, -2.0),
+        ),
+    ]
+)
+
+
+def _inf_generic() -> InformativeVariantsConfig:
+    """Provisional NUL/CDS/SPL config: one P/LP path + one B/LB path at SM 19 base
+    magnitudes, matching any distinct informative variant (no per-family criteria
+    yet). Each family's own branch diagram would replace these paths."""
     return InformativeVariantsConfig(
-        similarity_bases=list(bases), point_schedule=INF_POINT_SCHEDULE
+        paths=[
+            InfPath(
+                name="pathogenic", direction=InfDirection.PATHOGENIC, schedule=_sched(2.0, 1.0, 1.0)
+            ),
+            InfPath(
+                name="benign", direction=InfDirection.BENIGN, schedule=_sched(-2.0, -1.0, -1.0)
+            ),
+        ]
     )
 
 
-MIS_INF_V4 = _inf(SimilarityBasis.SIMILAR_POSITION)
-NUL_INF_V4 = _inf(SimilarityBasis.SAME_EXON)
-CDS_INF_V4 = _inf(SimilarityBasis.SAME_EXON, SimilarityBasis.GENE_DELETION)
-SPL_INF_V4 = _inf(SimilarityBasis.SIMILAR_EFFECT)
+NUL_INF_V4 = _inf_generic()
+CDS_INF_V4 = _inf_generic()
+SPL_INF_V4 = _inf_generic()
