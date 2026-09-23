@@ -22,9 +22,13 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from svcv4_model.config import (
+    CDS_INF_V4,
     EXON_REL_LOF_V4,
+    MIS_INF_V4,
     MIS_PRD_EXON_REL_V4,
     MIS_PRD_INIT_INSILICO_V4,
+    NUL_INF_V4,
+    SPL_INF_V4,
 )
 
 GROUP = Literal["rollup", "router", "initial", "adjuster", "module"]
@@ -475,8 +479,20 @@ _pat(
     "points",
     -8.0,
     8.0,
-    ("point_values", "relatedness_rule"),
-    (_di("comparator_variant", "input"), _di("classification_tier", "input", "P⇒+4·LP⇒+2")),
+    (
+        "point_schedule",
+        "similarity_bases",
+        "require_distinct_evidence",
+        "require_circularity_check",
+    ),
+    (
+        _di("informative_variant", "input", "a distinct variant, not the VBC"),
+        _di("classification", "input", "P/LP (+) or B/LB (−); VUS ignored"),
+        _di("similarity_basis", "input", "why it's informative — per-path (SM 19)"),
+        _di("distinct_evidence_from_vbc", "gate", "must differ from the VBC's evidence"),
+        _di("star_rating", "input", "external classifications usable at 3–4 star"),
+        _di("circularity_checked", "gate", "VBC not used to classify the informative variant"),
+    ),
 )
 _pat("coding-sequence-variant-assessment", "Coding-sequence variant (CDS)", "rollup", "points")
 _pat(
@@ -723,7 +739,18 @@ ruleset(
     ),
 )
 ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS_PRD_FXN")
-ruleset("MIS_INF", "Missense informative variants", "informative-variants-assessment", parent="MIS")
+ruleset(
+    "MIS_INF",
+    "Missense informative variants",
+    "informative-variants-assessment",
+    parent="MIS",
+    params=MIS_INF_V4.model_dump(),
+    description=(
+        "Informative variants for a missense VBC (SM 19): distinct P/LP (or B/LB) "
+        "variants at a SIMILAR_POSITION (same / nearby residue). First distinct P +2, "
+        "each additional +1 (LP-only: +1 each); benign mirrored; cap ±8."
+    ),
+)
 # NUL: NUL = (NUL_PRD + NUL_FXN -> NUL_PRD_FXN) + NUL_INF
 ruleset("NUL", "Null / nonsense variant", "null-variant-assessment", parent="PFD_ROUTER")
 ruleset(
@@ -774,7 +801,14 @@ ruleset(
     provisional=True,
 )
 ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL_PRD_FXN")
-ruleset("NUL_INF", "Null informative variants", "informative-variants-assessment", parent="NUL")
+ruleset(
+    "NUL_INF",
+    "Null informative variants",
+    "informative-variants-assessment",
+    parent="NUL",
+    params=NUL_INF_V4.model_dump(),
+    description="Informative variants for a null VBC (SM 19): distinct variants in the SAME_EXON.",
+)
 # CDS: CDS = (CDS_PRD + CDS_FXN -> CDS_PRD_FXN) + CDS_INF
 ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment", parent="PFD_ROUTER")
 ruleset(
@@ -837,7 +871,17 @@ ruleset(
     provisional=True,
 )
 ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS_PRD_FXN")
-ruleset("CDS_INF", "CDS informative variants", "informative-variants-assessment", parent="CDS")
+ruleset(
+    "CDS_INF",
+    "CDS informative variants",
+    "informative-variants-assessment",
+    parent="CDS",
+    params=CDS_INF_V4.model_dump(),
+    description=(
+        "Informative variants for a coding-sequence VBC (SM 19): SAME_EXON or "
+        "GENE_DELETION (whole-gene events with distinct breakpoints still count)."
+    ),
+)
 # SPL: SPL = (SPL_PRD + SPL_SPA -> SPL_PRD_SPA) + SPL_FXN -> SPL_PRD_SPA_FXN
 ruleset("SPL", "Splice variant", "splice-variant-assessment", parent="PFD_ROUTER")
 ruleset(
@@ -881,6 +925,17 @@ ruleset(
 ruleset("SPL_SPA", "Splice assay", "splice-assay-assessment", parent="SPL_PRD_SPA")
 ruleset(
     "SPL_FXN", "Splice functional assay", "functional-assay-assessment", parent="SPL_PRD_SPA_FXN"
+)
+ruleset(
+    "SPL_INF",
+    "Splice informative variants",
+    "informative-variants-assessment",
+    parent="SPL",
+    params=SPL_INF_V4.model_dump(),
+    description=(
+        "Informative variants for a splice VBC (SM 19): distinct variants of SIMILAR_EFFECT "
+        "(e.g. c.123+1G>A informs a c.123+2T>A VBC). First distinct P +2, additional +1; cap ±8."
+    ),
 )
 # Frameshift, exon del/dup, start/stop-lost route into the NUL / CDS trees above —
 # they add no new code families, only variant-type entry points, and select among the

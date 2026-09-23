@@ -201,6 +201,42 @@ LOF = mechanism_band("LOF", ("Established", 1.0), ("Likely", 0.5),
 cfg = ExonRelevanceConfig(tier_multipliers=..., mechanism_bands=[LOF])
 ```
 
+### Informative variants
+
+The `*_INF` codes (SM 19) share **one** config shape across all four families,
+split into a shared component and a per-path axis:
+
+```python
+class PointSchedule:                    # the shared, reusable SM 19 schedule
+    first_pathogenic = 2.0; additional_pathogenic = 1.0
+    first_lp_only = 1.0;    additional_lp = 1.0
+    cap_min = -8.0;         cap_max = 8.0
+
+class InformativeVariantsConfig:
+    similarity_bases: list[SimilarityBasis]   # ← per-path (what counts as informative)
+    point_schedule: PointSchedule             # ← shared component, passed into all four
+    require_distinct_evidence · min_star_rating_for_external · require_circularity_check
+    def evaluate(variants) -> float           # count distinct P/LP (B/LB mirrored), cap ±8
+    def valid_bases() -> list[str]
+```
+
+The **schedule is one reusable component** (`INF_POINT_SCHEDULE`) shared by every
+family; each path differs only in its **similarity bases** — the SM 19
+"variant-type dependent" criterion for what makes a variant informative:
+
+| code | similarity bases |
+|---|---|
+| `MIS_INF` | `SIMILAR_POSITION` (same / nearby residue) |
+| `NUL_INF` | `SAME_EXON` |
+| `CDS_INF` | `SAME_EXON`, `GENE_DELETION` |
+| `SPL_INF` | `SIMILAR_EFFECT` (e.g. `c.123+1G>A` informs `c.123+2T>A`) |
+
+`evaluate` counts only **distinct** variants that pass the gates (distinct
+evidence from the VBC, circularity checked, external ≥ 3-star) and whose basis the
+path accepts: first distinct P → +2, each additional → +1 (LP-only → +1 each);
+benign mirrored negative; capped ±8. A specialization can re-weight the schedule
+or change a path's accepted bases.
+
 ## In the model
 
 The registry lives in `svcv4_model.assessment`:

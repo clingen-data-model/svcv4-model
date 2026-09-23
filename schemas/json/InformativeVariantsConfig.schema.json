@@ -1,0 +1,87 @@
+{
+  "$defs": {
+    "PointSchedule": {
+      "additionalProperties": false,
+      "description": "SM 19 informative-variants point schedule (a reusable component).\n\nFirst distinct P \u2192 ``first_pathogenic``; each additional P \u2192\n``additional_pathogenic``. With no P, LP variants \u2192 ``first_lp_only`` then\n``additional_lp`` each. The benign side (B / LB) mirrors these magnitudes as\nnegatives. The running total is capped to ``[cap_min, cap_max]``.",
+      "properties": {
+        "additional_lp": {
+          "default": 1.0,
+          "title": "Additional Lp",
+          "type": "number"
+        },
+        "additional_pathogenic": {
+          "default": 1.0,
+          "title": "Additional Pathogenic",
+          "type": "number"
+        },
+        "cap_max": {
+          "default": 8.0,
+          "title": "Cap Max",
+          "type": "number"
+        },
+        "cap_min": {
+          "default": -8.0,
+          "title": "Cap Min",
+          "type": "number"
+        },
+        "first_lp_only": {
+          "default": 1.0,
+          "title": "First Lp Only",
+          "type": "number"
+        },
+        "first_pathogenic": {
+          "default": 2.0,
+          "title": "First Pathogenic",
+          "type": "number"
+        }
+      },
+      "title": "PointSchedule",
+      "type": "object"
+    },
+    "SimilarityBasis": {
+      "description": "Why a variant is informative for the VBC (SM 19) \u2014 variant-type dependent.",
+      "enum": [
+        "SIMILAR_POSITION",
+        "SAME_EXON",
+        "SIMILAR_EFFECT",
+        "GENE_DELETION"
+      ],
+      "title": "SimilarityBasis",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Configuration behind an ``informative-variants-assessment`` code (SM 19).\n\n``similarity_bases`` is the **per-path** axis \u2014 which bases make a variant\ninformative for this variant-impact family (missense \u2192 similar position;\nnull \u2192 same exon; splice \u2192 similar effect; \u2026). ``point_schedule`` is the\n**shared** SM 19 schedule. The gates (``require_distinct_evidence``,\n``min_star_rating_for_external``, ``require_circularity_check``) filter which\nvariants count, reading the fields on each :class:`InformativeVariant`.\n\n**API.** ``evaluate(variants)`` counts the distinct P/LP (and B/LB) variants\nthat pass the gates and whose ``similarity_basis`` is accepted, applies the\nschedule (benign mirrored negative), and caps. ``valid_bases()`` lists the\naccepted similarity bases.",
+  "properties": {
+    "min_star_rating_for_external": {
+      "default": 3,
+      "title": "Min Star Rating For External",
+      "type": "integer"
+    },
+    "point_schedule": {
+      "$ref": "#/$defs/PointSchedule"
+    },
+    "require_circularity_check": {
+      "default": true,
+      "title": "Require Circularity Check",
+      "type": "boolean"
+    },
+    "require_distinct_evidence": {
+      "default": true,
+      "title": "Require Distinct Evidence",
+      "type": "boolean"
+    },
+    "similarity_bases": {
+      "items": {
+        "$ref": "#/$defs/SimilarityBasis"
+      },
+      "title": "Similarity Bases",
+      "type": "array"
+    }
+  },
+  "required": [
+    "similarity_bases"
+  ],
+  "title": "InformativeVariantsConfig",
+  "type": "object"
+}

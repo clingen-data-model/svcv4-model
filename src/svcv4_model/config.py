@@ -18,6 +18,12 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from svcv4_model.informative import (
+    InformativeVariant,
+    SimilarityBasis,
+    VariantClassification,
+)
+
 
 class UnknownTool(ValueError):
     """Raised when a score is requested for a tool that is not configured."""
@@ -519,3 +525,122 @@ MIS_PRD_EXON_REL_V4 = exon_relevance_baseline(only_positive=True)
 # Convenience baseline for the LOF families (null / in-frame / splice) — the reusable
 # LOF band passed in. Each family could instead pass its own band if weights diverge.
 EXON_REL_LOF_V4 = exon_relevance_baseline(only_positive=True, mechanism_bands=[LOF_MECHANISM_BAND])
+
+
+# --------------------------------------------------------------------------- #
+# Informative-variants configuration (svc:*_INF:4.0) — SM 19
+#
+# One config shape shared by all four PFD families; the SM 19 point schedule is a
+# reusable component passed into each, while each path sets its own similarity
+# bases (what makes a variant informative for that variant type — "variant-type
+# dependent" per SM 19).
+# --------------------------------------------------------------------------- #
+
+_INF_COUNTING = {
+    VariantClassification.PATHOGENIC,
+    VariantClassification.LIKELY_PATHOGENIC,
+    VariantClassification.BENIGN,
+    VariantClassification.LIKELY_BENIGN,
+}
+
+
+class PointSchedule(BaseModel):
+    """SM 19 informative-variants point schedule (a reusable component).
+
+    First distinct P → ``first_pathogenic``; each additional P →
+    ``additional_pathogenic``. With no P, LP variants → ``first_lp_only`` then
+    ``additional_lp`` each. The benign side (B / LB) mirrors these magnitudes as
+    negatives. The running total is capped to ``[cap_min, cap_max]``.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    first_pathogenic: float = 2.0
+    additional_pathogenic: float = 1.0
+    first_lp_only: float = 1.0
+    additional_lp: float = 1.0
+    cap_min: float = -8.0
+    cap_max: float = 8.0
+
+
+class InformativeVariantsConfig(BaseModel):
+    """Configuration behind an ``informative-variants-assessment`` code (SM 19).
+
+    ``similarity_bases`` is the **per-path** axis — which bases make a variant
+    informative for this variant-impact family (missense → similar position;
+    null → same exon; splice → similar effect; …). ``point_schedule`` is the
+    **shared** SM 19 schedule. The gates (``require_distinct_evidence``,
+    ``min_star_rating_for_external``, ``require_circularity_check``) filter which
+    variants count, reading the fields on each :class:`InformativeVariant`.
+
+    **API.** ``evaluate(variants)`` counts the distinct P/LP (and B/LB) variants
+    that pass the gates and whose ``similarity_basis`` is accepted, applies the
+    schedule (benign mirrored negative), and caps. ``valid_bases()`` lists the
+    accepted similarity bases.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    similarity_bases: list[SimilarityBasis]
+    point_schedule: PointSchedule = Field(default_factory=PointSchedule)
+    require_distinct_evidence: bool = True
+    min_star_rating_for_external: int = 3
+    require_circularity_check: bool = True
+
+    def valid_bases(self) -> list[str]:
+        """The similarity bases this path accepts as informative."""
+        return [b.value for b in self.similarity_bases]
+
+    def _counts(self, v: InformativeVariant) -> bool:
+        if v.classification not in _INF_COUNTING:
+            return False
+        if v.similarity_basis is None or v.similarity_basis not in self.similarity_bases:
+            return False
+        if self.require_distinct_evidence and not v.distinct_evidence_from_vbc:
+            return False
+        if self.require_circularity_check and not v.circularity_checked:
+            return False
+        # external classifications are only usable at 3–4 star (SM 19)
+        return not (v.star_rating is not None and v.star_rating < self.min_star_rating_for_external)
+
+    def evaluate(self, variants: list[InformativeVariant]) -> float:
+        """Informative-variants points for a set of distinct variants (SM 19)."""
+        counting = [v for v in variants if self._counts(v)]
+        s = self.point_schedule
+
+        def side(strong: VariantClassification, weak: VariantClassification, sign: float) -> float:
+            n_s = sum(1 for v in counting if v.classification == strong)
+            n_w = sum(1 for v in counting if v.classification == weak)
+            if n_s >= 1:
+                return sign * (
+                    s.first_pathogenic + s.additional_pathogenic * (n_s - 1) + s.additional_lp * n_w
+                )
+            if n_w >= 1:
+                return sign * (s.first_lp_only + s.additional_lp * (n_w - 1))
+            return 0.0
+
+        total = side(
+            VariantClassification.PATHOGENIC, VariantClassification.LIKELY_PATHOGENIC, 1.0
+        ) + side(VariantClassification.BENIGN, VariantClassification.LIKELY_BENIGN, -1.0)
+        return max(s.cap_min, min(s.cap_max, total))
+
+
+def informative_config(params: dict) -> InformativeVariantsConfig:
+    """Read a ruleset's ``params`` dict back into the typed config."""
+    return InformativeVariantsConfig.model_validate(params)
+
+
+# The SM 19 point schedule is shared across all four families (a reusable component).
+INF_POINT_SCHEDULE = PointSchedule()
+
+
+def _inf(*bases: SimilarityBasis) -> InformativeVariantsConfig:
+    return InformativeVariantsConfig(
+        similarity_bases=list(bases), point_schedule=INF_POINT_SCHEDULE
+    )
+
+
+MIS_INF_V4 = _inf(SimilarityBasis.SIMILAR_POSITION)
+NUL_INF_V4 = _inf(SimilarityBasis.SAME_EXON)
+CDS_INF_V4 = _inf(SimilarityBasis.SAME_EXON, SimilarityBasis.GENE_DELETION)
+SPL_INF_V4 = _inf(SimilarityBasis.SIMILAR_EFFECT)

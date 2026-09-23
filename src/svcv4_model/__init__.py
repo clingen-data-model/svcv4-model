@@ -53,10 +53,12 @@ from svcv4_model.case_control import CaseControlStudyEvidence
 from svcv4_model.classification import VariantPathogenicityClassification
 from svcv4_model.config import (
     ExonRelevanceConfig,
+    InformativeVariantsConfig,
     InsilicoPredictorConfig,
     MechanismBand,
     MechanismClassification,
     MissingInput,
+    PointSchedule,
     RelevanceTier,
     ScoreBand,
     ScoreOutOfRange,
@@ -211,6 +213,7 @@ __all__ = [
     "Gene",
     "GeneDiseaseValidity",
     "InformativeVariant",
+    "InformativeVariantsConfig",
     "InformativeVariantsEvidence",
     "InsilicoPredictorConfig",
     "InframeIndelAssessment",
@@ -246,6 +249,7 @@ __all__ = [
     "PhenoSeverity",
     "PhenoSpecificity",
     "PhenotypeReplication",
+    "PointSchedule",
     "PopulationEvidence",
     "Predicate",
     "Proposition",
