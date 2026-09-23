@@ -104,7 +104,7 @@ from svcv4_model.inframe_indel import (
     InframeIndelBranch,
     InframeIndelPredictiveEvidence,
 )
-from svcv4_model.inputs import MDE, VBC
+from svcv4_model.inputs import MDE, VBC, MolecularConsequence
 from svcv4_model.intronic_synonymous import IntronicSynonymousAssessment
 from svcv4_model.mechanism import (
     ExonRelevance,
@@ -232,6 +232,7 @@ __all__ = [
     "MissensePredictor",
     "MissenseSelectedPath",
     "MissenseSpliceAssessment",
+    "MolecularConsequence",
     "MolecularMechanism",
     "NonsenseAssessment",
     "NonsensePredictionOutcome",

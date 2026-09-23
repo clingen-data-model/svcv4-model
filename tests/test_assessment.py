@@ -33,7 +33,8 @@ def test_svcv4_method_composes_hod_and_prd() -> None:
     assert {r.code for r in roots()} == {"SVCV4"}
     assert {c.code for c in children("svc:SVCV4:4.0")} == {"HOD", "PFD"}
     assert {c.code for c in children("svc:HOD:4.0")} == {"POP", "CLN", "LOC"}
-    assert {c.code for c in children("svc:PFD:4.0")} == {"MIS", "NUL", "CDS", "SPL"}
+    assert {c.code for c in children("svc:PFD:4.0")} == {"PFD_ROUTER"}
+    assert {c.code for c in children("svc:PFD_ROUTER:4.0")} == {"MIS", "NUL", "CDS", "SPL"}
 
 
 def test_id_round_trips() -> None:
@@ -130,3 +131,30 @@ def test_hod_count_grouping_cells() -> None:
         "case-count-grouping-assessment"
     )
     assert {c.code for c in children("svc:POP_HMZ:4.0")} == {"POP_HMZ_DOM", "POP_HMZ_OTH"}
+
+
+def test_pfd_router_selects_family_from_consequence() -> None:
+    """The PFD variant-impact router carries the consequence→family route map."""
+    from svcv4_model.assessment import ASSESSMENT_TYPES
+    from svcv4_model.inputs import VBC, MolecularConsequence
+
+    r = resolve("svc:PFD_ROUTER:4.0")
+    pat = ASSESSMENT_TYPES[r.method_type]
+    assert pat.group == "router" and pat.output_kind == "route"
+    assert [di.role for di in pat.data_items] == ["router"]
+
+    route = r.params["route_map"]
+    assert route["MISSENSE"] == ["MIS"]  # unambiguous
+    assert route["SPLICE"] == ["SPL"]
+    assert route["INFRAME_INDEL"] == ["CDS"]
+    assert set(route["FRAMESHIFT"]) == {"NUL", "CDS"}  # resolved by a within-workflow branch
+
+    # every routed family is a real child of the router
+    router_kids = {c.code for c in children("svc:PFD_ROUTER:4.0")}
+    for fams in route.values():
+        assert set(fams) <= router_kids
+
+    # the VBC carries the routing evidence
+    vbc = VBC(variation={}, molecular_consequence=MolecularConsequence.MISSENSE)
+    assert vbc.molecular_consequence == "MISSENSE"
+    assert route[vbc.molecular_consequence] == ["MIS"]

@@ -2,9 +2,34 @@
 
 from __future__ import annotations
 
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
+
+
+class MolecularConsequence(StrEnum):
+    """The VBC's predicted molecular consequence — the evidence that routes it to a
+    PFD variant-impact family (MIS / NUL / CDS / SPL).
+
+    This is the routing input read by the ``variant-impact-router`` node under PFD.
+    Several consequences resolve to NUL *or* CDS via a branch inside their own
+    variant-type workflow (NMD / non-stop-decay / alt-start / whole-gene); the
+    router names the candidate family set and that branch picks the final one.
+    Missense is unambiguous → MIS.
+    """
+
+    MISSENSE = "MISSENSE"
+    NONSENSE = "NONSENSE"
+    FRAMESHIFT = "FRAMESHIFT"
+    INFRAME_INDEL = "INFRAME_INDEL"
+    START_LOST = "START_LOST"
+    STOP_LOST = "STOP_LOST"
+    SPLICE = "SPLICE"
+    EXON_DELETION = "EXON_DELETION"
+    EXON_DUPLICATION = "EXON_DUPLICATION"
+    INTRONIC = "INTRONIC"
+    SYNONYMOUS = "SYNONYMOUS"
 
 
 class VBC(BaseModel):
@@ -27,6 +52,14 @@ class VBC(BaseModel):
     label: str | None = Field(
         default=None,
         description="Human-readable label for the variant.",
+    )
+    molecular_consequence: MolecularConsequence | None = Field(
+        default=None,
+        description=(
+            "The VBC's predicted molecular consequence (e.g. from VEP against the "
+            "relevant transcript). This is the evidence the PFD variant-impact router "
+            "reads to select the MIS / NUL / CDS / SPL family. None = not captured."
+        ),
     )
 
 
