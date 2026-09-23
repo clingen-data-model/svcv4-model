@@ -315,6 +315,15 @@ _pat(
 )
 
 # PFD — rollups + MIS_PRD (named by the team) + shared/proposed patterns
+# Variant-impact router: reads the VBC molecular consequence and selects the family.
+_pat(
+    "variant-impact-router",
+    "Variant-impact router (PFD family selection)",
+    "router",
+    "route",
+    params=("route_map",),
+    data_items=(_di("variant_type", "router", "VBC molecular_consequence, e.g. MISSENSE"),),
+)
 _pat("missense-variant-assessment", "Missense variant (MIS)", "rollup", "points")
 _pat("null-variant-assessment", "Null / nonsense variant (NUL)", "rollup", "points")
 _pat(
@@ -630,8 +639,41 @@ for _c, _p in [
         parent=_p,
         provisional=True,
     )
+# PFD variant-impact router — reads the VBC molecular consequence and selects ONE
+# family lane. Missense → MIS (unambiguous); the LoF-ish consequences name a
+# candidate {NUL, CDS} set that a branch inside that variant-type workflow resolves.
+ruleset(
+    "PFD_ROUTER",
+    "Variant-impact router",
+    "variant-impact-router",
+    parent="PFD",
+    provisional=True,
+    params={
+        "route_map": {
+            "MISSENSE": ["MIS"],
+            "NONSENSE": ["NUL", "CDS"],
+            "FRAMESHIFT": ["NUL", "CDS"],
+            "INFRAME_INDEL": ["CDS"],
+            "START_LOST": ["NUL", "CDS"],
+            "STOP_LOST": ["NUL", "CDS"],
+            "SPLICE": ["SPL"],
+            "EXON_DELETION": ["NUL", "CDS"],
+            "EXON_DUPLICATION": ["NUL", "CDS"],
+            "INTRONIC": ["SPL"],
+            "SYNONYMOUS": ["SPL"],
+        }
+    },
+    description=(
+        "Selects the PFD variant-impact family from the VBC molecular consequence "
+        "(VBC.molecular_consequence). MISSENSE → MIS; SPLICE/INTRONIC/SYNONYMOUS → SPL; "
+        "INFRAME_INDEL → CDS; the remaining LoF-type consequences route to a candidate "
+        "{NUL, CDS} set that the variant-type workflow's own branch (NMD / non-stop decay "
+        "/ alt-start / whole-gene) resolves to one lane. Provisional modeling node — the "
+        "routing is implicit in the SM flow diagrams, not an official SVCv4 code."
+    ),
+)
 # MIS: MIS = (MIS_PRD + MIS_FXN -> MIS_PRD_FXN) + MIS_INF
-ruleset("MIS", "Missense variant", "missense-variant-assessment", parent="PFD")
+ruleset("MIS", "Missense variant", "missense-variant-assessment", parent="PFD_ROUTER")
 ruleset(
     "MIS_PRD_FXN",
     "Missense predictive + functional (combination cap)",
@@ -683,7 +725,7 @@ ruleset(
 ruleset("MIS_FXN", "Missense functional assay", "functional-assay-assessment", parent="MIS_PRD_FXN")
 ruleset("MIS_INF", "Missense informative variants", "informative-variants-assessment", parent="MIS")
 # NUL: NUL = (NUL_PRD + NUL_FXN -> NUL_PRD_FXN) + NUL_INF
-ruleset("NUL", "Null / nonsense variant", "null-variant-assessment", parent="PFD")
+ruleset("NUL", "Null / nonsense variant", "null-variant-assessment", parent="PFD_ROUTER")
 ruleset(
     "NUL_PRD_FXN",
     "Null predictive + functional (combination cap)",
@@ -734,7 +776,7 @@ ruleset(
 ruleset("NUL_FXN", "Null functional assay", "functional-assay-assessment", parent="NUL_PRD_FXN")
 ruleset("NUL_INF", "Null informative variants", "informative-variants-assessment", parent="NUL")
 # CDS: CDS = (CDS_PRD + CDS_FXN -> CDS_PRD_FXN) + CDS_INF
-ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment", parent="PFD")
+ruleset("CDS", "Coding-sequence variant", "coding-sequence-variant-assessment", parent="PFD_ROUTER")
 ruleset(
     "CDS_PRD_FXN",
     "CDS predictive + functional (combination cap)",
@@ -797,7 +839,7 @@ ruleset(
 ruleset("CDS_FXN", "CDS functional assay", "functional-assay-assessment", parent="CDS_PRD_FXN")
 ruleset("CDS_INF", "CDS informative variants", "informative-variants-assessment", parent="CDS")
 # SPL: SPL = (SPL_PRD + SPL_SPA -> SPL_PRD_SPA) + SPL_FXN -> SPL_PRD_SPA_FXN
-ruleset("SPL", "Splice variant", "splice-variant-assessment", parent="PFD")
+ruleset("SPL", "Splice variant", "splice-variant-assessment", parent="PFD_ROUTER")
 ruleset(
     "SPL_PRD_SPA_FXN",
     "Splice (pred+assay) + functional (combination cap)",
