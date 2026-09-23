@@ -392,3 +392,98 @@ class TestExonRelevanceApi:
         )
         assert cfg.evaluate(2.0, "All", "LOF", "Yes") == 1.0
         assert cfg.evaluate(2.0, "All", "GOF", "Yes") == 0.25
+
+
+class TestInformativeVariantsConfig:
+    def _v(self, cls, basis, **kw):
+        from svcv4_model.informative import InformativeVariant
+
+        kw.setdefault("distinct_evidence_from_vbc", True)
+        kw.setdefault("circularity_checked", True)
+        return InformativeVariant(classification=cls, similarity_basis=basis, **kw)
+
+    def test_per_path_bases(self):
+        from svcv4_model.config import (
+            CDS_INF_V4,
+            MIS_INF_V4,
+            NUL_INF_V4,
+            SPL_INF_V4,
+        )
+
+        assert MIS_INF_V4.valid_bases() == ["SIMILAR_POSITION"]
+        assert NUL_INF_V4.valid_bases() == ["SAME_EXON"]
+        assert set(CDS_INF_V4.valid_bases()) == {"SAME_EXON", "GENE_DELETION"}
+        assert SPL_INF_V4.valid_bases() == ["SIMILAR_EFFECT"]
+
+    def test_shared_schedule_is_one_component(self):
+        from svcv4_model.config import CDS_INF_V4, MIS_INF_V4
+
+        # the SM19 schedule is shared across paths (a reusable component)
+        assert MIS_INF_V4.point_schedule == CDS_INF_V4.point_schedule
+
+    def test_point_schedule(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import SimilarityBasis as S
+        from svcv4_model.informative import VariantClassification as C
+
+        P, LP, B, LB = C.PATHOGENIC, C.LIKELY_PATHOGENIC, C.BENIGN, C.LIKELY_BENIGN
+        pos = S.SIMILAR_POSITION
+        e = MIS_INF_V4.evaluate
+        assert e([self._v(P, pos)]) == 2.0  # first P
+        assert e([self._v(P, pos), self._v(P, pos)]) == 3.0  # +1 additional
+        assert e([self._v(P, pos), self._v(LP, pos)]) == 3.0  # P + LP
+        assert e([self._v(LP, pos)]) == 1.0  # LP only
+        assert e([self._v(LP, pos), self._v(LP, pos)]) == 2.0
+        assert e([self._v(B, pos)]) == -2.0  # benign mirror
+        assert e([self._v(LB, pos)]) == -1.0
+
+    def test_cap(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import SimilarityBasis as S
+        from svcv4_model.informative import VariantClassification as C
+
+        many = [self._v(C.PATHOGENIC, S.SIMILAR_POSITION) for _ in range(20)]
+        assert MIS_INF_V4.evaluate(many) == 8.0  # capped
+
+    def test_gates_exclude(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import SimilarityBasis as S
+        from svcv4_model.informative import VariantClassification as C
+
+        P, pos = C.PATHOGENIC, S.SIMILAR_POSITION
+        # wrong basis for this path
+        assert MIS_INF_V4.evaluate([self._v(P, S.SAME_EXON)]) == 0.0
+        # not distinct evidence
+        assert MIS_INF_V4.evaluate([self._v(P, pos, distinct_evidence_from_vbc=False)]) == 0.0
+        # circularity not checked
+        assert MIS_INF_V4.evaluate([self._v(P, pos, circularity_checked=False)]) == 0.0
+        # external below 3-star
+        assert MIS_INF_V4.evaluate([self._v(P, pos, star_rating=2)]) == 0.0
+        assert MIS_INF_V4.evaluate([self._v(P, pos, star_rating=3)]) == 2.0
+        # VUS never counts
+        assert MIS_INF_V4.evaluate([self._v(C.VUS, pos)]) == 0.0
+
+    def test_registry_wiring_all_four(self):
+        from svcv4_model.assessment import RULESETS
+        from svcv4_model.config import informative_config
+
+        for code, exp in [
+            ("MIS_INF", ["SIMILAR_POSITION"]),
+            ("NUL_INF", ["SAME_EXON"]),
+            ("SPL_INF", ["SIMILAR_EFFECT"]),
+        ]:
+            cfg = informative_config(RULESETS[f"svc:{code}:4.0"].params)
+            assert cfg.valid_bases() == exp
+        # SPL_INF now exists under SPL
+        assert "svc:SPL_INF:4.0" in RULESETS
+
+    def test_specialisation_can_reweight_schedule(self):
+        from svcv4_model.config import InformativeVariantsConfig, PointSchedule
+        from svcv4_model.informative import SimilarityBasis as S
+        from svcv4_model.informative import VariantClassification as C
+
+        spec = InformativeVariantsConfig(
+            similarity_bases=[S.SIMILAR_POSITION],
+            point_schedule=PointSchedule(first_pathogenic=4.0),  # gene-specific
+        )
+        assert spec.evaluate([self._v(C.PATHOGENIC, S.SIMILAR_POSITION)]) == 4.0
