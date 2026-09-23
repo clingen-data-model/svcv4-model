@@ -217,9 +217,17 @@ class InformativeVariantsConfig:
     paths: list[InfPath]                # ← per-family, ordered (the modifiable axis)
     cap_min = -8.0; cap_max = 8.0
     require_distinct_evidence · min_star_rating_for_external · require_circularity_check
-    def evaluate(variants) -> float     # distribute across paths, sum, cap ±8
-    def classify(variant) -> str | None # the matched path; def path_names()
+    def evaluate(variants, vbc_grantham=None) -> float   # distribute, sum, cap ±8
+    def classify(variant, vbc_grantham=None) -> str | None
 ```
+
+Each `InformativeVariant` supplies its own `classification`, `aa` (same/distinct
+amino-acid change), raw `grantham` difference, `star_rating` (quality), and the
+two gates; the **VBC's** Grantham is passed to `evaluate` as `vbc_grantham` so the
+distinct-AA paths can compare informative ≤/≥ VBC. The two gates are **separate**:
+`circularity_checked` = the VBC was not used to classify the variant (no circular
+reasoning); `distinct_evidence_from_vbc` = the variant reached its class via
+*different* evidence codes than the VBC (no double-counting the same signal).
 
 **Missense** (`MIS_INF`) has the SM 19 five-branch schedule, keyed on the variant's
 `attributes` — `aa` (same/distinct amino-acid change vs the VBC) and

@@ -98,6 +98,7 @@ from svcv4_model.functional import (
     ProteinFunctionalAssay,
 )
 from svcv4_model.informative import (
+    AminoAcidRelation,
     InformativeVariant,
     InformativeVariantsEvidence,
     SimilarityBasis,
@@ -173,6 +174,7 @@ __all__ = [
     "AgeMatchedPenetrance",
     "AgeQualifier",
     "AgeUnit",
+    "AminoAcidRelation",
     "AnimalModelEvidence",
     "AnimalModelType",
     "ASSESSMENT_TYPES",

@@ -513,3 +513,69 @@ class TestInformativeVariantsConfig:
             ]
         )
         assert spec.evaluate([self._v(C.PATHOGENIC, "same")]) == 6.0
+
+    def test_typed_fields_with_raw_grantham_and_vbc_context(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import AminoAcidRelation as AA
+        from svcv4_model.informative import InformativeVariant as V
+        from svcv4_model.informative import VariantClassification as C
+
+        # TP53: His->Arg distinct AA, raw Grantham 29; VBC His->Leu Grantham 99 → le → +2
+        tp53 = V(
+            id="p.His214Arg",
+            classification=C.PATHOGENIC,
+            aa=AA.DISTINCT,
+            grantham=29,
+            distinct_evidence_from_vbc=True,
+            circularity_checked=True,
+        )
+        assert MIS_INF_V4.classify(tp53, vbc_grantham=99) == "distinct_aa_pathogenic"
+        assert MIS_INF_V4.evaluate([tp53], vbc_grantham=99) == 2.0
+        # informative Grantham > VBC → ge → no pathogenic path → 0
+        assert MIS_INF_V4.evaluate([tp53], vbc_grantham=20) == 0.0
+        # same-AA needs no Grantham
+        same = V(
+            classification=C.PATHOGENIC,
+            aa=AA.SAME,
+            distinct_evidence_from_vbc=True,
+            circularity_checked=True,
+        )
+        assert MIS_INF_V4.evaluate([same]) == 4.0
+        # star rating (quality) still gates per variant
+        low = V(
+            classification=C.PATHOGENIC,
+            aa=AA.SAME,
+            star_rating=2,
+            distinct_evidence_from_vbc=True,
+            circularity_checked=True,
+        )
+        assert MIS_INF_V4.evaluate([low]) == 0.0
+
+    def test_circularity_and_distinct_evidence_are_separate_gates(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import AminoAcidRelation as AA
+        from svcv4_model.informative import InformativeVariant as V
+        from svcv4_model.informative import VariantClassification as C
+
+        base = {"classification": C.PATHOGENIC, "aa": AA.SAME}
+        # circularity failed (VBC used to classify the variant) → excluded
+        assert (
+            MIS_INF_V4.evaluate(
+                [V(**base, distinct_evidence_from_vbc=True, circularity_checked=False)]
+            )
+            == 0.0
+        )
+        # distinct-evidence failed (same evidence as VBC) → excluded
+        assert (
+            MIS_INF_V4.evaluate(
+                [V(**base, distinct_evidence_from_vbc=False, circularity_checked=True)]
+            )
+            == 0.0
+        )
+        # both satisfied → counts
+        assert (
+            MIS_INF_V4.evaluate(
+                [V(**base, distinct_evidence_from_vbc=True, circularity_checked=True)]
+            )
+            == 4.0
+        )

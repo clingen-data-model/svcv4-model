@@ -35,6 +35,13 @@ class SimilarityBasis(StrEnum):
     GENE_DELETION = "GENE_DELETION"
 
 
+class AminoAcidRelation(StrEnum):
+    """An informative missense variant's amino-acid change relative to the VBC (SM 19)."""
+
+    SAME = "same"  # same amino-acid change as the VBC (a distinct nucleotide)
+    DISTINCT = "distinct"  # a different amino-acid change
+
+
 class InformativeVariant(BaseModel):
     """A single distinct variant (not the VBC) informative for the VBC's
     classification. Only distinct variants count; observation counts are
@@ -51,6 +58,17 @@ class InformativeVariant(BaseModel):
     similarity_basis: SimilarityBasis | None = Field(
         default=None,
         description="Why it is informative for the VBC (position/exon/effect/deletion).",
+    )
+    aa: AminoAcidRelation | None = Field(
+        default=None,
+        description="Amino-acid change relative to the VBC: same or distinct (SM 19 missense).",
+    )
+    grantham: float | None = Field(
+        default=None,
+        description=(
+            "Grantham difference of this variant's amino-acid change; compared to the "
+            "VBC's Grantham (passed to evaluate) on the distinct-AA scoring paths."
+        ),
     )
     distinct_evidence_from_vbc: bool | None = Field(
         default=None,
