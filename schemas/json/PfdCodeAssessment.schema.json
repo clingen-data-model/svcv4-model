@@ -245,7 +245,7 @@
             }
           ],
           "default": null,
-          "description": "Grantham difference of this variant's amino-acid change; compared to the VBC's Grantham (passed to evaluate) on the distinct-AA scoring paths.",
+          "description": "Grantham score of this variant's amino-acid change. On distinct-AA groups the difference VBC_grantham \u2212 this (passed via evaluate) selects the group.",
           "title": "Grantham"
         },
         "id": {
@@ -260,6 +260,19 @@
           "default": null,
           "description": "Identifier for the informative variant.",
           "title": "Id"
+        },
+        "motif_variant": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Motif-variant status (Yes/No) \u2014 captured for clinically-significant, distinct-AA informative variants (SM 19 'see text re motif variants').",
+          "title": "Motif Variant"
         },
         "similarity_basis": {
           "anyOf": [
@@ -285,6 +298,19 @@
           "default": null,
           "description": "ClinVar review star rating, for external classifications (usable only at 3-4 stars with circularity avoided).",
           "title": "Star Rating"
+        },
+        "transcript": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Transcript on which the change is expressed; SM 19 presumes the VBC and informative variant are compared on equivalent transcript sequences.",
+          "title": "Transcript"
         }
       },
       "title": "InformativeVariant",

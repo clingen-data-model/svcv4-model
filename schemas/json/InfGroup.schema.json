@@ -1,0 +1,80 @@
+{
+  "$defs": {
+    "VariantClassification": {
+      "description": "A variant's pathogenicity classification. Introduced for informative\nvariants (SM 19), whose scoring keys on P/LP vs B/LB. Not (yet) applied to\nthe placeholder ``classification`` strings on other Case sub-models.",
+      "enum": [
+        "PATHOGENIC",
+        "LIKELY_PATHOGENIC",
+        "VUS",
+        "LIKELY_BENIGN",
+        "BENIGN"
+      ],
+      "title": "VariantClassification",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One informative-variant scoring group (SM 19).\n\nA variant joins the FIRST group whose criteria it meets: ``clinical``\n(significant P/LP \u00b7 not_significant B/LB \u00b7 any), ``aa`` (same \u00b7 distinct \u00b7 any),\nand ``grantham`` \u2014 the sign of ``VBC_grantham \u2212 informative_grantham``\n(``non_negative`` \u2265 0 \u00b7 ``positive`` > 0 \u00b7 any). The group scores\n``count \u00d7 points_per_variant``, plus ``definitive_bonus`` once if any member\ncarries ``definitive_classification`` (Path or Benign \u2014 the 'established' call).",
+  "properties": {
+    "aa": {
+      "default": "any",
+      "enum": [
+        "same",
+        "distinct",
+        "any"
+      ],
+      "title": "Aa",
+      "type": "string"
+    },
+    "clinical": {
+      "default": "any",
+      "enum": [
+        "significant",
+        "not_significant",
+        "any"
+      ],
+      "title": "Clinical",
+      "type": "string"
+    },
+    "definitive_bonus": {
+      "default": 0.0,
+      "title": "Definitive Bonus",
+      "type": "number"
+    },
+    "definitive_classification": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VariantClassification"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "grantham": {
+      "default": "any",
+      "enum": [
+        "non_negative",
+        "positive",
+        "any"
+      ],
+      "title": "Grantham",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "points_per_variant": {
+      "default": 0.0,
+      "title": "Points Per Variant",
+      "type": "number"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "title": "InfGroup",
+  "type": "object"
+}

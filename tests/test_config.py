@@ -395,91 +395,112 @@ class TestExonRelevanceApi:
 
 
 class TestInformativeVariantsConfig:
-    """MIS_INF five-branch path model (SM 19)."""
+    """MIS_INF five-group model (SM 19): count × points + a definitive bonus."""
 
-    def _v(self, cls, aa=None, grantham=None, **kw):
+    def _v(self, cls, aa=None, grantham=None, star=3, vid=None):
         from svcv4_model.informative import InformativeVariant
 
-        attrs = {}
-        if aa is not None:
-            attrs["aa"] = aa
-        if grantham is not None:
-            attrs["grantham_vs_vbc"] = grantham
-        kw.setdefault("distinct_evidence_from_vbc", True)
-        kw.setdefault("circularity_checked", True)
-        return InformativeVariant(classification=cls, attributes=attrs, **kw)
+        return InformativeVariant(
+            id=vid, classification=cls, aa=aa, grantham=grantham, star_rating=star
+        )
 
-    def test_mis_paths(self):
+    def test_mis_groups(self):
         from svcv4_model.config import MIS_INF_V4
 
-        assert MIS_INF_V4.path_names() == [
-            "same_aa_pathogenic",
-            "distinct_aa_pathogenic",
-            "distinct_aa_benign",
-            "same_aa_benign",
+        assert MIS_INF_V4.group_names() == [
+            "a_clin_sig_same_aa",
+            "b_clin_sig_distinct_aa_nonneg_grantham",
+            "c_not_sig_distinct_aa_pos_grantham",
+            "d_not_sig_same_aa",
+            "e_other",
         ]
+        assert MIS_INF_V4.min_star_rating == 3
 
-    def test_classify_and_score_per_path(self):
+    def test_no_variants_is_nd(self):
         from svcv4_model.config import MIS_INF_V4
+
+        assert MIS_INF_V4.evaluate([]) is None  # MIS_INF_ND
+        # all below the star minimum → none qualify → ND
+        from svcv4_model.informative import AminoAcidRelation as AA
+        from svcv4_model.informative import VariantClassification as C
+
+        assert MIS_INF_V4.evaluate([self._v(C.PATHOGENIC, AA.SAME, star=2)]) is None
+
+    def test_group_scoring(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import AminoAcidRelation as AA
         from svcv4_model.informative import VariantClassification as C
 
         e = MIS_INF_V4.evaluate
-        # same-AA P/LP → +4/+2
-        assert e([self._v(C.PATHOGENIC, "same")]) == 4.0
-        assert e([self._v(C.LIKELY_PATHOGENIC, "same")]) == 2.0
-        # distinct-AA P, Grantham ≤ VBC → +2 (the TP53 comparator path)
-        tp53 = self._v(C.PATHOGENIC, "distinct", "le")
-        assert MIS_INF_V4.classify(tp53) == "distinct_aa_pathogenic"
-        assert e([tp53]) == 2.0
-        # distinct-AA B, Grantham ≥ VBC → −2 ; same-AA B → −4
-        assert e([self._v(C.BENIGN, "distinct", "ge")]) == -2.0
-        assert e([self._v(C.BENIGN, "same")]) == -4.0
+        # a) same-AA: Path → +2 + def +2 = +4 ; LP → +2 (no bonus)
+        assert e([self._v(C.PATHOGENIC, AA.SAME)]) == 4.0
+        assert e([self._v(C.LIKELY_PATHOGENIC, AA.SAME)]) == 2.0
+        # b) distinct-AA P, VBC−INF ≥ 0 → +1 + def +1 = +2  (TP53 comparator)
+        tp53 = self._v(C.PATHOGENIC, AA.DISTINCT, grantham=29, vid="p.His214Arg")
+        assert (
+            MIS_INF_V4.classify(tp53, vbc_grantham=99) == "b_clin_sig_distinct_aa_nonneg_grantham"
+        )
+        assert e([tp53], vbc_grantham=99) == 2.0
+        # d) same-AA Benign → −2 + def −2 = −4
+        assert e([self._v(C.BENIGN, AA.SAME)]) == -4.0
+        # e) VUS → group e → 0.0 (a value, not ND)
+        assert e([self._v(C.VUS, AA.SAME)]) == 0.0
 
-    def test_none_of_the_above_scores_zero(self):
+    def test_count_times_points_plus_one_bonus(self):
         from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import AminoAcidRelation as AA
         from svcv4_model.informative import VariantClassification as C
 
-        # distinct-AA pathogenic but Grantham ≥ VBC matches no path
-        v = self._v(C.PATHOGENIC, "distinct", "ge")
-        assert MIS_INF_V4.classify(v) is None
-        assert MIS_INF_V4.evaluate([v]) == 0.0
-        # VUS never matches a direction
-        assert MIS_INF_V4.evaluate([self._v(C.VUS, "same")]) == 0.0
+        # two same-AA clin-sig: 1 Path + 1 LP → 2×+2 + one definitive bonus +2 = +6
+        vs = [
+            self._v(C.PATHOGENIC, AA.SAME, vid="x1"),
+            self._v(C.LIKELY_PATHOGENIC, AA.SAME, vid="x2"),
+        ]
+        assert MIS_INF_V4.evaluate(vs) == 6.0
+        # two same-AA LP (no Path) → 2×+2 + no bonus = +4
+        vs2 = [
+            self._v(C.LIKELY_PATHOGENIC, AA.SAME, vid="y1"),
+            self._v(C.LIKELY_PATHOGENIC, AA.SAME, vid="y2"),
+        ]
+        assert MIS_INF_V4.evaluate(vs2) == 4.0
 
-    def test_multiple_variants_distribute_across_paths(self):
+    def test_distinct_aa_grantham_boundaries(self):
         from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import AminoAcidRelation as AA
         from svcv4_model.informative import VariantClassification as C
 
-        # 1 same-AA P (+4) + 1 distinct-AA P le (+2) = +6
-        assert (
-            MIS_INF_V4.evaluate(
-                [self._v(C.PATHOGENIC, "same"), self._v(C.PATHOGENIC, "distinct", "le")]
-            )
-            == 6.0
-        )
-        # within a path: first + additional  (2 same-AA P → +4 + 2 = +6)
-        assert MIS_INF_V4.evaluate([self._v(C.PATHOGENIC, "same")] * 2) == 6.0
-        # opposing directions net out: same-AA P (+4) + same-AA B (−4) = 0
-        assert (
-            MIS_INF_V4.evaluate([self._v(C.PATHOGENIC, "same"), self._v(C.BENIGN, "same")]) == 0.0
-        )
+        # clin-sig distinct-AA needs VBC−INF ≥ 0; INF Grantham > VBC → falls to catch-all e → 0
+        v = self._v(C.PATHOGENIC, AA.DISTINCT, grantham=120, vid="hi")
+        assert MIS_INF_V4.classify(v, vbc_grantham=99) == "e_other"
+        assert MIS_INF_V4.evaluate([v], vbc_grantham=99) == 0.0
+        # not-sig distinct-AA needs VBC−INF > 0 (strictly); diff 0 → e
+        eq = self._v(C.BENIGN, AA.DISTINCT, grantham=99, vid="eq")
+        assert MIS_INF_V4.classify(eq, vbc_grantham=99) == "e_other"
+        lt = self._v(C.BENIGN, AA.DISTINCT, grantham=40, vid="lt")
+        assert MIS_INF_V4.classify(lt, vbc_grantham=99) == "c_not_sig_distinct_aa_pos_grantham"
+        # group c: 1 × −1 + definitive(Benign) bonus −1 = −2
+        assert MIS_INF_V4.evaluate([lt], vbc_grantham=99) == -2.0
+
+    def test_dedup_keeps_highest_star(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import AminoAcidRelation as AA
+        from svcv4_model.informative import VariantClassification as C
+
+        # same id, two classifications: keep the higher-star one (Path @4 over LP @3)
+        dup = [
+            self._v(C.LIKELY_PATHOGENIC, AA.SAME, star=3, vid="same"),
+            self._v(C.PATHOGENIC, AA.SAME, star=4, vid="same"),
+        ]
+        # one variant, same-AA Path → +2 + def +2 = +4 (not counted twice)
+        assert MIS_INF_V4.evaluate(dup) == 4.0
 
     def test_cap(self):
         from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import AminoAcidRelation as AA
         from svcv4_model.informative import VariantClassification as C
 
-        assert MIS_INF_V4.evaluate([self._v(C.PATHOGENIC, "same")] * 5) == 8.0  # +12 → cap +8
-        assert MIS_INF_V4.evaluate([self._v(C.BENIGN, "same")] * 5) == -8.0
-
-    def test_gates_exclude(self):
-        from svcv4_model.config import MIS_INF_V4
-        from svcv4_model.informative import VariantClassification as C
-
-        P = C.PATHOGENIC
-        assert MIS_INF_V4.evaluate([self._v(P, "same", distinct_evidence_from_vbc=False)]) == 0.0
-        assert MIS_INF_V4.evaluate([self._v(P, "same", circularity_checked=False)]) == 0.0
-        assert MIS_INF_V4.evaluate([self._v(P, "same", star_rating=2)]) == 0.0
-        assert MIS_INF_V4.evaluate([self._v(P, "same", star_rating=3)]) == 4.0
+        many = [self._v(C.PATHOGENIC, AA.SAME, vid=f"v{i}") for i in range(10)]
+        assert MIS_INF_V4.evaluate(many) == 8.0  # 10×2 + 2 → cap +8
 
     def test_generic_families_and_registry(self):
         from svcv4_model.assessment import RULESETS
@@ -487,95 +508,31 @@ class TestInformativeVariantsConfig:
 
         for code in ("NUL_INF", "CDS_INF", "SPL_INF"):
             cfg = informative_config(RULESETS[f"svc:{code}:4.0"].params)
-            assert cfg.path_names() == ["pathogenic", "benign"]
+            assert cfg.group_names() == [
+                "clinically_significant",
+                "not_clinically_significant",
+                "other",
+            ]
         assert "svc:SPL_INF:4.0" in RULESETS
-        # MIS carries the five-branch paths
         mis = informative_config(RULESETS["svc:MIS_INF:4.0"].params)
-        assert "same_aa_pathogenic" in mis.path_names()
+        assert "a_clin_sig_same_aa" in mis.group_names()
 
-    def test_specialisation_can_reweight_a_path(self):
-        from svcv4_model.config import (
-            InfDirection,
-            InformativeVariantsConfig,
-            InfPath,
-            InfPointSchedule,
-        )
+    def test_specialisation_can_reweight_a_group(self):
+        from svcv4_model.config import InfGroup, InformativeVariantsConfig
+        from svcv4_model.informative import AminoAcidRelation as AA
         from svcv4_model.informative import VariantClassification as C
 
         spec = InformativeVariantsConfig(
-            paths=[
-                InfPath(
-                    name="same_aa_pathogenic",
-                    direction=InfDirection.PATHOGENIC,
-                    match={"aa": "same"},
-                    schedule=InfPointSchedule(first_strong=6.0, first_weak=3.0, additional=3.0),
-                )
+            groups=[
+                InfGroup(
+                    name="a_clin_sig_same_aa",
+                    clinical="significant",
+                    aa="same",
+                    points_per_variant=3.0,
+                    definitive_bonus=3.0,
+                    definitive_classification=C.PATHOGENIC,
+                ),
+                InfGroup(name="e_other"),
             ]
         )
-        assert spec.evaluate([self._v(C.PATHOGENIC, "same")]) == 6.0
-
-    def test_typed_fields_with_raw_grantham_and_vbc_context(self):
-        from svcv4_model.config import MIS_INF_V4
-        from svcv4_model.informative import AminoAcidRelation as AA
-        from svcv4_model.informative import InformativeVariant as V
-        from svcv4_model.informative import VariantClassification as C
-
-        # TP53: His->Arg distinct AA, raw Grantham 29; VBC His->Leu Grantham 99 → le → +2
-        tp53 = V(
-            id="p.His214Arg",
-            classification=C.PATHOGENIC,
-            aa=AA.DISTINCT,
-            grantham=29,
-            distinct_evidence_from_vbc=True,
-            circularity_checked=True,
-        )
-        assert MIS_INF_V4.classify(tp53, vbc_grantham=99) == "distinct_aa_pathogenic"
-        assert MIS_INF_V4.evaluate([tp53], vbc_grantham=99) == 2.0
-        # informative Grantham > VBC → ge → no pathogenic path → 0
-        assert MIS_INF_V4.evaluate([tp53], vbc_grantham=20) == 0.0
-        # same-AA needs no Grantham
-        same = V(
-            classification=C.PATHOGENIC,
-            aa=AA.SAME,
-            distinct_evidence_from_vbc=True,
-            circularity_checked=True,
-        )
-        assert MIS_INF_V4.evaluate([same]) == 4.0
-        # star rating (quality) still gates per variant
-        low = V(
-            classification=C.PATHOGENIC,
-            aa=AA.SAME,
-            star_rating=2,
-            distinct_evidence_from_vbc=True,
-            circularity_checked=True,
-        )
-        assert MIS_INF_V4.evaluate([low]) == 0.0
-
-    def test_circularity_and_distinct_evidence_are_separate_gates(self):
-        from svcv4_model.config import MIS_INF_V4
-        from svcv4_model.informative import AminoAcidRelation as AA
-        from svcv4_model.informative import InformativeVariant as V
-        from svcv4_model.informative import VariantClassification as C
-
-        base = {"classification": C.PATHOGENIC, "aa": AA.SAME}
-        # circularity failed (VBC used to classify the variant) → excluded
-        assert (
-            MIS_INF_V4.evaluate(
-                [V(**base, distinct_evidence_from_vbc=True, circularity_checked=False)]
-            )
-            == 0.0
-        )
-        # distinct-evidence failed (same evidence as VBC) → excluded
-        assert (
-            MIS_INF_V4.evaluate(
-                [V(**base, distinct_evidence_from_vbc=False, circularity_checked=True)]
-            )
-            == 0.0
-        )
-        # both satisfied → counts
-        assert (
-            MIS_INF_V4.evaluate(
-                [V(**base, distinct_evidence_from_vbc=True, circularity_checked=True)]
-            )
-            == 4.0
-        )
+        assert spec.evaluate([self._v(C.PATHOGENIC, AA.SAME)]) == 6.0
