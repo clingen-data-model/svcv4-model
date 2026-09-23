@@ -63,8 +63,8 @@ x_PRD_INIT (initial points)  ─×─  SM 18 mechanism/exon matrix  ──▶  x
 The only entry into `MIS`. Amino-acid effect path (`MIS_PRD` = in-silico predictor
 × exon relevance) + `MIS_FXN` + `MIS_INF`. A splice sub-path (`SPL_`) is assessed in
 parallel and the higher of MIS-vs-SPL is applied. `MIS_INF` is fully modeled — the
-[five-branch diagram](specialization.md#informative-variants) keyed on same/distinct
-amino-acid change and the Grantham relation to the VBC.
+[five-group model](specialization.md#informative-variants) keyed on clinical
+significance, same/distinct amino-acid change, and the Grantham relation to the VBC.
 
 ### SPL — splice (SM 11, SM 12)
 
@@ -101,7 +101,7 @@ directly change the rule for *what counts as an informative variant*:
 
 | family | informative-variant characteristic | status |
 |---|---|---|
-| `MIS_INF` | same vs distinct amino-acid change + Grantham(inf) ≤/≥ VBC | ✅ **modeled** (five-branch path config) |
+| `MIS_INF` | same vs distinct amino-acid change + Grantham(inf) ≤/≥ VBC | ✅ **modeled** (five-group config, SM 19) |
 | `SPL_INF` | similar splice effect (a nearby splice-site change with the same predicted consequence) | ⏳ provisional generic paths |
 | `NUL_INF` | a distinct P/LP LoF variant in the **same exon** — with the SM 19 *distinct-evidence* caveat (it must not rest on the same `x_PRD`-only evidence as the VBC) | ⏳ provisional generic paths |
 | `CDS_INF` | **branch-dependent** — differs across in-frame indel, rescue-Met, extension, alt-start, tandem-dup origins | ⏳ provisional generic paths |
@@ -119,7 +119,7 @@ Notes that already fall out of the pathway map:
 ## Status and next steps
 
 **Modeled today:** the PFD router + family tree; the `MIS` configs (`MIS_PRD_INIT_INSILICO`,
-`MIS_PRD_EXON_REL`, and the five-branch `MIS_INF`). `NUL_INF` / `CDS_INF` / `SPL_INF`
+`MIS_PRD_EXON_REL`, and the five-group `MIS_INF`). `NUL_INF` / `CDS_INF` / `SPL_INF`
 carry **provisional generic** P/LP + B/LB paths — explicitly placeholders.
 
 **Next:** capture each pathway's own `x_INF` rules (as the missense diagram was

@@ -203,49 +203,49 @@ cfg = ExonRelevanceConfig(tier_multipliers=..., mechanism_bands=[LOF])
 
 ### Informative variants
 
-The `*_INF` codes (SM 19) score by **scoring paths** — a variant is assigned to the
-first path whose criteria it meets, and each path has its own point schedule:
+The `*_INF` codes (SM 19) score by **scoring groups** — each variant joins the
+first group whose criteria it meets, and each group scores `count × points` plus a
+one-time *definitive* bonus:
 
 ```python
-class InfPath:                          # one criterion + its schedule
+class InfGroup:                         # one scoring group
     name: str
-    direction: PATHOGENIC | BENIGN      # P/LP add + ; B/LB subtract
-    match: dict[str, str]               # attribute constraints on the variant
-    schedule: InfPointSchedule          # first_strong · first_weak · additional
+    clinical: significant | not_significant | any    # P/LP vs B/LB
+    aa: same | distinct | any                        # amino-acid change vs the VBC
+    grantham: non_negative | positive | any          # sign of VBC−INF (distinct-AA)
+    points_per_variant · definitive_bonus · definitive_classification  # Path or Benign
 
 class InformativeVariantsConfig:
-    paths: list[InfPath]                # ← per-family, ordered (the modifiable axis)
-    cap_min = -8.0; cap_max = 8.0
-    require_distinct_evidence · min_star_rating_for_external · require_circularity_check
-    def evaluate(variants, vbc_grantham=None) -> float   # distribute, sum, cap ±8
+    groups: list[InfGroup]              # ← per-family, ordered (the modifiable axis)
+    cap_min = -8.0; cap_max = 8.0; min_star_rating = 3   # expert panel / 3-star
+    def evaluate(variants, vbc_grantham=None) -> float | None   # None = *_INF_ND
     def classify(variant, vbc_grantham=None) -> str | None
 ```
 
-Each `InformativeVariant` supplies its own `classification`, `aa` (same/distinct
-amino-acid change), raw `grantham` difference, `star_rating` (quality), and the
-two gates; the **VBC's** Grantham is passed to `evaluate` as `vbc_grantham` so the
-distinct-AA paths can compare informative ≤/≥ VBC. The two gates are **separate**:
-`circularity_checked` = the VBC was not used to classify the variant (no circular
-reasoning); `distinct_evidence_from_vbc` = the variant reached its class via
-*different* evidence codes than the VBC (no double-counting the same signal).
+An informative variant is a **distinct, ranked-classified variant at the same
+codon** as the VBC but a different nucleotide change (equivalent transcript). Each
+supplies its `classification`, `aa` (same/distinct), raw `grantham` score,
+`motif_variant` status, and `star_rating`; the VBC's Grantham is passed to
+`evaluate` as `vbc_grantham`. Duplicate classifications of one variant collapse to
+the highest-ranked, most clinically-significant call. **No qualifying variants →
+`evaluate` returns `None` and the code reads `*_INF_ND`.**
 
-**Missense** (`MIS_INF`) has the SM 19 five-branch schedule, keyed on the variant's
-`attributes` — `aa` (same/distinct amino-acid change vs the VBC) and
-`grantham_vs_vbc` (`le`/`ge`):
+**Missense** (`MIS_INF`) has the SM 19 five-group model:
 
-| path | criterion | first P/B | first LP/LB | addl |
-|---|---|--:|--:|--:|
-| `same_aa_pathogenic` | same AA, P/LP | +4 | +2 | +2 |
-| `distinct_aa_pathogenic` | distinct AA, P/LP, Grantham ≤ VBC | +2 | +1 | +1 |
-| `distinct_aa_benign` | distinct AA, B/LB, Grantham ≥ VBC | −2 | −1 | −1 |
-| `same_aa_benign` | same AA, B/LB | −4 | −2 | −2 |
-| *(none)* | matches no path | 0 | | |
+| group | direction | pts/variant | definitive bonus |
+|---|---|--:|--:|
+| a) clin-sig, same AA | P/LP | +2 | +2 (Path) |
+| b) clin-sig, distinct AA, VBC−INF ≥ 0 | P/LP | +1 | +1 (Path) |
+| c) not-sig, distinct AA, VBC−INF > 0 | B/LB | −1 | −1 (Benign) |
+| d) not-sig, same AA | B/LB | −2 | −2 (Benign) |
+| e) all other | — | 0 | 0 |
 
-Multiple informative variants **distribute across the paths**; within a path the
-first-strong / first-weak / additional schedule applies; the path sums add and cap
-±8. `NUL_INF` / `CDS_INF` / `SPL_INF` currently carry a **provisional** generic
-pathogenic (+2/+1) and benign (−2/−1) path pair, pending each family's own branch
-diagram. A specialization re-weights a path's schedule or swaps in its own paths.
+Each group scores `count × points_per_variant`, plus its `definitive_bonus` once if
+it holds at least one **definitive** (Path / Benign) call; group sums add, cap ±8.
+`NUL_INF` / `CDS_INF` / `SPL_INF` carry **provisional** clinically-significant /
+not-significant groups pending each pathway's own rules (see
+[variant-impact pathways](variant-impact-pathways.md)). A specialization re-weights
+a group or swaps in its own groups.
 
 ## In the model
 

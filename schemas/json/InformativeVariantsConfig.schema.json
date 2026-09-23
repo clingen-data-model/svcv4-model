@@ -1,72 +1,86 @@
 {
   "$defs": {
-    "InfDirection": {
-      "description": "Which classifications a scoring path counts, and the sign of its points.",
-      "enum": [
-        "PATHOGENIC",
-        "BENIGN"
-      ],
-      "title": "InfDirection",
-      "type": "string"
-    },
-    "InfPath": {
+    "InfGroup": {
       "additionalProperties": false,
-      "description": "One informative-variants scoring path \u2014 a criterion plus its schedule (SM 19).\n\nA variant is assigned to the FIRST path whose ``direction`` includes its\nclassification and whose ``match`` constraints it satisfies. ``match`` is a\nsubset test against the variant's ``attributes`` \u2014 e.g. ``{\"aa\": \"same\"}`` or\n``{\"aa\": \"distinct\", \"grantham_vs_vbc\": \"le\"}`` for missense. A variant matching\nno path scores 0 (the diagram's \"none of the above\" branch).",
+      "description": "One informative-variant scoring group (SM 19).\n\nA variant joins the FIRST group whose criteria it meets: ``clinical``\n(significant P/LP \u00b7 not_significant B/LB \u00b7 any), ``aa`` (same \u00b7 distinct \u00b7 any),\nand ``grantham`` \u2014 the sign of ``VBC_grantham \u2212 informative_grantham``\n(``non_negative`` \u2265 0 \u00b7 ``positive`` > 0 \u00b7 any). The group scores\n``count \u00d7 points_per_variant``, plus ``definitive_bonus`` once if any member\ncarries ``definitive_classification`` (Path or Benign \u2014 the 'established' call).",
       "properties": {
-        "direction": {
-          "$ref": "#/$defs/InfDirection"
+        "aa": {
+          "default": "any",
+          "enum": [
+            "same",
+            "distinct",
+            "any"
+          ],
+          "title": "Aa",
+          "type": "string"
         },
-        "match": {
-          "additionalProperties": {
-            "type": "string"
-          },
-          "title": "Match",
-          "type": "object"
+        "clinical": {
+          "default": "any",
+          "enum": [
+            "significant",
+            "not_significant",
+            "any"
+          ],
+          "title": "Clinical",
+          "type": "string"
+        },
+        "definitive_bonus": {
+          "default": 0.0,
+          "title": "Definitive Bonus",
+          "type": "number"
+        },
+        "definitive_classification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VariantClassification"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "grantham": {
+          "default": "any",
+          "enum": [
+            "non_negative",
+            "positive",
+            "any"
+          ],
+          "title": "Grantham",
+          "type": "string"
         },
         "name": {
           "title": "Name",
           "type": "string"
         },
-        "schedule": {
-          "$ref": "#/$defs/InfPointSchedule"
+        "points_per_variant": {
+          "default": 0.0,
+          "title": "Points Per Variant",
+          "type": "number"
         }
       },
       "required": [
-        "name",
-        "direction",
-        "schedule"
+        "name"
       ],
-      "title": "InfPath",
+      "title": "InfGroup",
       "type": "object"
     },
-    "InfPointSchedule": {
-      "additionalProperties": false,
-      "description": "One path's SM 19 schedule: the first strong (P/B), the first weak (LP/LB),\nand each additional in-direction variant. Benign paths carry negatives.",
-      "properties": {
-        "additional": {
-          "title": "Additional",
-          "type": "number"
-        },
-        "first_strong": {
-          "title": "First Strong",
-          "type": "number"
-        },
-        "first_weak": {
-          "title": "First Weak",
-          "type": "number"
-        }
-      },
-      "required": [
-        "first_strong",
-        "first_weak",
-        "additional"
+    "VariantClassification": {
+      "description": "A variant's pathogenicity classification. Introduced for informative\nvariants (SM 19), whose scoring keys on P/LP vs B/LB. Not (yet) applied to\nthe placeholder ``classification`` strings on other Case sub-models.",
+      "enum": [
+        "PATHOGENIC",
+        "LIKELY_PATHOGENIC",
+        "VUS",
+        "LIKELY_BENIGN",
+        "BENIGN"
       ],
-      "title": "InfPointSchedule",
-      "type": "object"
+      "title": "VariantClassification",
+      "type": "string"
     }
   },
   "additionalProperties": false,
-  "description": "Configuration behind an ``informative-variants-assessment`` code (SM 19).\n\n``paths`` is the ordered set of scoring criteria \u2014 the **per-family**,\nmodifiable axis. Missense keys on same-vs-distinct amino-acid change and the\nGrantham relation to the VBC; other families key on their own attributes.\nMultiple informative variants **distribute across the paths**; within each path\nthe first-strong / first-weak / additional schedule applies; the path sums are\nadded and capped to ``[cap_min, cap_max]``. The gates\n(``require_distinct_evidence`` / ``min_star_rating_for_external`` /\n``require_circularity_check``) filter which variants count.\n\n**API.** ``evaluate(variants)`` \u2192 points. ``classify(variant)`` \u2192 the matched\npath name (or None). ``path_names()`` lists the configured paths.",
+  "description": "Configuration behind an ``informative-variants-assessment`` code (SM 19).\n\n``groups`` is the ordered set of scoring groups \u2014 the per-family, modifiable\naxis. A variant counts only if its review ranking is at least\n``min_star_rating`` (default 3 = expert panel / 3-star); duplicate\nclassifications of one variant collapse to the highest-ranked, most\nclinically-significant call. Group sums add and cap to ``[cap_min, cap_max]``.\n\n**API.** ``evaluate(variants, vbc_grantham=None)`` \u2192 points, or **None** when\nno qualifying informative variants were found (the code reads ``*_INF_ND``).\n``classify(variant, vbc_grantham)`` \u2192 the group name (or None).",
   "properties": {
     "cap_max": {
       "default": 8.0,
@@ -78,31 +92,31 @@
       "title": "Cap Min",
       "type": "number"
     },
-    "min_star_rating_for_external": {
-      "default": 3,
-      "title": "Min Star Rating For External",
-      "type": "integer"
-    },
-    "paths": {
+    "groups": {
       "items": {
-        "$ref": "#/$defs/InfPath"
+        "$ref": "#/$defs/InfGroup"
       },
-      "title": "Paths",
+      "title": "Groups",
       "type": "array"
     },
+    "min_star_rating": {
+      "default": 3,
+      "title": "Min Star Rating",
+      "type": "integer"
+    },
     "require_circularity_check": {
-      "default": true,
+      "default": false,
       "title": "Require Circularity Check",
       "type": "boolean"
     },
     "require_distinct_evidence": {
-      "default": true,
+      "default": false,
       "title": "Require Distinct Evidence",
       "type": "boolean"
     }
   },
   "required": [
-    "paths"
+    "groups"
   ],
   "title": "InformativeVariantsConfig",
   "type": "object"

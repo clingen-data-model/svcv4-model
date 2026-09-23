@@ -66,8 +66,22 @@ class InformativeVariant(BaseModel):
     grantham: float | None = Field(
         default=None,
         description=(
-            "Grantham difference of this variant's amino-acid change; compared to the "
-            "VBC's Grantham (passed to evaluate) on the distinct-AA scoring paths."
+            "Grantham score of this variant's amino-acid change. On distinct-AA groups "
+            "the difference VBC_grantham − this (passed via evaluate) selects the group."
+        ),
+    )
+    motif_variant: bool | None = Field(
+        default=None,
+        description=(
+            "Motif-variant status (Yes/No) — captured for clinically-significant, "
+            "distinct-AA informative variants (SM 19 'see text re motif variants')."
+        ),
+    )
+    transcript: str | None = Field(
+        default=None,
+        description=(
+            "Transcript on which the change is expressed; SM 19 presumes the VBC and "
+            "informative variant are compared on equivalent transcript sequences."
         ),
     )
     distinct_evidence_from_vbc: bool | None = Field(

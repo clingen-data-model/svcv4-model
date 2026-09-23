@@ -16,7 +16,7 @@ value, or raises if the tool is unknown or the score is out of range.
 
 from __future__ import annotations
 
-from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -528,151 +528,166 @@ EXON_REL_LOF_V4 = exon_relevance_baseline(only_positive=True, mechanism_bands=[L
 # --------------------------------------------------------------------------- #
 # Informative-variants configuration (svc:*_INF:4.0) — SM 19
 #
-# One config shape shared by all four PFD families; the SM 19 point schedule is a
-# reusable component passed into each, while each path sets its own similarity
-# bases (what makes a variant informative for that variant type — "variant-type
-# dependent" per SM 19).
+# An informative variant is a distinct, ranked-classified variant at the SAME
+# CODON as the VBC but a DIFFERENT nucleotide change (on an equivalent transcript).
+# Each variant is placed into ONE scoring group by its clinical significance, its
+# amino-acid relation to the VBC (same/distinct), and — for distinct-AA — the
+# Grantham difference (VBC_grantham − informative_grantham). A group scores
+# (count × points_per_variant) + a one-time definitive bonus when it holds at least
+# one definitively-classified variant (Path for the clinically-significant groups,
+# Benign for the not-significant groups). Group sums add, cap ±8. No qualifying
+# informative variants → evaluate returns None and the code reads *_INF_ND.
 # --------------------------------------------------------------------------- #
 
-
-class InfDirection(StrEnum):
-    """Which classifications a scoring path counts, and the sign of its points."""
-
-    PATHOGENIC = "PATHOGENIC"  # strong = P, weak = LP (positive)
-    BENIGN = "BENIGN"  # strong = B, weak = LB (negative)
-
-
-_INF_STRONG_WEAK = {
-    InfDirection.PATHOGENIC: (
-        VariantClassification.PATHOGENIC,
-        VariantClassification.LIKELY_PATHOGENIC,
-    ),
-    InfDirection.BENIGN: (
-        VariantClassification.BENIGN,
-        VariantClassification.LIKELY_BENIGN,
-    ),
+CLINICALLY_SIGNIFICANT = {
+    VariantClassification.PATHOGENIC,
+    VariantClassification.LIKELY_PATHOGENIC,
+}
+NOT_CLINICALLY_SIGNIFICANT = {
+    VariantClassification.BENIGN,
+    VariantClassification.LIKELY_BENIGN,
 }
 
 
-class InfPointSchedule(BaseModel):
-    """One path's SM 19 schedule: the first strong (P/B), the first weak (LP/LB),
-    and each additional in-direction variant. Benign paths carry negatives."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    first_strong: float
-    first_weak: float
-    additional: float
+def _clinical_significance(cls: VariantClassification | None) -> str | None:
+    """'significant' (P/LP), 'not_significant' (B/LB), or None (Uncertain/VUS)."""
+    if cls in CLINICALLY_SIGNIFICANT:
+        return "significant"
+    if cls in NOT_CLINICALLY_SIGNIFICANT:
+        return "not_significant"
+    return None
 
 
-class InfPath(BaseModel):
-    """One informative-variants scoring path — a criterion plus its schedule (SM 19).
+# most-clinically-significant order (Path first) for de-duplicating a variant
+_CLIN_RANK = {
+    VariantClassification.PATHOGENIC: 0,
+    VariantClassification.LIKELY_PATHOGENIC: 1,
+    VariantClassification.VUS: 2,
+    VariantClassification.LIKELY_BENIGN: 3,
+    VariantClassification.BENIGN: 4,
+}
 
-    A variant is assigned to the FIRST path whose ``direction`` includes its
-    classification and whose ``match`` constraints it satisfies. ``match`` is a
-    subset test against the variant's ``attributes`` — e.g. ``{"aa": "same"}`` or
-    ``{"aa": "distinct", "grantham_vs_vbc": "le"}`` for missense. A variant matching
-    no path scores 0 (the diagram's "none of the above" branch).
+
+class InfGroup(BaseModel):
+    """One informative-variant scoring group (SM 19).
+
+    A variant joins the FIRST group whose criteria it meets: ``clinical``
+    (significant P/LP · not_significant B/LB · any), ``aa`` (same · distinct · any),
+    and ``grantham`` — the sign of ``VBC_grantham − informative_grantham``
+    (``non_negative`` ≥ 0 · ``positive`` > 0 · any). The group scores
+    ``count × points_per_variant``, plus ``definitive_bonus`` once if any member
+    carries ``definitive_classification`` (Path or Benign — the 'established' call).
     """
 
     model_config = ConfigDict(extra="forbid")
 
     name: str
-    direction: InfDirection
-    schedule: InfPointSchedule
-    match: dict[str, str] = Field(default_factory=dict)
+    clinical: Literal["significant", "not_significant", "any"] = "any"
+    aa: Literal["same", "distinct", "any"] = "any"
+    grantham: Literal["non_negative", "positive", "any"] = "any"
+    points_per_variant: float = 0.0
+    definitive_bonus: float = 0.0
+    definitive_classification: VariantClassification | None = None
 
 
 class InformativeVariantsConfig(BaseModel):
     """Configuration behind an ``informative-variants-assessment`` code (SM 19).
 
-    ``paths`` is the ordered set of scoring criteria — the **per-family**,
-    modifiable axis. Missense keys on same-vs-distinct amino-acid change and the
-    Grantham relation to the VBC; other families key on their own attributes.
-    Multiple informative variants **distribute across the paths**; within each path
-    the first-strong / first-weak / additional schedule applies; the path sums are
-    added and capped to ``[cap_min, cap_max]``. The gates
-    (``require_distinct_evidence`` / ``min_star_rating_for_external`` /
-    ``require_circularity_check``) filter which variants count.
+    ``groups`` is the ordered set of scoring groups — the per-family, modifiable
+    axis. A variant counts only if its review ranking is at least
+    ``min_star_rating`` (default 3 = expert panel / 3-star); duplicate
+    classifications of one variant collapse to the highest-ranked, most
+    clinically-significant call. Group sums add and cap to ``[cap_min, cap_max]``.
 
-    **API.** ``evaluate(variants)`` → points. ``classify(variant)`` → the matched
-    path name (or None). ``path_names()`` lists the configured paths.
+    **API.** ``evaluate(variants, vbc_grantham=None)`` → points, or **None** when
+    no qualifying informative variants were found (the code reads ``*_INF_ND``).
+    ``classify(variant, vbc_grantham)`` → the group name (or None).
     """
 
     model_config = ConfigDict(extra="forbid")
 
-    paths: list[InfPath]
+    groups: list[InfGroup]
     cap_min: float = -8.0
     cap_max: float = 8.0
-    require_distinct_evidence: bool = True
-    min_star_rating_for_external: int = 3
-    require_circularity_check: bool = True
+    min_star_rating: int = 3
+    require_distinct_evidence: bool = False
+    require_circularity_check: bool = False
 
-    def path_names(self) -> list[str]:
-        """The configured scoring paths, in match order."""
-        return [p.name for p in self.paths]
+    def group_names(self) -> list[str]:
+        """The configured scoring groups, in match order."""
+        return [g.name for g in self.groups]
 
     def _passes_gates(self, v: InformativeVariant) -> bool:
+        if v.star_rating is None or v.star_rating < self.min_star_rating:
+            return False
         if self.require_distinct_evidence and not v.distinct_evidence_from_vbc:
             return False
-        if self.require_circularity_check and not v.circularity_checked:
-            return False
-        # external classifications are only usable at 3–4 star (SM 19)
-        return not (v.star_rating is not None and v.star_rating < self.min_star_rating_for_external)
+        return not (self.require_circularity_check and not v.circularity_checked)
+
+    def _dedup(self, variants: list[InformativeVariant]) -> list[InformativeVariant]:
+        """One call per variant id: highest star, then most clinically significant."""
+
+        def key(v: InformativeVariant) -> tuple[float, int]:
+            star = v.star_rating if v.star_rating is not None else -1
+            return (star, -_CLIN_RANK.get(v.classification, -99))
+
+        best: dict[str, InformativeVariant] = {}
+        passthrough: list[InformativeVariant] = []
+        for v in variants:
+            if v.id is None:
+                passthrough.append(v)
+            elif v.id not in best or key(v) > key(best[v.id]):
+                best[v.id] = v
+        return list(best.values()) + passthrough
 
     @staticmethod
-    def _match_attributes(v: InformativeVariant, vbc_grantham: float | None) -> dict[str, str]:
-        """The attributes a variant is matched on: its ``attributes`` plus the derived
-        ``aa`` and (from raw Grantham vs the VBC's) ``grantham_vs_vbc``."""
-        attrs = dict(v.attributes)
-        if v.aa is not None:
-            attrs.setdefault("aa", v.aa.value)
-        if "grantham_vs_vbc" not in attrs and v.grantham is not None and vbc_grantham is not None:
-            attrs["grantham_vs_vbc"] = "le" if v.grantham <= vbc_grantham else "ge"
-        return attrs
+    def _grantham_ok(cond: str, diff: float | None) -> bool:
+        if cond == "any":
+            return True
+        if diff is None:
+            return False
+        return diff >= 0 if cond == "non_negative" else diff > 0
 
     def classify(self, v: InformativeVariant, vbc_grantham: float | None = None) -> str | None:
-        """The name of the first path this variant matches, or None."""
-        attrs = self._match_attributes(v, vbc_grantham)
-        for p in self.paths:
-            strong, weak = _INF_STRONG_WEAK[p.direction]
-            if v.classification in (strong, weak) and all(
-                attrs.get(k) == val for k, val in p.match.items()
-            ):
-                return p.name
+        """The name of the first group this variant matches, or None."""
+        clin = _clinical_significance(v.classification)
+        aa = v.aa.value if v.aa is not None else None
+        diff = None if (v.grantham is None or vbc_grantham is None) else vbc_grantham - v.grantham
+        for g in self.groups:
+            if g.clinical != "any" and clin != g.clinical:
+                continue
+            if g.aa != "any" and aa != g.aa:
+                continue
+            if not self._grantham_ok(g.grantham, diff):
+                continue
+            return g.name
         return None
 
     def evaluate(
         self, variants: list[InformativeVariant], vbc_grantham: float | None = None
-    ) -> float:
-        """Informative-variants points: distribute variants across paths, then cap.
+    ) -> float | None:
+        """Informative-variants points, or None (``*_INF_ND``) if none qualify."""
+        kept = [v for v in self._dedup(variants) if self._passes_gates(v)]
+        if not kept:
+            return None  # no qualifying informative variants → _ND
 
-        Each variant supplies its own ``classification``, ``aa`` (same/distinct),
-        ``grantham`` difference, ``star_rating`` (quality), and the two gates. The
-        VBC's Grantham difference is passed as ``vbc_grantham`` so the distinct-AA
-        paths can compare informative ≤/≥ VBC.
-        """
-        groups: dict[str, list[InformativeVariant]] = {}
-        for v in variants:
-            if not self._passes_gates(v):
-                continue
+        members: dict[str, list[InformativeVariant]] = {}
+        for v in kept:
             name = self.classify(v, vbc_grantham)
             if name is not None:
-                groups.setdefault(name, []).append(v)
+                members.setdefault(name, []).append(v)
 
         total = 0.0
-        for p in self.paths:
-            members = groups.get(p.name, [])
-            if not members:
+        for g in self.groups:
+            group = members.get(g.name, [])
+            if not group:
                 continue
-            strong, weak = _INF_STRONG_WEAK[p.direction]
-            n_s = sum(1 for v in members if v.classification == strong)
-            n_w = sum(1 for v in members if v.classification == weak)
-            s = p.schedule
-            if n_s >= 1:
-                total += s.first_strong + s.additional * (n_s - 1) + s.additional * n_w
-            elif n_w >= 1:
-                total += s.first_weak + s.additional * (n_w - 1)
+            score = len(group) * g.points_per_variant
+            if g.definitive_classification is not None and any(
+                v.classification == g.definitive_classification for v in group
+            ):
+                score += g.definitive_bonus
+            total += score
         return max(self.cap_min, min(self.cap_max, total))
 
 
@@ -681,55 +696,73 @@ def informative_config(params: dict) -> InformativeVariantsConfig:
     return InformativeVariantsConfig.model_validate(params)
 
 
-def _sched(strong: float, weak: float, additional: float) -> InfPointSchedule:
-    return InfPointSchedule(first_strong=strong, first_weak=weak, additional=additional)
-
-
-# --- MIS_INF: the five-branch missense diagram (SM 19) ---------------------- #
-# Variant attributes: "aa" = same|distinct (amino-acid change vs the VBC);
-# "grantham_vs_vbc" = le|ge (informative variant's Grantham difference vs the VBC).
+# --- MIS_INF: the five-group missense model (SM 19) ------------------------- #
+# aa = same|distinct amino-acid change vs the VBC (same codon, different nt).
+# grantham diff = VBC_grantham − informative_grantham (distinct-AA groups only).
+_P = VariantClassification.PATHOGENIC
+_B = VariantClassification.BENIGN
 MIS_INF_V4 = InformativeVariantsConfig(
-    paths=[
-        InfPath(  # distinct nucleotide, SAME amino-acid change, P/LP → strongest
-            name="same_aa_pathogenic",
-            direction=InfDirection.PATHOGENIC,
-            match={"aa": "same"},
-            schedule=_sched(4.0, 2.0, 2.0),
+    min_star_rating=3,
+    groups=[
+        InfGroup(  # a) clinically significant, same AA
+            name="a_clin_sig_same_aa",
+            clinical="significant",
+            aa="same",
+            points_per_variant=2.0,
+            definitive_bonus=2.0,
+            definitive_classification=_P,
         ),
-        InfPath(  # DISTINCT amino acid, P/LP, Grantham(inf) ≤ VBC
-            name="distinct_aa_pathogenic",
-            direction=InfDirection.PATHOGENIC,
-            match={"aa": "distinct", "grantham_vs_vbc": "le"},
-            schedule=_sched(2.0, 1.0, 1.0),
+        InfGroup(  # b) clinically significant, distinct AA, VBC−INF >= 0
+            name="b_clin_sig_distinct_aa_nonneg_grantham",
+            clinical="significant",
+            aa="distinct",
+            grantham="non_negative",
+            points_per_variant=1.0,
+            definitive_bonus=1.0,
+            definitive_classification=_P,
         ),
-        InfPath(  # DISTINCT amino acid, B/LB, Grantham(inf) ≥ VBC
-            name="distinct_aa_benign",
-            direction=InfDirection.BENIGN,
-            match={"aa": "distinct", "grantham_vs_vbc": "ge"},
-            schedule=_sched(-2.0, -1.0, -1.0),
+        InfGroup(  # c) not clinically significant, distinct AA, VBC−INF > 0
+            name="c_not_sig_distinct_aa_pos_grantham",
+            clinical="not_significant",
+            aa="distinct",
+            grantham="positive",
+            points_per_variant=-1.0,
+            definitive_bonus=-1.0,
+            definitive_classification=_B,
         ),
-        InfPath(  # distinct nucleotide, SAME amino-acid change, B/LB → strongest benign
-            name="same_aa_benign",
-            direction=InfDirection.BENIGN,
-            match={"aa": "same"},
-            schedule=_sched(-4.0, -2.0, -2.0),
+        InfGroup(  # d) not clinically significant, same AA
+            name="d_not_sig_same_aa",
+            clinical="not_significant",
+            aa="same",
+            points_per_variant=-2.0,
+            definitive_bonus=-2.0,
+            definitive_classification=_B,
         ),
-    ]
+        InfGroup(name="e_other"),  # e) all other informative variants -> 0
+    ],
 )
 
 
 def _inf_generic() -> InformativeVariantsConfig:
-    """Provisional NUL/CDS/SPL config: one P/LP path + one B/LB path at SM 19 base
-    magnitudes, matching any distinct informative variant (no per-family criteria
-    yet). Each family's own branch diagram would replace these paths."""
+    """Provisional NUL/CDS/SPL config: clinically-significant / not-significant /
+    other groups at SM 19 base magnitudes — pending each pathway's own rules."""
     return InformativeVariantsConfig(
-        paths=[
-            InfPath(
-                name="pathogenic", direction=InfDirection.PATHOGENIC, schedule=_sched(2.0, 1.0, 1.0)
+        groups=[
+            InfGroup(
+                name="clinically_significant",
+                clinical="significant",
+                points_per_variant=2.0,
+                definitive_bonus=2.0,
+                definitive_classification=_P,
             ),
-            InfPath(
-                name="benign", direction=InfDirection.BENIGN, schedule=_sched(-2.0, -1.0, -1.0)
+            InfGroup(
+                name="not_clinically_significant",
+                clinical="not_significant",
+                points_per_variant=-2.0,
+                definitive_bonus=-2.0,
+                definitive_classification=_B,
             ),
+            InfGroup(name="other"),
         ]
     )
 
