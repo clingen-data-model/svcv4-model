@@ -161,6 +161,7 @@ nav:
           - "Locus (LOC)": reference/scoring-map/locus.md
           - "Predictive & Functional (PFD)": reference/scoring-map/pfd.md
       - Summary Table: reference/summary-table.md
+      - Variant-impact pathways: reference/variant-impact-pathways.md
       - VA-Spec community profile: reference/va-spec-profile.md
       - Specialization & the registry: reference/specialization.md
       - Core concepts: reference/concepts.md
