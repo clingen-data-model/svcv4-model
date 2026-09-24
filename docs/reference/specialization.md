@@ -218,17 +218,18 @@ class InfGroup:                         # one scoring group
 class InformativeVariantsConfig:
     groups: list[InfGroup]              # ← per-family, ordered (the modifiable axis)
     cap_min = -8.0; cap_max = 8.0; min_star_rating = 3   # expert panel / 3-star
-    def evaluate(variants, vbc_grantham=None) -> float | None   # None = *_INF_ND
+    motif_points = 0.0                                   # SM 7 motif award (MIS = 2.0)
+    def evaluate(variants, vbc_grantham=None, motif_qualifying=False) -> float | None
     def classify(variant, vbc_grantham=None) -> str | None
 ```
 
 An informative variant is a **distinct, ranked-classified variant at the same
 codon** as the VBC but a different nucleotide change (equivalent transcript). Each
-supplies its `classification`, `aa` (same/distinct), raw `grantham` score,
-`motif_variant` status, and `star_rating`; the VBC's Grantham is passed to
-`evaluate` as `vbc_grantham`. Duplicate classifications of one variant collapse to
-the highest-ranked, most clinically-significant call. **No qualifying variants →
-`evaluate` returns `None` and the code reads `*_INF_ND`.**
+supplies its `classification`, `aa` (same/distinct), raw `grantham` score, and
+`star_rating`; the VBC's Grantham is passed to `evaluate` as `vbc_grantham`.
+Duplicate classifications of one variant collapse to the highest-ranked, most
+clinically-significant call. **No qualifying variants → `evaluate` returns `None`
+and the code reads `*_INF_ND`.**
 
 **Missense** (`MIS_INF`) has the SM 19 five-group model:
 
@@ -242,10 +243,19 @@ the highest-ranked, most clinically-significant call. **No qualifying variants �
 
 Each group scores `count × points_per_variant`, plus its `definitive_bonus` once if
 it holds at least one **definitive** (Path / Benign) call; group sums add, cap ±8.
+
+**Motif variants** (SM 7): a VBC in a robustly-defined deleterious motif — the
+Gly-X-Y motif of collagen triple-helical domains, or functional Cys/His in a C2H2
+DNA-binding domain — awards `motif_points` (MIS = **+2**) **once** via
+`evaluate(..., motif_qualifying=True)`, acting as a virtual group-b Pathogenic
+variant. It applies only when there are **no** clinically-significant informative
+variants (it substitutes for a missing one) and is **suppressed by any benign**
+informative variant at the codon.
+
 `NUL_INF` / `CDS_INF` / `SPL_INF` carry **provisional** clinically-significant /
-not-significant groups pending each pathway's own rules (see
+not-significant groups (no motif) pending each pathway's own rules (see
 [variant-impact pathways](variant-impact-pathways.md)). A specialization re-weights
-a group or swaps in its own groups.
+a group, sets `motif_points`, or swaps in its own groups.
 
 ## In the model
 

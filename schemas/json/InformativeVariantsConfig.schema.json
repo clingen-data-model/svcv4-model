@@ -104,6 +104,11 @@
       "title": "Min Star Rating",
       "type": "integer"
     },
+    "motif_points": {
+      "default": 0.0,
+      "title": "Motif Points",
+      "type": "number"
+    },
     "require_circularity_check": {
       "default": false,
       "title": "Require Circularity Check",

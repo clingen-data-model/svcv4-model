@@ -612,6 +612,7 @@ class InformativeVariantsConfig(BaseModel):
     min_star_rating: int = 3
     require_distinct_evidence: bool = False
     require_circularity_check: bool = False
+    motif_points: float = 0.0
 
     def group_names(self) -> list[str]:
         """The configured scoring groups, in match order."""
@@ -664,12 +665,21 @@ class InformativeVariantsConfig(BaseModel):
         return None
 
     def evaluate(
-        self, variants: list[InformativeVariant], vbc_grantham: float | None = None
+        self,
+        variants: list[InformativeVariant],
+        vbc_grantham: float | None = None,
+        motif_qualifying: bool = False,
     ) -> float | None:
-        """Informative-variants points, or None (``*_INF_ND``) if none qualify."""
+        """Informative-variants points, or None (``*_INF_ND``) if none qualify.
+
+        ``motif_qualifying`` (SM 7 / SM 19): the VBC sits in a robustly-defined
+        deleterious motif (Gly-X-Y collagen triple helix, C2H2 DNA-binding Cys/His,
+        …). When set, ``motif_points`` (default 0) is awarded **once** as a virtual
+        clinically-significant informative variant — but only if there are **no**
+        clinically-significant informative variants (it substitutes for a missing
+        one) **and no** benign informative variant (which suppresses it).
+        """
         kept = [v for v in self._dedup(variants) if self._passes_gates(v)]
-        if not kept:
-            return None  # no qualifying informative variants → _ND
 
         members: dict[str, list[InformativeVariant]] = {}
         for v in kept:
@@ -688,6 +698,16 @@ class InformativeVariantsConfig(BaseModel):
             ):
                 score += g.definitive_bonus
             total += score
+
+        motif_awarded = False
+        if motif_qualifying and self.motif_points:
+            sig = {_clinical_significance(v.classification) for v in kept}
+            if "significant" not in sig and "not_significant" not in sig:
+                total += self.motif_points
+                motif_awarded = True
+
+        if not kept and not motif_awarded:
+            return None  # no qualifying informative variants (and no motif) → _ND
         return max(self.cap_min, min(self.cap_max, total))
 
 
@@ -703,6 +723,7 @@ _P = VariantClassification.PATHOGENIC
 _B = VariantClassification.BENIGN
 MIS_INF_V4 = InformativeVariantsConfig(
     min_star_rating=3,
+    motif_points=2.0,  # SM 7 robust deleterious motif = one virtual group-b definitive P
     groups=[
         InfGroup(  # a) clinically significant, same AA
             name="a_clin_sig_same_aa",

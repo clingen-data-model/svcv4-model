@@ -70,13 +70,6 @@ class InformativeVariant(BaseModel):
             "the difference VBC_grantham − this (passed via evaluate) selects the group."
         ),
     )
-    motif_variant: bool | None = Field(
-        default=None,
-        description=(
-            "Motif-variant status (Yes/No) — captured for clinically-significant, "
-            "distinct-AA informative variants (SM 19 'see text re motif variants')."
-        ),
-    )
     transcript: str | None = Field(
         default=None,
         description=(
