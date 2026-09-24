@@ -347,19 +347,6 @@
           "description": "Identifier for the informative variant.",
           "title": "Id"
         },
-        "motif_variant": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Motif-variant status (Yes/No) \u2014 captured for clinically-significant, distinct-AA informative variants (SM 19 'see text re motif variants').",
-          "title": "Motif Variant"
-        },
         "similarity_basis": {
           "anyOf": [
             {

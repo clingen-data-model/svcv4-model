@@ -494,7 +494,7 @@ _pat(
             "input",
             "informative variant's Grantham; VBC−INF selects distinct-AA groups",
         ),
-        _di("motif_variant", "input", "Yes/No — captured for clin-sig distinct-AA variants"),
+        _di("motif_qualifying", "input", "VBC-level: in a robust deleterious motif (SM 7)"),
         _di(
             "star_rating",
             "gate",
@@ -760,7 +760,10 @@ ruleset(
         "(VBC−INF): (a) clin-sig same-AA +2 (b) clin-sig distinct-AA, VBC−INF≥0 +1 "
         "(c) not-sig distinct-AA, VBC−INF>0 −1 (d) not-sig same-AA −2 (e) other 0. Each "
         "group scores count×points, +an equal 'definitive' bonus if it holds a Path (or "
-        "Benign) call; sums add, cap ±8. No qualifying variants → MIS_INF_ND."
+        "Benign) call; sums add, cap ±8. A VBC in a robust deleterious motif (SM 7, "
+        "motif_qualifying) awards +2 once as a virtual group-b P — only when there are no "
+        "P/LP and no benign informative variants. No qualifying variants (and no motif) → "
+        "MIS_INF_ND."
     ),
 )
 # NUL: NUL = (NUL_PRD + NUL_FXN -> NUL_PRD_FXN) + NUL_INF

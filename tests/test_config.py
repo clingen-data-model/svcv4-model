@@ -536,3 +536,27 @@ class TestInformativeVariantsConfig:
             ]
         )
         assert spec.evaluate([self._v(C.PATHOGENIC, AA.SAME)]) == 6.0
+
+    def test_motif_variant_award(self):
+        from svcv4_model.config import MIS_INF_V4
+        from svcv4_model.informative import AminoAcidRelation as AA
+        from svcv4_model.informative import VariantClassification as C
+
+        # COL3A1-style: VBC in a robust motif, no informative variants → +2 once (not ND)
+        assert MIS_INF_V4.evaluate([], motif_qualifying=True) == 2.0
+        assert MIS_INF_V4.evaluate([]) is None  # no motif → ND
+        # suppressed by a benign informative variant at the codon
+        assert MIS_INF_V4.evaluate([self._v(C.BENIGN, AA.SAME)], motif_qualifying=True) == -4.0
+        # not added when a P/LP informative variant already exists
+        assert MIS_INF_V4.evaluate([self._v(C.PATHOGENIC, AA.SAME)], motif_qualifying=True) == 4.0
+        # VUS does not block the motif award
+        assert MIS_INF_V4.evaluate([self._v(C.VUS, AA.SAME)], motif_qualifying=True) == 2.0
+        # awarded only once
+        assert MIS_INF_V4.evaluate([], motif_qualifying=True) == 2.0
+
+    def test_generic_families_have_no_motif_points(self):
+        from svcv4_model.config import CDS_INF_V4, NUL_INF_V4, SPL_INF_V4
+
+        for cfg in (NUL_INF_V4, CDS_INF_V4, SPL_INF_V4):
+            assert cfg.motif_points == 0.0
+            assert cfg.evaluate([], motif_qualifying=True) is None
